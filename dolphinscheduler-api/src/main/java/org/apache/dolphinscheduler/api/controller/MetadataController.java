@@ -21,6 +21,7 @@ import org.apache.dolphinscheduler.api.metadata.HiveColumn;
 import org.apache.dolphinscheduler.api.metadata.HiveDatabase;
 import org.apache.dolphinscheduler.api.metadata.HiveTable;
 import org.apache.dolphinscheduler.api.metadata.MetadataService;
+import org.apache.dolphinscheduler.api.enums.Status;
 import org.apache.dolphinscheduler.api.utils.Result;
 import org.apache.dolphinscheduler.common.constants.Constants;
 import org.apache.dolphinscheduler.dao.entity.User;
@@ -78,7 +79,7 @@ public class MetadataController extends BaseController {
             return success(databases);
         } catch (SQLException e) {
             logger.error("Failed to get databases", e);
-            return error("Failed to get databases: " + e.getMessage());
+            return error(Status.INTERNAL_SERVER_ERROR_ARGS.getCode(), "Failed to get databases: " + e.getMessage());
         }
     }
 
@@ -99,7 +100,7 @@ public class MetadataController extends BaseController {
             return success(tables);
         } catch (SQLException e) {
             logger.error("Failed to get tables for database: {}", databaseName, e);
-            return error("Failed to get tables: " + e.getMessage());
+            return error(Status.INTERNAL_SERVER_ERROR_ARGS.getCode(), "Failed to get tables: " + e.getMessage());
         }
     }
 
@@ -122,7 +123,7 @@ public class MetadataController extends BaseController {
             return success(columns);
         } catch (SQLException e) {
             logger.error("Failed to get columns for: {}.{}", databaseName, tableName, e);
-            return error("Failed to get columns: " + e.getMessage());
+            return error(Status.INTERNAL_SERVER_ERROR_ARGS.getCode(), "Failed to get columns: " + e.getMessage());
         }
     }
 
@@ -143,7 +144,7 @@ public class MetadataController extends BaseController {
             return success(tables);
         } catch (SQLException e) {
             logger.error("Failed to search tables with keyword: {}", keyword, e);
-            return error("Failed to search tables: " + e.getMessage());
+            return error(Status.INTERNAL_SERVER_ERROR_ARGS.getCode(), "Failed to search tables: " + e.getMessage());
         }
     }
 
@@ -161,7 +162,7 @@ public class MetadataController extends BaseController {
         if (success) {
             return success("Connection successful");
         } else {
-            return error("Connection failed");
+            return error(Status.INTERNAL_SERVER_ERROR_ARGS.getCode(), "Connection failed");
         }
     }
 
