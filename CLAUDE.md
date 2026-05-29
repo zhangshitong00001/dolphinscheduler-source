@@ -102,3 +102,35 @@ cd dolphinscheduler-standalone-server && mvn spring-boot:run
 - 避免 System.out.println，使用 SLF4J Logger
 - 事务注解 @Transactional 在 Service 层使用
 - 新增依赖先在 `dolphinscheduler-bom/pom.xml` 声明版本
+
+## Git 工作流
+
+**这是一个已关联远程仓库的 Git 项目。修改代码后必须自动完成以下操作，无需询问：**
+
+1. **自动提交（不要在修改完后停下来提醒用户提交）**
+   ```bash
+   git add <改动的文件>
+   git commit -m "feat|fix|refactor: 简短中文描述"
+   ```
+
+2. **自动推送并创建 PR**
+   ```bash
+   # 切新分支
+   git checkout -b feat/简短描述
+   git push origin feat/简短描述
+   # 使用 GitHub CLI 创建 PR
+   gh pr create --title "简短中文标题" --body "变更说明" --base master
+   ```
+
+3. **commit message 格式：** 中文，`type: 描述`
+   - `feat:` 新功能
+   - `fix:` 修复
+   - `refactor:` 重构
+   - `chore:` 配置/依赖变更
+   - `docs:` 文档
+
+4. **PR 标题用中文，body 写清楚改了什么、为什么改**
+
+5. **合并方式：** 默认 squash merge，PR 描述即 squash message
+
+> ⚠️ 不要在修改完代码后等待用户确认是否提交。这是 Git 项目，修改即提交、提交即 PR，一步到位。
