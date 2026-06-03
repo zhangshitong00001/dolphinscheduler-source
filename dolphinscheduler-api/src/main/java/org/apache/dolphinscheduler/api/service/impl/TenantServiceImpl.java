@@ -49,6 +49,9 @@ import org.apache.dolphinscheduler.service.storage.StorageOperate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +67,7 @@ import java.util.Set;
  * tenant service impl
  */
 @Service
+@CacheConfig(cacheNames = "tenant")
 public class TenantServiceImpl extends BaseServiceImpl implements TenantService {
 
     private static final Logger logger = LoggerFactory.getLogger(TenantServiceImpl.class);
@@ -236,6 +240,14 @@ public class TenantServiceImpl extends BaseServiceImpl implements TenantService 
     }
 
     /**
+     * Evict tenant cache after mutation.
+     */
+    @CacheEvict(cacheNames = "tenant", allEntries = true)
+    public void evictTenantCache() {
+        // Cache eviction triggered by annotation
+    }
+
+    /**
      * delete tenant
      *
      * @param loginUser login user
@@ -296,6 +308,7 @@ public class TenantServiceImpl extends BaseServiceImpl implements TenantService 
      * @return tenant list
      */
     @Override
+    @Cacheable(key = "'tenantList_' + #loginUser.id")
     public Map<String, Object> queryTenantList(User loginUser) {
 
         Map<String, Object> result = new HashMap<>();

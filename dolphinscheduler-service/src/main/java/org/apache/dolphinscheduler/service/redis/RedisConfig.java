@@ -53,7 +53,7 @@ public class RedisConfig {
     /**
      * Default time-to-live for cache entries: 30 minutes.
      */
-    private static final long DEFAULT_CACHE_TTL_SECONDS = 1800L;
+    public static final long DEFAULT_CACHE_TTL_SECONDS = 1800L;
 
     /**
      * TTL for session cache: 10 minutes (matches session timeout).
@@ -64,6 +64,21 @@ public class RedisConfig {
      * TTL for metadata cache: 5 minutes.
      */
     private static final long METADATA_CACHE_TTL_SECONDS = 300L;
+
+    /**
+     * TTL for project cache: 10 minutes (projects change infrequently).
+     */
+    private static final long PROJECT_CACHE_TTL_SECONDS = 600L;
+
+    /**
+     * TTL for alert plugin cache: 10 minutes.
+     */
+    private static final long ALERT_PLUGIN_CACHE_TTL_SECONDS = 600L;
+
+    /**
+     * TTL for data quality cache: 5 minutes.
+     */
+    private static final long DATA_QUALITY_CACHE_TTL_SECONDS = 300L;
 
     /**
      * Creates a RedisTemplate with Jackson2Json serialization support.
@@ -136,6 +151,13 @@ public class RedisConfig {
         cacheConfigurations.put("taskDefinition", defaultConfig.entryTtl(Duration.ofSeconds(DEFAULT_CACHE_TTL_SECONDS)));
         cacheConfigurations.put("workerGroup", defaultConfig.entryTtl(Duration.ofSeconds(DEFAULT_CACHE_TTL_SECONDS)));
         cacheConfigurations.put("schedule", defaultConfig.entryTtl(Duration.ofSeconds(DEFAULT_CACHE_TTL_SECONDS)));
+        cacheConfigurations.put("project", defaultConfig.entryTtl(Duration.ofSeconds(PROJECT_CACHE_TTL_SECONDS)));
+        cacheConfigurations.put("environment", defaultConfig.entryTtl(Duration.ofSeconds(DEFAULT_CACHE_TTL_SECONDS)));
+        cacheConfigurations.put("datasource", defaultConfig.entryTtl(Duration.ofSeconds(DEFAULT_CACHE_TTL_SECONDS)));
+        cacheConfigurations.put("cluster", defaultConfig.entryTtl(Duration.ofSeconds(DEFAULT_CACHE_TTL_SECONDS)));
+        cacheConfigurations.put("k8sNamespace", defaultConfig.entryTtl(Duration.ofSeconds(DEFAULT_CACHE_TTL_SECONDS)));
+        cacheConfigurations.put("alertPluginInstance", defaultConfig.entryTtl(Duration.ofSeconds(ALERT_PLUGIN_CACHE_TTL_SECONDS)));
+        cacheConfigurations.put("dataQuality", defaultConfig.entryTtl(Duration.ofSeconds(DATA_QUALITY_CACHE_TTL_SECONDS)));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(defaultConfig)

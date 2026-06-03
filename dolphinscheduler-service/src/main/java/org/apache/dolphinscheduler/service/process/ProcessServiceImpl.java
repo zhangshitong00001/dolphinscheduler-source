@@ -142,6 +142,9 @@ import org.apache.dolphinscheduler.spi.enums.ResourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -167,6 +170,7 @@ import java.util.stream.Collectors;
  * process relative dao that some mappers in this.
  */
 @Component
+@CacheConfig(cacheNames = "processDefinition")
 public class ProcessServiceImpl implements ProcessService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -526,6 +530,7 @@ public class ProcessServiceImpl implements ProcessService {
      * @return process definition
      */
     @Override
+    @Cacheable(key = "#processDefinitionId")
     public ProcessDefinition findProcessDefineById(int processDefinitionId) {
         return processDefineMapper.selectById(processDefinitionId);
     }
@@ -555,6 +560,7 @@ public class ProcessServiceImpl implements ProcessService {
      * @return process definition
      */
     @Override
+    @Cacheable(key = "#processDefinitionCode")
     public ProcessDefinition findProcessDefinitionByCode(Long processDefinitionCode) {
         return processDefineMapper.queryByCode(processDefinitionCode);
     }
@@ -879,6 +885,7 @@ public class ProcessServiceImpl implements ProcessService {
      * @return Environment
      */
     @Override
+    @Cacheable(cacheNames = "environment", key = "#environmentCode")
     public Environment findEnvironmentByCode(Long environmentCode) {
         Environment environment = null;
         if (environmentCode >= 0) {
@@ -2356,6 +2363,7 @@ public class ProcessServiceImpl implements ProcessService {
      * @return User
      */
     @Override
+    @Cacheable(cacheNames = "user", key = "#userId")
     public User getUserById(int userId) {
         return userMapper.selectById(userId);
     }
@@ -2367,6 +2375,7 @@ public class ProcessServiceImpl implements ProcessService {
      * @return Resource
      */
     @Override
+    @Cacheable(cacheNames = "user", key = "'resource_' + #resourceId")
     public Resource getResourceById(int resourceId) {
         return resourceMapper.selectById(resourceId);
     }

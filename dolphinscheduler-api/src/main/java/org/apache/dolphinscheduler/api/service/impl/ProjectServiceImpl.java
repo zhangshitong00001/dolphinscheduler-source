@@ -61,6 +61,9 @@ import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,6 +74,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
  * project service impl
  **/
 @Service
+@CacheConfig(cacheNames = "project")
 public class ProjectServiceImpl extends BaseServiceImpl implements ProjectService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectServiceImpl.class);
@@ -146,6 +150,14 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
     }
 
     /**
+     * query project details by name (cached)
+     */
+    @Cacheable(cacheNames = "project", key = "'byName_' + #projectName", unless = "#result == null")
+    public Project getProjectByName(String projectName) {
+        return projectMapper.queryByName(projectName);
+    }
+
+    /**
      * check project description
      *
      * @param result
@@ -167,6 +179,7 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
      * @return project detail information
      */
     @Override
+    @Cacheable(key = "#projectCode", unless = "#result.data == null")
     public Result queryByCode(User loginUser, long projectCode) {
         Result result = new Result();
         Project project = projectMapper.queryByCode(projectCode);
@@ -396,6 +409,14 @@ public class ProjectServiceImpl extends BaseServiceImpl implements ProjectServic
             putMsg(result, Status.UPDATE_PROJECT_ERROR);
         }
         return result;
+    }
+
+    /**
+     * Evict project cache after update.
+     */
+    @CacheEvict(cacheNames = "project", key = "#projectCode")
+    public void evictProjectCache(Long projectCode) {
+        // Cache eviction triggered by annotation
     }
 
     /**
