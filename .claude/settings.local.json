@@ -1,47 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "Read(//workspace/**)",
-      "Bash(ls -la .git)",
-      "Bash(git *)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
-      "Bash(git push *)",
-      "Bash(git status)",
-      "Bash(git diff *)",
-      "Bash(git log *)",
-      "Bash(git restore *)",
-      "Bash(git branch *)",
-      "Bash(git checkout *)",
-      "Bash(git merge *)",
-      "Bash(git rebase *)",
-      "Bash(mvn *)",
-      "Bash(java *)",
-      "Bash(cd *)",
-      "Bash(cat *)",
+      "Bash(*)",
+      "Bash(curl *)",
+      "Bash(PGPASSWORD=Qq981997@ psql *)",
+      "Bash(DB_PASSWORD=Qq981997@ DATABASE_URL=\"postgresql+psycopg2://zhangshitong:Qq981997%40@127.0.0.1:5432/logistics_db\" nohup python3 *)",
       "Bash(echo *)",
-      "Bash(type *)",
-      "Bash(find *)",
-      "Bash(grep *)",
-      "Bash(mkdir *)",
-      "Bash(rm *)",
-      "Bash(cp *)",
-      "Bash(mv *)",
-      "Bash(echo test *)",
-      "Bash(python3 *)"
-    ]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write(*.java)",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if command -v java &>/dev/null; then javac -version 2>/dev/null; fi"
-          }
-        ]
-      }
+      "Bash(pkill *)",
+      "Bash(kill 994112 *)",
+      "Bash(python3 *)",
+      "Bash(pip list *)",
+      "Bash(pip3 list *)",
+      "Bash(xargs -I{} basename {} .py)",
+      "Bash(xargs cat)",
+      "Bash(kill 532469)",
+      "Bash(/root/Hermes-Agent/.venv/bin/python3 -c \"import openpyxl; print\\('openpyxl available'\\)\")",
+      "Bash(npx vite *)",
+      "Write(**/*)",
+      "Edit(**/*)",
+      "Read(**/*)",
+      "Bash(cd /)",
+      "Bash(PYTHONPATH=/ python3 -c ' *)"
     ]
   }
 }

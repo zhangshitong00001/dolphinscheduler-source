@@ -17,17 +17,20 @@
 
 package org.apache.dolphinscheduler.api.metadata;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,13 +40,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Implementation of MetadataService for Hive Metastore.
+ * Implementation of MetadataService for Hive Metastore metadata management.
  * <p>
  * Uses JDBC to connect to Hive Metastore (via HiveServer2 or direct Metastore DB).
- * Results are cached in Redis with a 5-minute TTL to reduce Metastore load.
+ * Results are cached in Redis via Spring {@link Cacheable} annotation with a 5-minute TTL,
+ * reducing load on Hive Metastore and improving response times for repeated queries.
+ * <p>
+ * Cache configuration is defined in {@link org.apache.dolphinscheduler.service.redis.RedisConfig}
+ * under the "metadata" cache namespace with a 300-second TTL.
  */
 @Service
-@CacheConfig(cacheNames = "metadata", keyGenerator = "cacheKeyGenerator")
 public class MetadataServiceImpl implements MetadataService {
 
     private static final Logger logger = LoggerFactory.getLogger(MetadataServiceImpl.class);
@@ -60,31 +66,57 @@ public class MetadataServiceImpl implements MetadataService {
     @Value("${metadata.hive.jdbc.driver:org.apache.hive.jdbc.HiveDriver}")
     private String hiveDriver;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Redis cache key prefix for metadata entries.
+     */
     private static final String METADATA_CACHE_PREFIX = "dolphinscheduler:metadata:";
+
+    /**
+     * Cache TTL for metadata entries: 5 minutes (300 seconds).
+     */
     private static final long METADATA_CACHE_TTL_SECONDS = 300L;
 
+    /**
+     * Jackson TypeReference for deserializing HiveDatabase list from JSON.
+     */
+    private static final TypeReference<List<HiveDatabase>> DATABASE_LIST_TYPE =
+            new TypeReference<List<HiveDatabase>>() {};
+
+    /**
+     * Jackson TypeReference for deserializing HiveTable list from JSON.
+     */
+    private static final TypeReference<List<HiveTable>> TABLE_LIST_TYPE =
+            new TypeReference<List<HiveTable>>() {};
+
+    /**
+     * Jackson TypeReference for deserializing HiveColumn list from JSON.
+     */
+    private static final TypeReference<List<HiveColumn>> COLUMN_LIST_TYPE =
+            new TypeReference<List<HiveColumn>>() {};
+
     @Override
-    @Cacheable(key = "databases", unless = "#result == null or #result.isEmpty()")
+    @Cacheable(value = "metadata", key = "'dolphinscheduler:metadata:databases'",
+            unless = "#result == null or #result.isEmpty()")
     public List<HiveDatabase> getDatabases() throws SQLException {
-        String cacheKey = METADATA_CACHE_PREFIX + "databases";
-        String cached = stringRedisTemplate.opsForValue().get(cacheKey);
-        if (cached != null) {
-            logger.debug("Returning cached databases list");
-            return parseDatabaseList(cached);
-        }
+        logger.debug("Fetching databases from Hive Metastore (cache miss)");
         List<HiveDatabase> databases = new ArrayList<>();
-        try (Connection conn = getConnection();
-             ResultSet rs = conn.getMetaData().getCatalogs()) {
-            while (rs.next()) {
-                String dbName = rs.getString("TABLE_CAT");
-                if (dbName != null && !dbName.isEmpty()) {
-                    databases.add(new HiveDatabase(dbName, ""));
+
+        // Attempt to retrieve via JDBC metadata API (catalogs)
+        try (Connection conn = getConnection()) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            try (ResultSet rs = metaData.getCatalogs()) {
+                while (rs.next()) {
+                    String dbName = rs.getString("TABLE_CAT");
+                    if (dbName != null && !dbName.isEmpty()) {
+                        databases.add(new HiveDatabase(dbName, ""));
+                    }
                 }
             }
         }
+
+        // Fallback: if catalogs returned empty, use SHOW DATABASES (Hive-specific)
         if (databases.isEmpty()) {
             try (Connection conn = getConnection();
                  Statement stmt = conn.createStatement();
@@ -94,22 +126,18 @@ public class MetadataServiceImpl implements MetadataService {
                 }
             }
         }
-        stringRedisTemplate.opsForValue().set(cacheKey, serializeDatabaseList(databases),
-                METADATA_CACHE_TTL_SECONDS, TimeUnit.SECONDS);
+
         logger.info("Retrieved {} databases from Hive Metastore", databases.size());
         return databases;
     }
 
     @Override
-    @Cacheable(key = "tables_ + #databaseName", unless = "#result == null or #result.isEmpty()")
+    @Cacheable(value = "metadata", key = "'dolphinscheduler:metadata:tables:' + #databaseName",
+            unless = "#result == null or #result.isEmpty()")
     public List<HiveTable> getTables(String databaseName) throws SQLException {
-        String cacheKey = METADATA_CACHE_PREFIX + "tables:" + databaseName;
-        String cached = stringRedisTemplate.opsForValue().get(cacheKey);
-        if (cached != null) {
-            logger.debug("Returning cached tables for database: {}", databaseName);
-            return parseTableList(cached);
-        }
+        logger.debug("Fetching tables for database '{}' from Hive Metastore (cache miss)", databaseName);
         List<HiveTable> tables = new ArrayList<>();
+
         String sql = "SHOW TABLES IN " + databaseName;
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
@@ -119,6 +147,8 @@ public class MetadataServiceImpl implements MetadataService {
                 tables.add(new HiveTable(tableName, databaseName, ""));
             }
         }
+
+        // Enrich each table with its comment from JDBC metadata
         for (HiveTable table : tables) {
             try (Connection conn = getConnection();
                  ResultSet rs = conn.getMetaData().getTables(databaseName, null, table.getName(), null)) {
@@ -127,22 +157,18 @@ public class MetadataServiceImpl implements MetadataService {
                 }
             }
         }
-        stringRedisTemplate.opsForValue().set(cacheKey, serializeTableList(tables),
-                METADATA_CACHE_TTL_SECONDS, TimeUnit.SECONDS);
+
         logger.info("Retrieved {} tables from database: {}", tables.size(), databaseName);
         return tables;
     }
 
     @Override
-    @Cacheable(key = "columns_ + #databaseName + _ + #tableName", unless = "#result == null or #result.isEmpty()")
+    @Cacheable(value = "metadata", key = "'dolphinscheduler:metadata:columns:' + #databaseName + ':' + #tableName",
+            unless = "#result == null or #result.isEmpty()")
     public List<HiveColumn> getColumns(String databaseName, String tableName) throws SQLException {
-        String cacheKey = METADATA_CACHE_PREFIX + "columns:" + databaseName + ":" + tableName;
-        String cached = stringRedisTemplate.opsForValue().get(cacheKey);
-        if (cached != null) {
-            logger.debug("Returning cached columns for: {}.{}", databaseName, tableName);
-            return parseColumnList(cached);
-        }
+        logger.debug("Fetching columns for {}.{} from Hive Metastore (cache miss)", databaseName, tableName);
         List<HiveColumn> columns = new ArrayList<>();
+
         try (Connection conn = getConnection();
              ResultSet rs = conn.getMetaData().getColumns(databaseName, null, tableName, null)) {
             while (rs.next()) {
@@ -152,14 +178,14 @@ public class MetadataServiceImpl implements MetadataService {
                 columns.add(new HiveColumn(colName, colType, colComment));
             }
         }
-        stringRedisTemplate.opsForValue().set(cacheKey, serializeColumnList(columns),
-                METADATA_CACHE_TTL_SECONDS, TimeUnit.SECONDS);
+
         logger.info("Retrieved {} columns from: {}.{}", columns.size(), databaseName, tableName);
         return columns;
     }
 
     @Override
     public List<HiveTable> searchTables(String keyword) throws SQLException {
+        logger.debug("Searching tables with keyword: {}", keyword);
         List<HiveTable> results = new ArrayList<>();
         List<HiveDatabase> databases = getDatabases();
         for (HiveDatabase db : databases) {
@@ -172,7 +198,7 @@ public class MetadataServiceImpl implements MetadataService {
                 }
             }
         }
-        logger.info("Search for {} returned {} results", keyword, results.size());
+        logger.info("Search for '{}' returned {} results", keyword, results.size());
         return results;
     }
 
@@ -188,11 +214,21 @@ public class MetadataServiceImpl implements MetadataService {
         }
     }
 
-    @CacheEvict(allEntries = true)
+    /**
+     * Clears all metadata cache entries from Redis.
+     * Typically called after schema changes in Hive to force a refresh.
+     */
+    @CacheEvict(value = "metadata", allEntries = true)
     public void clearCache() {
-        logger.info("Metadata cache cleared");
+        logger.info("Metadata cache cleared successfully");
     }
 
+    /**
+     * Establishes a JDBC connection to Hive Metastore (or HiveServer2).
+     *
+     * @return a JDBC connection
+     * @throws SQLException if connection fails
+     */
     private Connection getConnection() throws SQLException {
         try {
             Class.forName(hiveDriver);
@@ -200,61 +236,5 @@ public class MetadataServiceImpl implements MetadataService {
             throw new SQLException("Hive JDBC driver not found: " + hiveDriver, e);
         }
         return DriverManager.getConnection(hiveJdbcUrl, hiveUser, hivePassword);
-    }
-
-    private String serializeDatabaseList(List<HiveDatabase> databases) {
-        StringBuilder sb = new StringBuilder();
-        for (HiveDatabase db : databases) {
-            sb.append(db.getName()).append("|").append(db.getComment() != null ? db.getComment() : "").append("\n");
-        }
-        return sb.toString();
-    }
-
-    private List<HiveDatabase> parseDatabaseList(String data) {
-        List<HiveDatabase> result = new ArrayList<>();
-        for (String line : data.split("\n")) {
-            if (line.isEmpty()) continue;
-            String[] parts = line.split("\\|", 2);
-            result.add(new HiveDatabase(parts[0], parts.length > 1 ? parts[1] : ""));
-        }
-        return result;
-    }
-
-    private String serializeTableList(List<HiveTable> tables) {
-        StringBuilder sb = new StringBuilder();
-        for (HiveTable t : tables) {
-            sb.append(t.getName()).append("|").append(t.getDatabase()).append("|")
-              .append(t.getComment() != null ? t.getComment() : "").append("\n");
-        }
-        return sb.toString();
-    }
-
-    private List<HiveTable> parseTableList(String data) {
-        List<HiveTable> result = new ArrayList<>();
-        for (String line : data.split("\n")) {
-            if (line.isEmpty()) continue;
-            String[] parts = line.split("\\|", 3);
-            result.add(new HiveTable(parts[0], parts[1], parts.length > 2 ? parts[2] : ""));
-        }
-        return result;
-    }
-
-    private String serializeColumnList(List<HiveColumn> columns) {
-        StringBuilder sb = new StringBuilder();
-        for (HiveColumn c : columns) {
-            sb.append(c.getName()).append("|").append(c.getType()).append("|")
-              .append(c.getComment() != null ? c.getComment() : "").append("\n");
-        }
-        return sb.toString();
-    }
-
-    private List<HiveColumn> parseColumnList(String data) {
-        List<HiveColumn> result = new ArrayList<>();
-        for (String line : data.split("\n")) {
-            if (line.isEmpty()) continue;
-            String[] parts = line.split("\\|", 3);
-            result.add(new HiveColumn(parts[0], parts[1], parts.length > 2 ? parts[2] : ""));
-        }
-        return result;
     }
 }
