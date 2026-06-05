@@ -23,70 +23,74 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * alert plugin instance service
+ * 告警插件实例服务接口。提供告警插件实例的CRUD操作，用于管理各告警渠道（邮件、短信等）的配置实例。
+ * 同一个告警插件可创建多个不同配置的实例。
  */
 public interface AlertPluginInstanceService {
 
     /**
-     * creat alert plugin instance
+     * 创建告警插件实例。
      *
-     * @param loginUser login user
-     * @param pluginDefineId plugin define id
-     * @param instanceName instance name
-     * @param pluginInstanceParams plugin instance params
-     * @return result
+     * @param loginUser            登录用户
+     * @param pluginDefineId       插件定义ID
+     * @param instanceName         实例名称
+     * @param pluginInstanceParams 插件实例参数
+     * @return 创建结果
      */
     Map<String, Object> create(User loginUser,int pluginDefineId,String instanceName,String pluginInstanceParams);
 
     /**
-     * update
-     * @param loginUser login user
-     * @param alertPluginInstanceId plugin instance id
-     * @param instanceName instance name
-     * @param pluginInstanceParams plugin instance params
-     * @return result
+     * 更新告警插件实例。
+     *
+     * @param loginUser              登录用户
+     * @param alertPluginInstanceId  插件实例ID
+     * @param instanceName           实例名称
+     * @param pluginInstanceParams   插件实例参数
+     * @return 更新结果
      */
     Map<String, Object> update(User loginUser, int alertPluginInstanceId,String instanceName,String pluginInstanceParams);
 
     /**
-     * delete alert plugin instance
+     * 删除告警插件实例。
      *
-     * @param loginUser login user
-     * @param id id
-     * @return result
+     * @param loginUser 登录用户
+     * @param id        实例ID
+     * @return 删除结果
      */
     Map<String, Object> delete(User loginUser, int id);
 
     /**
-     * get alert plugin instance
+     * 根据ID获取告警插件实例。
      *
-     * @param loginUser login user
-     * @param id get id
-     * @return alert plugin
+     * @param loginUser 登录用户
+     * @param id        实例ID
+     * @return 实例信息
      */
     Map<String, Object> get(User loginUser, int id);
 
     /**
-     * queryAll
+     * 查询所有告警插件实例。
      *
-     * @return alert plugins
+     * @return 所有实例列表
      */
     Map<String, Object> queryAll();
 
     /**
-     * checkExistPluginInstanceName
-     * @param pluginName plugin name
-     * @return isExist
+     * 检查插件实例名称是否已存在。
+     *
+     * @param pluginName 插件实例名称
+     * @return 存在返回true，否则返回false
      */
     boolean checkExistPluginInstanceName(String pluginName);
 
     /**
-     * queryPluginPage
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo    page index
-     * @param pageSize  page size
-     * @return plugins
+     * 分页查询告警插件实例。
+     *
+     * @param loginUser 登录用户
+     * @param searchVal 搜索关键字
+     * @param pageNo    页码
+     * @param pageSize  每页大小
+     * @return 分页查询结果
      */
     Result listPaging(User loginUser, String searchVal, int pageNo, int pageSize);
 }

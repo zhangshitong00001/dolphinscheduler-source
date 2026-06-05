@@ -22,12 +22,14 @@ import org.apache.dolphinscheduler.dao.entity.MonitorRecord;
 import java.sql.Connection;
 
 /**
- * db performance abstract class
+ * 数据库性能采集抽象类，定义获取当前数据库性能指标的模板方法。
+ * 各数据库类型（MySQL、PostgreSQL、H2）需实现各自的性能采集逻辑。
  */
 public abstract class BaseDBPerformance {
 
     /**
-     * return the current database performance
+     * 获取当前数据库的性能指标记录。
+     *
      * @param conn connection
      * @return MonitorRecord
      */

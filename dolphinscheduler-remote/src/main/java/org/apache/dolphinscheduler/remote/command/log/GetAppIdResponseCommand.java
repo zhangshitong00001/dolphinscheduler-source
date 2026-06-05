@@ -27,11 +27,15 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 获取AppId响应命令。封装Worker返回的YARN应用程序ID列表，用于日志查询和关联。
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAppIdResponseCommand implements Serializable {
 
+    /** 应用程序ID列表 */
     private List<String> appIds;
 
     public Command convert2Command(long opaque) {

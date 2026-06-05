@@ -22,24 +22,17 @@ import org.apache.dolphinscheduler.common.enums.CycleEnum;
 import java.util.Date;
 
 /**
- * cycle dependency
+ * 周期依赖实体，用于表示工作流之间基于时间周期的依赖关系。
+ * 非数据库表映射，在依赖任务解析过程中使用，用于判断上游工作流的调度周期与当前任务的时间依赖关系。
  */
 public class CycleDependency {
-    /**
-     * process define id
-     */
+    /** 工作流定义 ID，关联的上游工作流 */
     private int processDefineId;
-    /**
-     * last schedule time
-     */
+    /** 上游工作流最后一次调度时间 */
     private Date lastScheduleTime;
-    /**
-     * expiration time
-     */
+    /** 依赖过期时间，超过该时间的依赖关系视为无效 */
     private Date expirationTime;
-    /**
-     * cycle enum
-     */
+    /** 周期枚举，表示时间周期单位（小时、天、周、月、年等） */
     private CycleEnum cycleEnum;
 
     public CycleDependency(int processDefineId, Date lastScheduleTime, Date expirationTime, CycleEnum cycleEnum) {

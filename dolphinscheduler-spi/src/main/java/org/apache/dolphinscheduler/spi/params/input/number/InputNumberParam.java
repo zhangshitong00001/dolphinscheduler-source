@@ -26,7 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * front-end input number component
+ * 前端数字输入框组件参数类，继承自 {@link PluginParams}。
+ * <p>
+ * 用于在前端动态表单中渲染数字输入框（inputNumber）组件，
+ * 支持设置最小值、最大值、步长、精度和控件位置等属性。
  */
 public class InputNumberParam extends PluginParams {
 
@@ -34,6 +37,7 @@ public class InputNumberParam extends PluginParams {
         super(builder);
     }
 
+    /** 数字输入框组件专属属性 */
     private InputNumberParamProps props;
 
     public static Builder newBuilder(String name, String title) {

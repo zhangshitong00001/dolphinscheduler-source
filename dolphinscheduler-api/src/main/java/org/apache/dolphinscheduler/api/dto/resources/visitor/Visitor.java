@@ -20,12 +20,12 @@ package org.apache.dolphinscheduler.api.dto.resources.visitor;
 import org.apache.dolphinscheduler.api.dto.resources.ResourceComponent;
 
 /**
- * Visitor
+ * 访问者接口。定义资源树访问的标准接口，实现类负责构建资源树形结构。
  */
 public interface Visitor {
     /**
-     * visit
-     * @return resource component
+     * 执行访问操作，构建资源组件树
+     * @return 根资源组件
      */
     ResourceComponent visit();
 }

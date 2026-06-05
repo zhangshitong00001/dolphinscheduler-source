@@ -22,33 +22,33 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
- *  command header
+ * 命令头部信息。定义Netty远程通信协议的数据包头部结构，包含命令类型、请求唯一标识（opaque）、上下文长度与内容、消息体长度，用于解码器按协议逐字段解析。
  */
 @Data
 public class CommandHeader implements Serializable {
 
     /**
-     * type
+     * 命令类型
      */
     private byte type;
 
     /**
-     * request unique identification
+     * 请求唯一标识，用于关联请求与响应
      */
     private long opaque;
 
     /**
-     * context length
+     * 上下文数据的字节长度
      */
     private int contextLength;
 
     /**
-     * context
+     * 上下文数据的字节数组
      */
     private byte[] context;
 
     /**
-     *  body length
+     * 消息体的字节长度
      */
     private int bodyLength;
 

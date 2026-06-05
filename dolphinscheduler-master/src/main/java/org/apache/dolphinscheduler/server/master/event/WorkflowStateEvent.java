@@ -22,6 +22,9 @@ import lombok.*;
 import org.apache.dolphinscheduler.common.enums.StateEventType;
 import org.apache.dolphinscheduler.common.enums.WorkflowExecutionStatus;
 
+/**
+ * 工作流状态事件。封装工作流实例的状态变化信息，包含目标执行状态和关联流程实例 ID，用于驱动工作流级别的状态流转。
+ */
 @Data
 @Builder
 @AllArgsConstructor

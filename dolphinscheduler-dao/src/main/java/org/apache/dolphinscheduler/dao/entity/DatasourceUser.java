@@ -25,37 +25,29 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 数据源-用户关联实体，映射到 t_ds_relation_datasource_user 表，表示数据源与用户之间的授权关系。
+ * 通过此关联表实现数据源级别的权限控制，指定哪些用户可以访问特定的数据源。
+ */
 @Data
 @TableName("t_ds_relation_datasource_user")
 public class DatasourceUser {
 
-    /**
-     * id
-     */
+    /** 关联关系主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * user id
-     */
+    /** 用户 ID，对应 t_ds_user 表的 id */
     private int userId;
 
-    /**
-     * data source id
-     */
+    /** 数据源 ID，对应 t_ds_datasource 表的 id */
     private int datasourceId;
 
-    /**
-     * permission
-     */
+    /** 权限编码，控制用户对数据源的访问级别（如只读、读写等） */
     private int perm;
-    /**
-     * create time
-     */
+    /** 授权创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 最后更新时间 */
     private Date updateTime;
 }

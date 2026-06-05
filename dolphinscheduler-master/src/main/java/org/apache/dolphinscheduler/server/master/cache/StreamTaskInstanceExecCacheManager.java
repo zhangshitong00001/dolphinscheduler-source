@@ -25,28 +25,45 @@ import java.util.Collection;
 import lombok.NonNull;
 
 /**
- * cache of stream task instance
+ * 流式任务实例执行缓存管理器接口。定义流式任务实例 ID 与 StreamTaskExecuteRunnable 的缓存操作。
  */
 public interface StreamTaskInstanceExecCacheManager {
 
+    /**
+     * 根据任务实例 ID 获取 StreamTaskExecuteRunnable。
+     *
+     * @param taskInstanceId 任务实例 ID
+     * @return StreamTaskExecuteRunnable
+     */
     StreamTaskExecuteRunnable getByTaskInstanceId(int taskInstanceId);
 
+    /**
+     * 判断任务实例是否存在于缓存中。
+     *
+     * @param taskInstanceId 任务实例 ID
+     * @return true 表示任务实例 ID 存在于缓存中
+     */
     boolean contains(int taskInstanceId);
 
+    /**
+     * 根据任务实例 ID 移除缓存。
+     *
+     * @param taskInstanceId 任务实例 ID
+     */
     void removeByTaskInstanceId(int taskInstanceId);
 
     /**
-     * cache
+     * 缓存任务实例与 StreamTaskExecuteRunnable 的映射。
      *
-     * @param taskInstanceId     taskInstanceId
-     * @param streamTaskExecuteRunnable if it is null, will not be cached
+     * @param taskInstanceId             任务实例 ID
+     * @param streamTaskExecuteRunnable 若为 null，则不会被缓存
      */
     void cache(int taskInstanceId, @NonNull StreamTaskExecuteRunnable streamTaskExecuteRunnable);
 
     /**
-     * get all streamTaskExecuteRunnable from cache
+     * 获取缓存中所有的 StreamTaskExecuteRunnable。
      *
-     * @return all streamTaskExecuteRunnable in cache
+     * @return 缓存中所有的 StreamTaskExecuteRunnable
      */
     Collection<StreamTaskExecuteRunnable> getAll();
 }

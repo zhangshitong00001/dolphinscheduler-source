@@ -49,11 +49,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
- * Check thread
- * 1. timeout task check
- * 2. dependent task state check
- * 3. retry task check
- * 4. timeout process check
+ * 状态轮询线程，负责对任务实例和工作流实例进行定时状态检查。
+ * 管理四种检查列表：任务超时检查、任务重试检查、任务状态检查（用于依赖和子流程）、工作流超时检查。
+ * 采用轮询机制，按配置的时间间隔循环扫描各检查列表并触发相应的状态事件。
  */
 @Component
 public class StateWheelExecuteThread extends BaseDaemonThread {
@@ -61,22 +59,22 @@ public class StateWheelExecuteThread extends BaseDaemonThread {
     private static final Logger logger = LoggerFactory.getLogger(StateWheelExecuteThread.class);
 
     /**
-     * ProcessInstance timeout check list, element is the processInstanceId.
+     * 工作流实例超时检查列表，元素为 processInstanceId。
      */
     private final ConcurrentLinkedQueue<Integer> processInstanceTimeoutCheckList = new ConcurrentLinkedQueue<>();
 
     /**
-     * task time out check list
+     * 任务超时检查列表。
      */
     private final ConcurrentLinkedQueue<TaskInstanceKey> taskInstanceTimeoutCheckList = new ConcurrentLinkedQueue<>();
 
     /**
-     * task retry check list
+     * 任务重试检查列表。
      */
     private final ConcurrentLinkedQueue<TaskInstanceKey> taskInstanceRetryCheckList = new ConcurrentLinkedQueue<>();
 
     /**
-     * task state check list
+     * 任务状态检查列表（用于依赖任务和子流程任务的状态轮询）。
      */
     private final ConcurrentLinkedQueue<TaskInstanceKey> taskInstanceStateCheckList = new ConcurrentLinkedQueue<>();
 
@@ -121,11 +119,21 @@ public class StateWheelExecuteThread extends BaseDaemonThread {
         }
     }
 
+    /**
+     * 将工作流实例添加到超时检查列表中。
+     *
+     * @param processInstance 工作流实例
+     */
     public void addProcess4TimeoutCheck(ProcessInstance processInstance) {
         processInstanceTimeoutCheckList.add(processInstance.getId());
         logger.info("Success add workflow instance {} into timeout check list", processInstance.getId());
     }
 
+    /**
+     * 从超时检查列表中移除工作流实例。
+     *
+     * @param processInstanceId 工作流实例 ID
+     */
     public void removeProcess4TimeoutCheck(int processInstanceId) {
         boolean removeFlag = processInstanceTimeoutCheckList.remove(processInstanceId);
         if (removeFlag) {
@@ -170,6 +178,12 @@ public class StateWheelExecuteThread extends BaseDaemonThread {
         }
     }
 
+    /**
+     * 将任务实例添加到超时检查列表中。仅当任务定义的超时标志为开启状态时才添加。
+     *
+     * @param processInstance 所属工作流实例
+     * @param taskInstance    任务实例
+     */
     public void addTask4TimeoutCheck(@NonNull ProcessInstance processInstance, @NonNull TaskInstance taskInstance) {
         TaskInstanceKey taskInstanceKey = TaskInstanceKey.getTaskInstanceKey(processInstance, taskInstance);
         logger.info("Adding task instance into timeout check list");

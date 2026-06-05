@@ -30,6 +30,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 工作流执行控制器。提供查询内存中工作流执行数据的 REST API。
+ */
 @RestController
 @RequestMapping("/workflow/execute")
 public class WorkflowExecuteController {
@@ -38,9 +41,9 @@ public class WorkflowExecuteController {
     private ExecutingService executingService;
 
     /**
-     * query workflow execute data in memory
-     * @param processInstanceId
-     * @return
+     * 查询内存中的工作流执行数据。
+     * @param processInstanceId 流程实例 ID
+     * @return WorkflowExecuteDto
      */
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)

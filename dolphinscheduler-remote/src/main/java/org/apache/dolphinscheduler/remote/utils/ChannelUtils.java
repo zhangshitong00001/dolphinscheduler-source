@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import io.netty.channel.Channel;
 
 /**
- * channel utils
+ * 通道工具类。提供从Netty Channel中提取本地地址、远程地址和Host信息的方法。
  */
 public class ChannelUtils {
 
@@ -38,7 +38,7 @@ public class ChannelUtils {
     }
 
     /**
-     * get local address
+     * 获取通道的本地地址。
      *
      * @param channel channel
      * @return local address
@@ -48,7 +48,7 @@ public class ChannelUtils {
     }
 
     /**
-     * get remote address
+     * 获取通道的远程地址。
      *
      * @param channel channel
      * @return remote address
@@ -58,7 +58,7 @@ public class ChannelUtils {
     }
 
     /**
-     * channel to address
+     * 将Netty通道转换为Host地址对象。
      *
      * @param channel channel
      * @return address

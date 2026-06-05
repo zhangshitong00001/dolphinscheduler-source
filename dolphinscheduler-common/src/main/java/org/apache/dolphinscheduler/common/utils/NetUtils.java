@@ -40,7 +40,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * NetUtils
+ * 网络工具类，提供主机地址获取、网络接口选择、IP验证等网络相关操作。
+ * 支持内网/外网优先级策略、IPv4/IPv6地址处理、Kubernetes模式下的主机名获取。
+ * 该类为工具类，不可实例化。
  */
 public class NetUtils {
 
@@ -57,24 +59,32 @@ public class NetUtils {
     }
 
     /**
-     * get addr like host:port
-     * @return addr
+     * 获取格式为 host:port 的地址字符串。
+     *
+     * @param host 主机名
+     * @param port 端口号
+     * @return host:port格式的地址
      */
     public static String getAddr(String host, int port) {
         return String.format("%s:%d", host, port);
     }
 
     /**
-     * get addr like host:port
-     * @return addr
+     * 使用本地主机和指定端口生成 host:port 格式的地址。
+     *
+     * @param port 端口号
+     * @return host:port格式的地址
      */
     public static String getAddr(int port) {
         return getAddr(getHost(), port);
     }
 
     /**
-     * get host
-     * @return host
+     * 从InetAddress中获取主机名或IP地址。
+     * Kubernetes模式下返回规范的Service名称。
+     *
+     * @param inetAddress 网络地址
+     * @return 主机名或IP地址字符串
      */
     public static String getHost(InetAddress inetAddress) {
         if (inetAddress != null) {
@@ -248,9 +258,12 @@ public class NetUtils {
     }
 
     /**
-     * @param networkInterface {@link NetworkInterface}
-     * @return if the specified {@link NetworkInterface} should be ignored, return <code>true</code>
-     * @throws SocketException SocketException if an I/O error occurs.
+     * 判断指定的网络接口是否应被忽略。
+     * 回环接口、虚拟接口或未启用的接口会被忽略。
+     *
+     * @param networkInterface 网络接口
+     * @return 如果该接口应被忽略返回true
+     * @throws SocketException 如果发生I/O错误
      */
     public static boolean ignoreNetworkInterface(NetworkInterface networkInterface) throws SocketException {
         return networkInterface == null

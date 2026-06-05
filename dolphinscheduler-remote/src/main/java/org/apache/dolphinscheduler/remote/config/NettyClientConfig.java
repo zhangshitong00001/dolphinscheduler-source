@@ -23,6 +23,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.dolphinscheduler.remote.utils.Constants;
 
+/**
+ * Netty客户端配置类。配置Netty客户端的连接参数，包括工作线程数、TCP参数、缓冲区大小和连接超时时间等。
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -30,37 +33,37 @@ import org.apache.dolphinscheduler.remote.utils.Constants;
 public class NettyClientConfig {
 
     /**
-     * worker threads，default get machine cpus
+     * 工作线程数，默认为CPU核心数
      */
     @Builder.Default
     private int workerThreads = Constants.CPUS;
 
     /**
-     * whether tpc delay
+     * 是否启用TCP无延迟（Nagle算法）
      */
     @Builder.Default
     private boolean tcpNoDelay = true;
 
     /**
-     * whether keep alive
+     * 是否启用TCP KeepAlive保活机制
      */
     @Builder.Default
     private boolean soKeepalive = true;
 
     /**
-     * send buffer size
+     * 发送缓冲区大小（字节）
      */
     @Builder.Default
     private int sendBufferSize = 65535;
 
     /**
-     * receive buffer size
+     * 接收缓冲区大小（字节）
      */
     @Builder.Default
     private int receiveBufferSize = 65535;
 
     /**
-     * connect timeout millis
+     * 连接超时时间（毫秒）
      */
     @Builder.Default
     private int connectTimeoutMillis = 3000;

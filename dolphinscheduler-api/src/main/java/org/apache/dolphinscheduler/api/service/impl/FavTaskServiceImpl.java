@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 收藏任务服务实现类。负责用户收藏任务类型的查询、添加和删除，结合默认任务类型配置返回收藏状态。
+ */
 @Service
 public class FavTaskServiceImpl extends BaseServiceImpl implements FavTaskService {
 
@@ -38,6 +41,12 @@ public class FavTaskServiceImpl extends BaseServiceImpl implements FavTaskServic
     @Resource
     private FavTaskMapper favMapper;
 
+    /**
+     * 获取用户的收藏任务列表，包含默认任务类型及其收藏状态。
+     *
+     * @param loginUser 当前登录用户
+     * @return 包含收藏状态的任务类型DTO列表
+     */
     @Override
     public List<FavTaskDto> getFavTaskList(User loginUser) {
         List<FavTaskDto> result = new ArrayList<>();
@@ -53,11 +62,25 @@ public class FavTaskServiceImpl extends BaseServiceImpl implements FavTaskServic
         return result;
     }
 
+    /**
+     * 删除用户对指定任务类型的收藏。
+     *
+     * @param loginUser 当前登录用户
+     * @param taskName 任务类型名称
+     * @return true表示删除成功，false表示删除失败
+     */
     @Override
     public boolean deleteFavTask(User loginUser, String taskName) {
         return favMapper.deleteUserFavTask(loginUser.getId(), taskName);
     }
 
+    /**
+     * 添加用户对指定任务类型的收藏。先删除已有记录再插入新记录，实现幂等操作。
+     *
+     * @param loginUser 当前登录用户
+     * @param taskName 任务类型名称
+     * @return 插入操作影响的行数
+     */
     @Override
     public int addFavTask(User loginUser, String taskName) {
         favMapper.deleteUserFavTask(loginUser.getId(), taskName);

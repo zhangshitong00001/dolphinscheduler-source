@@ -54,7 +54,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * login controller
+ * 登录控制器，提供用户登录与登出 REST API。
  */
 @Api(tags = "LOGIN_TAG")
 @RestController
@@ -68,13 +68,13 @@ public class LoginController extends BaseController {
     private Authenticator authenticator;
 
     /**
-     * login
+     * 用户登录，验证用户名密码并设置会话 Cookie。
      *
-     * @param userName user name
-     * @param userPassword user password
-     * @param request request
-     * @param response response
-     * @return login result
+     * @param userName 用户名
+     * @param userPassword 用户密码
+     * @param request HTTP 请求
+     * @param response HTTP 响应
+     * @return 登录结果
      */
     @ApiOperation(value = "login", notes = "LOGIN_NOTES")
     @ApiImplicitParams({
@@ -118,11 +118,11 @@ public class LoginController extends BaseController {
     }
 
     /**
-     * sign out
+     * 用户登出，清除服务端会话。
      *
-     * @param loginUser login user
-     * @param request request
-     * @return sign out result
+     * @param loginUser 登录用户
+     * @param request HTTP 请求
+     * @return 登出结果
      */
     @ApiOperation(value = "signOut", notes = "SIGNOUT_NOTES")
     @PostMapping(value = "/signOut")

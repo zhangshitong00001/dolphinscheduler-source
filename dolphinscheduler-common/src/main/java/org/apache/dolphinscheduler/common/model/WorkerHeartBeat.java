@@ -22,6 +22,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Worker服务心跳数据模型，包含Worker节点的系统资源、服务状态和线程池信息。
+ * 用于Worker向注册中心上报心跳数据，供Master进行任务分配决策。
+ */
 @Data
 @Builder
 @NoArgsConstructor

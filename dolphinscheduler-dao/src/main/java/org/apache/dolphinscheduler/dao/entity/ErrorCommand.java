@@ -31,94 +31,64 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 错误命令实体，映射到 t_ds_error_command 表，存储执行失败或出错的命令记录。
+ * 当 Master 处理命令过程中发生异常时，会将原始命令信息连同错误信息移入此表，用于故障排查和重试。
+ */
 @Data
 @TableName("t_ds_error_command")
 public class ErrorCommand {
 
-    /**
-     * id
-     */
+    /** 错误命令 ID，直接使用原始 Command 的 id，类型为 INPUT（手动输入，非自增） */
     @TableId(value = "id", type = IdType.INPUT)
     private Integer id;
 
-    /**
-     * command type
-     */
+    /** 命令类型，与原始命令一致 */
     private CommandType commandType;
 
-    /**
-     * process definition code
-     */
+    /** 关联的工作流定义编码 */
     private long processDefinitionCode;
 
-    /**
-     * executor id
-     */
+    /** 执行者用户 ID */
     private int executorId;
 
-    /**
-     * command parameter, format json
-     */
+    /** 命令参数，JSON 格式 */
     private String commandParam;
 
-    /**
-     * task depend type
-     */
+    /** 任务依赖类型 */
     private TaskDependType taskDependType;
 
-    /**
-     * failure strategy
-     */
+    /** 失败策略 */
     private FailureStrategy failureStrategy;
 
-    /**
-     *  warning type
-     */
+    /** 告警通知类型 */
     private WarningType warningType;
 
-    /**
-     * warning group id
-     */
+    /** 告警组 ID */
     private Integer warningGroupId;
 
-    /**
-     * schedule time
-     */
+    /** 计划调度时间 */
     private Date scheduleTime;
 
-    /**
-     * start time
-     */
+    /** 命令开始时间 */
     private Date startTime;
 
-    /**
-     * process instance priority
-     */
+    /** 工作流实例优先级 */
     private Priority processInstancePriority;
 
-    /**
-     * update time
-     */
+    /** 最后更新时间 */
     private Date updateTime;
 
-    /**
-     * 执行信息
-     */
+    /** 错误信息，记录命令执行失败的原因和堆栈信息 */
     private String message;
 
-    /**
-     * worker group
-     */
+    /** 工作组名称 */
     private String workerGroup;
 
-    /**
-     * environment code
-     */
+    /** 环境编码 */
     private Long environmentCode;
 
-    /**
-     * dry run flag
-     */
+    /** 试运行标志 */
     private int dryRun;
 
     public ErrorCommand() {

@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * base service impl
+ * 基础服务实现类。提供权限校验、消息封装、日期参数解析等通用功能，作为其他服务实现类的基类。
  */
 public class BaseServiceImpl implements BaseService {
     private static final Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
@@ -48,6 +48,14 @@ public class BaseServiceImpl implements BaseService {
     @Autowired
     protected ResourcePermissionCheckService resourcePermissionCheckService;
 
+    /**
+     * 权限后置处理，在资源操作完成后关联用户与资源的权限关系。
+     *
+     * @param authorizationType 授权类型
+     * @param userId 用户ID
+     * @param ids 资源ID列表
+     * @param logger 日志记录器
+     */
     @Override
     public void permissionPostHandle(AuthorizationType authorizationType, Integer userId, List<Integer> ids, Logger logger) {
         try{
@@ -59,10 +67,10 @@ public class BaseServiceImpl implements BaseService {
     }
 
     /**
-     * check admin
+     * 检查用户是否为管理员。
      *
-     * @param user input user
-     * @return ture if administrator, otherwise return false
+     * @param user 待检查的用户
+     * @return true表示管理员，false表示非管理员
      */
     @Override
     public boolean isAdmin(User user) {
@@ -70,11 +78,11 @@ public class BaseServiceImpl implements BaseService {
     }
 
     /**
-     * isNotAdmin
+     * 检查用户是否为非管理员，如果非管理员则在结果中设置无权限错误信息。
      *
-     * @param loginUser login user
-     * @param result result code
-     * @return true if not administrator, otherwise false
+     * @param loginUser 登录用户
+     * @param result 结果Map，非管理员时写入错误状态
+     * @return true表示非管理员，false表示管理员
      */
     @Override
     public boolean isNotAdmin(User loginUser, Map<String, Object> result) {
@@ -87,11 +95,11 @@ public class BaseServiceImpl implements BaseService {
     }
 
     /**
-     * put message to map
+     * 将状态消息放入Map结果中。
      *
-     * @param result result code
-     * @param status status
-     * @param statusParams status message
+     * @param result 结果Map
+     * @param status 状态枚举
+     * @param statusParams 状态消息格式化参数
      */
     @Override
     public void putMsg(Map<String, Object> result, Status status, Object... statusParams) {
@@ -104,11 +112,11 @@ public class BaseServiceImpl implements BaseService {
     }
 
     /**
-     * put message to result object
+     * 将状态消息放入Result结果对象中。
      *
-     * @param result result code
-     * @param status status
-     * @param statusParams status message
+     * @param result 结果对象
+     * @param status 状态枚举
+     * @param statusParams 状态消息格式化参数
      */
     @Override
     public void putMsg(Result result, Status status, Object... statusParams) {
@@ -121,12 +129,12 @@ public class BaseServiceImpl implements BaseService {
     }
 
     /**
-     * check
+     * 检查条件并设置无权限结果。如果bool为true则将无操作权限状态放入结果中。
      *
-     * @param result result
-     * @param bool bool
-     * @param userNoOperationPerm status
-     * @return check result
+     * @param result 结果Map
+     * @param bool 检查条件
+     * @param userNoOperationPerm 无操作权限的状态码
+     * @return true表示检查不通过，false表示检查通过
      */
     @Override
     public boolean check(Map<String, Object> result, boolean bool, Status userNoOperationPerm) {
@@ -140,10 +148,10 @@ public class BaseServiceImpl implements BaseService {
     }
 
     /**
-     * create tenant dir if not exists
+     * 创建租户目录（如果不存在）。已废弃的方法，保留以供参考。
      *
-     * @param tenantCode tenant code
-     * @throws IOException if hdfs operation exception
+     * @param tenantCode 租户编码
+     * @throws IOException HDFS操作异常时抛出
      */
 //    @Override
 //    public void createTenantDirIfNotExists(String tenantCode) throws IOException {
@@ -155,10 +163,11 @@ public class BaseServiceImpl implements BaseService {
 //    }
 
     /**
-     * Verify that the operator has permissions
+     * 验证操作用户是否有权限操作目标资源。操作用户为管理员或资源创建者时具有操作权限。
      *
-     * @param operateUser operate user
-     * @param createUserId create user id
+     * @param operateUser 操作用户
+     * @param createUserId 资源创建者用户ID
+     * @return true表示有权限操作，false表示无权限
      */
     @Override
     public boolean canOperator(User operateUser, int createUserId) {
@@ -166,11 +175,13 @@ public class BaseServiceImpl implements BaseService {
     }
 
     /**
-     * Verify that the operator has permissions
-     * @param user operate user
-     * @param ids Object[]
-     * @param type AuthorizationType
-     * @return boolean
+     * 验证用户对指定资源是否有操作权限，同时检查操作权限和资源权限。
+     *
+     * @param user 操作用户
+     * @param ids 资源ID数组
+     * @param type 授权类型
+     * @param permissionKey 权限键
+     * @return true表示有权限，false表示无权限
      */
     @Override
     public boolean canOperatorPermissions(User user, Object[] ids,AuthorizationType type,String permissionKey) {
@@ -180,11 +191,11 @@ public class BaseServiceImpl implements BaseService {
     }
 
     /**
-     * check and parse date parameters
+     * 检查并解析日期参数，将起止日期字符串转换为Date对象并放入结果Map中。
      *
-     * @param startDateStr start date string
-     * @param endDateStr end date string
-     * @return map<status,startDate,endDate>
+     * @param startDateStr 开始日期字符串
+     * @param endDateStr 结束日期字符串
+     * @return 包含STATUS、START_TIME、END_TIME的结果Map
      */
     @Override
     public Map<String, Object> checkAndParseDateParameters(String startDateStr, String endDateStr) {
@@ -213,6 +224,12 @@ public class BaseServiceImpl implements BaseService {
         return result;
     }
 
+    /**
+     * 检查描述文本长度是否超过255个字符（按Unicode码点计算）。
+     *
+     * @param description 描述文本
+     * @return true表示超过长度限制，false表示未超过
+     */
     @Override
     public boolean checkDescriptionLength(String description) {
         return description!=null && description.codePointCount(0, description.length()) > 255;

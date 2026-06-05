@@ -25,7 +25,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * task definition service
+ * 任务定义服务接口。提供任务定义的创建、查询、更新、删除、版本管理以及发布功能。
  */
 public interface TaskDefinitionService {
 

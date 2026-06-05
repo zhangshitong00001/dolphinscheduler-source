@@ -23,11 +23,12 @@ import org.apache.dolphinscheduler.dao.entity.Project;
 import lombok.Data;
 
 /**
- * project update response
+ * 项目更新响应DTO。继承自Result，用于封装更新项目操作的返回结果。
  */
 @Data
 public class ProjectUpdateResponse extends Result {
 
+    /** 更新后的项目数据 */
     private Project data;
 
     public ProjectUpdateResponse(Result result) {

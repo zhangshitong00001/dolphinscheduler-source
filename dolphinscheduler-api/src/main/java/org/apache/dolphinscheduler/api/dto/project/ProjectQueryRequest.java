@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * project query request
+ * 项目查询请求DTO。继承自分页查询基类，用于接收项目搜索和分页查询的请求参数。
  */
 @ApiModel("PROJECT-QUERY")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -35,6 +35,7 @@ import lombok.Data;
 @Data
 public class ProjectQueryRequest extends PageQueryDto {
 
+    /** 搜索关键词 */
     @ApiModelProperty(example = "pro123")
     private String searchVal;
 }

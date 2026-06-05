@@ -17,6 +17,10 @@
 
 package org.apache.dolphinscheduler.common.lifecycle;
 
+/**
+ * 服务生命周期异常，当服务状态转换失败时抛出。
+ * 例如：尝试将已停止的服务切换到等待状态时将抛出此异常。
+ */
 public class ServerLifeCycleException extends Exception {
 
     public ServerLifeCycleException(String message) {

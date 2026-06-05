@@ -35,16 +35,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 数据库监控数据访问对象，根据当前数据库类型（MySQL、PostgreSQL、H2）采集对应的性能指标。
+ */
 @Component
 public class MonitorDBDao {
 
     private static final Logger logger = LoggerFactory.getLogger(MonitorDBDao.class);
 
+    /** 查询变量名称常量，用于 MySQL 查询结果集中的变量名字段 */
     public static final String VARIABLE_NAME = "variable_name";
 
+    /** 数据源，用于获取数据库连接 */
     @Autowired
     private DataSource dataSource;
 
+    /**
+     * 获取当前数据库的性能指标，根据驱动类型自动选择对应的性能采集实现。
+     *
+     * @return MonitorRecord 数据库性能记录，失败时返回 null
+     */
     private MonitorRecord getCurrentDbPerformance() {
         try (final Connection conn = dataSource.getConnection()) {
             String driverClassName = DriverManager.getDriver(conn.getMetaData().getURL()).getClass().getName();
@@ -62,7 +72,7 @@ public class MonitorDBDao {
     }
 
     /**
-     * query database state
+     * 查询数据库运行状态，返回包含当前性能指标的记录列表。
      *
      * @return MonitorRecord list
      */

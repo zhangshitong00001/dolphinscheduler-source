@@ -55,7 +55,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Master scheduler thread, this thread will consume the commands from database and trigger processInstance executed.
+ * Master 调度启动器，负责从数据库消费命令并将其转换为工作流实例执行。
+ * 作为 Master 的核心调度线程，通过 slot 机制分配命令，支持负载检测和背压控制，
+ * 将命令转换为 ProcessInstance 后缓存并触发工作流启动事件。
  */
 @Service
 public class MasterSchedulerBootstrap extends BaseDaemonThread implements AutoCloseable {
@@ -107,7 +109,7 @@ public class MasterSchedulerBootstrap extends BaseDaemonThread implements AutoCl
     }
 
     /**
-     * constructor of MasterSchedulerService
+     * 初始化调度器，创建预处理线程池并设置 Master 网络地址。
      */
     public void init() {
         this.masterPrepareExecService = (ThreadPoolExecutor) ThreadUtils
@@ -130,7 +132,8 @@ public class MasterSchedulerBootstrap extends BaseDaemonThread implements AutoCl
     }
 
     /**
-     * run of MasterSchedulerService
+     * 调度器主循环，持续从数据库拉取待处理的命令并转换为工作流实例执行。
+     * 包含负载检测、slot 校验和命令消费的完整流程。
      */
     @Override
     public void run() {

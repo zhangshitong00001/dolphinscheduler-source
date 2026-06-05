@@ -69,7 +69,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * data source controller
+ * 数据源控制器。提供数据源的增删改查REST API，包括数据源创建、更新、查询详情、分页列表、连接测试、
+ * 删除、名称校验、授权/未授权管理、Kerberos状态查询以及表/列元数据获取等操作。
  */
 @Api(tags = "DATA_SOURCE_TAG")
 @RestController
@@ -80,12 +81,11 @@ public class DataSourceController extends BaseController {
     private DataSourceService dataSourceService;
 
     /**
-     * create data source
+     * 创建数据源。接收JSON格式的数据源参数，解析并创建新的数据源连接配置。
      *
-     * @param loginUser login user
-     * @param jsonStr   datasource param
-     *                  example: {"type":"MYSQL","name":"txx","note":"","host":"localhost","port":3306,"principal":"","javaSecurityKrb5Conf":"","loginUserKeytabUsername":"","loginUserKeytabPath":"","userName":"root","password":"xxx","database":"ds","connectType":"","other":{"serverTimezone":"GMT-8"},"id":2}
-     * @return create result code
+     * @param loginUser 当前登录用户
+     * @param jsonStr 数据源参数字符串（JSON格式，包含类型、名称、主机、端口、用户名、密码等信息）
+     * @return 创建结果状态码
      */
     @ApiOperation(value = "createDataSource", notes = "CREATE_DATA_SOURCE_NOTES")
     @PostMapping()
@@ -99,13 +99,12 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * updateProcessInstance data source
+     * 更新数据源配置。根据数据源ID修改数据源的连接配置参数。
      *
-     * @param loginUser login user
-     * @param id        datasource id
-     * @param jsonStr   datasource param
-     *                  example: {"type":"MYSQL","name":"txx","note":"","host":"localhost","port":3306,"principal":"","javaSecurityKrb5Conf":"","loginUserKeytabUsername":"","loginUserKeytabPath":"","userName":"root","password":"xxx","database":"ds","connectType":"","other":{"serverTimezone":"GMT-8"},"id":2}
-     * @return update result code
+     * @param loginUser 当前登录用户
+     * @param id 数据源ID
+     * @param jsonStr 数据源参数字符串（JSON格式）
+     * @return 更新结果状态码
      */
     @ApiOperation(value = "updateDataSource", notes = "UPDATE_DATA_SOURCE_NOTES")
     @ApiImplicitParams({
@@ -125,11 +124,11 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * query data source detail
+     * 根据ID查询数据源详情。
      *
-     * @param loginUser login user
-     * @param id datasource id
-     * @return data source detail
+     * @param loginUser 当前登录用户
+     * @param id 数据源ID
+     * @return 数据源详细信息
      */
     @ApiOperation(value = "queryDataSource", notes = "QUERY_DATA_SOURCE_NOTES")
     @ApiImplicitParams({
@@ -148,11 +147,11 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * query datasource by type
+     * 按数据库类型查询数据源列表。
      *
-     * @param loginUser login user
-     * @param type data source type
-     * @return data source list page
+     * @param loginUser 当前登录用户
+     * @param type 数据库类型
+     * @return 数据源列表
      */
     @ApiOperation(value = "queryDataSourceList", notes = "QUERY_DATA_SOURCE_LIST_BY_TYPE_NOTES")
     @ApiImplicitParams({
@@ -169,13 +168,13 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * query datasource with paging
+     * 分页查询数据源列表。支持按搜索值进行模糊筛选。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return data source list page
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索值
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 数据源分页列表
      */
     @ApiOperation(value = "queryDataSourceListPaging", notes = "QUERY_DATA_SOURCE_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -200,12 +199,11 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * connect datasource
+     * 连接数据源测试。使用提供的参数进行数据源连接测试，验证连接参数的有效性。
      *
-     * @param loginUser login user
-     * @param jsonStr   datasource param
-     *                  example: {"type":"MYSQL","name":"txx","note":"","host":"localhost","port":3306,"principal":"","javaSecurityKrb5Conf":"","loginUserKeytabUsername":"","loginUserKeytabPath":"","userName":"root","password":"xxx","database":"ds","connectType":"","other":{"serverTimezone":"GMT-8"},"id":2}
-     * @return connect result code
+     * @param loginUser 当前登录用户
+     * @param jsonStr 数据源参数字符串（JSON格式）
+     * @return 连接测试结果
      */
     @ApiOperation(value = "connectDataSource", notes = "CONNECT_DATA_SOURCE_NOTES")
     @PostMapping(value = "/connect")
@@ -221,11 +219,11 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * connection test
+     * 测试已存在数据源的连接。根据数据源ID获取配置并执行连接测试。
      *
-     * @param loginUser login user
-     * @param id data source id
-     * @return connect result code
+     * @param loginUser 当前登录用户
+     * @param id 数据源ID
+     * @return 连接测试结果
      */
     @ApiOperation(value = "connectionTest", notes = "CONNECT_DATA_SOURCE_TEST_NOTES")
     @ApiImplicitParams({
@@ -241,11 +239,11 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * delete datasource by id
+     * 根据ID删除数据源。
      *
-     * @param loginUser login user
-     * @param id datasource id
-     * @return delete result
+     * @param loginUser 当前登录用户
+     * @param id 数据源ID
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteDataSource", notes = "DELETE_DATA_SOURCE_NOTES")
     @ApiImplicitParams({
@@ -261,11 +259,11 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * verify datasource name
+     * 校验数据源名称是否已存在。
      *
-     * @param loginUser login user
-     * @param name data source name
-     * @return true if data source name not exists.otherwise return false
+     * @param loginUser 当前登录用户
+     * @param name 数据源名称
+     * @return 校验结果，名称不存在返回true，否则返回false
      */
     @ApiOperation(value = "verifyDataSourceName", notes = "VERIFY_DATA_SOURCE_NOTES")
     @ApiImplicitParams({
@@ -281,11 +279,11 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * unauthorized datasource
+     * 查询未授权给指定用户的数据源列表。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @return unauthed data source result code
+     * @param loginUser 当前登录用户
+     * @param userId 用户ID
+     * @return 未授权数据源列表
      */
     @ApiOperation(value = "unauthDatasource", notes = "UNAUTHORIZED_DATA_SOURCE_NOTES")
     @ApiImplicitParams({
@@ -303,11 +301,11 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * authorized datasource
+     * 查询已授权给指定用户的数据源列表。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @return authorized result code
+     * @param loginUser 当前登录用户
+     * @param userId 用户ID
+     * @return 已授权数据源列表
      */
     @ApiOperation(value = "authedDatasource", notes = "AUTHORIZED_DATA_SOURCE_NOTES")
     @ApiImplicitParams({
@@ -325,10 +323,10 @@ public class DataSourceController extends BaseController {
     }
 
     /**
-     * get user info
+     * 获取Kerberos启动状态。判断HDFS上传资源时是否启用了Kerberos认证。
      *
-     * @param loginUser login user
-     * @return user info data
+     * @param loginUser 当前登录用户
+     * @return Kerberos启动状态信息
      */
     @ApiOperation(value = "getKerberosStartupState", notes = "GET_USER_INFO_NOTES")
     @GetMapping(value = "/kerberos-startup-state")

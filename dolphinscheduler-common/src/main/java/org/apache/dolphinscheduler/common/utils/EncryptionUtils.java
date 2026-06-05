@@ -21,7 +21,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * encryption utils
+ * 加密工具类，提供MD5等加密算法的便捷方法。
+ * 该类为工具类，不可实例化。
  */
 public class EncryptionUtils {
 
@@ -30,8 +31,10 @@ public class EncryptionUtils {
     }
 
     /**
-     * @param rawStr raw string
-     * @return md5(rawStr)
+     * 计算字符串的MD5哈希值。
+     *
+     * @param rawStr 原始字符串，如果为null则视为空字符串
+     * @return MD5哈希值的十六进制字符串
      */
     public static String getMd5(String rawStr) {
         return DigestUtils.md5Hex(null == rawStr ? StringUtils.EMPTY : rawStr);

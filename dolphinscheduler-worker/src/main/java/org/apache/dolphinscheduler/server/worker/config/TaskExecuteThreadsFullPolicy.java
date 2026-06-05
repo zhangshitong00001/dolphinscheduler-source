@@ -17,6 +17,10 @@
 
 package org.apache.dolphinscheduler.server.worker.config;
 
+/**
+ * 任务执行线程池满载策略枚举。定义当Worker任务执行线程池已满时的处理策略。
+ * CONTINUE表示继续等待执行，REJECT表示拒绝新任务并通知Master重新调度。
+ */
 public enum TaskExecuteThreadsFullPolicy {
     CONTINUE,
     REJECT,

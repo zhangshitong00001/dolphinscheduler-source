@@ -23,95 +23,66 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * 数据质量执行结果告警内容实体，非数据库表映射，用于封装数据质量检查失败时发送的告警消息内容。
+ * 通过 Builder 模式构建，序列化为 JSON 后发送给告警插件实例。包含检查结果、阈值对比等关键信息。
+ */
 @JsonInclude(Include.NON_NULL)
 public class DqExecuteResultAlertContent implements Serializable {
 
-    /**
-     * process_defined_id
-     */
+    /** 工作流定义 ID */
     @JsonProperty(value = "processDefinitionId")
     private long processDefinitionId;
-    /**
-     * process define name
-     */
+    /** 工作流定义名称 */
     @JsonProperty("processDefinitionName")
     private String  processDefinitionName;
-    /**
-     * process_instance_id
-     */
+    /** 工作流实例 ID */
     @JsonProperty(value = "processInstanceId")
     private long processInstanceId;
-    /**
-     * process instance name
-     */
+    /** 工作流实例名称 */
     @JsonProperty("processInstanceName")
     private String processInstanceName;
-    /**
-     * task_instance_id
-     */
+    /** 任务实例 ID */
     @JsonProperty(value = "taskInstanceId")
     private long taskInstanceId;
-    /**
-     * task name
-     */
+    /** 任务名称 */
     @JsonProperty("taskName")
     private String taskName;
-    /**
-     * rule_type
-     */
+    /** 数据质量规则类型 */
     @JsonProperty(value = "ruleType")
     private int ruleType;
-    /**
-     * rule_name
-     */
+    /** 数据质量规则名称 */
     @JsonProperty(value = "ruleName")
     private String ruleName;
-    /**
-     * statistics_value
-     */
+    /** 统计值，数据质量 SQL 执行得到的实际数值 */
     @JsonProperty(value = "statisticsValue")
     private double statisticsValue;
-    /**
-     * comparison_value
-     */
+    /** 比较值，用于对比的期望值 */
     @JsonProperty(value = "comparisonValue")
     private double comparisonValue;
-    /**
-     * check_type
-     */
+    /** 检查类型 */
     @JsonProperty(value = "checkType")
     private int checkType;
-    /**
-     * task_instance_id
-     */
+    /** 阈值，数据质量检查的临界值 */
     @JsonProperty(value = "threshold")
     private double threshold;
-    /**
-     * operator
-     */
+    /** 操作符，定义统计值与阈值的比较逻辑 */
     @JsonProperty(value = "operator")
     private int operator;
-    /**
-     * operator
-     */
+    /** 失败策略，质量检查失败时的处理方式 */
     @JsonProperty(value = "failureStrategy")
     private int failureStrategy;
-    /**
-     * user id
-     */
+    /** 用户 ID */
     @JsonProperty(value = "userId")
     private int userId;
-    /**
-     * user_name
-     */
+    /** 用户名 */
     @JsonProperty("userName")
     private String userName;
-    /**
-     * state
-     */
+    /** 执行状态 */
     @JsonProperty(value = "state")
     private int state;
 
+    /** 错误数据输出路径 */
     @JsonProperty(value = "errorDataPath")
     private String errorDataPath;
 

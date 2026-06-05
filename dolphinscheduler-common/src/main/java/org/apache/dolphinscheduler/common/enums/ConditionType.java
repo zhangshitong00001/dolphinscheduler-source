@@ -23,16 +23,15 @@ import java.util.Map;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * condition type
+ * 条件类型枚举。
+ * 定义工作流中条件节点的执行类型。
  */
 public enum ConditionType {
-    /**
-     * 0 none
-     * 1 judge
-     * 2 delay
-     */
+    /** 无条件 */
     NONE(0, "none"),
+    /** 条件判断 */
     JUDGE(1, "judge"),
+    /** 延时 */
     DELAY(2, "delay");
 
     ConditionType(int code, String desc) {

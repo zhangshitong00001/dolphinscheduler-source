@@ -44,6 +44,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
+/**
+ * 审计日志控制器。提供审计日志的分页查询REST API，支持按资源类型、操作类型、时间范围和用户名等条件筛选。
+ */
 @Api(tags = "AUDIT_LOG_TAG")
 @RestController
 @RequestMapping("projects/audit")
@@ -53,17 +56,17 @@ public class AuditLogController extends BaseController {
     AuditService auditService;
 
     /**
-     * query audit log list paging
+     * 分页查询审计日志列表。支持按资源类型、操作类型、时间范围和用户名等条件进行筛选。
      *
-     * @param loginUser         login user
-     * @param pageNo            page number
-     * @param resourceType     resource type
-     * @param operationType     operation type
-     * @param startDate         start time
-     * @param endDate           end time
-     * @param userName          user name
-     * @param pageSize          page size
-     * @return      audit log content
+     * @param loginUser 当前登录用户
+     * @param pageNo 页码
+     * @param resourceType 资源类型
+     * @param operationType 操作类型
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param userName 用户名
+     * @param pageSize 每页大小
+     * @return 审计日志分页内容
      */
     @ApiOperation(value = "queryAuditLogListPaging", notes = "QUERY_AUDIT_LOG")
     @ApiImplicitParams({

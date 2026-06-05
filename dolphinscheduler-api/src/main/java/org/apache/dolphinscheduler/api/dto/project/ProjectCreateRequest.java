@@ -21,14 +21,16 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * project create request
+ * 项目创建请求DTO。用于接收创建项目时的请求参数，包含项目名称和描述信息。
  */
 @Data
 public class ProjectCreateRequest {
 
+    /** 项目名称 */
     @ApiModelProperty(example = "pro123", required = true)
     private String projectName;
 
+    /** 项目描述 */
     @ApiModelProperty(example = "this is a project")
     private String description;
 }

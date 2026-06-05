@@ -19,7 +19,20 @@ package org.apache.dolphinscheduler.spi.datasource;
 
 import org.apache.dolphinscheduler.spi.enums.DbType;
 
+/**
+ * 数据源通道接口，定义了根据连接参数和数据库类型创建数据源客户端的方法。
+ * <p>
+ * 每种数据库类型（如MySQL、PostgreSQL）都有对应的通道实现，
+ * 负责创建该类型数据库的专用连接客户端，用于获取JDBC连接。
+ */
 public interface DataSourceChannel {
 
+    /**
+     * 根据给定的连接参数和数据库类型创建对应的数据源客户端
+     *
+     * @param baseConnectionParam 数据库连接参数（地址、用户名、密码、JDBC URL等）
+     * @param dbType              数据库类型
+     * @return 该数据库类型对应的数据源客户端实例
+     */
     DataSourceClient createDataSourceClient(BaseConnectionParam baseConnectionParam, DbType dbType);
 }

@@ -23,29 +23,25 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 流程实例映射关系实体，映射到 t_ds_relation_process_instance 表，表示父子流程实例之间的依赖关系。
+ * 用于记录子流程的父流程实例 ID 和父任务实例 ID。
+ */
 @Data
 @TableName("t_ds_relation_process_instance")
 public class ProcessInstanceMap {
 
-    /**
-     * id
-     */
+    /** 主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * parent process instance id
-     */
+    /** 父流程实例 ID */
     private int parentProcessInstanceId;
 
-    /**
-     * parent task instance id
-     */
+    /** 父任务实例 ID */
     private int parentTaskInstanceId;
 
-    /**
-     * process instance id
-     */
+    /** 子流程实例 ID */
     private int processInstanceId;
 
     @Override

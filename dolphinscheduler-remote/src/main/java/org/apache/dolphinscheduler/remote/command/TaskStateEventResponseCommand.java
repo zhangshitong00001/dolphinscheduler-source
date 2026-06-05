@@ -22,15 +22,20 @@ import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
 
 import java.io.Serializable;
 
+/**
+ * 任务状态事件响应命令，用于返回任务状态事件的确认响应。
+ */
 public class TaskStateEventResponseCommand implements Serializable {
 
+    /** 任务执行状态 */
     private TaskExecutionStatus status;
+    /** 事件键 */
     private String key;
 
     /**
-     * package response command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

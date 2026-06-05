@@ -28,16 +28,20 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * error command mapper interface
+ * 错误命令 Mapper 接口，封装对 t_ds_error_command 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，存储执行失败的命令记录，并提供按状态统计的能力。
  */
 public interface ErrorCommandMapper extends BaseMapper<ErrorCommand> {
 
     /**
-     * count command state
-     * @param startTime startTime
-     * @param endTime endTime
-     * @param projectCodeArray projectCodeArray
-     * @return CommandCount list
+     * 按时间范围和项目编码统计错误命令各状态的数量。
+     * SELECT command_type, COUNT(*) FROM t_ds_error_command WHERE start_time BETWEEN #{startTime} AND #{endTime}
+     * AND project_code IN (#{projectCodeArray}) GROUP BY command_type
+     *
+     * @param startTime 统计开始时间
+     * @param endTime 统计结束时间
+     * @param projectCodeArray 项目编码数组
+     * @return 命令统计结果列表
      */
     List<CommandCount> countCommandState(
             @Param("startTime") Date startTime,

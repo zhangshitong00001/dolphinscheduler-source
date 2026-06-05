@@ -22,18 +22,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
 
+/**
+ * 执行状态统计实体，非数据库表映射，用于按执行状态统计任务或工作流实例的数量。
+ * 通常用于 Dashboard 展示各状态（成功、失败、运行中等）的实例分布情况。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExecuteStatusCount {
 
-    /**
-     * execution state
-     */
+    /** 任务执行状态枚举值 */
     private TaskExecutionStatus state;
 
-    /**
-     * count for state
-     */
+    /** 该状态的实例数量 */
     private int count;
 }

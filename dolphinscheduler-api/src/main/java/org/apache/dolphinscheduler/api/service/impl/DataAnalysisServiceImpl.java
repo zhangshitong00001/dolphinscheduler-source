@@ -63,7 +63,7 @@ import java.util.stream.Collectors;
 import static org.apache.dolphinscheduler.api.constants.ApiFuncIdentificationConstant.PROJECT_OVERVIEW;
 
 /**
- * data analysis service impl
+ * 数据分析服务实现类。负责任务状态、流程状态、命令状态和队列状态的统计分析，支持按项目、日期范围和用户权限进行数据聚合。
  */
 @Service
 public class DataAnalysisServiceImpl extends BaseServiceImpl implements DataAnalysisService {
@@ -95,13 +95,13 @@ public class DataAnalysisServiceImpl extends BaseServiceImpl implements DataAnal
     private ProcessService processService;
 
     /**
-     * statistical task instance status data
+     * 统计指定项目下任务实例各状态的数量。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @param startDate   start date
-     * @param endDate     end date
-     * @return task state count data
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码（0表示所有有权限的项目）
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 包含任务状态统计数据的Map
      */
     @Override
     public Map<String, Object> countTaskStateByProject(User loginUser, long projectCode, String startDate,
@@ -116,13 +116,13 @@ public class DataAnalysisServiceImpl extends BaseServiceImpl implements DataAnal
     }
 
     /**
-     * statistical process instance status data
+     * 统计指定项目下流程实例各状态的数量，自动移除强制成功状态。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @param startDate   start date
-     * @param endDate     end date
-     * @return process instance state count data
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码（0表示所有有权限的项目）
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 包含流程实例状态统计数据的Map
      */
     @Override
     public Map<String, Object> countProcessInstanceStateByProject(User loginUser, long projectCode, String startDate,
@@ -144,12 +144,14 @@ public class DataAnalysisServiceImpl extends BaseServiceImpl implements DataAnal
     }
 
     /**
-     * Wrapper function of counting process instance state and task state
+     * 通用状态统计包装方法，根据项目权限和日期范围调用指定的统计函数。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @param startDate   start date
-     * @param endDate     end date
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @param instanceStateCounter 具体统计计数的函数
+     * @return 包含统计数据的Map
      */
     private Map<String, Object> countStateByProject(User loginUser, long projectCode, String startDate, String endDate,
                                                     TriFunction<Date, Date, Long[], List<ExecuteStatusCount>> instanceStateCounter) {
@@ -193,13 +195,11 @@ public class DataAnalysisServiceImpl extends BaseServiceImpl implements DataAnal
     }
 
     /**
-     * statistics the process definition quantities of a certain person
-     * <p>
-     * We only need projects which users have permission to see to determine whether the definition belongs to the user or not.
+     * 统计指定项目中各用户拥有的流程定义数量。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @return definition count data
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码（0表示所有有权限的项目）
+     * @return 包含定义用户统计数据的Map
      */
     @Override
     public Map<String, Object> countDefinitionByUser(User loginUser, long projectCode) {
@@ -234,10 +234,10 @@ public class DataAnalysisServiceImpl extends BaseServiceImpl implements DataAnal
     }
 
     /**
-     * statistical command status data
+     * 统计命令状态数据，分别统计正常命令和错误命令的各类命令类型数量。
      *
-     * @param loginUser login user
-     * @return command state count data
+     * @param loginUser 当前登录用户
+     * @return 包含各命令类型正常/错误计数的Map
      */
     @Override
     public Map<String, Object> countCommandState(User loginUser) {
@@ -303,9 +303,10 @@ public class DataAnalysisServiceImpl extends BaseServiceImpl implements DataAnal
     }
 
     /**
-     * count queue state
+     * 查询队列状态统计，包含任务队列和终止任务的数量。
      *
-     * @return queue state count data
+     * @param loginUser 当前登录用户
+     * @return 包含队列状态统计数据的Map
      */
     @Override
     public Map<String, Object> countQueueState(User loginUser) {
@@ -320,6 +321,14 @@ public class DataAnalysisServiceImpl extends BaseServiceImpl implements DataAnal
         return result;
     }
 
+    /**
+     * 统计指定项目编码列表中任务实例各状态的数量，对计数为0的状态通过提交时间重新统计。
+     *
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param projectCodes 项目编码数组
+     * @return 所有任务状态的计数列表
+     */
     @Override
     public List<ExecuteStatusCount> countTaskInstanceAllStatesByProjectCodes(Date startTime, Date endTime,
                                                                              Long[] projectCodes) {

@@ -53,7 +53,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * environment controller
+ * 环境配置控制器。提供环境配置的增删改查REST API，包括环境创建、更新、查询详情、分页列表、删除和名称校验操作。
+ * 环境配置关联Worker组，用于任务运行时环境隔离。
  */
 @Api(tags = "ENVIRONMENT_TAG")
 @RestController
@@ -64,13 +65,13 @@ public class EnvironmentController extends BaseController {
     private EnvironmentService environmentService;
 
     /**
-     * create environment
+     * 创建环境配置。新增环境配置信息并关联Worker组。
      *
-     * @param loginUser   login user
-     * @param name environment name
-     * @param config config
-     * @param description description
-     * @return returns an error if it exists
+     * @param loginUser 当前登录用户
+     * @param name 环境名称
+     * @param config 环境配置
+     * @param description 环境描述
+     * @return 创建结果（若名称已存在则返回错误）
      */
     @ApiOperation(value = "createEnvironment", notes = "CREATE_ENVIRONMENT_NOTES")
     @ApiImplicitParams({
@@ -95,14 +96,14 @@ public class EnvironmentController extends BaseController {
     }
 
     /**
-     * update environment
+     * 更新环境配置。根据环境编码修改环境配置信息和关联的Worker组。
      *
-     * @param loginUser   login user
-     * @param code   environment code
-     * @param name environment name
-     * @param config environment config
-     * @param description description
-     * @return update result code
+     * @param loginUser 当前登录用户
+     * @param code 环境编码
+     * @param name 环境名称
+     * @param config 环境配置
+     * @param description 环境描述
+     * @return 更新结果状态码
      */
     @ApiOperation(value = "updateEnvironment", notes = "UPDATE_ENVIRONMENT_NOTES")
     @ApiImplicitParams({
@@ -128,10 +129,10 @@ public class EnvironmentController extends BaseController {
     }
 
     /**
-     * query environment details by code
+     * 根据编码查询环境配置详情。
      *
-     * @param environmentCode environment code
-     * @return environment detail information
+     * @param environmentCode 环境编码
+     * @return 环境配置详细信息
      */
     @ApiOperation(value = "queryEnvironmentByCode", notes = "QUERY_ENVIRONMENT_BY_CODE_NOTES")
     @ApiImplicitParams({
@@ -149,12 +150,12 @@ public class EnvironmentController extends BaseController {
     }
 
     /**
-     * query environment list paging
+     * 分页查询环境配置列表。
      *
-     * @param searchVal search value
-     * @param pageSize  page size
-     * @param pageNo    page number
-     * @return environment list which the login user have permission to see
+     * @param searchVal 搜索值
+     * @param pageSize 每页大小
+     * @param pageNo 页码
+     * @return 环境配置分页列表
      */
     @ApiOperation(value = "queryEnvironmentListPaging", notes = "QUERY_ENVIRONMENT_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -181,11 +182,11 @@ public class EnvironmentController extends BaseController {
     }
 
     /**
-     * delete environment by code
+     * 根据编码删除环境配置。
      *
-     * @param loginUser login user
-     * @param environmentCode environment code
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param environmentCode 环境编码
+     * @return 删除结果状态码
      */
     @ApiOperation(value = "deleteEnvironmentByCode", notes = "DELETE_ENVIRONMENT_BY_CODE_NOTES")
     @ApiImplicitParams({
@@ -203,10 +204,10 @@ public class EnvironmentController extends BaseController {
     }
 
     /**
-     * query all environment list
+     * 查询所有环境配置列表。
      *
-     * @param loginUser login user
-     * @return all environment list
+     * @param loginUser 当前登录用户
+     * @return 全部环境配置列表
      */
     @ApiOperation(value = "queryAllEnvironmentList", notes = "QUERY_ALL_ENVIRONMENT_LIST_NOTES")
     @GetMapping(value = "/query-environment-list")
@@ -219,11 +220,11 @@ public class EnvironmentController extends BaseController {
     }
 
     /**
-     * verify environment and environment name
+     * 校验环境名称是否已存在。
      *
-     * @param loginUser login user
-     * @param environmentName environment name
-     * @return true if the environment name not exists, otherwise return false
+     * @param loginUser 当前登录用户
+     * @param environmentName 环境名称
+     * @return 校验结果，名称不存在返回true，否则返回false
      */
     @ApiOperation(value = "verifyEnvironment", notes = "VERIFY_ENVIRONMENT_NOTES")
     @ApiImplicitParams({

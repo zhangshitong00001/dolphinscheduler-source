@@ -22,6 +22,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Master服务心跳数据模型，包含Master节点的系统资源使用情况和进程信息。
+ * 用于Master向注册中心上报心跳数据，供Worker和其他组件感知Master的状态。
+ */
 @Data
 @Builder
 @NoArgsConstructor

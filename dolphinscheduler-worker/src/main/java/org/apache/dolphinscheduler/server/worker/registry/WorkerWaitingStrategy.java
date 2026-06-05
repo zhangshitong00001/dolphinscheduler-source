@@ -35,6 +35,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
+/**
+ * Worker等待策略，当Worker与注册中心断开连接时进入等待状态，等待重新连接。
+ * 在等待期间会清理Worker资源（关闭RPC、清理任务队列），恢复连接后重新启动资源。
+ * 配置项为 worker.registry-disconnect-strategy.strategy=waiting。
+ */
 @Service
 @ConditionalOnProperty(prefix = "worker.registry-disconnect-strategy", name = "strategy", havingValue = "waiting")
 public class WorkerWaitingStrategy implements WorkerConnectStrategy {
@@ -59,6 +64,10 @@ public class WorkerWaitingStrategy implements WorkerConnectStrategy {
     @Autowired
     private WorkerManagerThread workerManagerThread;
 
+    /**
+     * 当与注册中心断开连接时，将Worker状态置为等待，清理资源后尝试重新连接。
+     * 如果在最大等待时间内无法重连，则停止Worker服务。
+     */
     @Override
     public void disconnect() {
         try {
@@ -90,6 +99,9 @@ public class WorkerWaitingStrategy implements WorkerConnectStrategy {
         }
     }
 
+    /**
+     * 重新连接到注册中心后，恢复Worker状态为运行并重新启动Worker资源。
+     */
     @Override
     public void reconnect() {
         if (ServerLifeCycleManager.isRunning()) {

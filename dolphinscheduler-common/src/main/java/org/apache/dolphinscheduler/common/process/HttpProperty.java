@@ -21,6 +21,10 @@ import org.apache.dolphinscheduler.common.enums.HttpParametersType;
 
 import java.util.Objects;
 
+/**
+ * HTTP请求参数属性模型，表示HTTP任务中的单个参数。
+ * 包含参数名、参数值和参数类型（如请求体、请求头、查询参数等）。
+ */
 public class HttpProperty {
     /**
      * key

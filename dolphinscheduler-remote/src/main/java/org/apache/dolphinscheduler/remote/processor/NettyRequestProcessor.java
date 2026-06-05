@@ -20,12 +20,13 @@ import io.netty.channel.Channel;
 import org.apache.dolphinscheduler.remote.command.Command;
 
 /**
- *  netty request processor
+ * Netty请求处理器接口。定义命令处理的标准契约，所有业务处理器需实现此接口。
  */
 public interface NettyRequestProcessor {
 
     /**
-     *  process logic
+     * 处理接收到的命令。实现类在此方法中编写具体的业务处理逻辑。
+     *
      * @param channel channel
      * @param command command
      */

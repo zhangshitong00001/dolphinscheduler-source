@@ -17,6 +17,9 @@
 
 package org.apache.dolphinscheduler.common.model;
 
+/**
+ * 前置任务节点模型，用于记录上游依赖任务的编码、名称和版本信息。
+ */
 public class PreviousTaskNode {
 
     /**

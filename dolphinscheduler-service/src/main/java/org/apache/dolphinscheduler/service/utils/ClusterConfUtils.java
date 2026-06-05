@@ -24,17 +24,18 @@ import org.apache.commons.lang3.StringUtils;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * cluster conf will include all env type, but only k8s config now
+ * 集群配置工具类，用于解析数据库中存储的集群配置信息。当前仅支持Kubernetes（K8s）配置的解析，
+ * 后续可扩展支持其他集群环境的配置。
  */
 public class ClusterConfUtils {
 
     private static final String K8S_CONFIG = "k8s";
 
     /**
-     * get k8s
+     * 从数据库存储的集群配置JSON中提取K8s配置。
      *
-     * @param config cluster config in db
-     * @return
+     * @param config the cluster config JSON string from database
+     * @return the K8s configuration string, or null if not found
      */
     public static String getK8sConfig(String config) {
         if (StringUtils.isEmpty(config)) {

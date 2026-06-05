@@ -28,9 +28,24 @@ import org.apache.dolphinscheduler.service.task.TaskPluginManager;
 
 import javax.annotation.Nullable;
 
+/**
+ * Worker任务执行Runnable工厂构建器，提供静态工厂方法创建默认的延迟任务执行工厂实例。
+ */
 @UtilityClass
 public class WorkerTaskExecuteRunnableFactoryBuilder {
 
+    /**
+     * 创建默认的延迟任务执行Runnable工厂实例。
+     *
+     * @param taskExecutionContext 任务执行上下文
+     * @param workerConfig Worker配置
+     * @param workflowMasterAddress 工作流Master地址
+     * @param workerMessageSender Worker消息发送器
+     * @param alertClientService 告警客户端服务
+     * @param taskPluginManager 任务插件管理器
+     * @param storageOperate 存储操作接口（可为null）
+     * @return 延迟任务执行Runnable工厂实例
+     */
     public static WorkerDelayTaskExecuteRunnableFactory<?> createWorkerDelayTaskExecuteRunnableFactory(@NonNull TaskExecutionContext taskExecutionContext,
                                                                                                        @NonNull WorkerConfig workerConfig,
                                                                                                        @NonNull String workflowMasterAddress,

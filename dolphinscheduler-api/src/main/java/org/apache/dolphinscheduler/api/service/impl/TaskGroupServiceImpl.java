@@ -52,7 +52,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
- * task Group Service
+ * 任务组服务实现类。负责任务组的增删改查、启停管理和手动唤醒队列任务，通过任务组实现并发控制。
  */
 @Service
 public class TaskGroupServiceImpl extends BaseServiceImpl implements TaskGroupService {
@@ -72,13 +72,14 @@ public class TaskGroupServiceImpl extends BaseServiceImpl implements TaskGroupSe
     private static final Logger logger = LoggerFactory.getLogger(TaskGroupServiceImpl.class);
 
     /**
-     * create a Task group
+     * 创建任务组。校验权限、名称唯一性和组大小，初始状态为启用。
      *
-     * @param loginUser   login user
-     * @param name        task group name
-     * @param description task group description
-     * @param groupSize   task group total size
-     * @return the result code and msg
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param name 任务组名称
+     * @param description 描述信息
+     * @param groupSize 任务组总大小（并发容量）
+     * @return 包含创建结果的结果Map
      */
     @Override
     @Transactional
@@ -133,13 +134,14 @@ public class TaskGroupServiceImpl extends BaseServiceImpl implements TaskGroupSe
     }
 
     /**
-     * update the task group
+     * 更新任务组信息。校验权限、名称唯一性（排除自身）和组状态。
      *
-     * @param loginUser   login user
-     * @param name        task group name
-     * @param description task group description
-     * @param groupSize   task group total size
-     * @return the result code and msg
+     * @param loginUser 当前登录用户
+     * @param id 任务组ID
+     * @param name 新的任务组名称
+     * @param description 新的描述信息
+     * @param groupSize 新的组大小
+     * @return 包含更新结果的结果Map
      */
     @Override
     public Map<String, Object> updateTaskGroup(User loginUser, int id, String name, String description, int groupSize) {
@@ -200,12 +202,14 @@ public class TaskGroupServiceImpl extends BaseServiceImpl implements TaskGroupSe
     }
 
     /**
-     * query all task group by user id
+     * 分页查询当前用户的任务组列表，支持按名称和状态过滤。
      *
-     * @param loginUser login user
-     * @param pageNo    page no
-     * @param pageSize  page size
-     * @return the result code and msg
+     * @param loginUser 当前登录用户
+     * @param name 任务组名称（可为null）
+     * @param status 状态（可为null）
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页任务组列表的结果Map
      */
     @Override
     public Map<String, Object> queryAllTaskGroup(User loginUser, String name, Integer status, int pageNo,

@@ -22,26 +22,35 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 /**
- * form validate
+ * 表单校验规则类，定义前端表单输入项的校验约束。
+ * <p>
+ * 支持必填校验、数据类型校验、最小/最大值约束以及校验触发时机等。
+ * 使用Builder模式构建，支持JSON序列化/反序列化。
  */
 @JsonDeserialize(builder = Validate.Builder.class)
 public class Validate {
 
+    /** 是否必填 */
     @JsonProperty("required")
     private boolean required;
 
+    /** 校验失败时的提示消息 */
     @JsonProperty("message")
     private String message;
 
+    /** 数据类型（string/number） */
     @JsonProperty("type")
     private String type;
 
+    /** 校验触发时机（blur/change） */
     @JsonProperty("trigger")
     private String trigger;
 
+    /** 最小值 */
     @JsonProperty("min")
     private Double min;
 
+    /** 最大值 */
     @JsonProperty("max")
     private Double max;
 

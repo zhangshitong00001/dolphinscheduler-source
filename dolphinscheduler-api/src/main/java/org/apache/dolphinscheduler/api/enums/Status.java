@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 /**
- * status enum      // todo #4855 One category one interval
+ * API响应状态枚举。定义系统中所有API响应的状态码和中英文消息，支持国际化。状态码按功能模块分段组织。
  */
 public enum Status {
 

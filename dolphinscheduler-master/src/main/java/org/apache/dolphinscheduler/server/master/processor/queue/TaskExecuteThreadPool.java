@@ -38,6 +38,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+/**
+ * 任务执行线程池。继承ThreadPoolTaskExecutor，管理任务事件的提交和异步执行，防止同一工作流实例的事件被并发处理。
+ */
 @Component
 public class TaskExecuteThreadPool extends ThreadPoolTaskExecutor {
 
@@ -60,7 +63,7 @@ public class TaskExecuteThreadPool extends ThreadPoolTaskExecutor {
     private Map<TaskEventType, TaskEventHandler> taskEventHandlerMap = new HashMap<>();
 
     /**
-     * task event thread map
+     * 任务事件执行线程映射表，按工作流实例ID关联对应的TaskExecuteRunnable
      */
     private final ConcurrentHashMap<Integer, TaskExecuteRunnable> taskExecuteThreadMap = new ConcurrentHashMap<>();
 
@@ -74,6 +77,11 @@ public class TaskExecuteThreadPool extends ThreadPoolTaskExecutor {
             taskEventHandler -> taskEventHandlerMap.put(taskEventHandler.getHandleEventType(), taskEventHandler));
     }
 
+    /**
+     * 提交任务事件到对应工作流实例的执行队列中。
+     *
+     * @param taskEvent 任务事件
+     */
     public void submitTaskEvent(TaskEvent taskEvent) {
         // stream task event handle
         if (taskEvent.getProcessInstanceId() == 0 && streamTaskInstanceExecCacheManager.contains(taskEvent.getTaskInstanceId())) {
@@ -89,12 +97,20 @@ public class TaskExecuteThreadPool extends ThreadPoolTaskExecutor {
         taskExecuteRunnable.addEvent(taskEvent);
     }
 
+    /**
+     * 遍历所有工作流实例的事件队列，将待处理的事件提交异步执行。
+     */
     public void eventHandler() {
         for (TaskExecuteRunnable taskExecuteThread : taskExecuteThreadMap.values()) {
             executeEvent(taskExecuteThread);
         }
     }
 
+    /**
+     * 异步执行指定工作流实例的任务事件。使用ListenableFuture防止同一工作流实例的重复提交。
+     *
+     * @param taskExecuteThread 任务执行运行单元
+     */
     public void executeEvent(TaskExecuteRunnable taskExecuteThread) {
         if (taskExecuteThread.isEmpty()) {
             return;

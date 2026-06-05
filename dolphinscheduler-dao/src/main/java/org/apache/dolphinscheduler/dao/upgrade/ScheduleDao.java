@@ -29,12 +29,15 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 升级用调度数据访问对象，负责在版本升级时查询和更新调度配置，将流程定义 ID 转换为新编码。
+ */
 public class ScheduleDao {
 
     public static final Logger logger = LoggerFactory.getLogger(ScheduleDao.class);
 
     /**
-     * queryAllSchedule
+     * 查询所有调度记录，返回调度 ID 到流程定义编码的映射。
      *
      * @param conn jdbc connection
      * @return Schedule List
@@ -62,7 +65,7 @@ public class ScheduleDao {
     }
 
     /**
-     * update schedule
+     * 更新调度记录的流程定义编码，同时设置时区 ID 和环境编码默认值。
      *
      * @param conn jdbc connection
      * @param scheduleMap scheduleMap

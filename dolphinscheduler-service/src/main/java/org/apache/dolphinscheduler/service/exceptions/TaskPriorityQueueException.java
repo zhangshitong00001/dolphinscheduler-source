@@ -18,7 +18,7 @@
 package org.apache.dolphinscheduler.service.exceptions;
 
 /**
- * task priority queue exception
+ * 任务优先级队列异常，当任务优先级队列操作失败时抛出。
  */
 public class TaskPriorityQueueException extends Exception {
 

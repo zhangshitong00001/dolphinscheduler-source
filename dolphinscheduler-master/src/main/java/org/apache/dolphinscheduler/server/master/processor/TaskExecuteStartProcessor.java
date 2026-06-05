@@ -38,7 +38,7 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 
 /**
- * task execute start processor, from api to master
+ * 任务执行启动处理器。接收来自API服务的独立任务执行启动命令，创建流式任务执行运行实例并提交到流式任务线程池。
  */
 @Component
 public class TaskExecuteStartProcessor implements NettyRequestProcessor {
@@ -51,6 +51,12 @@ public class TaskExecuteStartProcessor implements NettyRequestProcessor {
     @Autowired
     private ProcessService processService;
 
+    /**
+     * 处理任务执行启动命令。根据命令中的任务定义信息查找任务定义，创建流式任务执行实例并返回响应。
+     *
+     * @param channel Netty通道
+     * @param command 任务执行启动命令
+     */
     @Override
     public void process(Channel channel, Command command) {
         Preconditions.checkArgument(CommandType.TASK_EXECUTE_START == command.getType(), String.format("invalid command type : %s", command.getType()));

@@ -17,13 +17,8 @@
 
 package org.apache.dolphinscheduler.api.metadata;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,7 +32,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Implementation of MetadataService for Hive Metastore metadata management.
@@ -65,36 +59,6 @@ public class MetadataServiceImpl implements MetadataService {
 
     @Value("${metadata.hive.jdbc.driver:org.apache.hive.jdbc.HiveDriver}")
     private String hiveDriver;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    /**
-     * Redis cache key prefix for metadata entries.
-     */
-    private static final String METADATA_CACHE_PREFIX = "dolphinscheduler:metadata:";
-
-    /**
-     * Cache TTL for metadata entries: 5 minutes (300 seconds).
-     */
-    private static final long METADATA_CACHE_TTL_SECONDS = 300L;
-
-    /**
-     * Jackson TypeReference for deserializing HiveDatabase list from JSON.
-     */
-    private static final TypeReference<List<HiveDatabase>> DATABASE_LIST_TYPE =
-            new TypeReference<List<HiveDatabase>>() {};
-
-    /**
-     * Jackson TypeReference for deserializing HiveTable list from JSON.
-     */
-    private static final TypeReference<List<HiveTable>> TABLE_LIST_TYPE =
-            new TypeReference<List<HiveTable>>() {};
-
-    /**
-     * Jackson TypeReference for deserializing HiveColumn list from JSON.
-     */
-    private static final TypeReference<List<HiveColumn>> COLUMN_LIST_TYPE =
-            new TypeReference<List<HiveColumn>>() {};
 
     @Override
     @Cacheable(value = "metadata", key = "'dolphinscheduler:metadata:databases'",
@@ -148,12 +112,16 @@ public class MetadataServiceImpl implements MetadataService {
             }
         }
 
-        // Enrich each table with its comment from JDBC metadata
-        for (HiveTable table : tables) {
-            try (Connection conn = getConnection();
-                 ResultSet rs = conn.getMetaData().getTables(databaseName, null, table.getName(), null)) {
-                while (rs.next()) {
-                    table.setComment(rs.getString("REMARKS"));
+        // Enrich each table with its comment from JDBC metadata, reusing a single connection
+        if (!tables.isEmpty()) {
+            try (Connection conn = getConnection()) {
+                DatabaseMetaData metaData = conn.getMetaData();
+                for (HiveTable table : tables) {
+                    try (ResultSet rs = metaData.getTables(databaseName, null, table.getName(), null)) {
+                        while (rs.next()) {
+                            table.setComment(rs.getString("REMARKS"));
+                        }
+                    }
                 }
             }
         }

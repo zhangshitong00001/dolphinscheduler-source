@@ -25,22 +25,22 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 
 /**
- *  callback channel
+ * Netty远程通道。封装Netty Channel，提供通道地址、状态检测和命令发送功能。
  */
 public class NettyRemoteChannel {
 
     /**
-     *  channel
+     * Netty通道实例
      */
     private final Channel channel;
 
     /**
-     *  request unique identification
+     * 请求唯一标识
      */
     private final long opaque;
 
     /**
-     * master host
+     * 远端主机信息
      */
     private final Host host;
 
@@ -69,14 +69,28 @@ public class NettyRemoteChannel {
         return host;
     }
 
+    /**
+     * 检查通道是否活跃。
+     *
+     * @return 是否活跃
+     */
     public boolean isActive(){
         return this.channel.isActive();
     }
 
+    /**
+     * 向通道写入并刷新命令。
+     *
+     * @param command command
+     * @return ChannelFuture
+     */
     public ChannelFuture writeAndFlush(Command command) {
         return this.channel.writeAndFlush(command);
     }
 
+    /**
+     * 关闭通道。
+     */
     public void close(){
         this.channel.close();
     }

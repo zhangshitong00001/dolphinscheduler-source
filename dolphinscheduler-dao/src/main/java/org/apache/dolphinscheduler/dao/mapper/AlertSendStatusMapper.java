@@ -21,5 +21,10 @@ import org.apache.dolphinscheduler.dao.entity.AlertSendStatus;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+/**
+ * 告警发送状态 Mapper 接口，封装对 t_ds_alert_send_status 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供告警发送状态记录的基本 CRUD 能力。
+ * 当前仅使用 MyBatis-Plus 内置方法，无自定义 SQL。
+ */
 public interface AlertSendStatusMapper extends BaseMapper<AlertSendStatus> {
 }

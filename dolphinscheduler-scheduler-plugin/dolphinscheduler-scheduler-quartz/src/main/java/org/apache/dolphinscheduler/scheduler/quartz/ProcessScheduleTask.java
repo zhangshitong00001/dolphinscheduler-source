@@ -41,6 +41,20 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 
+/**
+ * 基于Quartz的定时调度任务执行器，继承自Spring的 {@link QuartzJobBean}。
+ * <p>
+ * 当Quartz触发器触发时，会调用 {@link #executeInternal} 方法。
+ * 该方法执行以下逻辑：
+ * <ol>
+ *   <li>从JobDataMap中提取项目ID和调度ID</li>
+ *   <li>校验调度记录和工作流定义是否仍在线（在线状态）</li>
+ *   <li>如果已下线，删除对应的Quartz任务</li>
+ *   <li>如果在线，创建一条类型为 {@link CommandType#SCHEDULER} 的命令，交由Master处理</li>
+ * </ol>
+ * <p>
+ * 同时集成了 Micrometer 指标收集，记录Quartz任务执行次数和耗时。
+ */
 public class ProcessScheduleTask extends QuartzJobBean {
 
     private static final Logger logger = LoggerFactory.getLogger(ProcessScheduleTask.class);
@@ -48,7 +62,9 @@ public class ProcessScheduleTask extends QuartzJobBean {
     @Autowired
     private ProcessService processService;
 
+    /** Micrometer计数：Quartz任务执行次数 */
     @Counted(value = "ds.master.quartz.job.executed")
+    /** Micrometer计时：Quartz任务执行耗时，采集50/75/95/99分位数和直方图 */
     @Timed(value = "ds.master.quartz.job.execution.time", percentiles = {0.5, 0.75, 0.95, 0.99}, histogram = true)
     @Override
     protected void executeInternal(JobExecutionContext context) {
@@ -63,7 +79,7 @@ public class ProcessScheduleTask extends QuartzJobBean {
 
         logger.info("scheduled fire time :{}, fire time :{}, process id :{}", scheduledFireTime, fireTime, scheduleId);
 
-        // query schedule
+        // 查询调度记录，校验是否存在且在线
         Schedule schedule = processService.querySchedule(scheduleId);
         if (schedule == null || ReleaseState.OFFLINE == schedule.getReleaseState()) {
             logger.warn("process schedule does not exist in db or process schedule offline，delete schedule job in quartz, projectId:{}, scheduleId:{}", projectId, scheduleId);
@@ -72,13 +88,14 @@ public class ProcessScheduleTask extends QuartzJobBean {
         }
 
         ProcessDefinition processDefinition = processService.findProcessDefinitionByCode(schedule.getProcessDefinitionCode());
-        // release state : online/offline
+        // 校验工作流定义是否在线
         ReleaseState releaseState = processDefinition.getReleaseState();
         if (releaseState == ReleaseState.OFFLINE) {
             logger.warn("process definition does not exist in db or offline，need not to create command, projectId:{}, processId:{}", projectId, processDefinition.getId());
             return;
         }
 
+        // 构建调度命令并创建
         Command command = new Command();
         command.setCommandType(CommandType.SCHEDULER);
         command.setExecutorId(schedule.getUserId());
@@ -97,6 +114,9 @@ public class ProcessScheduleTask extends QuartzJobBean {
         processService.createCommand(command);
     }
 
+    /**
+     * 从Quartz中删除指定的调度任务（当调度记录已下线或不存在时调用）
+     */
     private void deleteJob(JobExecutionContext context, int projectId, int scheduleId) {
         final Scheduler scheduler = context.getScheduler();
         JobKey jobKey = QuartzTaskUtils.getJobKey(scheduleId, projectId);

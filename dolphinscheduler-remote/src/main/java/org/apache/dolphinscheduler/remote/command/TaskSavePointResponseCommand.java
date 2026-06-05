@@ -26,22 +26,20 @@ import org.apache.dolphinscheduler.common.utils.JSONUtils;
 import java.io.Serializable;
 
 /**
- * task savepoint response command
+ * 任务保存点响应命令，用于返回任务保存点（Savepoint）操作的处理结果。
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskSavePointResponseCommand implements Serializable {
 
-    /**
-     * taskInstanceId
-     */
+    /** 任务实例ID */
     private int taskInstanceId;
 
     /**
-     * package request command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

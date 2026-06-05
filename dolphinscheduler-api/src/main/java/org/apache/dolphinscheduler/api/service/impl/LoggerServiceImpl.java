@@ -54,7 +54,7 @@ import static org.apache.dolphinscheduler.api.constants.ApiFuncIdentificationCon
 import static org.apache.dolphinscheduler.api.constants.ApiFuncIdentificationConstant.VIEW_LOG;
 
 /**
- * logger service impl
+ * 日志服务实现类。负责查询和下载任务实例的日志，通过LogClient与Worker节点通信获取日志内容。
  */
 @Service
 public class LoggerServiceImpl extends BaseServiceImpl implements LoggerService {
@@ -79,12 +79,12 @@ public class LoggerServiceImpl extends BaseServiceImpl implements LoggerService 
     TaskDefinitionMapper taskDefinitionMapper;
 
     /**
-     * view log
+     * 根据任务实例ID查询日志内容，支持跳过行数和行数限制。
      *
-     * @param taskInstId task instance id
-     * @param skipLineNum skip line number
-     * @param limit limit
-     * @return log string data
+     * @param taskInstId 任务实例ID
+     * @param skipLineNum 跳过的行数
+     * @param limit 返回的最大行数
+     * @return 包含日志内容和行数的结果对象
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -107,10 +107,10 @@ public class LoggerServiceImpl extends BaseServiceImpl implements LoggerService 
 
 
     /**
-     * get log size
+     * 根据任务实例ID获取日志字节数组，用于日志下载。
      *
-     * @param taskInstId task instance id
-     * @return log byte array
+     * @param taskInstId 任务实例ID
+     * @return 日志字节数组
      */
     @Override
     public byte[] getLogBytes(int taskInstId) {
@@ -122,14 +122,14 @@ public class LoggerServiceImpl extends BaseServiceImpl implements LoggerService 
     }
 
     /**
-     * query log
+     * 查询指定项目中任务实例的日志。先校验项目权限，再通过LogClient获取日志内容。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @param taskInstId  task instance id
-     * @param skipLineNum skip line number
-     * @param limit       limit
-     * @return log string data
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param taskInstId 任务实例ID
+     * @param skipLineNum 跳过的行数
+     * @param limit 返回的最大行数
+     * @return 包含日志内容的结果Map
      */
     @Override
     @SuppressWarnings("unchecked")
@@ -158,12 +158,12 @@ public class LoggerServiceImpl extends BaseServiceImpl implements LoggerService 
     }
 
     /**
-     * get log bytes
+     * 获取指定项目中任务实例的日志字节数组，用于日志下载。校验项目权限后通过LogClient获取。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @param taskInstId  task instance id
-     * @return log byte array
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param taskInstId 任务实例ID
+     * @return 日志字节数组
      */
     @Override
     public byte[] getLogBytes(User loginUser, long projectCode, int taskInstId) {
@@ -187,12 +187,12 @@ public class LoggerServiceImpl extends BaseServiceImpl implements LoggerService 
     }
 
     /**
-     * query log
+     * 通过LogClient连接到Worker节点查询任务日志内容。
      *
-     * @param taskInstance  task instance
-     * @param skipLineNum skip line number
-     * @param limit       limit
-     * @return log string data
+     * @param taskInstance 任务实例
+     * @param skipLineNum 跳过的行数
+     * @param limit 返回的最大行数
+     * @return 日志字符串（含头部信息）
      */
     private String queryLog(TaskInstance taskInstance, int skipLineNum, int limit) {
         Host host = Host.of(taskInstance.getHost());
@@ -216,10 +216,10 @@ public class LoggerServiceImpl extends BaseServiceImpl implements LoggerService 
     }
 
     /**
-     * get log bytes
+     * 通过LogClient连接到Worker节点获取任务日志字节数组。
      *
-     * @param taskInstance task instance
-     * @return log byte array
+     * @param taskInstance 任务实例
+     * @return 日志字节数组（含头部信息）
      */
     private byte[] getLogBytes(TaskInstance taskInstance) {
         Host host = Host.of(taskInstance.getHost());

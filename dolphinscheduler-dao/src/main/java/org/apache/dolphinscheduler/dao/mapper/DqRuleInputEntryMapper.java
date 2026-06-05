@@ -26,14 +26,17 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * DqRuleInputEntryMapper
+ * 数据质量规则输入项 Mapper 接口，封装对 t_ds_dq_rule_input_entry 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供数据质量规则中输入项定义（如期望值、阈值等）的查询能力。
  */
 public interface DqRuleInputEntryMapper extends BaseMapper<DqRuleInputEntry> {
 
     /**
-     * get rule input entry list by rule id
+     * 根据规则ID查询该规则的所有输入项列表。
+     * SELECT * FROM t_ds_dq_rule_input_entry WHERE rule_id = #{ruleId}
      *
-     * @param ruleId Integer
+     * @param ruleId 数据质量规则ID
+     * @return 规则输入项列表
      */
     List<DqRuleInputEntry> getRuleInputEntryList(@Param("ruleId") Integer ruleId);
 }

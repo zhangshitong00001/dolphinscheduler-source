@@ -64,7 +64,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * task definition controller
+ * 任务定义控制器，提供任务定义的创建、更新、删除、版本管理、发布等 REST API。
  */
 @Api(tags = "TASK_DEFINITION_TAG")
 @RestController
@@ -75,12 +75,12 @@ public class TaskDefinitionController extends BaseController {
     private TaskDefinitionService taskDefinitionService;
 
     /**
-     * create task definition
+     * 创建任务定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param taskDefinitionJson task definition json
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param taskDefinitionJson 任务定义 JSON
+     * @return 创建结果
      */
     @ApiOperation(value = "save", notes = "CREATE_TASK_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -100,14 +100,14 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * create single task definition that binds the workflow
+     * 创建绑定到工作流的单个任务定义。
      *
-     * @param loginUser             login user
-     * @param projectCode           project code
-     * @param processDefinitionCode process definition code
-     * @param taskDefinitionJsonObj task definition json object
-     * @param upstreamCodes         upstream task codes, sep comma
-     * @return create result code
+     * @param loginUser             登录用户
+     * @param projectCode           项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param taskDefinitionJsonObj 任务定义 JSON 对象
+     * @param upstreamCodes         上游任务编码列表，逗号分隔
+     * @return 创建结果
      */
     @ApiOperation(value = "saveSingle", notes = "CREATE_SINGLE_TASK_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -131,13 +131,13 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * update task definition
+     * 更新任务定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code task definition code
-     * @param taskDefinitionJsonObj task definition json object
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 任务定义编码
+     * @param taskDefinitionJsonObj 任务定义 JSON 对象
+     * @return 更新结果
      */
     @ApiOperation(value = "update", notes = "UPDATE_TASK_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -159,14 +159,14 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * update task definition
+     * 更新任务定义及上游依赖关系。
      *
-     * @param loginUser             login user
-     * @param projectCode           project code
-     * @param code                  task definition code
-     * @param taskDefinitionJsonObj task definition json object
-     * @param upstreamCodes         upstream task codes, sep comma
-     * @return update result code
+     * @param loginUser             登录用户
+     * @param projectCode           项目编码
+     * @param code                  任务定义编码
+     * @param taskDefinitionJsonObj 任务定义 JSON 对象
+     * @param upstreamCodes         上游任务编码列表，逗号分隔
+     * @return 更新结果
      */
     @ApiOperation(value = "updateWithUpstream", notes = "UPDATE_TASK_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -190,15 +190,14 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * query task definition version paging list info
+     * 查询任务定义版本分页列表。
      *
-     * @param loginUser login user info
-     * @param projectCode project code
-     * @param code task definition code
-     * @param pageNo the task definition version list current page number
-     * @param pageSize the task definition version list page size
-     * @param code the task definition code
-     * @return the task definition version list
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 任务定义编码
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 任务定义版本列表
      */
     @ApiOperation(value = "queryVersions", notes = "QUERY_TASK_DEFINITION_VERSIONS_NOTES")
     @ApiImplicitParams({
@@ -223,13 +222,13 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * switch task definition version
+     * 切换任务定义到指定版本。
      *
-     * @param loginUser login user info
-     * @param projectCode project code
-     * @param code the task definition code
-     * @param version the version user want to switch
-     * @return switch version result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 任务定义编码
+     * @param version 要切换到的版本号
+     * @return 切换结果
      */
     @ApiOperation(value = "switchVersion", notes = "SWITCH_TASK_DEFINITION_VERSION_NOTES")
     @ApiImplicitParams({
@@ -249,13 +248,13 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * delete the certain task definition version by version and code
+     * 删除指定任务定义的某个版本。
      *
-     * @param loginUser login user info
-     * @param projectCode project code
-     * @param code the task definition code
-     * @param version the task definition version user want to delete
-     * @return delete version result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 任务定义编码
+     * @param version 要删除的版本号
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteVersion", notes = "DELETE_TASK_DEFINITION_VERSION_NOTES")
     @ApiImplicitParams({
@@ -276,12 +275,12 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * delete task definition by code
+     * 根据编码删除任务定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code the task definition code
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 任务定义编码
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteTaskDefinition", notes = "DELETE_TASK_DEFINITION_BY_CODE_NOTES")
     @ApiImplicitParams({
@@ -299,12 +298,12 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * query detail of task definition by code
+     * 根据编码查询任务定义详情。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code the task definition code
-     * @return task definition detail
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 任务定义编码
+     * @return 任务定义详情
      */
     @ApiOperation(value = "queryTaskDefinitionByCode", notes = "QUERY_TASK_DEFINITION_DETAIL_NOTES")
     @ApiImplicitParams({
@@ -322,17 +321,17 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * query task definition list paging
+     * 查询任务定义分页列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param searchWorkflowName searchWorkflowName
-     * @param searchTaskName searchTaskName
-     * @param taskType taskType
-     * @param taskExecuteType taskExecuteType
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return task definition page
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param searchWorkflowName 搜索工作流名称
+     * @param searchTaskName 搜索任务名称
+     * @param taskType 任务类型
+     * @param taskExecuteType 任务执行类型
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 任务定义分页数据
      */
     @ApiOperation(value = "queryTaskDefinitionListPaging", notes = "QUERY_TASK_DEFINITION_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -367,11 +366,11 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * gen task code list
+     * 生成一批任务编码。
      *
-     * @param loginUser login user
-     * @param genNum gen num
-     * @return task code list
+     * @param loginUser 登录用户
+     * @param genNum 生成数量
+     * @return 任务编码列表
      */
     @ApiOperation(value = "genTaskCodeList", notes = "GEN_TASK_CODE_LIST_NOTES")
     @ApiImplicitParams({
@@ -388,13 +387,13 @@ public class TaskDefinitionController extends BaseController {
     }
 
     /**
-     * release task definition
+     * 发布（上线/下线）任务定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code task definition code
-     * @param releaseState releaseState
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 任务定义编码
+     * @param releaseState 发布状态
+     * @return 更新结果
      */
     @ApiOperation(value = "releaseTaskDefinition", notes = "RELEASE_TASK_DEFINITION_NOTES")
     @ApiImplicitParams({

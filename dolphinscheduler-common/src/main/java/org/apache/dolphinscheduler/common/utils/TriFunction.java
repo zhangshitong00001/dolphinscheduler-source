@@ -18,7 +18,13 @@
 package org.apache.dolphinscheduler.common.utils;
 
 /**
- * tri function function interface
+ * 三参数函数式接口，接受三个输入参数并返回一个结果。
+ * 用于需要三个输入参数的Lambda表达式或方法引用场景。
+ *
+ * @param <IN1> 第一个输入参数类型
+ * @param <IN2> 第二个输入参数类型
+ * @param <IN3> 第三个输入参数类型
+ * @param <OUT1> 输出结果类型
  */
 @FunctionalInterface
 public interface TriFunction<IN1, IN2, IN3, OUT1> {

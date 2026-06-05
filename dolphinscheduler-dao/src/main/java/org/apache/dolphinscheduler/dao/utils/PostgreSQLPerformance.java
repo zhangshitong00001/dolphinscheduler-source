@@ -29,12 +29,15 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * PostgreSQL 数据库性能监控实现，通过查询 pg_stat_activity 视图采集连接数、最大连接数和活跃连接数等指标。
+ */
 public class PostgreSQLPerformance extends BaseDBPerformance {
 
     private static final Logger logger = LoggerFactory.getLogger(PostgreSQLPerformance.class);
 
     /**
-     * get monitor record
+     * 获取 PostgreSQL 数据库当前性能指标，包括连接总数、最大连接数和活跃连接数。
      *
      * @param conn connection
      * @return MonitorRecord

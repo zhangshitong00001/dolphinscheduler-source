@@ -20,15 +20,16 @@ package org.apache.dolphinscheduler.server.master.dispatch.host.assign;
 import java.util.Collection;
 
 /**
- * selector
- * @param <T> T
+ * 通用选择器接口。定义从集合中选择一个元素的策略。
+ *
+ * @param <T> 选择元素的类型
  */
 public interface Selector<T> {
 
     /**
-     * select
-     * @param source source, the given source should not be empty.
-     * @return T
+     * 从集合中选择一个元素。
+     * @param source 待选择的源集合，不能为空
+     * @return 选中的元素
      */
     T select(Collection<T> source);
 }

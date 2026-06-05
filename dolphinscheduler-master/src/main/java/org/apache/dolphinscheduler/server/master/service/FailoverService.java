@@ -26,7 +26,8 @@ import org.springframework.stereotype.Component;
 import lombok.NonNull;
 
 /**
- * failover service
+ * 故障转移服务，根据节点类型（Master 或 Worker）将故障转移到对应的服务处理。
+ * 作为故障转移的统一入口，监听注册中心节点变化并根据节点类型分派到具体的故障转移实现。
  */
 @Component
 public class FailoverService {
@@ -42,10 +43,10 @@ public class FailoverService {
     }
 
     /**
-     * failover server when server down
+     * 当服务器宕机时执行故障转移，根据节点类型分派到 Master 或 Worker 故障转移处理。
      *
-     * @param serverHost server host
-     * @param nodeType   node type
+     * @param serverHost 故障服务器地址
+     * @param nodeType   节点类型（MASTER 或 WORKER）
      */
     public void failoverServerWhenDown(String serverHost, NodeType nodeType) {
         switch (nodeType) {

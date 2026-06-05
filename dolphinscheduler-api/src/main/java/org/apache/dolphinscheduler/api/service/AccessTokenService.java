@@ -23,67 +23,71 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * access token service
+ * 访问令牌服务接口。提供访问令牌的CRUD操作，用于API认证。
+ * 支持分页查询、按用户查询、创建、生成、更新和删除访问令牌。
  */
 public interface AccessTokenService {
 
     /**
-     * query access token list
+     * 分页查询访问令牌列表。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return token list for page number and page size
+     * @param loginUser 登录用户
+     * @param searchVal 搜索关键字
+     * @param pageNo    页码
+     * @param pageSize  每页大小
+     * @return 分页查询结果
      */
     Result queryAccessTokenList(User loginUser, String searchVal, Integer pageNo, Integer pageSize);
 
     /**
-     * query access token for specified user
+     * 查询指定用户的访问令牌。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @return token list for specified user
+     * @param loginUser 登录用户
+     * @param userId    用户ID
+     * @return 指定用户的令牌查询结果
      */
     Map<String, Object> queryAccessTokenByUser(User loginUser, Integer userId);
 
     /**
-     * create token
+     * 创建访问令牌。
      *
-     * @param userId token for user
-     * @param expireTime token expire time
-     * @param token token string (if it is absent, it will be automatically generated)
-     * @return create result code
+     * @param loginUser  登录用户
+     * @param userId     关联的用户ID
+     * @param expireTime 过期时间
+     * @param token      令牌字符串，为空时自动生成
+     * @return 创建结果
      */
     Result createToken(User loginUser, int userId, String expireTime, String token);
 
 
     /**
-     * generate token
+     * 生成访问令牌字符串。
      *
-     * @param userId token for user
-     * @param expireTime token expire time
-     * @return token string
+     * @param loginUser  登录用户
+     * @param userId     关联的用户ID
+     * @param expireTime 过期时间
+     * @return 生成的令牌结果
      */
     Map<String, Object> generateToken(User loginUser, int userId, String expireTime);
 
     /**
-     * delete access token
+     * 删除指定ID的访问令牌。
      *
-     * @param loginUser login user
-     * @param id token id
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param id        令牌ID
+     * @return 删除结果
      */
     Map<String, Object> delAccessTokenById(User loginUser, int id);
 
     /**
-     * update token by id
+     * 更新指定ID的访问令牌。
      *
-     * @param id token id
-     * @param userId token for user
-     * @param expireTime token expire time
-     * @param token token string (if it is absent, it will be automatically generated)
-     * @return updated access token entity
+     * @param loginUser  登录用户
+     * @param id         令牌ID
+     * @param userId     关联的用户ID
+     * @param expireTime 过期时间
+     * @param token      令牌字符串，为空时自动生成
+     * @return 更新结果
      */
     Map<String, Object> updateToken(User loginUser, int id, int userId, String expireTime, String token);
 }

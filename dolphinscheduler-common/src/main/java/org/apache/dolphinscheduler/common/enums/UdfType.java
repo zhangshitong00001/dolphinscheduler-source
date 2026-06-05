@@ -20,13 +20,13 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * UDF type
+ * UDF 类型枚举。
+ * 定义用户自定义函数（UDF）所属的计算引擎类型。
  */
 public enum UdfType {
-    /**
-     * 0 hive; 1 spark
-     */
+    /** Hive UDF */
   HIVE(0, "hive"),
+    /** Spark UDF */
   SPARK(1, "spark");
 
     UdfType(int code, String descp){

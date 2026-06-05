@@ -24,7 +24,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * udf func service
+ * UDF函数服务接口。提供UDF函数的创建、查询、更新、删除及函数名验证功能。
  */
 public interface UdfFuncService {
 

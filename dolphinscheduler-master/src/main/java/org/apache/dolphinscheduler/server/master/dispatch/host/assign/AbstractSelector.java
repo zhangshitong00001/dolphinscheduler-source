@@ -22,9 +22,17 @@ import org.apache.commons.collections.CollectionUtils;
 import java.util.Collection;
 
 /**
- *  AbstractSelector
+ * 抽象选择器。实现公共的 select 方法：空集合抛异常，单元素直接返回，多元素委托给子类的 doSelect 方法。
+ *
+ * @param <T> 选择元素的类型
  */
 public  abstract class AbstractSelector<T> implements Selector<T> {
+    /**
+     * 从集合中选择一个元素。空集合抛异常，单元素直接返回，多元素委托子类实现。
+     *
+     * @param source 待选择的源集合，不能为空
+     * @return 选中的元素
+     */
     @Override
     public T select(Collection<T> source) {
 
@@ -32,8 +40,8 @@ public  abstract class AbstractSelector<T> implements Selector<T> {
             throw new IllegalArgumentException("Empty source.");
         }
 
-        /**
-         * if only one , return directly
+        /*
+         * 只有一个元素时直接返回。
          */
         if (source.size() == 1) {
             return (T)source.toArray()[0];
@@ -41,6 +49,12 @@ public  abstract class AbstractSelector<T> implements Selector<T> {
         return doSelect(source);
     }
 
+    /**
+     * 子类实现具体的多元素选择算法。
+     *
+     * @param source 待选择的源集合（元素数量大于 1）
+     * @return 选中的元素
+     */
     protected abstract T doSelect(Collection<T> source);
 
 }

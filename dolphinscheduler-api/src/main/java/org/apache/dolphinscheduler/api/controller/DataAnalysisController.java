@@ -49,7 +49,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * data analysis controller
+ * 数据分析控制器。提供任务状态统计、工作流实例状态统计、用户定义数量统计、命令状态统计和队列统计等数据分析REST API。
  */
 @Api(tags = "DATA_ANALYSIS_TAG")
 @RestController
@@ -60,13 +60,13 @@ public class DataAnalysisController extends BaseController {
     DataAnalysisService dataAnalysisService;
 
     /**
-     * statistical task instance status data
+     * 统计任务实例状态数据。按项目和时间范围统计各状态的任务实例数量。
      *
-     * @param loginUser login user
-     * @param startDate count start date
-     * @param endDate count end date
-     * @param projectCode project code
-     * @return task instance count data
+     * @param loginUser 当前登录用户
+     * @param startDate 统计开始日期
+     * @param endDate 统计结束日期
+     * @param projectCode 项目编码
+     * @return 任务实例状态统计数据
      */
     @ApiOperation(value = "countTaskState", notes = "COUNT_TASK_STATE_NOTES")
     @ApiImplicitParams({
@@ -89,13 +89,13 @@ public class DataAnalysisController extends BaseController {
     }
 
     /**
-     * statistical process instance status data
+     * 统计工作流实例状态数据。按项目和时间范围统计各状态的工作流实例数量。
      *
-     * @param loginUser login user
-     * @param startDate start date
-     * @param endDate end date
-     * @param projectCode project code
-     * @return process instance data
+     * @param loginUser 当前登录用户
+     * @param startDate 统计开始日期
+     * @param endDate 统计结束日期
+     * @param projectCode 项目编码
+     * @return 工作流实例状态统计数据
      */
     @ApiOperation(value = "countProcessInstanceState", notes = "COUNT_PROCESS_INSTANCE_NOTES")
     @ApiImplicitParams({
@@ -118,11 +118,11 @@ public class DataAnalysisController extends BaseController {
     }
 
     /**
-     * statistics the process definition quantities of certain person
+     * 统计指定用户的流程定义数量。按项目统计每个用户创建的流程定义数。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @return definition count in project code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @return 用户流程定义数量统计
      */
     @ApiOperation(value = "countDefinitionByUser", notes = "COUNT_PROCESS_DEFINITION_BY_USER_NOTES")
     @ApiImplicitParams({
@@ -140,10 +140,10 @@ public class DataAnalysisController extends BaseController {
     }
 
     /**
-     * statistical command status data
+     * 统计命令状态数据。按用户项目统计各状态的命令数量。
      *
-     * @param loginUser login user
-     * @return command state of user projects
+     * @param loginUser 当前登录用户
+     * @return 命令状态统计数据
      */
     @ApiOperation(value = "countCommandState", notes = "COUNT_COMMAND_STATE_NOTES")
     @GetMapping(value = "/command-state-count")
@@ -157,10 +157,10 @@ public class DataAnalysisController extends BaseController {
     }
 
     /**
-     * queue count
+     * 统计队列任务数量。按用户项目统计各队列中的任务数量。
      *
-     * @param loginUser login user
-     * @return queue state count
+     * @param loginUser 当前登录用户
+     * @return 队列状态统计数据
      */
     @ApiOperation(value = "countQueueState", notes = "COUNT_QUEUE_STATE_NOTES")
     @GetMapping(value = "/queue-count")

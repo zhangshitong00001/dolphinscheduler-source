@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * execute task response command
+ * 任务执行结果命令，由Worker发送给Master，携带任务执行的完整结果信息。
  */
 @Data
 @NoArgsConstructor
@@ -39,67 +39,43 @@ public class TaskExecuteResultCommand extends BaseCommand {
         super(messageSenderAddress, messageReceiverAddress, messageSendTime);
     }
 
-    /**
-     * task instance id
-     */
+    /** 任务实例ID */
     private int taskInstanceId;
 
-    /**
-     * process instance id
-     */
+    /** 流程实例ID */
     private int processInstanceId;
 
-    /**
-     * status
-     */
+    /** 状态 */
     private int status;
 
-    /**
-     * startTime
-     */
+    /** 开始时间 */
     private Date startTime;
 
-    /**
-     * host
-     */
+    /** 执行主机 */
     private String host;
 
-    /**
-     * logPath
-     */
+    /** 日志路径 */
     private String logPath;
 
-    /**
-     * executePath
-     */
+    /** 执行路径 */
     private String executePath;
 
-
-    /**
-     * end time
-     */
+    /** 结束时间 */
     private Date endTime;
 
-
-    /**
-     * processId
-     */
+    /** 进程ID */
     private int processId;
 
-    /**
-     * appIds
-     */
+    /** 应用ID列表 */
     private String appIds;
 
-    /**
-     * varPool string
-     */
+    /** 变量池字符串 */
     private String varPool;
 
     /**
-     * package response command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

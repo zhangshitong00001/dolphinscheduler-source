@@ -78,6 +78,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cronutils.model.Cron;
 
+/**
+ * 调度服务实现类。负责定时调度的增删改查、上线/下线管理、Cron表达式解析和预览，调度任务通过SchedulerApi与Master节点交互。
+ */
 @Service
 public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerService {
 
@@ -111,19 +114,19 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     private ProcessTaskRelationMapper processTaskRelationMapper;
 
     /**
-     * save schedule
+     * 创建定时调度。校验Cron表达式、时间参数和流程定义状态，创建后默认为离线状态。
      *
-     * @param loginUser               login user
-     * @param projectCode             project name
-     * @param processDefineCode       process definition code
-     * @param schedule                scheduler
-     * @param warningType             warning type
-     * @param warningGroupId          warning group id
-     * @param failureStrategy         failure strategy
-     * @param processInstancePriority process instance priority
-     * @param workerGroup             worker group
-     * @param environmentCode         environment code
-     * @return create result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param processDefineCode 流程定义编码
+     * @param schedule 调度参数（JSON格式，含crontab、起止时间、时区）
+     * @param warningType 告警类型
+     * @param warningGroupId 告警组ID
+     * @param failureStrategy 失败策略
+     * @param processInstancePriority 流程实例优先级
+     * @param workerGroup 工作组
+     * @param environmentCode 环境编码
+     * @return 包含创建的调度对象的结果Map
      */
     @Override
     @Transactional
@@ -212,19 +215,19 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     }
 
     /**
-     * updateProcessInstance schedule
+     * 更新定时调度。校验项目权限和调度存在性，调用统一的更新方法处理变更。
      *
-     * @param loginUser               login user
-     * @param projectCode             project code
-     * @param id                      scheduler id
-     * @param scheduleExpression      scheduler
-     * @param warningType             warning type
-     * @param warningGroupId          warning group id
-     * @param failureStrategy         failure strategy
-     * @param workerGroup             worker group
-     * @param environmentCode         environment code
-     * @param processInstancePriority process instance priority
-     * @return update result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param id 调度ID
+     * @param scheduleExpression 新的调度参数（JSON格式）
+     * @param warningType 告警类型
+     * @param warningGroupId 告警组ID
+     * @param failureStrategy 失败策略
+     * @param processInstancePriority 流程实例优先级
+     * @param workerGroup 工作组
+     * @param environmentCode 环境编码
+     * @return 包含更新结果的结果Map
      */
     @Override
     @Transactional
@@ -268,13 +271,13 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     }
 
     /**
-     * set schedule online or offline
+     * 设置调度上线或离线。上线前检查流程定义和子流程的发布状态、DAG节点存在性及Master服务可用性。
      *
-     * @param loginUser      login user
-     * @param projectCode    project code
-     * @param id             scheduler id
-     * @param scheduleStatus schedule status
-     * @return publish result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param id 调度ID
+     * @param scheduleStatus 目标调度状态（ONLINE/OFFLINE）
+     * @throws ServiceException 条件不满足时抛出
      */
     @Override
     @Transactional
@@ -380,15 +383,15 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     }
 
     /**
-     * query schedule
+     * 分页查询指定流程定义的调度列表。
      *
-     * @param loginUser         login user
-     * @param projectCode       project code
-     * @param processDefineCode process definition code
-     * @param pageNo            page number
-     * @param pageSize          page size
-     * @param searchVal         search value
-     * @return schedule list page
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param processDefineCode 流程定义编码
+     * @param searchVal 搜索关键字
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页调度VO列表的结果对象
      */
     @Override
     public Result querySchedule(User loginUser, long projectCode, long processDefineCode, String searchVal,
@@ -434,11 +437,11 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     }
 
     /**
-     * query schedule list
+     * 查询项目下所有调度列表。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @return schedule list
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @return 包含调度VO列表的结果Map
      */
     @Override
     public Map<String, Object> queryScheduleList(User loginUser, long projectCode) {
@@ -469,11 +472,10 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     }
 
     /**
-     * delete schedule
+     * 通过SchedulerApi删除Master上的调度任务。
      *
-     * @param projectId  project id
-     * @param scheduleId schedule id
-     * @throws RuntimeException runtime exception
+     * @param projectId 项目ID
+     * @param scheduleId 调度ID
      */
     @Override
     public void deleteSchedule(int projectId, int scheduleId) {
@@ -482,12 +484,12 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     }
 
     /**
-     * check valid
+     * 校验条件的辅助方法，如果条件为true则将指定状态放入结果Map。
      *
-     * @param result result
-     * @param bool   bool
-     * @param status status
-     * @return check result code
+     * @param result 结果Map
+     * @param bool 校验条件
+     * @param status 校验失败时使用的状态
+     * @return true表示校验不通过
      */
     private boolean checkValid(Map<String, Object> result, boolean bool, Status status) {
         // timeout is valid
@@ -499,12 +501,12 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     }
 
     /**
-     * delete schedule by id
+     * 根据ID删除调度。只允许调度创建者或管理员删除，且调度必须为离线状态。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @param scheduleId  scheule id
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param scheduleId 调度ID
+     * @return 包含删除结果的结果Map
      */
     @Override
     public Map<String, Object> deleteScheduleById(User loginUser, long projectCode, Integer scheduleId) {
@@ -548,11 +550,11 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     }
 
     /**
-     * preview schedule
+     * 预览定时调度的执行时间。根据Cron表达式和起止时间，返回后续N次触发的时间列表。
      *
-     * @param loginUser login user
-     * @param schedule  schedule expression
-     * @return the next five fire time
+     * @param loginUser 当前登录用户
+     * @param schedule 调度参数（JSON格式）
+     * @return 包含预览触发时间列表的结果Map
      */
     @Override
     public Map<String, Object> previewSchedule(User loginUser, String schedule) {
@@ -584,18 +586,19 @@ public class SchedulerServiceImpl extends BaseServiceImpl implements SchedulerSe
     }
 
     /**
-     * update process definition schedule
+     * 通过流程定义编码更新其关联的调度参数。如果调度已上线则禁止更新。
      *
-     * @param loginUser               login user
-     * @param projectCode             project code
-     * @param processDefinitionCode   process definition code
-     * @param scheduleExpression      scheduleExpression
-     * @param warningType             warning type
-     * @param warningGroupId          warning group id
-     * @param failureStrategy         failure strategy
-     * @param workerGroup             worker group
-     * @param processInstancePriority process instance priority
-     * @return update result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param scheduleExpression 新的调度参数（JSON格式）
+     * @param warningType 告警类型
+     * @param warningGroupId 告警组ID
+     * @param failureStrategy 失败策略
+     * @param processInstancePriority 流程实例优先级
+     * @param workerGroup 工作组
+     * @param environmentCode 环境编码
+     * @return 包含更新结果的结果Map
      */
     @Override
     public Map<String, Object> updateScheduleByProcessDefinitionCode(User loginUser,

@@ -23,13 +23,15 @@ import org.apache.dolphinscheduler.common.utils.JSONUtils;
 import java.io.Serializable;
 
 /**
- * process host update
+ * 主机更新请求命令。用于通知Master更新任务实例的执行主机地址，当Worker发生变化时需要同步更新进程主机信息。
  */
 @Data
 public class HostUpdateCommand implements Serializable {
 
+    /** 任务实例ID */
     private int taskInstanceId;
 
+    /** 进程执行主机地址 */
     private String processHost;
 
     /**

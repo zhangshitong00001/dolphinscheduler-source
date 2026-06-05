@@ -22,12 +22,16 @@ import java.util.HashMap;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * running status for task group queue
+ * 任务组队列状态枚举。
+ * 定义任务组队列中任务等待、获取和释放的状态。
  */
 public enum TaskGroupQueueStatus {
 
+    /** 等待队列 */
     WAIT_QUEUE(-1, "wait queue"),
+    /** 获取成功 */
     ACQUIRE_SUCCESS(1, "acquire success"),
+    /** 已释放 */
     RELEASE(2, "release");
 
     @EnumValue

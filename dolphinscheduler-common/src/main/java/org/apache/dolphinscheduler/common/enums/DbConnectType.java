@@ -19,9 +19,14 @@ package org.apache.dolphinscheduler.common.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
+/**
+ * 数据库连接类型枚举。
+ * 定义Oracle数据库的连接方式。
+ */
 public enum DbConnectType {
-
+    /** Oracle服务名方式连接 */
     ORACLE_SERVICE_NAME(0, "Oracle Service Name"),
+    /** Oracle SID方式连接 */
     ORACLE_SID(1, "Oracle SID");
 
     DbConnectType(int code, String descp) {

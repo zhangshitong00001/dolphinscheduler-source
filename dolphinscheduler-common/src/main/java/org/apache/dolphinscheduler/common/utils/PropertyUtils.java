@@ -36,6 +36,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
+/**
+ * 属性配置工具类，提供配置文件属性的读取和类型转换功能。
+ * 支持String、Integer、Long、Boolean、Double、Enum等类型的属性获取，
+ * 以及前缀匹配的属性集检索。在类加载时自动加载common.properties。
+ * 该类为工具类，不可实例化。
+ */
 public class PropertyUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyUtils.class);
@@ -74,7 +80,9 @@ public class PropertyUtils {
     }
 
     /**
-     * @return judge whether resource upload startup
+     * 判断资源上传功能是否启用。
+     *
+     * @return 如果配置了非NONE的资源存储类型则返回true
      */
     public static boolean getResUploadStartupState() {
         String resUploadStartupType = PropertyUtils.getUpperCaseString(Constants.RESOURCE_STORAGE_TYPE);
@@ -84,20 +92,20 @@ public class PropertyUtils {
     }
 
     /**
-     * get property value
+     * 获取指定key的属性值。
      *
-     * @param key property name
-     * @return property value
+     * @param key 属性名称
+     * @return 属性值，如果不存在则返回null
      */
     public static String getString(String key) {
         return properties.getProperty(key.trim());
     }
 
     /**
-     * get property value with upper case
+     * 获取指定key的属性值并转换为大写。
      *
-     * @param key property name
-     * @return property value  with upper case
+     * @param key 属性名称
+     * @return 大写的属性值，如果不存在则返回null
      */
     public static String getUpperCaseString(String key) {
         String val = getString(key);
@@ -105,11 +113,11 @@ public class PropertyUtils {
     }
 
     /**
-     * get property value
+     * 获取指定key的属性值，如果不存在则返回默认值。
      *
-     * @param key property name
-     * @param defaultVal default value
-     * @return property value
+     * @param key 属性名称
+     * @param defaultVal 默认值
+     * @return 属性值或默认值
      */
     public static String getString(String key, String defaultVal) {
         String val = getString(key);
@@ -117,19 +125,21 @@ public class PropertyUtils {
     }
 
     /**
-     * get property value
+     * 获取指定key的int类型属性值，不存在则返回-1。
      *
-     * @param key property name
-     * @return get property int value , if key == null, then return -1
+     * @param key 属性名称
+     * @return int类型属性值，不存在返回-1
      */
     public static int getInt(String key) {
         return getInt(key, -1);
     }
 
     /**
-     * @param key key
-     * @param defaultValue default value
-     * @return property value
+     * 获取指定key的int类型属性值，不存在或格式错误则返回默认值。
+     *
+     * @param key 属性名称
+     * @param defaultValue 默认值
+     * @return int类型属性值
      */
     public static int getInt(String key, int defaultValue) {
         String value = getString(key);
@@ -146,21 +156,21 @@ public class PropertyUtils {
     }
 
     /**
-     * get property value
+     * 获取指定key的boolean类型属性值，不存在则返回false。
      *
-     * @param key property name
-     * @return property value
+     * @param key 属性名称
+     * @return boolean类型属性值
      */
     public static boolean getBoolean(String key) {
         return getBoolean(key, false);
     }
 
     /**
-     * get property value
+     * 获取指定key的boolean类型属性值，不存在则返回默认值。
      *
-     * @param key property name
-     * @param defaultValue default value
-     * @return property value
+     * @param key 属性名称
+     * @param defaultValue 默认值
+     * @return boolean类型属性值
      */
     public static Boolean getBoolean(String key, boolean defaultValue) {
         String value = getString(key);
@@ -168,11 +178,11 @@ public class PropertyUtils {
     }
 
     /**
-     * get property long value
+     * 获取指定key的long类型属性值，不存在或格式错误则返回默认值。
      *
-     * @param key key
-     * @param defaultValue default value
-     * @return property value
+     * @param key 属性名称
+     * @param defaultValue 默认值
+     * @return long类型属性值
      */
     public static long getLong(String key, long defaultValue) {
         String value = getString(key);
@@ -189,17 +199,21 @@ public class PropertyUtils {
     }
 
     /**
-     * @param key key
-     * @return property value
+     * 获取指定key的long类型属性值，不存在则返回-1。
+     *
+     * @param key 属性名称
+     * @return long类型属性值
      */
     public static long getLong(String key) {
         return getLong(key, -1);
     }
 
     /**
-     * @param key key
-     * @param defaultValue default value
-     * @return property value
+     * 获取指定key的double类型属性值，不存在或格式错误则返回默认值。
+     *
+     * @param key 属性名称
+     * @param defaultValue 默认值
+     * @return double类型属性值
      */
     public static double getDouble(String key, double defaultValue) {
         String value = getString(key);
@@ -216,11 +230,11 @@ public class PropertyUtils {
     }
 
     /**
-     * get array
+     * 获取指定key的属性值并按分隔符拆分为数组。
      *
-     * @param key property name
-     * @param splitStr separator
-     * @return property value through array
+     * @param key 属性名称
+     * @param splitStr 分隔符
+     * @return 拆分后的字符串数组，key不存在则返回空数组
      */
     public static String[] getArray(String key, String splitStr) {
         String value = getString(key);
@@ -231,11 +245,13 @@ public class PropertyUtils {
     }
 
     /**
-     * @param key key
-     * @param type type
-     * @param defaultValue default value
-     * @param <T> T
-     * @return get enum value
+     * 获取指定key的枚举类型属性值，不存在则返回默认值。
+     *
+     * @param key 属性名称
+     * @param type 枚举类型
+     * @param defaultValue 默认值
+     * @param <T> 枚举类型参数
+     * @return 枚举值
      */
     public static <T extends Enum<T>> T getEnum(String key, Class<T> type,
                                                 T defaultValue) {
@@ -253,10 +269,10 @@ public class PropertyUtils {
     }
 
     /**
-     * get all properties with specified prefix, like: fs.
+     * 获取所有以指定前缀开头的属性，返回完整key-value的Map。
      *
-     * @param prefix prefix to search
-     * @return all properties with specified prefix
+     * @param prefix 要搜索的前缀，如 "fs."
+     * @return 匹配的属性和值的Map
      */
     public static Map<String, String> getPrefixedProperties(String prefix) {
         Map<String, String> matchedProperties = new HashMap<>();
@@ -269,9 +285,10 @@ public class PropertyUtils {
     }
 
     /**
-     * set value
-     * @param key key
-     * @param value value
+     * 设置属性值。
+     *
+     * @param key 属性名称
+     * @param value 属性值
      */
     public static void setValue(String key, String value) {
         properties.setProperty(key, value);

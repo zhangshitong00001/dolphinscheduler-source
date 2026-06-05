@@ -38,7 +38,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
- * DqExecuteResultServiceImpl
+ * 数据质量执行结果服务实现类。负责数据质量检查执行结果的分页查询，支持按状态、规则类型和日期范围等条件过滤。
  */
 @Service
 public class DqExecuteResultServiceImpl extends BaseServiceImpl implements DqExecuteResultService {
@@ -46,6 +46,19 @@ public class DqExecuteResultServiceImpl extends BaseServiceImpl implements DqExe
     @Autowired
     private DqExecuteResultMapper dqExecuteResultMapper;
 
+    /**
+     * 分页查询数据质量执行结果，支持按状态、规则类型和日期范围等条件过滤。
+     *
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索关键字
+     * @param state 执行状态（可为null）
+     * @param ruleType 规则类型（可为null）
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页执行结果的结果对象
+     */
     @Override
     public Result queryResultListPaging(User loginUser,
                                         String searchVal,

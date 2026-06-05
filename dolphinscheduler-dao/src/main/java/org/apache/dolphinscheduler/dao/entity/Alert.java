@@ -31,89 +31,66 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 告警实体，映射到 t_ds_alert 表，表示系统产生的一条告警记录。
+ * 当工作流或任务执行异常时，系统会根据告警组配置发送告警，告警信息包含标题、内容、告警类型等。
+ */
 @TableName("t_ds_alert")
 public class Alert {
-    /**
-     * primary key
-     */
+    /** 告警主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    /**
-     * sign
-     */
+    /** 告警标识，用于去重和唯一性判断，通常由工作流实例 ID、任务实例 ID 等信息组合生成 */
     @TableField(value = "sign")
     private String sign;
-    /**
-     * title
-     */
+    /** 告警标题 */
     @TableField(value = "title")
     private String title;
 
-    /**
-     * content
-     */
+    /** 告警内容，详细描述告警信息 */
     @TableField(value = "content")
     private String content;
 
-    /**
-     * alert_status
-     */
+    /** 告警发送状态，枚举值：WAIT_EXECUTION（等待执行）、EXECUTION_SUCCESS（发送成功）、EXECUTION_FAILURE（发送失败） */
     @TableField(value = "alert_status")
     private AlertStatus alertStatus;
 
-    /**
-     * warning_type
-     */
+    /** 告警通知类型，枚举值：ALL（全部）、SUCCESS（成功时）、FAILURE（失败时）、TIMEOUT（超时时） */
     @TableField(value = "warning_type")
     private WarningType warningType;
 
-    /**
-     * log
-     */
+    /** 告警日志，记录告警发送过程中的详细信息 */
     @TableField(value = "log")
     private String log;
 
-    /**
-     * alertgroup_id
-     */
+    /** 关联的告警组 ID，对应 t_ds_alertgroup 表的 id */
     @TableField("alertgroup_id")
     private Integer alertGroupId;
 
-    /**
-     * create_time
-     */
+    /** 创建时间 */
     @TableField("create_time")
     private Date createTime;
-    /**
-     * update_time
-     */
+    /** 最后更新时间 */
     @TableField("update_time")
     private Date updateTime;
 
-    /**
-     * project_code
-     */
+    /** 关联的项目编码，对应 t_ds_project 表的 code */
     @TableField("project_code")
     private Long projectCode;
 
-    /**
-     * process_definition_code
-     */
+    /** 关联的工作流定义编码，对应 t_ds_process_definition 表的 code */
     @TableField("process_definition_code")
     private Long processDefinitionCode;
 
-    /**
-     * process_instance_id
-     */
+    /** 关联的工作流实例 ID，对应 t_ds_process_instance 表的 id */
     @TableField("process_instance_id")
     private Integer processInstanceId;
 
-    /**
-     * alert_type
-     */
+    /** 告警类型，枚举值：PROCESS_DEFINITION（工作流告警）、TASK_DEFINITION（任务告警）、SERVER（服务告警） */
     @TableField("alert_type")
     private AlertType alertType;
 
+    /** 非数据库字段：告警附加信息，用于存储告警实例参数等动态数据 */
     @TableField(exist = false)
     private Map<String, Object> info = new HashMap<>();
 

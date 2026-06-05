@@ -19,14 +19,25 @@ package org.apache.dolphinscheduler.dao.entity;
 
 import java.util.Date;
 
+/**
+ * 工作流血缘信息，描述工作流之间的依赖关系和调度信息。
+ */
 public class WorkFlowLineage {
+    /** 工作流编码 */
     private long workFlowCode;
+    /** 工作流名称 */
     private String workFlowName;
+    /** 工作流发布状态 */
     private String workFlowPublishStatus;
+    /** 调度开始时间 */
     private Date scheduleStartTime;
+    /** 调度结束时间 */
     private Date scheduleEndTime;
+    /** Cron 表达式 */
     private String crontab;
+    /** 调度发布状态 */
     private int schedulePublishStatus;
+    /** 源工作流编码 */
     private String sourceWorkFlowCode;
 
     public long getWorkFlowCode() {

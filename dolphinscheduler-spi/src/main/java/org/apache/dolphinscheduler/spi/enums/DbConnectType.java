@@ -17,9 +17,14 @@
 
 package org.apache.dolphinscheduler.spi.enums;
 
+/**
+ * Oracle数据库连接方式枚举，定义连接Oracle时可选的两种连接类型。
+ */
 public enum DbConnectType {
 
+    /** Oracle通过服务名称(Service Name)方式连接 */
     ORACLE_SERVICE_NAME(0, "Oracle Service Name"),
+    /** Oracle通过SID方式连接 */
     ORACLE_SID(1, "Oracle SID");
 
     DbConnectType(int code, String descp) {

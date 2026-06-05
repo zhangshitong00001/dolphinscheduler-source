@@ -25,7 +25,8 @@ import lombok.Data;
 import lombok.NonNull;
 
 /**
- * Used to identify a task instance.
+ * 任务实例的唯一标识键，用于在状态轮询线程的检查列表中标识特定的任务实例。
+ * 由工作流实例 ID、任务编码和任务版本号组成。
  */
 @Data
 @AllArgsConstructor
@@ -34,6 +35,13 @@ public class TaskInstanceKey {
     private final long taskCode;
     private final int taskVersion;
 
+    /**
+     * 从工作流实例和任务实例构造 TaskInstanceKey。
+     *
+     * @param processInstance 工作流实例
+     * @param taskInstance    任务实例
+     * @return TaskInstanceKey
+     */
     public static TaskInstanceKey getTaskInstanceKey(@NonNull ProcessInstance processInstance, @NonNull TaskInstance taskInstance) {
         return new TaskInstanceKey(processInstance.getId(), taskInstance.getTaskCode(), taskInstance.getTaskDefinitionVersion());
     }

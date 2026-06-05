@@ -20,13 +20,17 @@ package org.apache.dolphinscheduler.server.master.event;
 import org.apache.dolphinscheduler.common.enums.TaskEventType;
 import org.apache.dolphinscheduler.server.master.processor.queue.TaskEvent;
 
+/**
+ * 任务事件处理器接口。定义了处理任务事件的契约，每种任务事件类型（如分发、运行中、结果、延迟、Worker 拒绝等）对应一个处理器实现。
+ */
 public interface TaskEventHandler {
 
     /**
-     * Handle the task event
+     * 处理任务事件。
      *
-     * @throws TaskEventHandleError     this exception means we will discord this event.
-     * @throws TaskEventHandleException this exception means we need to retry this event
+     * @param taskEvent 待处理的任务事件
+     * @throws TaskEventHandleError 不可恢复的错误，系统将丢弃该事件
+     * @throws TaskEventHandleException 可恢复的异常，系统将重试该事件
      */
     void handleTaskEvent(TaskEvent taskEvent) throws TaskEventHandleError, TaskEventHandleException;
 

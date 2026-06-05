@@ -39,7 +39,9 @@ import org.apache.dolphinscheduler.service.queue.TaskPriorityQueueImpl;
 import java.util.Date;
 
 /**
- * common task processor
+ * 通用任务处理器，负责普通类型任务的提交、分发和终止。
+ * 作为默认的任务处理器，将任务放入优先级队列等待 Worker 节点领取执行。
+ * 支持通过 Netty 向远程 Worker 发送终止命令。
  */
 @AutoService(ITaskProcessor.class)
 public class CommonTaskProcessor extends BaseTaskProcessor {
@@ -76,7 +78,9 @@ public class CommonTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     * common task cannot be paused
+     * 通用任务不支持暂停操作。
+     *
+     * @return 始终返回 true
      */
     @Override
     protected boolean pauseTask() {
@@ -88,6 +92,11 @@ public class CommonTaskProcessor extends BaseTaskProcessor {
         return Constants.COMMON_TASK_TYPE;
     }
 
+    /**
+     * 将任务分发到 Worker 执行，构建任务优先级放入队列等待 Worker 领取。
+     *
+     * @return 是否分发成功
+     */
     @Override
     public boolean dispatchTask() {
         try {
@@ -130,10 +139,18 @@ public class CommonTaskProcessor extends BaseTaskProcessor {
         }
     }
 
+    /**
+     * 初始化优先级队列。
+     */
     public void initQueue() {
         this.taskUpdateQueue = SpringApplicationContext.getBean(TaskPriorityQueueImpl.class);
     }
 
+    /**
+     * 终止任务，先更新本地任务状态，再向远程 Worker 发送终止命令。
+     *
+     * @return 是否终止成功
+     */
     @Override
     public boolean killTask() {
 

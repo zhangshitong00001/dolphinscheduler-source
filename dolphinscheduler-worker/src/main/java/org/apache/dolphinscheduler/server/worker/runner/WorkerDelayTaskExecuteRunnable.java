@@ -30,6 +30,10 @@ import javax.annotation.Nullable;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 支持延迟执行的任务Runnable，实现了Delayed接口以支持DelayQueue排序。
+ * 根据任务的首次提交时间和延迟时间计算剩余等待时间，并支持DelayQueue中的比较排序。
+ */
 public abstract class WorkerDelayTaskExecuteRunnable extends WorkerTaskExecuteRunnable implements Delayed {
 
     protected WorkerDelayTaskExecuteRunnable(@NonNull TaskExecutionContext taskExecutionContext,
@@ -42,6 +46,12 @@ public abstract class WorkerDelayTaskExecuteRunnable extends WorkerTaskExecuteRu
         super(taskExecutionContext, workerConfig, masterAddress, workerMessageSender, alertClientService, taskPluginManager, storageOperate);
     }
 
+    /**
+     * 获取任务的剩余延迟时间，用于DelayQueue调度。
+     *
+     * @param unit 时间单位
+     * @return 剩余延迟时间
+     */
     @Override
     public long getDelay(TimeUnit unit) {
         TaskExecutionContext taskExecutionContext = getTaskExecutionContext();

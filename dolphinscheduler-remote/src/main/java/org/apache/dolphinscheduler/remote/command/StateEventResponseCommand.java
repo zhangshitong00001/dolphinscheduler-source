@@ -24,18 +24,19 @@ import org.apache.dolphinscheduler.common.utils.JSONUtils;
 import java.io.Serializable;
 
 /**
- * db task final result response command
+ * 状态事件响应命令，用于封装数据库任务最终执行结果的响应消息。
  */
 @Data
 @AllArgsConstructor
 public class StateEventResponseCommand implements Serializable {
 
+    /** 事件键 */
     private String key;
 
     /**
-     * package response command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

@@ -60,28 +60,61 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Netty远程通信客户端。提供同步/异步消息发送、通道管理和命令处理器注册功能。
+ */
 public class NettyRemotingClient implements AutoCloseable {
 
     private final Logger logger = LoggerFactory.getLogger(NettyRemotingClient.class);
 
+    /**
+     * Netty客户端引导程序
+     */
     private final Bootstrap bootstrap = new Bootstrap();
 
+    /**
+     * Netty编码器
+     */
     private final NettyEncoder encoder = new NettyEncoder();
 
+    /**
+     * 主机到通道的映射缓存
+     */
     private final ConcurrentHashMap<Host, Channel> channels = new ConcurrentHashMap<>(128);
 
+    /**
+     * 客户端是否已启动标志
+     */
     private final AtomicBoolean isStarted = new AtomicBoolean(false);
 
+    /**
+     * 工作线程组
+     */
     private final EventLoopGroup workerGroup;
 
+    /**
+     * 客户端配置
+     */
     private final NettyClientConfig clientConfig;
 
+    /**
+     * 异步信号量，用于并发控制
+     */
     private final Semaphore asyncSemaphore = new Semaphore(200, true);
 
+    /**
+     * 回调线程执行器
+     */
     private final ExecutorService callbackExecutor;
 
+    /**
+     * 客户端通道处理器
+     */
     private final NettyClientHandler clientHandler;
 
+    /**
+     * 响应Future定时清理执行器
+     */
     private final ScheduledExecutorService responseFutureExecutor;
 
     public NettyRemotingClient(final NettyClientConfig clientConfig) {
@@ -129,7 +162,7 @@ public class NettyRemotingClient implements AutoCloseable {
     }
 
     /**
-     * async send
+     * 异步发送命令到指定主机。通过信号量控制并发数，超时或失败时通过回调通知调用方。
      *
      * @param host host
      * @param command command
@@ -191,12 +224,12 @@ public class NettyRemotingClient implements AutoCloseable {
     }
 
     /**
-     * sync send
+     * 同步发送命令到指定主机，阻塞等待响应返回。
      *
      * @param host host
      * @param command command
      * @param timeoutMillis timeoutMillis
-     * @return command
+     * @return command 响应命令
      */
     public Command sendSync(final Host host, final Command command, final long timeoutMillis) throws InterruptedException, RemotingException {
         final Channel channel = getChannel(host);
@@ -231,7 +264,7 @@ public class NettyRemotingClient implements AutoCloseable {
     }
 
     /**
-     * send task
+     * 发送命令到指定主机，不等待响应。用于单向通知场景。
      *
      * @param host host
      * @param command command
@@ -259,7 +292,7 @@ public class NettyRemotingClient implements AutoCloseable {
     }
 
     /**
-     * register processor
+     * 注册命令处理器，使用默认线程执行器。
      *
      * @param commandType command type
      * @param processor processor
@@ -269,7 +302,7 @@ public class NettyRemotingClient implements AutoCloseable {
     }
 
     /**
-     * register processor
+     * 注册命令处理器，指定线程执行器。
      *
      * @param commandType command type
      * @param processor processor
@@ -280,7 +313,10 @@ public class NettyRemotingClient implements AutoCloseable {
     }
 
     /**
-     * get channel
+     * 获取指定主机的活跃通道，若不存在或已关闭则创建新通道。
+     *
+     * @param host host
+     * @return channel
      */
     public Channel getChannel(Host host) {
         Channel channel = channels.get(host);
@@ -291,11 +327,11 @@ public class NettyRemotingClient implements AutoCloseable {
     }
 
     /**
-     * create channel
+     * 创建到指定主机的Netty通道。支持同步等待连接完成。
      *
      * @param host host
      * @param isSync sync flag
-     * @return channel
+     * @return channel 创建的通道，失败返回null
      */
     public Channel createChannel(Host host, boolean isSync) {
         ChannelFuture future;
@@ -339,7 +375,7 @@ public class NettyRemotingClient implements AutoCloseable {
     }
 
     /**
-     * close channels
+     * 关闭所有已建立的通道并清空通道缓存。
      */
     private void closeChannels() {
         for (Channel channel : this.channels.values()) {
@@ -349,7 +385,7 @@ public class NettyRemotingClient implements AutoCloseable {
     }
 
     /**
-     * close channel
+     * 关闭指定主机的通道并从缓存中移除。
      *
      * @param host host
      */

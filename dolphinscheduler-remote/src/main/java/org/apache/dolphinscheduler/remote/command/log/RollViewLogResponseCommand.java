@@ -27,7 +27,7 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 import java.io.Serializable;
 
 /**
- *  roll view log response command
+ * 滚动查看日志响应命令。封装Worker返回的指定范围的滚动日志内容字符串。
  */
 @Data
 @NoArgsConstructor
@@ -35,7 +35,7 @@ import java.io.Serializable;
 public class RollViewLogResponseCommand implements Serializable {
 
     /**
-     *  response data
+     * 日志内容字符串
      */
     private String msg;
 

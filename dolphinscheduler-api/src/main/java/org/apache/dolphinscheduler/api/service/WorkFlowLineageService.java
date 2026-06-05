@@ -24,14 +24,34 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * work flow lineage service
+ * 工作流血缘服务接口。提供工作流之间依赖关系的查询功能，支持按名称、Code和项目范围查询血缘关系。
  */
 public interface WorkFlowLineageService {
 
+    /**
+     * 根据项目Code和工作流名称查询工作流血缘关系。
+     *
+     * @param projectCode  项目Code
+     * @param workFlowName 工作流名称
+     * @return 血缘关系列表Map
+     */
     Map<String, Object> queryWorkFlowLineageByName(long projectCode, String workFlowName);
 
+    /**
+     * 根据项目Code和源工作流Code递归查询血缘关系（包括上下游）。
+     *
+     * @param projectCode  项目Code
+     * @param workFlowCode 工作流Code
+     * @return 血缘关系列表Map
+     */
     Map<String, Object> queryWorkFlowLineageByCode(long projectCode, long workFlowCode);
 
+    /**
+     * 查询项目下所有工作流的血缘关系。
+     *
+     * @param projectCode 项目Code
+     * @return 血缘关系列表Map
+     */
     Map<String, Object> queryWorkFlowLineage(long projectCode);
 
     /**

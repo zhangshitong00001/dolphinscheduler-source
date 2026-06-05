@@ -22,6 +22,9 @@ import org.apache.dolphinscheduler.service.model.TaskNode;
 
 import java.util.List;
 
+/**
+ * 流程DAG（有向无环图）模型，表示一个流程实例的图结构。包含DAG的边（任务节点关系列表）和节点（任务节点列表）。
+ */
 public class ProcessDag {
 
     /**

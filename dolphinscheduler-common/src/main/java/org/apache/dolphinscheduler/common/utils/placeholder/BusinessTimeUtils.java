@@ -30,7 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * business time utils
+ * 业务时间工具类，根据不同的命令类型计算业务日期和相关时间参数。
+ * 用于工作流调度中确定补数、恢复、重跑等场景下的业务日期。
+ * 该类为工具类，不可实例化。
  */
 public class BusinessTimeUtils {
     private BusinessTimeUtils() {
@@ -38,11 +40,12 @@ public class BusinessTimeUtils {
     }
 
     /**
-     * get business time in parameters by different command types
+     * 根据命令类型和运行时间计算业务时间参数，包含当前日期、业务日期和日期时间。
      *
-     * @param commandType command type
-     * @param runTime     run time or schedule time
-     * @return business time
+     * @param commandType 命令类型
+     * @param runTime 运行时间或调度时间
+     * @param timezone 时区
+     * @return 包含业务时间参数的Map
      */
     public static Map<String, String> getBusinessTime(CommandType commandType, Date runTime, String timezone) {
         Date businessDate = runTime;

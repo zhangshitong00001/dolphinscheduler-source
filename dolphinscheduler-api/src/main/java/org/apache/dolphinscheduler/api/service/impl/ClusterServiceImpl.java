@@ -56,7 +56,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
- * cluster definition service impl
+ * 集群服务实现类。负责集群（K8s/YARN等）的增删改查、参数校验和K8s客户端管理，支持集群与命名空间的关联检查。
  */
 @Service
 public class ClusterServiceImpl extends BaseServiceImpl implements ClusterService {
@@ -72,12 +72,13 @@ public class ClusterServiceImpl extends BaseServiceImpl implements ClusterServic
     @Autowired
     private K8sNamespaceMapper k8sNamespaceMapper;
     /**
-     * create cluster
+     * 创建集群。管理员专属操作，自动生成集群编码并写入数据库。
      *
-     * @param loginUser login user
-     * @param name      cluster name
-     * @param config    cluster config
-     * @param desc      cluster desc
+     * @param loginUser 当前登录用户（需为管理员）
+     * @param name 集群名称
+     * @param config 集群配置（如K8s kubeconfig）
+     * @param desc 集群描述
+     * @return 包含新集群编码的结果Map
      */
     @Transactional
     @Override
@@ -127,12 +128,12 @@ public class ClusterServiceImpl extends BaseServiceImpl implements ClusterServic
     }
 
     /**
-     * query cluster paging
+     * 分页查询集群列表，支持搜索过滤。
      *
-     * @param pageNo    page number
-     * @param searchVal search value
-     * @param pageSize  page size
-     * @return cluster list page
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @param searchVal 搜索关键字
+     * @return 包含分页集群DTO列表的结果对象
      */
     @Override
     public Result queryClusterListPaging(Integer pageNo, Integer pageSize, String searchVal) {
@@ -164,9 +165,9 @@ public class ClusterServiceImpl extends BaseServiceImpl implements ClusterServic
     }
 
     /**
-     * query all cluster
+     * 查询所有集群列表，返回集群DTO列表。
      *
-     * @return all cluster list
+     * @return 包含所有集群DTO列表的结果Map
      */
     @Override
     public Map<String, Object> queryAllClusterList() {
@@ -190,9 +191,10 @@ public class ClusterServiceImpl extends BaseServiceImpl implements ClusterServic
     }
 
     /**
-     * query cluster
+     * 根据集群编码查询集群详情。
      *
-     * @param code cluster code
+     * @param code 集群编码
+     * @return 包含集群DTO的结果Map，不存在时返回错误信息
      */
     @Override
     public Map<String, Object> queryClusterByCode(Long code) {
@@ -213,9 +215,10 @@ public class ClusterServiceImpl extends BaseServiceImpl implements ClusterServic
     }
 
     /**
-     * query cluster
+     * 根据集群名称查询集群详情。
      *
-     * @param name cluster name
+     * @param name 集群名称
+     * @return 包含集群DTO的结果Map，不存在时返回错误信息
      */
     @Override
     public Map<String, Object> queryClusterByName(String name) {
@@ -235,10 +238,11 @@ public class ClusterServiceImpl extends BaseServiceImpl implements ClusterServic
     }
 
     /**
-     * delete cluster
+     * 根据编码删除集群。管理员专属操作，会检查是否有关联的命名空间。
      *
-     * @param loginUser login user
-     * @param code      cluster code
+     * @param loginUser 当前登录用户（需为管理员）
+     * @param code 集群编码
+     * @return 包含删除结果的结果Map
      */
     @Transactional
     @Override
@@ -266,13 +270,14 @@ public class ClusterServiceImpl extends BaseServiceImpl implements ClusterServic
     }
 
     /**
-     * update cluster
+     * 更新集群信息。配置变更时自动更新K8s客户端连接。
      *
-     * @param loginUser login user
-     * @param code      cluster code
-     * @param name      cluster name
-     * @param config    cluster config
-     * @param desc      cluster desc
+     * @param loginUser 当前登录用户（需为管理员）
+     * @param code 集群编码
+     * @param name 新的集群名称
+     * @param config 新的集群配置
+     * @param desc 新的集群描述
+     * @return 包含更新结果的结果Map
      */
     @Transactional
     @Override
@@ -326,10 +331,10 @@ public class ClusterServiceImpl extends BaseServiceImpl implements ClusterServic
     }
 
     /**
-     * verify cluster name
+     * 验证集群名称是否可用（未被占用）。
      *
-     * @param clusterName cluster name
-     * @return true if the cluster name not exists, otherwise return false
+     * @param clusterName 集群名称
+     * @return 包含验证结果的结果Map，名称已存在时返回错误信息
      */
     @Override
     public Map<String, Object> verifyCluster(String clusterName) {
@@ -350,6 +355,13 @@ public class ClusterServiceImpl extends BaseServiceImpl implements ClusterServic
         return result;
     }
 
+    /**
+     * 校验集群名称和配置参数是否为空。
+     *
+     * @param name 集群名称
+     * @param config 集群配置
+     * @return 包含校验状态的结果Map
+     */
     public Map<String, Object> checkParams(String name, String config) {
         Map<String, Object> result = new HashMap<>();
         if (StringUtils.isEmpty(name)) {

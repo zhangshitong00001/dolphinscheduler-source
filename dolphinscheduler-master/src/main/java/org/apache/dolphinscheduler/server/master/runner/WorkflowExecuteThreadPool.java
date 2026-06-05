@@ -51,7 +51,9 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import com.google.common.base.Strings;
 
 /**
- * Used to execute {@link WorkflowExecuteRunnable}.
+ * 工作流执行线程池，用于异步执行 {@link WorkflowExecuteRunnable} 的事件处理。
+ * 提供状态事件提交、事件执行回调（含工作流完成后的清理和子流程通知）、
+ * 多线程过滤（防止同一工作流被并发处理）、超时检查和缓存移除等功能。
  */
 @Component
 public class WorkflowExecuteThreadPool extends ThreadPoolTaskExecutor {
@@ -74,7 +76,7 @@ public class WorkflowExecuteThreadPool extends ThreadPoolTaskExecutor {
     private StateWheelExecuteThread stateWheelExecuteThread;
 
     /**
-     * multi-thread filter, avoid handling workflow at the same time
+     * 多线程过滤器，防止同一工作流被多个线程同时处理。
      */
     private ConcurrentHashMap<String, WorkflowExecuteRunnable> multiThreadFilterMap = new ConcurrentHashMap<>();
 
@@ -86,6 +88,12 @@ public class WorkflowExecuteThreadPool extends ThreadPoolTaskExecutor {
         this.setCorePoolSize(masterConfig.getExecThreads());
     }
 
+    /**
+     * 检查指定状态事件是否已存在于工作流事件队列中。
+     *
+     * @param stateEvent 状态事件
+     * @return 如果存在返回 true
+     */
     public boolean existStateEvent(StateEvent stateEvent) {
         WorkflowExecuteRunnable workflowExecuteThread =
                 processInstanceExecCacheManager.getByProcessInstanceId(stateEvent.getProcessInstanceId());
@@ -98,7 +106,9 @@ public class WorkflowExecuteThreadPool extends ThreadPoolTaskExecutor {
     }
 
     /**
-     * submit state event
+     * 提交状态事件到指定工作流实例的事件队列中。
+     *
+     * @param stateEvent 状态事件
      */
     public void submitStateEvent(StateEvent stateEvent) {
         WorkflowExecuteRunnable workflowExecuteThread =
@@ -113,7 +123,10 @@ public class WorkflowExecuteThreadPool extends ThreadPoolTaskExecutor {
     }
 
     /**
-     * Handle the events belong to the given workflow.
+     * 处理指定工作流实例的所有待处理事件，通过多线程过滤器和异步回调确保安全执行。
+     * 执行完成后会进行超时检查清理、缓存移除，以及子流程通知。
+     *
+     * @param workflowExecuteThread 工作流执行器
      */
     public void executeEvent(final WorkflowExecuteRunnable workflowExecuteThread) {
         if (!workflowExecuteThread.isStart() || workflowExecuteThread.eventSize() == 0) {
@@ -162,7 +175,9 @@ public class WorkflowExecuteThreadPool extends ThreadPoolTaskExecutor {
     }
 
     /**
-     * notify process change
+     * 通知父流程子流程的状态变更，根据父流程所在位置进行本地或远程通知。
+     *
+     * @param finishProcessInstance 已完成的工作流实例
      */
     private void notifyProcessChanged(ProcessInstance finishProcessInstance) {
         if (Flag.NO == finishProcessInstance.getIsSubProcess()) {
@@ -189,7 +204,7 @@ public class WorkflowExecuteThreadPool extends ThreadPoolTaskExecutor {
     }
 
     /**
-     * notify myself
+     * 通知本地 Master 自身：构造 TaskStateEvent 提交到事件队列中。
      */
     private void notifyMyself(@NonNull ProcessInstance processInstance, @NonNull TaskInstance taskInstance) {
         if (!processInstanceExecCacheManager.contains(processInstance.getId())) {
@@ -206,7 +221,7 @@ public class WorkflowExecuteThreadPool extends ThreadPoolTaskExecutor {
     }
 
     /**
-     * notify process's master
+     * 通知远程 Master：通过 Netty 发送 WorkflowStateEventChangeCommand 到目标 Master。
      */
     private void notifyProcess(ProcessInstance finishProcessInstance, ProcessInstance processInstance,
                                TaskInstance taskInstance) {

@@ -17,19 +17,26 @@
 
 package org.apache.dolphinscheduler.service.expand;
 
+/**
+ * 时间占位符解析扩展服务接口，允许用户自定义时间函数的扩展计算逻辑。
+ */
 public interface TimePlaceholderResolverExpandService {
 
     /**
-     * check is need expand function
-     * @param placeholderName
-     * @return
+     * 检查当前时间占位符是否需要执行扩展计算。
+     *
+     * @param placeholderName 占位符名称
+     * @return 需要扩展返回true，否则返回false
      */
     boolean timeFunctionNeedExpand(String placeholderName);
 
     /**
-     * time function extension
-     * @param placeholderName
-     * @return
+     * 执行时间函数扩展计算，根据流程实例上下文返回计算结果。
+     *
+     * @param processInstanceId 流程实例ID
+     * @param timeZone 时区
+     * @param placeholderName 占位符名称
+     * @return 扩展计算后的结果字符串
      */
     String timeFunctionExtension(Integer processInstanceId, String timeZone, String placeholderName);
 }

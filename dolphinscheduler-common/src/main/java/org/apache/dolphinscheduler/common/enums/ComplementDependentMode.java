@@ -20,14 +20,13 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * task node depend type
+ * 补数依赖模式枚举。
+ * 定义补数操作时对于下游依赖任务的处理模式。
  */
 public enum ComplementDependentMode {
-    /**
-     * 0 off mode
-     * 1 run complement data with all dependent process
-     */
+    /** 关闭依赖模式，补数时不触发下游依赖 */
     OFF_MODE(0,"off mode"),
+    /** 全依赖模式，补数时同时触发所有下游依赖流程 */
     ALL_DEPENDENT(1,"all dependent");
 
     ComplementDependentMode(int code, String desc) {

@@ -123,7 +123,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * Workflow execute task, used to execute a workflow instance.
+ * 工作流执行器，负责单个工作流实例的完整执行生命周期管理。
+ * 作为工作流在 Master 端的核心执行引擎，负责以下阶段的编排：
+ * 1. DAG 构建与初始化：解析工作流定义、构建 DAG 图
+ * 2. 任务队列管理：管理待提交、活动、重试、完成和错误任务的状态映射
+ * 3. 事件处理：处理状态变化事件（任务完成、暂停、停止、超时等）
+ * 4. 状态更新：根据任务执行结果更新工作流实例状态
+ * 5. 补数处理：支持补数场景下的连续调度
+ * 6. 子流程通知：子流程完成后通知父流程
  */
 public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
 
@@ -144,79 +151,74 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     private DAG<String, TaskNode, TaskNodeRelation> dag;
 
     /**
-     * unique key of workflow
+     * 工作流的唯一标识键。
      */
     private String key;
 
     private WorkflowRunnableStatus workflowRunnableStatus = WorkflowRunnableStatus.CREATED;
 
     /**
-     * submit failure nodes
+     * 任务提交失败标志。
      */
     private boolean taskFailedSubmit = false;
 
     /**
-     * task instance hash map, taskId as key
+     * 任务实例映射表，key 为 taskId。
      */
     private final Map<Integer, TaskInstance> taskInstanceMap = new ConcurrentHashMap<>();
 
     /**
-     * running taskProcessor, taskCode as key, taskProcessor as value
-     * only on taskProcessor per taskCode
+     * 活动任务处理器映射表，key 为 taskCode，每个 taskCode 仅有一个活跃的 taskProcessor。
      */
     private final Map<Long, ITaskProcessor> activeTaskProcessorMaps = new ConcurrentHashMap<>();
 
     /**
-     * valid task map, taskCode as key, taskId as value
-     * in a DAG, only one taskInstance per taskCode is valid
+     * 有效任务映射表，key 为 taskCode，value 为 taskId。DAG 中每个 taskCode 只有一个有效的 taskInstance。
      */
     private final Map<Long, Integer> validTaskMap = new ConcurrentHashMap<>();
 
     /**
-     * error task map, taskCode as key, taskInstanceId as value
-     * in a DAG, only one taskInstance per taskCode is valid
+     * 错误任务映射表，key 为 taskCode，value 为 taskInstanceId。
      */
     private final Map<Long, Integer> errorTaskMap = new ConcurrentHashMap<>();
 
     /**
-     * complete task map, taskCode as key, taskInstanceId as value
-     * in a DAG, only one taskInstance per taskCode is valid
+     * 完成任务映射表，key 为 taskCode，value 为 taskInstanceId。
      */
     private final Map<Long, Integer> completeTaskMap = new ConcurrentHashMap<>();
 
     /**
-     * depend failed task set
+     * 依赖失败任务集合。
      */
     private final Set<Long> dependFailedTaskSet = Sets.newConcurrentHashSet();
 
     /**
-     * forbidden task map, code as key
+     * 禁止执行的任务节点映射表，key 为 taskCode。
      */
     private final Map<Long, TaskNode> forbiddenTaskMap = new ConcurrentHashMap<>();
 
     /**
-     * skip task map, code as key
+     * 跳过执行的任务节点映射表，key 为 taskCode 字符串。
      */
     private final Map<String, TaskNode> skipTaskNodeMap = new ConcurrentHashMap<>();
 
     /**
-     * complement date list
+     * 补数日期列表。
      */
     private List<Date> complementListDate = Lists.newLinkedList();
 
     /**
-     * state event queue
+     * 状态事件队列。
      */
     private final ConcurrentLinkedQueue<StateEvent> stateEvents = new ConcurrentLinkedQueue<>();
 
     /**
-     * The StandBy task list, will be executed, need to know, the taskInstance in this queue may doesn't have id.
+     * 待提交任务队列，其中任务实例可能尚未分配 ID。
      */
     private final PeerTaskInstancePriorityQueue readyToSubmitTaskQueue = new PeerTaskInstancePriorityQueue();
 
     /**
-     * wait to retry taskInstance map, taskCode as key, taskInstance as value
-     * before retry, the taskInstance id is 0
+     * 等待重试的任务实例映射表，key 为 taskCode。重试前 taskInstance id 为 0。
      */
     private final Map<Long, TaskInstance> waitToRetryTaskInstanceMap = new ConcurrentHashMap<>();
 
@@ -227,13 +229,16 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     private final String masterAddress;
 
     /**
-     * @param processInstance         processInstance
-     * @param processService          processService
-     * @param processInstanceDao      processInstanceDao
-     * @param nettyExecutorManager    nettyExecutorManager
-     * @param processAlertManager     processAlertManager
-     * @param masterConfig            masterConfig
-     * @param stateWheelExecuteThread stateWheelExecuteThread
+     * 构造工作流执行器。
+     *
+     * @param processInstance         工作流实例
+     * @param processService          流程服务
+     * @param processInstanceDao      工作流实例 DAO
+     * @param nettyExecutorManager    Netty 执行管理器
+     * @param processAlertManager     流程告警管理器
+     * @param masterConfig            Master 配置
+     * @param stateWheelExecuteThread 状态轮询线程
+     * @param curingParamsService     参数固化服务
      */
     public WorkflowExecuteRunnable(
                                    @NonNull ProcessInstance processInstance,
@@ -256,14 +261,16 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * the process start nodes are submitted completely.
+     * 判断工作流是否已启动（起始节点已全部提交完成）。
+     *
+     * @return 是否已启动
      */
     public boolean isStart() {
         return WorkflowRunnableStatus.STARTED == workflowRunnableStatus;
     }
 
     /**
-     * handle event
+     * 处理工作流状态事件，从事件队列中取出事件并逐个分发到对应的 StateEventHandler 处理。
      */
     public void handleEvents() {
         if (!isStart()) {
@@ -360,6 +367,12 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return this.processInstance;
     }
 
+    /**
+     * 检查任务组队列是否可以强制启动或唤醒，如果可以则执行分发操作。
+     *
+     * @param stateEvent 状态事件
+     * @return 是否处理成功
+     */
     public boolean checkForceStartAndWakeUp(StateEvent stateEvent) {
         TaskGroupQueue taskGroupQueue = this.processService.loadTaskGroupQueue(stateEvent.getTaskInstanceId());
         if (taskGroupQueue.getForceStart() == Flag.YES.getCode()) {
@@ -392,16 +405,30 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         }
     }
 
+    /**
+     * 处理工作流超时，发送超时告警。
+     */
     public void processTimeout() {
         ProjectUser projectUser = processService.queryProjectWithUserByProcessInstanceId(processInstance.getId());
         this.processAlertManager.sendProcessTimeoutAlert(this.processInstance, projectUser);
     }
 
+    /**
+     * 处理任务超时，发送任务超时告警。
+     *
+     * @param taskInstance 超时任务实例
+     */
     public void taskTimeout(TaskInstance taskInstance) {
         ProjectUser projectUser = processService.queryProjectWithUserByProcessInstanceId(processInstance.getId());
         processAlertManager.sendTaskTimeoutAlert(processInstance, taskInstance, projectUser);
     }
 
+    /**
+     * 任务完成处理，更新任务状态映射，根据结果决定后续节点提交或重试。
+     *
+     * @param taskInstance 已完成的任务实例
+     * @throws StateEventHandleException 状态处理异常
+     */
     public void taskFinished(TaskInstance taskInstance) throws StateEventHandleException {
         logger.info("TaskInstance finished task code:{} state:{}", taskInstance.getTaskCode(), taskInstance.getState());
         try {
@@ -453,8 +480,9 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * release task group
+     * 释放任务组资源，如果队列中有等待的下一个任务则唤醒。
      *
+     * @param taskInstance 已完成的任务实例
      */
     public void releaseTaskGroup(TaskInstance taskInstance) {
         if (taskInstance.getTaskGroupId() > 0) {
@@ -478,8 +506,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * crate new task instance to retry, different objects from the original
+     * 创建新的任务实例用于重试，与原始对象不同。
      *
+     * @param taskInstance 原始任务实例
+     * @throws StateEventHandleException 状态处理异常
      */
     private void retryTaskInstance(TaskInstance taskInstance) throws StateEventHandleException {
         if (!taskInstance.taskCanRetry()) {
@@ -509,7 +539,9 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * update process instance
+     * 刷新工作流实例信息。
+     *
+     * @param processInstanceId 工作流实例 ID
      */
     public void refreshProcessInstance(int processInstanceId) {
         logger.info("process instance update: {}", processInstanceId);
@@ -523,7 +555,9 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * update task instance
+     * 刷新任务实例信息。
+     *
+     * @param taskInstanceId 任务实例 ID
      */
     public void refreshTaskInstance(int taskInstanceId) {
         logger.info("task instance update: {} ", taskInstanceId);
@@ -542,7 +576,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * check process instance by state event
+     * 校验状态事件中的工作流实例 ID 是否与当前一致。
+     *
+     * @param stateEvent 状态事件
+     * @throws StateEventHandleError 校验失败
      */
     public void checkProcessInstance(StateEvent stateEvent) throws StateEventHandleError {
         if (this.processInstance.getId() != stateEvent.getProcessInstanceId()) {
@@ -551,7 +588,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * check if task instance exist by state event
+     * 校验 TaskStateEvent 中的任务实例 ID 是否存在且有效。
+     *
+     * @param stateEvent 任务状态事件
+     * @throws StateEventHandleError 校验失败
      */
     public void checkTaskInstanceByStateEvent(TaskStateEvent stateEvent) throws StateEventHandleError {
         if (stateEvent.getTaskInstanceId() == null || stateEvent.getTaskInstanceId() == 0) {
@@ -564,7 +604,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * check if task instance exist by id
+     * 检查指定 ID 的任务实例是否存在于内存中。
+     *
+     * @param taskInstanceId 任务实例 ID
+     * @return 是否存在
      */
     public boolean checkTaskInstanceById(int taskInstanceId) {
         if (taskInstanceMap.isEmpty()) {
@@ -574,7 +617,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * get task instance from memory
+     * 从内存获取任务实例。
+     *
+     * @param taskInstanceId 任务实例 ID
+     * @return 任务实例
      */
     public Optional<TaskInstance> getTaskInstance(int taskInstanceId) {
         return Optional.ofNullable(taskInstanceMap.get(taskInstanceId));
@@ -607,12 +653,20 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return Optional.empty();
     }
 
+    /**
+     * 处理工作流阻塞事件，发送阻塞告警。
+     */
     public void processBlock() {
         ProjectUser projectUser = processService.queryProjectWithUserByProcessInstanceId(processInstance.getId());
         processAlertManager.sendProcessBlockingAlert(processInstance, projectUser);
         logger.info("processInstance {} block alert send successful!", processInstance.getId());
     }
 
+    /**
+     * 处理补数流程，在当前补数实例完成后创建下一个补数命令。
+     *
+     * @return 补数是否结束
+     */
     public boolean processComplementData() {
         if (!needComplementProcess()) {
             return false;
@@ -699,7 +753,9 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * ProcessInstance start entrypoint.
+     * 工作流实例启动入口，依次完成 DAG 构建、任务队列初始化和起始节点提交。
+     *
+     * @return 提交状态
      */
     @Override
     public WorkflowSubmitStatue call() {
@@ -736,7 +792,7 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * process end handle
+     * 工作流结束处理，清空事件队列，处理串行流程，发送告警，释放任务组资源。
      */
     public void endProcess() {
         this.stateEvents.clear();
@@ -790,9 +846,7 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * Generate process dag
-     *
-     * @throws Exception exception
+     * 构建工作流 DAG 图，解析流程定义、任务关系，处理禁止节点和恢复节点。
      */
     private void buildFlowDag() throws Exception {
         processDefinition = processService.findProcessDefinition(processInstance.getProcessDefinitionCode(),
@@ -829,7 +883,7 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * init task queue
+     * 初始化任务队列，处理已有运行中实例的任务状态恢复、补数数据加载和全局参数固化。
      */
     private void initTaskQueue() throws StateEventHandleException, CronParseException {
 
@@ -949,10 +1003,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * submit task to execute
+     * 提交任务执行，包括创建 TaskProcessor、提交、分发、任务组资源获取。
      *
-     * @param taskInstance task instance
-     * @return TaskInstance
+     * @param taskInstance 任务实例
+     * @return 提交后的任务实例
      */
     private Optional<TaskInstance> submitTaskExec(TaskInstance taskInstance) {
         try {
@@ -1068,12 +1122,11 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * find task instance in db.
-     * in case submit more than one same name task in the same time.
+     * 在数据库中查找已存在的任务实例，防止同一时间提交重复的同名任务。
      *
-     * @param taskCode    task code
-     * @param taskVersion task version
-     * @return TaskInstance
+     * @param taskCode    任务编码
+     * @param taskVersion 任务版本
+     * @return 已存在的任务实例，若不存在则返回 null
      */
     private TaskInstance findTaskIfExists(Long taskCode, int taskVersion) {
         List<TaskInstance> validTaskInstanceList = getValidTaskList();
@@ -1086,11 +1139,11 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * encapsulation task, this method will only create a new task instance, the return task instance will not contain id.
+     * 创建新的任务实例（不包含 ID），会根据是否已存在进行判断。
      *
-     * @param processInstance process instance
-     * @param taskNode        taskNode
-     * @return TaskInstance
+     * @param processInstance 工作流实例
+     * @param taskNode        任务节点
+     * @return 任务实例
      */
     private TaskInstance createTaskInstance(ProcessInstance processInstance, TaskNode taskNode) {
         TaskInstance taskInstance = findTaskIfExists(taskNode.getCode(), taskNode.getVersion());
@@ -1102,9 +1155,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * clone a new taskInstance for retry and reset some logic fields
+     * 克隆一个用于重试的新任务实例，重置状态并递增重试次数。
      *
-     * @return taskInstance
+     * @param taskInstance 原始任务实例
+     * @return 新的任务实例
      */
     public TaskInstance cloneRetryTaskInstance(TaskInstance taskInstance) {
         TaskNode taskNode = dag.getNode(Long.toString(taskInstance.getTaskCode()));
@@ -1130,9 +1184,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * clone a new taskInstance for tolerant and reset some logic fields
+     * 克隆一个用于容错恢复的新任务实例。
      *
-     * @return taskInstance
+     * @param taskInstance 原始任务实例
+     * @return 新的任务实例
      */
     public TaskInstance cloneTolerantTaskInstance(TaskInstance taskInstance) {
         TaskNode taskNode = dag.getNode(Long.toString(taskInstance.getTaskCode()));
@@ -1152,11 +1207,11 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * new a taskInstance
+     * 创建全新的任务实例，设置初始状态、优先级、Worker 组、环境配置等。
      *
-     * @param processInstance process instance
-     * @param taskNode task node
-     * @return task instance
+     * @param processInstance 工作流实例
+     * @param taskNode        任务节点
+     * @return 新的任务实例
      */
     public TaskInstance newTaskInstance(ProcessInstance processInstance, TaskNode taskNode) {
         TaskInstance taskInstance = new TaskInstance();
@@ -1239,6 +1294,12 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return taskInstance;
     }
 
+    /**
+     * 获取上游任务的变量池并合并到当前任务实例。
+     *
+     * @param taskInstance 当前任务实例
+     * @param preTask      上游任务编码集合
+     */
     public void getPreVarPool(TaskInstance taskInstance, Set<String> preTask) {
         Map<String, Property> allProperty = new HashMap<>();
         Map<String, TaskInstance> allTaskInstance = new HashMap<>();
@@ -1270,6 +1331,11 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         }
     }
 
+    /**
+     * 获取内存中所有任务实例。
+     *
+     * @return 所有任务实例集合
+     */
     public Collection<TaskInstance> getAllTaskInstances() {
         return taskInstanceMap.values();
     }
@@ -1307,7 +1373,7 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * get complete task instance map, taskCode as key
+     * 获取已完成的任务实例映射表，key 为 taskCode 字符串。
      */
     private Map<String, TaskInstance> getCompleteTaskInstanceMap() {
         Map<String, TaskInstance> completeTaskInstanceMap = new HashMap<>();
@@ -1328,9 +1394,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return completeTaskInstanceMap;
     }
 
-    /**
-     * get valid task list
-     */
     private List<TaskInstance> getValidTaskList() {
         List<TaskInstance> validTaskInstanceList = new ArrayList<>();
         for (Integer taskInstanceId : validTaskMap.values()) {
@@ -1394,9 +1457,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * determine whether the dependencies of the task node are complete
+     * 判断任务节点的依赖是否全部完成。
      *
-     * @return DependResult
+     * @param taskCode 任务编码
+     * @return 依赖结果
      */
     private DependResult isTaskDepsComplete(String taskCode) {
 
@@ -1441,11 +1505,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * This function is specially used to handle the dependency situation where the parent node is a prohibited node.
-     * When the parent node is a forbidden node, the dependency relationship should continue to be traced
+     * 递归追踪间接依赖节点，处理父节点为禁止节点时的依赖穿透。
      *
-     * @param taskCode            taskCode
-     * @param indirectDepCodeList All indirectly dependent nodes
+     * @param taskCode            任务编码
+     * @param indirectDepCodeList 间接依赖节点列表
      */
     private void setIndirectDepList(String taskCode, List<String> indirectDepCodeList) {
         TaskNode taskNode = dag.getNode(taskCode);
@@ -1463,7 +1526,7 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * depend node is completed, but here need check the condition task branch is the next node
+     * 判断依赖节点是否成功完成，对于条件任务需要检查其分支是否包含当前任务。
      */
     private boolean dependTaskSuccess(String dependNodeName, String nextNodeName) {
         if (dag.getNode(dependNodeName).isConditionsTask()) {
@@ -1486,12 +1549,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return true;
     }
 
-    /**
-     * query task instance by complete state
-     *
-     * @param state state
-     * @return task instance list
-     */
     private List<TaskInstance> getCompleteTaskByState(TaskExecutionStatus state) {
         List<TaskInstance> resultList = new ArrayList<>();
         for (Integer taskInstanceId : completeTaskMap.values()) {
@@ -1503,12 +1560,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return resultList;
     }
 
-    /**
-     * where there are ongoing tasks
-     *
-     * @param state state
-     * @return ExecutionStatus
-     */
     private WorkflowExecutionStatus runningState(WorkflowExecutionStatus state) {
         if (state == WorkflowExecutionStatus.READY_STOP || state == WorkflowExecutionStatus.READY_PAUSE
                 || state == WorkflowExecutionStatus.READY_BLOCK ||
@@ -1520,11 +1571,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         }
     }
 
-    /**
-     * exists failure task,contains submit failure、dependency failure,execute failure(retry after)
-     *
-     * @return Boolean whether has failed task
-     */
     private boolean hasFailedTask() {
 
         if (this.taskFailedSubmit) {
@@ -1536,11 +1582,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return this.dependFailedTaskSet.size() > 0;
     }
 
-    /**
-     * process instance failure
-     *
-     * @return Boolean whether process instance failed
-     */
     private boolean processFailed() {
         if (hasFailedTask()) {
             logger.info("The current process has failed task, the current process failed");
@@ -1555,14 +1596,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return false;
     }
 
-    /**
-     * prepare for pause
-     * 1，failed retry task in the preparation queue , returns to failure directly
-     * 2，exists pause task，complement not completed, pending submission of tasks, return to suspension
-     * 3，success
-     *
-     * @return ExecutionStatus
-     */
     private WorkflowExecutionStatus processReadyPause() {
         if (hasRetryTaskInStandBy()) {
             return WorkflowExecutionStatus.FAILURE;
@@ -1577,14 +1610,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         }
     }
 
-    /**
-     * prepare for block
-     * if process has tasks still running, pause them
-     * if readyToSubmitTaskQueue is not empty, kill them
-     * else return block status directly
-     *
-     * @return ExecutionStatus
-     */
     private WorkflowExecutionStatus processReadyBlock() {
         if (activeTaskProcessorMaps.size() > 0) {
             for (ITaskProcessor taskProcessor : activeTaskProcessorMaps.values()) {
@@ -1602,9 +1627,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * generate the latest process instance status by the tasks state
+     * 根据当前任务执行情况推断工作流实例的最新状态。
      *
-     * @return process instance execution status
+     * @param instance 工作流实例
+     * @return 计算出的工作流执行状态
      */
     private WorkflowExecutionStatus getProcessInstanceState(ProcessInstance instance) {
         WorkflowExecutionStatus state = instance.getState();
@@ -1668,11 +1694,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return state;
     }
 
-    /**
-     * whether complement end
-     *
-     * @return Boolean whether is complement end
-     */
     private boolean isComplementEnd() {
         if (!processInstance.isComplementData()) {
             return true;
@@ -1684,8 +1705,7 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * updateProcessInstance process instance state
-     * after each batch of tasks is executed, the status of the process instance is updated
+     * 根据任务执行情况更新工作流实例状态，每批任务执行完成后调用。
      */
     private void updateProcessInstanceState() throws StateEventHandleException {
         WorkflowExecutionStatus state = getProcessInstanceState(processInstance);
@@ -1710,7 +1730,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * stateEvent's execution status as process instance state
+     * 根据 WorkflowStateEvent 更新工作流实例状态。
+     *
+     * @param stateEvent 工作流状态事件
+     * @throws StateEventHandleException 数据库更新异常
      */
     public void updateProcessInstanceState(WorkflowStateEvent stateEvent) throws StateEventHandleException {
         WorkflowExecutionStatus state = stateEvent.getStatus();
@@ -1740,19 +1763,19 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * get task dependency result
+     * 获取单个任务的依赖结果。
      *
-     * @param taskInstance task instance
-     * @return DependResult
+     * @param taskInstance 任务实例
+     * @return 依赖结果
      */
     private DependResult getDependResultForTask(TaskInstance taskInstance) {
         return isTaskDepsComplete(Long.toString(taskInstance.getTaskCode()));
     }
 
     /**
-     * add task to standby list
+     * 将任务实例添加到待提交队列中。
      *
-     * @param taskInstance task instance
+     * @param taskInstance 任务实例
      */
     public void addTaskToStandByList(TaskInstance taskInstance) {
         if (readyToSubmitTaskQueue.contains(taskInstance)) {
@@ -1768,20 +1791,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         readyToSubmitTaskQueue.put(taskInstance);
     }
 
-    /**
-     * remove task from stand by list
-     *
-     * @param taskInstance task instance
-     */
     private boolean removeTaskFromStandbyList(TaskInstance taskInstance) {
         return readyToSubmitTaskQueue.remove(taskInstance);
     }
 
-    /**
-     * has retry task in standby
-     *
-     * @return Boolean whether has retry task in standby
-     */
     private boolean hasRetryTaskInStandBy() {
         for (Iterator<TaskInstance> iter = readyToSubmitTaskQueue.iterator(); iter.hasNext();) {
             if (iter.next().getState().isFailure()) {
@@ -1792,7 +1805,7 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * close the on going tasks
+     * 终止当前工作流中所有正在执行的任务，清空待提交队列。
      */
     public void killAllTasks() {
         logger.info("kill called on process instance id: {}, num: {}",
@@ -1831,12 +1844,19 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         }
     }
 
+    /**
+     * 判断工作流是否已完成。
+     *
+     * @return 工作流状态是否已结束
+     */
     public boolean workFlowFinish() {
         return this.processInstance.getState().isFinished();
     }
 
     /**
-     * handling the list of tasks to be submitted
+     * 提交待执行队列中的任务，依次检查每个任务的依赖关系和重试状态后执行。
+     *
+     * @throws StateEventHandleException 状态处理异常
      */
     public void submitStandByTask() throws StateEventHandleException {
         int length = readyToSubmitTaskQueue.size();
@@ -1906,10 +1926,10 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * Get start task instance list from recover
+     * 从命令参数中获取恢复启动的任务实例列表。
      *
-     * @param cmdParam command param
-     * @return task instance list
+     * @param cmdParam 命令参数
+     * @return 需恢复的任务实例列表
      */
     protected List<TaskInstance> getRecoverTaskInstanceList(String cmdParam) {
         Map<String, String> paramMap = JSONUtils.toMap(cmdParam);
@@ -1928,12 +1948,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return Collections.emptyList();
     }
 
-    /**
-     * parse "StartNodeNameList" from cmd param
-     *
-     * @param cmdParam command param
-     * @return start node name list
-     */
     private List<String> parseStartNodeName(String cmdParam) {
         List<String> startNodeNameList = new ArrayList<>();
         Map<String, String> paramMap = JSONUtils.toMap(cmdParam);
@@ -1946,12 +1960,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return startNodeNameList;
     }
 
-    /**
-     * generate start node code list from parsing command param;
-     * if "StartNodeIdList" exists in command param, return StartNodeIdList
-     *
-     * @return recovery node code list
-     */
     private List<String> getRecoveryNodeCodeList(List<TaskInstance> recoverNodeList) {
         List<String> recoveryNodeCodeList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(recoverNodeList)) {
@@ -1963,14 +1971,14 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
     }
 
     /**
-     * generate flow dag
+     * 生成流程 DAG 图。
      *
-     * @param totalTaskNodeList    total task node list
-     * @param startNodeNameList    start node name list
-     * @param recoveryNodeCodeList recovery node code list
-     * @param depNodeType          depend node type
-     * @return ProcessDag           process dag
-     * @throws Exception exception
+     * @param totalTaskNodeList    任务节点列表
+     * @param startNodeNameList    起始节点名称列表
+     * @param recoveryNodeCodeList 恢复节点编码列表
+     * @param depNodeType          依赖节点类型
+     * @return 流程 DAG 图
+     * @throws Exception 异常
      */
     public ProcessDag generateFlowDag(List<TaskNode> totalTaskNodeList,
                                       List<String> startNodeNameList,
@@ -1979,9 +1987,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return DagHelper.generateFlowDag(totalTaskNodeList, startNodeNameList, recoveryNodeCodeList, depNodeType);
     }
 
-    /**
-     * check task queue
-     */
     private boolean checkTaskQueue() {
         AtomicBoolean result = new AtomicBoolean(false);
         taskInstanceMap.forEach((id, taskInstance) -> {
@@ -1992,9 +1997,6 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return result.get();
     }
 
-    /**
-     * is new process instance
-     */
     private boolean isNewProcessInstance() {
         if (Flag.YES.equals(processInstance.getRecovery())) {
             logger.info("This workInstance will be recover by this execution");
@@ -2012,6 +2014,12 @@ public class WorkflowExecuteRunnable implements Callable<WorkflowSubmitStatue> {
         return false;
     }
 
+    /**
+     * 重新提交指定任务。
+     *
+     * @param taskCode 任务编码
+     * @throws Exception 如果找不到对应的 taskProcessor 则抛出异常
+     */
     public void resubmit(long taskCode) throws Exception {
         ITaskProcessor taskProcessor = activeTaskProcessorMaps.get(taskCode);
         if (taskProcessor != null) {

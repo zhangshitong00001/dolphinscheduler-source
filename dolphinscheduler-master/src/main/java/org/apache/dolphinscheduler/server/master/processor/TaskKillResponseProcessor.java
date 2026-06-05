@@ -32,7 +32,7 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 
 /**
- *  task response processor
+ * 任务终止响应处理器。接收Worker返回的任务终止响应命令并记录日志。
  */
 @Component
 public class TaskKillResponseProcessor implements NettyRequestProcessor {
@@ -40,11 +40,10 @@ public class TaskKillResponseProcessor implements NettyRequestProcessor {
     private final Logger logger = LoggerFactory.getLogger(TaskKillResponseProcessor.class);
 
     /**
-     * task final result response
-     * need master process , state persistence
+     * 处理任务终止响应命令。解析命令并记录任务终止响应的日志信息。
      *
-     * @param channel channel
-     * @param command command
+     * @param channel Netty通道
+     * @param command 任务终止响应命令
      */
     @Override
     public void process(Channel channel, Command command) {

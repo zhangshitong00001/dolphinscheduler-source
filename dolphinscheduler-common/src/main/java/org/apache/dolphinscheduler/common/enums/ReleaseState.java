@@ -20,15 +20,14 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * process define release state
+ * 流程定义发布状态枚举。
+ * 定义流程定义的上线/下线状态。
  */
 public enum ReleaseState {
 
-    /**
-     * 0 offline
-     * 1 online
-     */
+    /** 离线（下线） */
     OFFLINE(0, "offline"),
+    /** 在线（上线） */
     ONLINE(1, "online");
 
     ReleaseState(int code, String descp) {

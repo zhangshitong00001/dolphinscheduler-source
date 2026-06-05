@@ -18,7 +18,7 @@
 package org.apache.dolphinscheduler.remote.exceptions;
 
 /**
- *  remote exception
+ * 远程通信受检异常，作为所有远程通信相关异常的基类。
  */
 public class RemotingException extends Exception {
 

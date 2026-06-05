@@ -40,7 +40,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 
 
 /**
- * netty server request handler
+ * Netty服务端处理器。负责处理客户端请求的分发与响应，支持命令类型注册和心跳检测。
  */
 @ChannelHandler.Sharable
 public class NettyServerHandler extends ChannelInboundHandlerAdapter {
@@ -48,12 +48,12 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     private final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
 
     /**
-     * netty remote server
+     * Netty远程服务端实例
      */
     private final NettyRemotingServer nettyRemotingServer;
 
     /**
-     * server processors queue
+     * 服务端处理器注册表，按命令类型映射到对应的处理器和执行器
      */
     private final ConcurrentHashMap<CommandType, Pair<NettyRequestProcessor, ExecutorService>> processors = new ConcurrentHashMap<>();
 
@@ -62,8 +62,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * When the current channel is not active,
-     * the current channel has reached the end of its life cycle
+     * 通道变为非活跃状态时的回调。关闭当前通道。
      *
      * @param ctx channel handler context
      */
@@ -73,7 +72,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * The current channel reads data from the remote end
+     * 通道读取数据时的回调。将接收到的命令分发给对应的处理器。
      *
      * @param ctx channel handler context
      * @param msg message
@@ -84,7 +83,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * register processor
+     * 注册命令处理器，使用默认线程执行器。
      *
      * @param commandType command type
      * @param processor processor
@@ -94,7 +93,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * register processor
+     * 注册命令处理器，指定线程执行器。
      *
      * @param commandType command type
      * @param processor processor
@@ -109,7 +108,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * process received logic
+     * 处理接收到的命令。过滤心跳消息，其余按命令类型分发给注册的处理器。
      *
      * @param channel channel
      * @param msg message
@@ -142,7 +141,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * caught exception
+     * 异常捕获处理。记录异常日志并关闭异常通道。
      *
      * @param ctx channel handler context
      * @param cause cause
@@ -154,7 +153,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * channel write changed
+     * 通道可写性变更处理。当通道不可写时暂停自动读取，可写时恢复自动读取，实现背压控制。
      *
      * @param ctx channel handler context
      */

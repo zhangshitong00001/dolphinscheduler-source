@@ -21,51 +21,40 @@ import java.util.Date;
 
 import lombok.Data;
 
+/**
+ * 树形视图节点实例DTO。表示工作流树形图中的一个节点实例，包含节点的运行状态、时间和主机信息。
+ */
 @Data
 public class Instance {
 
+    /** 节点ID */
     private Integer id;
 
-    /**
-     * node name
-     */
+    /** 节点名称 */
     private String name;
 
-    /**
-     * node code
-     */
+    /** 节点编码 */
     private long code;
 
-    /**
-     * node type
-     */
+    /** 节点类型 */
     private String type;
 
-    /**
-     * node status
-     */
+    /** 节点状态 */
     private String state;
 
-    /**
-     * node start time
-     */
+    /** 节点开始时间 */
     private Date startTime;
 
-    /**
-     * node end time
-     */
+    /** 节点结束时间 */
     private Date endTime;
 
-    /**
-     * node running on which host
-     */
+    /** 节点运行所在的主机 */
     private String host;
 
-    /**
-     * node duration
-     */
+    /** 节点运行持续时间 */
     private String duration;
 
+    /** 子流程编码 */
     private long subflowCode;
 
     public Instance() {

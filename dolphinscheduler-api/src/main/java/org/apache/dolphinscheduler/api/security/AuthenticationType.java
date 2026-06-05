@@ -20,7 +20,8 @@ package org.apache.dolphinscheduler.api.security;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * authentication type
+ * 认证类型枚举。定义系统支持的认证方式，包括基于用户名密码的PASSWORD认证和基于LDAP服务器的LDAP认证。
+ * 认证流程：根据配置的认证类型，选择对应的Authenticator实现进行身份验证。
  */
 public enum AuthenticationType {
 

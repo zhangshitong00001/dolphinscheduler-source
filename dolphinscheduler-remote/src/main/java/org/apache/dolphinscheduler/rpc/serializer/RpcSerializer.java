@@ -17,13 +17,20 @@ package org.apache.dolphinscheduler.rpc.serializer;/*
 
 import java.util.HashMap;
 
+/**
+ * RPC 序列化器注册枚举。定义 RPC 协议支持的序列化方式及其对应的 Serializer 实现。
+ * 通过序列化类型字节码查找对应的序列化器实例，支持扩展多家序列化方案。
+ */
 public enum RpcSerializer {
 
 
+    /** ProtoStuff 二进制序列化方案 */
     PROTOSTUFF((byte) 1, new ProtoStuffSerializer());
 
+    /** 序列化类型标识字节 */
     byte type;
 
+    /** 序列化器实例 */
     Serializer serializer;
 
     RpcSerializer(byte type, Serializer serializer) {
@@ -35,6 +42,7 @@ public enum RpcSerializer {
         return type;
     }
 
+    /** 类型字节码到序列化器实例的映射表 */
     private static HashMap<Byte, Serializer> SERIALIZERS_MAP = new HashMap<>();
 
     static {
@@ -43,6 +51,12 @@ public enum RpcSerializer {
         }
     }
 
+    /**
+     * 根据序列化类型字节码获取对应的序列化器实例。
+     *
+     * @param type 序列化类型字节码
+     * @return 对应的 Serializer 实例，若不存在则返回 null
+     */
     public static Serializer getSerializerByType(byte type) {
         return SERIALIZERS_MAP.get(type);
     }

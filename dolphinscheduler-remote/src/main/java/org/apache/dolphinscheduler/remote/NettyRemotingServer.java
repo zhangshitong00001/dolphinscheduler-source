@@ -50,54 +50,54 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 
 /**
- * remoting netty server
+ * Netty远程通信服务端。负责监听端口、接收客户端连接、分发请求到注册的命令处理器。
  */
 public class NettyRemotingServer {
 
     private final Logger logger = LoggerFactory.getLogger(NettyRemotingServer.class);
 
     /**
-     * server bootstrap
+     * 服务端引导程序
      */
     private final ServerBootstrap serverBootstrap = new ServerBootstrap();
 
     /**
-     * default executor
+     * 默认线程执行器
      */
     private final ExecutorService defaultExecutor = Executors.newFixedThreadPool(Constants.CPUS);
 
     /**
-     * boss group
+     * Boss线程组，负责接收连接
      */
     private final EventLoopGroup bossGroup;
 
     /**
-     * worker group
+     * Worker线程组，负责处理IO操作
      */
     private final EventLoopGroup workGroup;
 
     /**
-     * server config
+     * 服务端配置
      */
     private final NettyServerConfig serverConfig;
 
     /**
-     * server handler
+     * 服务端通道处理器
      */
     private final NettyServerHandler serverHandler = new NettyServerHandler(this);
 
     /**
-     * started flag
+     * 服务端是否已启动标志
      */
     private final AtomicBoolean isStarted = new AtomicBoolean(false);
 
     /**
-     * Netty server bind fail message
+     * Netty服务端绑定失败消息模板
      */
     private static final String NETTY_BIND_FAILURE_MSG = "NettyRemotingServer bind %s fail";
 
     /**
-     * server init
+     * 初始化服务端，创建Boss和Worker线程组。
      *
      * @param serverConfig server config
      */
@@ -115,7 +115,7 @@ public class NettyRemotingServer {
     }
 
     /**
-     * server start
+     * 启动Netty服务端，绑定监听端口并初始化通道处理器链。
      */
     public void start() {
         if (isStarted.compareAndSet(false, true)) {
@@ -154,7 +154,7 @@ public class NettyRemotingServer {
     }
 
     /**
-     * init netty channel
+     * 初始化Netty通道管道线，添加编解码器、空闲检测处理器和服务端处理器。
      *
      * @param ch socket channel
      */
@@ -167,7 +167,7 @@ public class NettyRemotingServer {
     }
 
     /**
-     * register processor
+     * 注册命令处理器，使用默认线程执行器。
      *
      * @param commandType command type
      * @param processor processor
@@ -177,7 +177,7 @@ public class NettyRemotingServer {
     }
 
     /**
-     * register processor
+     * 注册命令处理器，指定线程执行器。
      *
      * @param commandType command type
      * @param processor processor
@@ -188,7 +188,7 @@ public class NettyRemotingServer {
     }
 
     /**
-     * get default thread executor
+     * 获取默认线程执行器，用于处理未指定专用执行器的命令。
      *
      * @return thread executor
      */

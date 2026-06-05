@@ -60,7 +60,15 @@ import org.springframework.stereotype.Component;
 import io.netty.channel.Channel;
 
 /**
- * logger request process logic
+ * 日志请求处理器，处理来自Master端的日志操作请求。
+ * <p>支持的请求类型：
+ * <ul>
+ *   <li>获取日志字节内容</li>
+ *   <li>查看完整日志</li>
+ *   <li>滚动查看日志</li>
+ *   <li>删除任务日志</li>
+ *   <li>获取AppId列表</li>
+ * </ul></p>
  */
 @Component
 public class LoggerRequestProcessor implements NettyRequestProcessor {

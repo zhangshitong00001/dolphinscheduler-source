@@ -102,6 +102,12 @@ import org.slf4j.LoggerFactory;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+/**
+ * 任务处理器的抽象基类，实现了 {@link ITaskProcessor} 接口的通用逻辑。
+ * 提供任务提交、运行、分发、暂停、停止和超时处理的标准流程框架，
+ * 同时封装了任务执行上下文的构建、数据质量任务配置、K8s 任务配置以及资源信息解析等公共功能。
+ * 具体的任务类型处理器需继承此类并实现对应的抽象方法。
+ */
 public abstract class BaseTaskProcessor implements ITaskProcessor {
 
     protected final Logger logger =
@@ -150,40 +156,58 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
             SpringApplicationContext.getBean(javax.sql.DataSource.class);
 
     /**
-     * pause task, common tasks donot need this.
+     * 暂停任务，子类实现具体的暂停逻辑。
+     *
+     * @return 是否暂停成功
      */
     protected abstract boolean pauseTask();
 
     /**
-     * kill task, all tasks need to realize this function
+     * 终止任务，子类实现具体的终止逻辑。
+     *
+     * @return 是否终止成功
      */
     protected abstract boolean killTask();
 
     /**
-     * task timeout process
+     * 任务超时处理，子类实现具体的超时逻辑。
+     *
+     * @return 是否超时处理成功
      */
     protected abstract boolean taskTimeout();
 
     /**
-     * submit task
+     * 提交任务，子类实现具体的提交逻辑。
+     *
+     * @return 是否提交成功
      */
     protected abstract boolean submitTask();
 
     /*
-     * resubmit task
+     * 重新提交任务，子类实现具体的重提交逻辑。
      */
     protected abstract boolean resubmitTask();
 
     /**
-     * run task
+     * 运行任务，子类实现具体的运行逻辑。
+     *
+     * @return 是否运行成功
      */
     protected abstract boolean runTask();
 
     /**
-     * dispatch task
+     * 分发任务到 Worker 执行，子类实现具体的分发逻辑。
+     *
+     * @return 是否分发成功
      */
     protected abstract boolean dispatchTask();
 
+    /**
+     * 根据指定的任务动作执行对应的操作，是任务状态变更的统一入口。
+     *
+     * @param taskAction 任务动作（SUBMIT, RUN, DISPATCH, PAUSE, STOP, TIMEOUT, RESUBMIT）
+     * @return 是否执行成功
+     */
     @Override
     public boolean action(TaskAction taskAction) {
         String threadName = Thread.currentThread().getName();
@@ -281,7 +305,7 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * set master task running logger.
+     * 设置 Master 任务运行日志名称，将线程名格式化为包含任务标识信息的日志前缀。
      */
     public void setTaskExecutionLogger() {
         threadLoggerInfoName = LoggerUtils.buildTaskId(taskInstance.getFirstSubmitTime(),
@@ -293,10 +317,10 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * get TaskExecutionContext
+     * 构建任务执行上下文，包括租户、队列、资源、参数等信息。
      *
-     * @param taskInstance taskInstance
-     * @return TaskExecutionContext
+     * @param taskInstance 任务实例
+     * @return 任务执行上下文，若租户校验失败则返回 null
      */
     protected TaskExecutionContext getTaskExecutionContext(TaskInstance taskInstance) {
         int userId = taskInstance.getProcessDefine() == null ? 0 : taskInstance.getProcessDefine().getUserId();
@@ -348,6 +372,11 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
                 .create();
     }
 
+    /**
+     * 设置任务资源信息，包括数据源资源和 UDF 函数资源。
+     *
+     * @param resourceParametersHelper 资源参数帮助类
+     */
     public void setTaskResourceInfo(ResourceParametersHelper resourceParametersHelper) {
         if (Objects.isNull(resourceParametersHelper)) {
             return;
@@ -401,10 +430,11 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * set data quality task relation
+     * 设置数据质量任务的相关配置，包括规则输入、执行 SQL、源/目标数据源配置等。
      *
-     * @param dataQualityTaskExecutionContext dataQualityTaskExecutionContext
-     * @param taskInstance taskInstance
+     * @param dataQualityTaskExecutionContext 数据质量任务执行上下文
+     * @param taskInstance                    任务实例
+     * @param tenantCode                      租户编码
      */
     private void setDataQualityTaskRelation(DataQualityTaskExecutionContext dataQualityTaskExecutionContext,
                                             TaskInstance taskInstance, String tenantCode) {
@@ -451,13 +481,13 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * It is used to get comparison params, the param contains
-     * comparison name、comparison table and execute sql.
-     * When the type is fixed_value, params will be null.
-     * @param dataQualityTaskExecutionContext
-     * @param config
-     * @param ruleInputEntryList
-     * @param executeSqlList
+     * 设置比较参数，包含比较名称、比较表和执行 SQL。
+     * 当比较类型为固定值（fixed_value，id=1）时，参数为空。
+     *
+     * @param dataQualityTaskExecutionContext 数据质量任务执行上下文
+     * @param config                          规则输入参数
+     * @param ruleInputEntryList              规则输入条目列表
+     * @param executeSqlList                  执行 SQL 列表
      */
     private void setComparisonParams(DataQualityTaskExecutionContext dataQualityTaskExecutionContext,
                                      Map<String, String> config,
@@ -501,9 +531,9 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * The default datasource is used to get the dolphinscheduler datasource info,
-     * and the info will be used in StatisticsValueConfig and WriterConfig
-     * @return DataSource
+     * 获取默认数据源（DolphinScheduler 自身的数据源），用于 StatisticsValueConfig 和 WriterConfig。
+     *
+     * @return 默认数据源配置
      */
     public DataSource getDefaultDataSource() {
         DataSource dataSource = new DataSource();
@@ -527,9 +557,9 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * The StatisticsValueWriterConfig will be used in DataQualityApplication that
-     * writes the statistics value into dolphin scheduler datasource
-     * @param dataQualityTaskExecutionContext
+     * 设置统计值写入配置，用于 DataQualityApplication 将统计值写入 DolphinScheduler 数据源。
+     *
+     * @param dataQualityTaskExecutionContext 数据质量任务执行上下文
      */
     private void setStatisticsValueWriterConfig(DataQualityTaskExecutionContext dataQualityTaskExecutionContext) {
         DataSource dataSource = getDefaultDataSource();
@@ -541,9 +571,9 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * The WriterConfig will be used in DataQualityApplication that
-     * writes the data quality check result into dolphin scheduler datasource
-     * @param dataQualityTaskExecutionContext
+     * 设置写入配置，用于 DataQualityApplication 将数据质量检查结果写入 DolphinScheduler 数据源。
+     *
+     * @param dataQualityTaskExecutionContext 数据质量任务执行上下文
      */
     private void setWriterConfig(DataQualityTaskExecutionContext dataQualityTaskExecutionContext) {
         DataSource dataSource = getDefaultDataSource();
@@ -555,10 +585,10 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * The TargetConfig will be used in DataQualityApplication that
-     * get the data which be used to compare to src value
-     * @param dataQualityTaskExecutionContext
-     * @param config
+     * 设置目标端配置，用于 DataQualityApplication 获取与源值进行比较的数据。
+     *
+     * @param dataQualityTaskExecutionContext 数据质量任务执行上下文
+     * @param config                          规则输入参数
      */
     private void setTargetConfig(DataQualityTaskExecutionContext dataQualityTaskExecutionContext,
                                  Map<String, String> config) {
@@ -576,10 +606,10 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * The SourceConfig will be used in DataQualityApplication that
-     * get the data which be used to get the statistics value
-     * @param dataQualityTaskExecutionContext
-     * @param config
+     * 设置源端配置，用于 DataQualityApplication 获取统计数据。
+     *
+     * @param dataQualityTaskExecutionContext 数据质量任务执行上下文
+     * @param config                          规则输入参数
      */
     private void setSourceConfig(DataQualityTaskExecutionContext dataQualityTaskExecutionContext,
                                  Map<String, String> config) {
@@ -596,11 +626,11 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * whehter tenant is null
+     * 校验租户是否为空。
      *
-     * @param tenant tenant
-     * @param taskInstance taskInstance
-     * @return result
+     * @param tenant       租户
+     * @param taskInstance 任务实例
+     * @return 如果租户为空返回 true
      */
     protected boolean verifyTenantIsNull(Tenant tenant, TaskInstance taskInstance) {
         if (tenant == null) {
@@ -611,7 +641,10 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * get resource map key is full name and value is tenantCode
+     * 获取资源全名到租户编码的映射。
+     *
+     * @param taskInstance 任务实例
+     * @return key 为资源全名，value 为租户编码的映射
      */
     public Map<String, String> getResourceFullNames(TaskInstance taskInstance) {
         Map<String, String> resourcesMap = new HashMap<>();
@@ -647,9 +680,10 @@ public abstract class BaseTaskProcessor implements ITaskProcessor {
     }
 
     /**
-     * set k8s task relation
-     * @param k8sTaskExecutionContext k8sTaskExecutionContext
-     * @param taskInstance taskInstance
+     * 设置 K8s 任务相关配置，包括命名空间和 ConfigMap YAML 配置。
+     *
+     * @param k8sTaskExecutionContext K8s 任务执行上下文
+     * @param taskInstance            任务实例
      */
     private void setK8sTaskRelation(K8sTaskExecutionContext k8sTaskExecutionContext, TaskInstance taskInstance) {
         K8sTaskParameters k8sTaskParameters =

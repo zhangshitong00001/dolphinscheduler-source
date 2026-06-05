@@ -36,10 +36,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * analysis of DAG
- * Node: node
- * NodeInfo：node description information
- * EdgeInfo: edge description information
+ * 有向无环图（DAG）数据结构，支持拓扑排序和环检测。
+ * 提供节点和边的添加、删除、查询功能，以及入度计算、前驱/后继节点查找等图分析操作。
+ * 使用读写锁保证线程安全。
+ *
+ * @param <Node> 节点类型
+ * @param <NodeInfo> 节点描述信息类型
+ * @param <EdgeInfo> 边描述信息类型
  */
 public class DAG<Node, NodeInfo, EdgeInfo> {
     private static final Logger logger = LoggerFactory.getLogger(DAG.class);
@@ -68,10 +71,10 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * add node information
+     * 向DAG中添加一个节点及其描述信息。
      *
-     * @param node node
-     * @param nodeInfo node information
+     * @param node 节点
+     * @param nodeInfo 节点描述信息
      */
     public void addNode(Node node, NodeInfo nodeInfo) {
         lock.writeLock().lock();
@@ -85,11 +88,11 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * add edge
+     * 添加一条从fromNode到toNode的有向边。
      *
-     * @param fromNode node of origin
-     * @param toNode node of destination
-     * @return The result of adding an edge. returns false if the DAG result is a ring result
+     * @param fromNode 起始节点
+     * @param toNode 目标节点
+     * @return 添加成功返回true，如果会形成环则返回false
      */
     public boolean addEdge(Node fromNode, Node toNode) {
         return addEdge(fromNode, toNode, false);
@@ -108,13 +111,13 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * add edge
+     * 添加一条带描述信息的有向边，可选择在节点不存在时自动创建。
      *
-     * @param fromNode node of origin
-     * @param toNode node of destination
-     * @param edge edge description
-     * @param createNode whether the node needs to be created if it does not exist
-     * @return The result of adding an edge. returns false if the DAG result is a ring result
+     * @param fromNode 起始节点
+     * @param toNode 目标节点
+     * @param edge 边描述信息
+     * @param createNode 节点不存在时是否自动创建
+     * @return 添加成功返回true，如果会形成环则返回false
      */
     public boolean addEdge(Node fromNode, Node toNode, EdgeInfo edge, boolean createNode) {
         lock.writeLock().lock();
@@ -140,10 +143,10 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * whether this node is contained
+     * 判断图中是否包含指定的节点。
      *
-     * @param node node
-     * @return true if contains
+     * @param node 节点
+     * @return 如果包含返回true
      */
     public boolean containsNode(Node node) {
         lock.readLock().lock();
@@ -156,11 +159,11 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * whether this edge is contained
+     * 判断图中是否包含指定从fromNode到toNode的边。
      *
-     * @param fromNode node of origin
-     * @param toNode node of destination
-     * @return true if contains
+     * @param fromNode 起始节点
+     * @param toNode 目标节点
+     * @return 如果包含该边返回true
      */
     public boolean containsEdge(Node fromNode, Node toNode) {
         lock.readLock().lock();
@@ -177,10 +180,10 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * get node description
+     * 获取指定节点的描述信息。
      *
-     * @param node node
-     * @return node description
+     * @param node 节点
+     * @return 节点描述信息，如果不存在则返回null
      */
     public NodeInfo getNode(Node node) {
         lock.readLock().lock();
@@ -193,9 +196,9 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * Get the number of nodes
+     * 获取图中节点的总数。
      *
-     * @return the number of nodes
+     * @return 节点数量
      */
     public int getNodesCount() {
         lock.readLock().lock();
@@ -208,9 +211,9 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * Get the number of edges
+     * 获取图中边的总数。
      *
-     * @return the number of edges
+     * @return 边的数量
      */
     public int getEdgesCount() {
         lock.readLock().lock();
@@ -228,9 +231,9 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * get the start node of DAG
+     * 获取DAG的所有起始节点（入度为0的节点）。
      *
-     * @return the start node of DAG
+     * @return 起始节点集合
      */
     public Collection<Node> getBeginNode() {
         lock.readLock().lock();
@@ -244,9 +247,9 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * get the end node of DAG
+     * 获取DAG的所有终止节点（出度为0的节点）。
      *
-     * @return the end node of DAG
+     * @return 终止节点集合
      */
     public Collection<Node> getEndNode() {
         lock.readLock().lock();
@@ -260,10 +263,10 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * Gets all previous nodes of the node
+     * 获取指定节点的所有前驱节点。
      *
-     * @param node node id to be calculated
-     * @return all previous nodes of the node
+     * @param node 目标节点
+     * @return 所有前驱节点的集合
      */
     public Set<Node> getPreviousNodes(Node node) {
         lock.readLock().lock();
@@ -276,10 +279,10 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * Get all subsequent nodes of the node
+     * 获取指定节点的所有后继节点。
      *
-     * @param node node id to be calculated
-     * @return all subsequent nodes of the node
+     * @param node 目标节点
+     * @return 所有后继节点的集合
      */
     public Set<Node> getSubsequentNodes(Node node) {
         lock.readLock().lock();
@@ -292,10 +295,10 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * Gets the degree of entry of the node
+     * 获取指定节点的入度。
      *
-     * @param node node id
-     * @return the degree of entry of the node
+     * @param node 目标节点
+     * @return 入度值
      */
     public int getIndegree(Node node) {
         lock.readLock().lock();
@@ -308,9 +311,9 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * whether the graph has a ring
+     * 判断图中是否存在环。
      *
-     * @return true if has cycle, else return false.
+     * @return 如果存在环返回true，否则返回false
      */
     public boolean hasCycle() {
         lock.readLock().lock();
@@ -322,10 +325,10 @@ public class DAG<Node, NodeInfo, EdgeInfo> {
     }
 
     /**
-     * Only DAG has a topological sort
+     * 对DAG执行拓扑排序，仅当图中无环时才能成功排序。
      *
-     * @return topologically sorted results, returns false if the DAG result is a ring result
-     * @throws Exception errors
+     * @return 拓扑排序后的节点列表
+     * @throws Exception 如果图中存在环则抛出异常
      */
     public List<Node> topologicalSort() throws Exception {
         lock.readLock().lock();

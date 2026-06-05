@@ -17,7 +17,7 @@
 package org.apache.dolphinscheduler.remote.exceptions;
 
 /**
- *  too much request exception
+ * 远程请求过多异常，当并发远程请求数超过限制时抛出。
  */
 public class RemotingTooMuchRequestException extends RemotingException{
 

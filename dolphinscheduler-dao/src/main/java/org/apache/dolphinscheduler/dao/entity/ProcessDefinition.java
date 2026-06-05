@@ -40,6 +40,10 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.google.common.base.Strings;
 
+/**
+ * 流程定义实体，映射到 t_ds_process_definition 表，表示工作流的一次版本定义。
+ * 包含流程名称、版本号、全局参数、位置信息、超时时间、租户、执行类型等配置信息。
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -47,133 +51,85 @@ import com.google.common.base.Strings;
 @TableName("t_ds_process_definition")
 public class ProcessDefinition {
 
-    /**
-     * id
-     */
+    /** 流程定义主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * code
-     */
+    /** 流程定义编码，全局唯一 */
     private long code;
 
-    /**
-     * name
-     */
+    /** 流程定义名称 */
     private String name;
 
-    /**
-     * version
-     */
+    /** 流程定义版本号 */
     private int version;
 
-    /**
-     * release state : online/offline
-     */
+    /** 发布状态：上线/下线 */
     private ReleaseState releaseState;
 
-    /**
-     * project code
-     */
+    /** 所属项目编码 */
     private long projectCode;
 
-    /**
-     * description
-     */
+    /** 流程描述 */
     private String description;
 
-    /**
-     * user defined parameters
-     */
+    /** 用户自定义全局参数（JSON 格式） */
     private String globalParams;
 
-    /**
-     * user defined parameter list
-     */
+    /** 非数据库字段：用户自定义全局参数列表 */
     @TableField(exist = false)
     private List<Property> globalParamList;
 
-    /**
-     * user define parameter map
-     */
+    /** 非数据库字段：用户自定义全局参数映射 */
     @TableField(exist = false)
     private Map<String, String> globalParamMap;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 
-    /**
-     * process is valid: yes/no
-     */
+    /** 流程是否有效：是/否 */
     private Flag flag;
 
-    /**
-     * process user id
-     */
+    /** 流程创建用户 ID */
     private int userId;
 
-    /**
-     * create user name
-     */
+    /** 非数据库字段：创建用户名 */
     @TableField(exist = false)
     private String userName;
 
-    /**
-     * project name
-     */
+    /** 非数据库字段：项目名称 */
     @TableField(exist = false)
     private String projectName;
 
-    /**
-     * locations array for web
-     */
+    /** 节点位置信息（JSON 格式，用于前端展示） */
     private String locations;
 
-    /**
-     * schedule release state : online/offline
-     */
+    /** 非数据库字段：定时调度发布状态：上线/下线 */
     @TableField(exist = false)
     private ReleaseState scheduleReleaseState;
 
-    /**
-     * process warning time out. unit: minute
-     */
+    /** 流程超时告警时间，单位：分钟 */
     private int timeout;
 
-    /**
-     * tenant id
-     */
+    /** 租户 ID */
     private int tenantId;
 
-    /**
-     * tenant code
-     */
+    /** 非数据库字段：租户编码 */
     @TableField(exist = false)
     private String tenantCode;
 
-    /**
-     * modify user name
-     */
+    /** 非数据库字段：修改用户名 */
     @TableField(exist = false)
     private String modifyBy;
 
-    /**
-     * warningGroupId
-     */
+    /** 非数据库字段：告警组 ID */
     @TableField(exist = false)
     private int warningGroupId;
 
-    /**
-     * execution type
-     */
+    /** 执行类型 */
     private ProcessExecutionTypeEnum executionType;
 
     public ProcessDefinition(long projectCode,

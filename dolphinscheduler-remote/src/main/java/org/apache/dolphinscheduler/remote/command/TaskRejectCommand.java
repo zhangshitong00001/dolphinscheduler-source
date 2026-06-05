@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * Task reject message, means the task has been rejected by the worker.
+ * 任务拒绝命令，表示Worker拒绝了Master分派的任务。
  */
 @Data
 @NoArgsConstructor
@@ -33,19 +33,13 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class TaskRejectCommand extends BaseCommand {
 
-    /**
-     * taskInstanceId
-     */
+    /** 任务实例ID */
     private int taskInstanceId;
 
-    /**
-     * host
-     */
+    /** 执行主机 */
     private String host;
 
-    /**
-     * process instance id
-     */
+    /** 流程实例ID */
     private int processInstanceId;
 
     public TaskRejectCommand(String messageSenderAddress, String messageReceiverAddress, long messageSendTime) {
@@ -53,9 +47,9 @@ public class TaskRejectCommand extends BaseCommand {
     }
 
     /**
-     * package request command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

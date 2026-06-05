@@ -20,18 +20,16 @@ package org.apache.dolphinscheduler.spi.params.radio;
 import org.apache.dolphinscheduler.spi.params.base.ParamsProps;
 
 /**
- * front-end radio component props attributes
+ * 前端单选框组件的属性配置类，继承自 {@link ParamsProps}。
+ * <p>
+ * 定义单选框的激活态样式属性，包括文本颜色和填充色/边框颜色。
  */
 public class RadioParamProps extends ParamsProps {
 
-    /**
-     * the color of the text when Radio is activated in the form of a button
-     */
+    /** 按钮形式单选框激活时的文本颜色 */
     private String textColor;
 
-    /**
-     * the fill color and border color of the button form of Radio when activated
-     */
+    /** 按钮形式单选框激活时的填充色和边框颜色 */
     private String fill;
 
     public String getTextColor() {

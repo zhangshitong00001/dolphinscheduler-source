@@ -27,18 +27,21 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
- * DqRuleMapper
+ * 数据质量规则 Mapper 接口，封装对 t_ds_dq_rule 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供数据质量规则的分页查询、按类型/时间范围过滤等能力。
  */
 public interface DqRuleMapper extends BaseMapper<DqRule> {
 
     /**
-     * data quality rule page
+     * 多条件分页查询数据质量规则列表。
+     * 支持按搜索值（LIKE 模糊匹配）、规则类型和时间范围过滤。
      *
-     * @param page page
-     * @param searchVal searchVal
-     * @param ruleType ruleType
-     * @param startTime startTime
-     * @return endTime endTime
+     * @param page 分页对象
+     * @param searchVal 搜索关键字，用于模糊匹配规则名称
+     * @param ruleType 规则类型
+     * @param startTime 创建时间范围起始
+     * @param endTime 创建时间范围结束
+     * @return 数据质量规则分页结果
      */
     IPage<DqRule> queryRuleListPaging(IPage<DqRule> page,
                                       @Param("searchVal") String searchVal,

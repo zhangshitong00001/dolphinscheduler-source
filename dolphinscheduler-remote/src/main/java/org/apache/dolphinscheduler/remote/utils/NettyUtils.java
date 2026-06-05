@@ -26,13 +26,18 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
- * NettyUtils
+ * Netty工具类。根据操作系统是否支持Epoll自动选择最优的通道实现类。
  */
 public class NettyUtils {
 
     private NettyUtils() {
     }
 
+    /**
+     * 获取服务端Socket通道类。优先使用Epoll，不可用时回退到NIO。
+     *
+     * @return ServerSocketChannel实现类
+     */
     public static Class<? extends ServerSocketChannel> getServerSocketChannelClass() {
         if (Epoll.isAvailable()) {
             return EpollServerSocketChannel.class;
@@ -40,6 +45,11 @@ public class NettyUtils {
         return NioServerSocketChannel.class;
     }
 
+    /**
+     * 获取客户端Socket通道类。优先使用Epoll，不可用时回退到NIO。
+     *
+     * @return SocketChannel实现类
+     */
     public static Class<? extends SocketChannel> getSocketChannelClass() {
         if (Epoll.isAvailable()) {
             return EpollSocketChannel.class;

@@ -25,15 +25,15 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 
 /**
- * lower weight round robin
+ * 低权重轮询选择器。优先选择等待任务数为零且当前权重最低的节点，实现负载均衡调度。
  */
 public class LowerWeightRoundRobin extends AbstractSelector<HostWeight> {
 
     /**
-     * select
+     * 从主机权重集合中选择权重最低且等待任务数最少的节点。
      *
-     * @param sources sources
-     * @return HostWeight
+     * @param sources 主机权重集合
+     * @return 选中的 HostWeight
      */
     @Override
     public HostWeight doSelect(Collection<HostWeight> sources) {

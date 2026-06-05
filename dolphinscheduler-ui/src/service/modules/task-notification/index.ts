@@ -16,59 +16,51 @@
  */
 
 import { axios } from '@/service/service'
-import { ListReq, GroupNameReq, IdReq, GroupReq } from './types'
+import type {
+  ListReq,
+  TaskNotificationReq,
+  TaskNotificationResp,
+  IdReq,
+} from './types'
 
-export function queryAlertGroupListPaging(params: ListReq): any {
+export function queryTaskNotificationListPaging(params: ListReq): Promise<TaskNotificationResp> {
   return axios({
-    url: '/alert-groups',
+    url: '/task-notifications',
     method: 'get',
-    params
+    params,
   })
 }
 
-export function createAlertGroup(data: GroupReq): any {
+export function queryTaskNotification(id: IdReq): Promise<TaskNotificationResp> {
   return axios({
-    url: '/alert-groups',
-    method: 'post',
-    data
-  })
-}
-
-export function listAlertGroupById(): any {
-  return axios({
-    url: '/alert-groups/list',
-    method: 'get'
-  })
-}
-
-export function queryAlertGroupById(data: IdReq): any {
-  return axios({
-    url: '/alert-groups/query',
-    method: 'post',
-    data
-  })
-}
-
-export function verifyGroupName(params: GroupNameReq): any {
-  return axios({
-    url: '/alert-groups/verify-name',
+    url: `/task-notifications/${id}`,
     method: 'get',
-    params
   })
 }
 
-export function updateAlertGroup(data: GroupReq, id: IdReq): any {
+export function createTaskNotification(data: TaskNotificationReq): Promise<any> {
   return axios({
-    url: `/alert-groups/${id.id}`,
+    url: '/task-notifications',
+    method: 'post',
+    data,
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    transformRequest: (params: any) => JSON.stringify(params),
+  })
+}
+
+export function updateTaskNotification(id: IdReq, data: TaskNotificationReq): Promise<any> {
+  return axios({
+    url: `/task-notifications/${id}`,
     method: 'put',
-    data
+    data,
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    transformRequest: (params: any) => JSON.stringify(params),
   })
 }
 
-export function delAlertGroupById(id: IdReq): any {
+export function deleteTaskNotification(id: IdReq): Promise<any> {
   return axios({
-    url: `/alert-groups/${id.id}`,
+    url: `/task-notifications/${id}`,
     method: 'delete',
-    params: id
   })
 }

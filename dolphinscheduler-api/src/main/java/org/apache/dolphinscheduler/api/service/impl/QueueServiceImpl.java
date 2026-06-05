@@ -54,7 +54,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
- * queue service impl
+ * 队列服务实现类。负责YARN队列的增删改查、验证和权限管理，支持队列与用户的关联更新。
  */
 @Service
 public class QueueServiceImpl extends BaseServiceImpl implements QueueService {
@@ -68,9 +68,10 @@ public class QueueServiceImpl extends BaseServiceImpl implements QueueService {
     private UserMapper userMapper;
 
     /**
-     * Check the queue new object valid or not
+     * 校验待创建的队列对象参数是否合法，包括队列值、队列名是否为空以及是否已存在。
      *
-     * @param queue The queue object want to create
+     * @param queue 待创建的队列对象
+     * @throws ServiceException 参数校验不通过时抛出
      */
     private void createQueueValid(Queue queue) throws ServiceException {
         if (StringUtils.isEmpty(queue.getQueue())) {
@@ -85,10 +86,11 @@ public class QueueServiceImpl extends BaseServiceImpl implements QueueService {
     }
 
     /**
-     * Check queue update object valid or not
+     * 校验待更新的队列对象参数是否合法，包括存在性检查、变更必要性判断和重复性检查。
      *
-     * @param existsQueue The exists queue object
-     * @param updateQueue The queue object want to update
+     * @param existsQueue 已存在的队列对象
+     * @param updateQueue 待更新的队列对象
+     * @throws ServiceException 参数校验不通过时抛出
      */
     private void updateQueueValid(Queue existsQueue, Queue updateQueue) throws ServiceException {
         // Check the exists queue and the necessary of update operation, in not exist checker have to use updateQueue to avoid NPE
@@ -110,10 +112,10 @@ public class QueueServiceImpl extends BaseServiceImpl implements QueueService {
     }
 
     /**
-     * query queue list
+     * 查询用户有权限的队列列表。根据用户权限过滤，普通用户额外包含默认队列。
      *
-     * @param loginUser login user
-     * @return queue list
+     * @param loginUser 当前登录用户
+     * @return 包含队列列表的结果对象
      */
     @Override
     public Result queryList(User loginUser) {
@@ -130,13 +132,13 @@ public class QueueServiceImpl extends BaseServiceImpl implements QueueService {
     }
 
     /**
-     * query queue list paging
+     * 分页查询队列列表，支持关键字搜索和权限过滤。
      *
-     * @param loginUser login user
-     * @param pageNo page number
-     * @param searchVal search value
-     * @param pageSize page size
-     * @return queue list
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索关键字
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页队列列表的结果对象
      */
     @Override
     public Result queryList(User loginUser, String searchVal, Integer pageNo, Integer pageSize) {
@@ -160,12 +162,12 @@ public class QueueServiceImpl extends BaseServiceImpl implements QueueService {
     }
 
     /**
-     * create queue
+     * 创建队列。校验权限和参数后插入新队列，并执行权限后置处理。
      *
-     * @param loginUser login user
-     * @param queue queue
-     * @param queueName queue name
-     * @return create result
+     * @param loginUser 当前登录用户
+     * @param queue 队列值（YARN队列路径）
+     * @param queueName 队列名称
+     * @return 包含创建的队列对象的结果对象
      */
     @Override
     @Transactional
@@ -186,13 +188,13 @@ public class QueueServiceImpl extends BaseServiceImpl implements QueueService {
     }
 
     /**
-     * update queue
+     * 更新队列信息。更新队列值或名称时，同步更新关联用户的队列引用。
      *
-     * @param loginUser login user
-     * @param queue queue
-     * @param id queue id
-     * @param queueName queue name
-     * @return update result code
+     * @param loginUser 当前登录用户
+     * @param id 队列ID
+     * @param queue 新的队列值
+     * @param queueName 新的队列名称
+     * @return 包含更新后的队列对象的结果对象
      */
     @Override
     public Result updateQueue(User loginUser, int id, String queue, String queueName) {
@@ -219,11 +221,11 @@ public class QueueServiceImpl extends BaseServiceImpl implements QueueService {
     }
 
     /**
-     * verify queue and queueName
+     * 验证队列值和队列名称是否合法可用（不重复且格式正确）。
      *
-     * @param queue queue
-     * @param queueName queue name
-     * @return true if the queue name not exists, otherwise return false
+     * @param queue 队列值
+     * @param queueName 队列名称
+     * @return 包含验证结果的结果对象
      */
     @Override
     public Result<Object> verifyQueue(String queue, String queueName) {
@@ -237,48 +239,42 @@ public class QueueServiceImpl extends BaseServiceImpl implements QueueService {
     }
 
     /**
-     * check queue exist
-     * if exists return true，not exists return false
-     * check queue exist
+     * 检查队列值是否已存在。
      *
-     * @param queue queue
-     * @return true if the queue not exists, otherwise return false
+     * @param queue 队列值
+     * @return true表示已存在，false表示不存在
      */
     private boolean checkQueueExist(String queue) {
         return queueMapper.existQueue(queue, null) == Boolean.TRUE;
     }
 
     /**
-     * check queue name exist
-     * if exists return true，not exists return false
+     * 检查队列名称是否已存在。
      *
-     * @param queueName queue name
-     * @return true if the queue name not exists, otherwise return false
+     * @param queueName 队列名称
+     * @return true表示已存在，false表示不存在
      */
     private boolean checkQueueNameExist(String queueName) {
         return queueMapper.existQueue(null, queueName) == Boolean.TRUE;
     }
 
     /**
-     * check old queue name using by any user
-     * if need to update user
+     * 检查旧队列名称是否被用户引用，且新旧名称不同时需要更新用户关联。
      *
-     * @param oldQueue old queue name
-     * @param newQueue new queue name
-     * @return true if need to update user
+     * @param oldQueue 旧队列名称
+     * @param newQueue 新队列名称
+     * @return true表示需要更新用户队列关联
      */
     private boolean checkIfQueueIsInUsing(String oldQueue, String newQueue) {
         return !oldQueue.equals(newQueue) && userMapper.existUser(oldQueue) == Boolean.TRUE;
     }
 
     /**
-     * Make sure queue with given name exists, and create the queue if not exists
+     * 确保指定队列存在，不存在则自动创建。仅供Python网关服务使用，不应在Web UI功能中调用。
      *
-     * ONLY for python gateway server, and should not use this in web ui function
-     *
-     * @param queue queue value
-     * @param queueName queue name
-     * @return Queue object
+     * @param queue 队列值
+     * @param queueName 队列名称
+     * @return 已存在或新创建的队列对象
      */
     @Override
     public Queue createQueueIfNotExists(String queue, String queueName) {

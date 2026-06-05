@@ -18,15 +18,18 @@
 package org.apache.dolphinscheduler.common.enums;
 
 /**
- * http method
+ * HTTP方法枚举。
+ * 定义HTTP任务支持的请求方法。
  */
 public enum HttpMethod {
-    /**
-     * 0 get
-     * 1 post
-     * 2 head
-     * 3 put
-     * 4 delete
-     */
-    GET, POST, HEAD, PUT, DELETE
+    /** GET请求 */
+    GET,
+    /** POST请求 */
+    POST,
+    /** HEAD请求 */
+    HEAD,
+    /** PUT请求 */
+    PUT,
+    /** DELETE请求 */
+    DELETE
 }

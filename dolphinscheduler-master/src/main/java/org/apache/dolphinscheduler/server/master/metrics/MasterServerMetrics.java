@@ -21,11 +21,14 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Metrics;
 import lombok.experimental.UtilityClass;
 
+/**
+ * Master服务器指标收集工具类。用于记录和暴露Master服务器的过载次数和命令消费量等运行指标。
+ */
 @UtilityClass
 public class MasterServerMetrics {
 
     /**
-     * Used to measure the master server is overload.
+     * 用于统计Master服务器过载的次数。
      */
     private final Counter masterOverloadCounter =
             Counter.builder("ds.master.overload.count")
@@ -33,17 +36,25 @@ public class MasterServerMetrics {
                     .register(Metrics.globalRegistry);
 
     /**
-     * Used to measure the number of process command consumed by master.
+     * 用于统计Master服务器消费的命令数量。
      */
     private final Counter masterConsumeCommandCounter =
             Counter.builder("ds.master.consume.command.count")
                     .description("Master server consume command count")
                     .register(Metrics.globalRegistry);
 
+    /**
+     * 增加Master过载计数。
+     */
     public void incMasterOverload() {
         masterOverloadCounter.increment();
     }
 
+    /**
+     * 增加Master命令消费计数。
+     *
+     * @param commandCount 本次消费的命令数量
+     */
     public void incMasterConsumeCommand(int commandCount) {
         masterConsumeCommandCounter.increment(commandCount);
     }

@@ -31,16 +31,26 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 /**
- * NettyDecoder
+ * Netty RPC 解码器。将字节流按照 DolphinScheduler RPC 协议格式解码为 RpcProtocol 对象。
+ * 协议头部17字节：magic(2) + eventType(1) + version(1) + serialization(1) + requestId(8) + dataLength(4)。
  */
 public class NettyDecoder extends ByteToMessageDecoder {
 
+    /** 反序列化目标类 */
     private Class<?> genericClass;
 
     public NettyDecoder(Class<?> genericClass) {
         this.genericClass = genericClass;
     }
 
+    /**
+     * 解码字节流为 RpcProtocol 对象。
+     *
+     * @param channelHandlerContext Netty 通道处理器上下文
+     * @param byteBuf 待解码的字节缓冲区
+     * @param list 解码后的对象列表，解码结果会添加到此列表中
+     * @throws Exception 解码过程中可能发生的异常
+     */
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
         if (byteBuf.readableBytes() < RpcProtocolConstants.HEADER_LENGTH) {

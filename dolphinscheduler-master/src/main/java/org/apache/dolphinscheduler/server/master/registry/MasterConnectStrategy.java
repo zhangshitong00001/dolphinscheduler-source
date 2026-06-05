@@ -19,6 +19,9 @@ package org.apache.dolphinscheduler.server.master.registry;
 
 import org.apache.dolphinscheduler.registry.api.ConnectStrategy;
 
+/**
+ * Master连接策略接口。定义Master与注册中心断开连接后的处理策略，扩展自ConnectStrategy接口。
+ */
 public interface MasterConnectStrategy extends ConnectStrategy {
 
 }

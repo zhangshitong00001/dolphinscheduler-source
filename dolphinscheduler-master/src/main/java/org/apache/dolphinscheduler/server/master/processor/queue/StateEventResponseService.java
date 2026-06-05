@@ -38,21 +38,24 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * 状态事件响应服务。负责管理状态事件的队列、持久化以及向工作流执行线程提交状态事件。
+ */
 @Component
 public class StateEventResponseService {
 
     /**
-     * logger
+     * 日志记录器
      */
     private final Logger logger = LoggerFactory.getLogger(StateEventResponseService.class);
 
     /**
-     * attemptQueue
+     * 状态事件阻塞队列，容量为5000
      */
     private final BlockingQueue<StateEvent> eventQueue = new LinkedBlockingQueue<>(5000);
 
     /**
-     * task response worker
+     * 状态事件响应工作线程
      */
     private Thread responseWorker;
 
@@ -62,12 +65,18 @@ public class StateEventResponseService {
     @Autowired
     private WorkflowExecuteThreadPool workflowExecuteThreadPool;
 
+    /**
+     * 启动状态事件响应服务。创建并启动状态事件响应工作线程。
+     */
     @PostConstruct
     public void start() {
         this.responseWorker = new StateEventResponseWorker();
         this.responseWorker.start();
     }
 
+    /**
+     * 停止状态事件响应服务。中断工作线程并处理队列中剩余的事件。
+     */
     @PreDestroy
     public void stop() {
         this.responseWorker.interrupt();
@@ -88,7 +97,9 @@ public class StateEventResponseService {
     }
 
     /**
-     * put task to attemptQueue
+     * 将状态变更事件放入事件队列中。
+     *
+     * @param stateEvent 状态事件
      */
     public void addStateChangeEvent(StateEvent stateEvent) {
         try {
@@ -101,7 +112,7 @@ public class StateEventResponseService {
     }
 
     /**
-     * task worker thread
+     * 状态事件响应工作线程。循环从队列中取出状态事件并进行持久化处理。
      */
     class StateEventResponseWorker extends BaseDaemonThread {
 
@@ -168,6 +179,11 @@ public class StateEventResponseService {
         }
     }
 
+    /**
+     * 将状态事件直接提交到工作流执行线程池进行处理。
+     *
+     * @param stateEvent 状态事件
+     */
     public void addEvent2WorkflowExecute(StateEvent stateEvent) {
         workflowExecuteThreadPool.submitStateEvent(stateEvent);
     }

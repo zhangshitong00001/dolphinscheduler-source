@@ -22,8 +22,10 @@ import org.apache.dolphinscheduler.service.exceptions.TaskPriorityQueueException
 import java.util.concurrent.TimeUnit;
 
 /**
- * task priority queue
- * @param <T>
+ * 任务优先级队列接口，定义了任务优先级队列的基本操作。支持任务的放入、取出、带超时的轮询以及获取队列大小。
+ * 用于Master节点管理和调度任务实例。
+ *
+ * @param <T> 队列中存储的元素类型
  */
 public interface TaskPriorityQueue<T> {
 

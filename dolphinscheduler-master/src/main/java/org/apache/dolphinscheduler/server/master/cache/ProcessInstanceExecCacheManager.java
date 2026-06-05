@@ -25,47 +25,50 @@ import java.util.Collection;
 import lombok.NonNull;
 
 /**
- * cache of process instance id and WorkflowExecuteThread
+ * 流程实例执行缓存管理器接口。定义流程实例 ID 与 WorkflowExecuteRunnable 的缓存操作。
  */
 public interface ProcessInstanceExecCacheManager {
 
     /**
-     * get WorkflowExecuteThread by process instance id
+     * 根据流程实例 ID 获取 WorkflowExecuteRunnable。
      *
-     * @param processInstanceId processInstanceId
-     * @return WorkflowExecuteThread
+     * @param processInstanceId 流程实例 ID
+     * @return WorkflowExecuteRunnable
      */
     WorkflowExecuteRunnable getByProcessInstanceId(int processInstanceId);
 
     /**
-     * judge the process instance does it exist
+     * 判断流程实例是否存在于缓存中。
      *
-     * @param processInstanceId processInstanceId
-     * @return true - if process instance id exists in cache
+     * @param processInstanceId 流程实例 ID
+     * @return true 表示流程实例 ID 存在于缓存中
      */
     boolean contains(int processInstanceId);
 
     /**
-     * remove cache by process instance id
+     * 根据流程实例 ID 移除缓存。
      *
-     * @param processInstanceId processInstanceId
+     * @param processInstanceId 流程实例 ID
      */
     void removeByProcessInstanceId(int processInstanceId);
 
     /**
-     * cache
+     * 缓存流程实例与 WorkflowExecuteRunnable 的映射。
      *
-     * @param processInstanceId     processInstanceId
-     * @param workflowExecuteThread if it is null, will not be cached
+     * @param processInstanceId     流程实例 ID
+     * @param workflowExecuteThread 若为 null，则不会被缓存
      */
     void cache(int processInstanceId, @NonNull WorkflowExecuteRunnable workflowExecuteThread);
 
     /**
-     * get all WorkflowExecuteThread from cache
+     * 获取缓存中所有的 WorkflowExecuteRunnable。
      *
-     * @return all WorkflowExecuteThread in cache
+     * @return 缓存中所有的 WorkflowExecuteRunnable
      */
     Collection<WorkflowExecuteRunnable> getAll();
 
+    /**
+     * 清空缓存。
+     */
     void clearCache();
 }

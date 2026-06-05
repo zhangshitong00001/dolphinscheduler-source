@@ -22,19 +22,18 @@ import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 
 /**
- *  worker log filter
+ * Worker日志过滤器，仅接受线程名以"Worker-"开头的日志事件。
  */
 public class WorkerLogFilter extends Filter<ILoggingEvent> {
 
-    /**
-     * level
-     */
+    /** 日志级别 */
     Level level;
 
     /**
-     * Accept or reject based on thread name
-     * @param event event
-     * @return FilterReply
+     * 根据线程名判断是否接受该日志事件。
+     *
+     * @param event 日志事件
+     * @return 线程名以"Worker-"开头则接受，否则拒绝
      */
     @Override
     public FilterReply decide(ILoggingEvent event) {

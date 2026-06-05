@@ -18,14 +18,16 @@
 package org.apache.dolphinscheduler.common.enums;
 
 /**
- * http check condition
+ * HTTP检查条件枚举。
+ * 定义HTTP任务执行后的响应校验条件。
  */
 public enum HttpCheckCondition {
-    /**
-     * 0 status_code_default:200
-     * 1 status_code_custom
-     * 2 body_contains
-     * 3 body_not_contains
-     */
-    STATUS_CODE_DEFAULT,STATUS_CODE_CUSTOM, BODY_CONTAINS, BODY_NOT_CONTAINS
+    /** 默认状态码200 */
+    STATUS_CODE_DEFAULT,
+    /** 自定义状态码 */
+    STATUS_CODE_CUSTOM,
+    /** 响应体包含指定内容 */
+    BODY_CONTAINS,
+    /** 响应体不包含指定内容 */
+    BODY_NOT_CONTAINS
 }

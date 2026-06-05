@@ -21,6 +21,9 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * 服务节点基础模型，包含服务ID、主机地址、端口、ZK目录和心跳时间等信息。
+ */
 @Data
 public class Server {
 

@@ -57,7 +57,8 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 
 /**
- * task kill processor
+ * 任务终止处理器。处理Master发送的任务终止请求，负责取消正在执行或等待中的任务。
+ * 支持终止系统进程和YARN应用，清理任务缓存和重试消息，并向Master返回终止结果。
  */
 @Component
 public class TaskKillProcessor implements NettyRequestProcessor {
@@ -74,10 +75,12 @@ public class TaskKillProcessor implements NettyRequestProcessor {
     private LogClient logClient;
 
     /**
-     * task kill process
+     * 处理任务终止请求。解析Master发送的终止命令，根据任务状态执行不同的终止逻辑：
+     * 对于尚未开始执行的任务（processId为0），直接取消并标记为KILL状态；
+     * 对于正在执行的任务，调用cancelApplication取消应用、终止系统进程和YARN作业。
      *
-     * @param channel channel channel
-     * @param command command command
+     * @param channel Netty通道，用于向Master返回终止响应
+     * @param command 任务终止请求命令
      */
     @Override
     public void process(Channel channel, Command command) {

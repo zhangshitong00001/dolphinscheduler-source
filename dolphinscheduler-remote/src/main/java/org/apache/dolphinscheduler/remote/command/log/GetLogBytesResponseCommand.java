@@ -27,7 +27,7 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 import java.io.Serializable;
 
 /**
- *  get log bytes response command
+ * 获取日志字节响应命令。封装Worker返回的指定范围的日志字节数据。
  */
 @Data
 @NoArgsConstructor
@@ -35,7 +35,7 @@ import java.io.Serializable;
 public class GetLogBytesResponseCommand implements Serializable {
 
     /**
-     *  log byte data
+     * 日志字节数据
      */
     private byte[] data;
 

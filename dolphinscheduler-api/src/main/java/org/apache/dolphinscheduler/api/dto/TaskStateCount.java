@@ -22,12 +22,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
 
+/**
+ * 任务状态计数DTO。记录特定任务状态及其对应的任务数量。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskStateCount {
 
+    /** 任务执行状态类型 */
     private TaskExecutionStatus taskStateType;
+    /** 该状态下的任务数量 */
     private int count;
 
 }

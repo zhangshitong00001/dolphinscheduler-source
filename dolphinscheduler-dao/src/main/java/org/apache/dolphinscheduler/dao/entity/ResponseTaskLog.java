@@ -21,11 +21,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * log of the logger service response
+ * 任务日志响应 DTO，封装日志服务返回的单行日志内容及其行号。
  */
 @Data
 @AllArgsConstructor
 public class ResponseTaskLog {
+    /** 日志行号 */
     private int lineNum;
+    /** 日志消息内容 */
     private String message;
 }

@@ -52,7 +52,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
- * k8s namespace service impl
+ * K8s命名空间服务实现类。负责K8s命名空间的增删改查和资源配额管理，支持在K8s集群上创建、更新和删除命名空间并生成资源配额YAML。
  */
 @Service
 public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNamespaceService {
@@ -79,13 +79,13 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     private ClusterMapper clusterMapper;
 
     /**
-     * query namespace list paging
+     * 分页查询K8s命名空间列表。管理员专属功能。
      *
-     * @param loginUser login user
-     * @param pageNo    page number
-     * @param searchVal search value
-     * @param pageSize  page size
-     * @return k8s namespace list
+     * @param loginUser 当前登录用户（需为管理员）
+     * @param pageNo 页码
+     * @param searchVal 搜索关键字
+     * @param pageSize 每页大小
+     * @return 包含分页命名空间列表的结果对象
      */
     @Override
     public Result queryListPaging(User loginUser, String searchVal, Integer pageNo, Integer pageSize) {
@@ -110,14 +110,14 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     }
 
     /**
-     * create namespace,if not exist on k8s,will create,if exist only register in db
+     * 创建K8s命名空间。先在K8s集群上创建命名空间和资源配额，再注册到数据库。
      *
-     * @param loginUser    login user
-     * @param namespace    namespace
-     * @param clusterCode  k8s not null
-     * @param limitsCpu    limits cpu, can null means not limit
-     * @param limitsMemory limits memory, can null means not limit
-     * @return
+     * @param loginUser 当前登录用户（需为管理员）
+     * @param namespace 命名空间名称
+     * @param clusterCode K8s集群编码
+     * @param limitsCpu CPU限制（可为null表示不限制）
+     * @param limitsMemory 内存限制（可为null表示不限制）
+     * @return 包含创建结果的结果Map
      */
     @Override
     public Map<String, Object> createK8sNamespace(User loginUser, String namespace, Long clusterCode, Double limitsCpu,
@@ -203,13 +203,14 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     }
 
     /**
-     * update K8s Namespace tag and resource limit
+     * 更新K8s命名空间的资源限制。同步更新数据库和K8s集群上的资源配额。
      *
-     * @param loginUser    login user
-     * @param userName     owner
-     * @param limitsCpu    max cpu
-     * @param limitsMemory max memory
-     * @return
+     * @param loginUser 当前登录用户（需为管理员）
+     * @param id 命名空间记录ID
+     * @param userName 所属用户名称
+     * @param limitsCpu CPU限制
+     * @param limitsMemory 内存限制
+     * @return 包含更新结果的结果Map
      */
     @Override
     public Map<String, Object> updateK8sNamespace(User loginUser, int id, String userName, Double limitsCpu,
@@ -258,11 +259,11 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     }
 
     /**
-     * verify namespace and k8s
+     * 验证命名空间名称在指定集群中是否可用（未重复）。
      *
-     * @param namespace   namespace
-     * @param clusterCode cluster code
-     * @return true if the k8s and namespace not exists, otherwise return false
+     * @param namespace 命名空间名称
+     * @param clusterCode 集群编码
+     * @return 包含验证结果的结果对象，已存在时返回错误
      */
     @Override
     public Result<Object> verifyNamespaceK8s(String namespace, Long clusterCode) {
@@ -287,11 +288,11 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     }
 
     /**
-     * delete namespace by id
+     * 根据ID删除K8s命名空间。同时从K8s集群和数据库中移除。
      *
-     * @param loginUser login user
-     * @param id        namespace id
-     * @return
+     * @param loginUser 当前登录用户（需为管理员）
+     * @param id 命名空间记录ID
+     * @return 包含删除结果的结果Map
      */
     @Override
     public Map<String, Object> deleteNamespaceById(User loginUser, int id) {
@@ -319,20 +320,21 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     }
 
     /**
-     * check namespace name exist
+     * 检查命名空间在指定集群中是否已存在于数据库。
      *
-     * @param namespace namespace
-     * @return true if the k8s and namespace not exists, otherwise return false
+     * @param namespace 命名空间名称
+     * @param clusterCode 集群编码
+     * @return true表示已存在，false表示不存在
      */
     private boolean checkNamespaceExistInDb(String namespace, Long clusterCode) {
         return k8sNamespaceMapper.existNamespace(namespace, clusterCode) == Boolean.TRUE;
     }
 
     /**
-     * use cpu memory create yaml
+     * 根据命名空间的CPU和内存限制生成K8s ResourceQuota的YAML配置内容。
      *
-     * @param k8sNamespace
-     * @return yaml file
+     * @param k8sNamespace K8s命名空间实体
+     * @return 资源配额YAML字符串
      */
     private String genDefaultResourceYaml(K8sNamespace k8sNamespace) {
         // resource use same name with namespace
@@ -365,11 +367,11 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     }
 
     /**
-     * query unauthorized namespace
+     * 查询用户未授权的命名空间列表。管理员或用户本人可查询。
      *
-     * @param loginUser login user
-     * @param userId    user id
-     * @return the namespaces which user have not permission to see
+     * @param loginUser 当前登录用户
+     * @param userId 目标用户ID
+     * @return 包含未授权命名空间列表的结果Map
      */
     @Override
     public Map<String, Object> queryUnauthorizedNamespace(User loginUser, Integer userId) {
@@ -392,11 +394,11 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     }
 
     /**
-     * query authorized namespace
+     * 查询用户已授权的命名空间列表。管理员或用户本人可查询。
      *
-     * @param loginUser login user
-     * @param userId    user id
-     * @return namespaces which the user have permission to see
+     * @param loginUser 当前登录用户
+     * @param userId 目标用户ID
+     * @return 包含已授权命名空间列表的结果Map
      */
     @Override
     public Map<String, Object> queryAuthorizedNamespace(User loginUser, Integer userId) {
@@ -414,10 +416,10 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     }
 
     /**
-     * query namespace can use
+     * 查询当前用户可用的命名空间列表。管理员返回所有，普通用户返回已授权的。
      *
-     * @param loginUser login user
-     * @return namespace list
+     * @param loginUser 当前登录用户
+     * @return 可用命名空间列表（含集群名称）
      */
     @Override
     public List<K8sNamespace> queryNamespaceAvailable(User loginUser) {
@@ -432,8 +434,9 @@ public class K8SNamespaceServiceImpl extends BaseServiceImpl implements K8sNames
     }
 
     /**
-     * set cluster_name
-     * @param k8sNamespaces source data
+     * 为命名空间列表设置对应的集群名称。
+     *
+     * @param k8sNamespaces 命名空间列表
      */
     private void setClusterName(List<K8sNamespace> k8sNamespaces) {
         if (CollectionUtils.isNotEmpty(k8sNamespaces)) {

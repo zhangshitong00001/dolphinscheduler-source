@@ -47,10 +47,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * ui plugin controller
- * Some plugins (such as alert plugin) need to provide UI interfaces to users.
- * We use from-creat to dynamically generate UI interfaces. Related parameters are mainly provided by pluginParams.
- * From-create can generate dynamic ui based on this parameter.
+ * UI 插件控制器，提供插件 UI 界面相关参数的查询 REST API。
+ * 部分插件（如告警插件）需要为前端提供动态生成的 UI 界面参数，通过 pluginParams 驱动 from-create 动态表单渲染。
  */
 @Api(tags = "UI_PLUGINS_TAG")
 @RestController
@@ -60,6 +58,13 @@ public class UiPluginController extends BaseController {
     @Autowired
     UiPluginService uiPluginService;
 
+    /**
+     * 根据插件类型查询 UI 插件列表。
+     *
+     * @param loginUser 登录用户
+     * @param pluginType 插件类型
+     * @return UI 插件列表
+     */
     @ApiOperation(value = "queryUiPluginsByType", notes = "QUERY_UI_PLUGINS_BY_TYPE")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pluginType", value = "pluginType", required = true, dataTypeClass = PluginType.class),
@@ -75,6 +80,13 @@ public class UiPluginController extends BaseController {
         return returnDataList(result);
     }
 
+    /**
+     * 根据插件 ID 查询 UI 插件详情。
+     *
+     * @param loginUser 登录用户
+     * @param pluginId 插件 ID
+     * @return UI 插件详情
+     */
     @ApiOperation(value = "queryUiPluginDetailById", notes = "QUERY_UI_PLUGIN_DETAIL_BY_ID")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "PLUGIN_ID", required = true, dataTypeClass = int.class, example = "100"),

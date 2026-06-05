@@ -29,6 +29,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 任务组实体，映射到 t_ds_task_group 表，用于管理任务组的容量和并发控制。
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -36,44 +39,27 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @TableName("t_ds_task_group")
 public class TaskGroup implements Serializable {
 
-    /**
-     * key
-     */
+    /** 任务组主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    /**
-     * task_group name
-     */
+    /** 任务组名称 */
     private String name;
 
+    /** 任务组描述 */
     private String description;
-    /**
-     * 作业组大小
-     */
+    /** 任务组容量大小 */
     private int groupSize;
-    /**
-     * 已使用作业组大小
-     */
+    /** 已使用的任务组容量 */
     private int useSize;
-    /**
-     * creator id
-     */
+    /** 创建者用户 ID */
     private int userId;
-    /**
-     * 0 not available, 1 available
-     */
+    /** 状态：0 不可用，1 可用 */
     private Integer status;
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
-    /**
-     * project Id
-     */
+    /** 所属项目编码 */
     private long projectCode;
 
 }

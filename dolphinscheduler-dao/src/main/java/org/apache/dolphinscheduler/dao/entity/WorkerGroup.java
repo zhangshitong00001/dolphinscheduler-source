@@ -27,28 +27,36 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
- * worker group
+ * Worker 分组实体，映射到 t_ds_worker_group 表，定义 Worker 节点的分组配置。
  */
 @TableName("t_ds_worker_group")
 @Data
 public class WorkerGroup {
 
+    /** Worker 分组主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    /** Worker 分组名称 */
     private String name;
 
+    /** Worker 地址列表 */
     private String addrList;
 
+    /** 创建时间 */
     private Date createTime;
 
+    /** 更新时间 */
     private Date updateTime;
 
+    /** 分组描述 */
     private String description;
 
+    /** 非数据库字段：是否为系统默认分组 */
     @TableField(exist = false)
     private boolean systemDefault;
 
+    /** 其他参数，JSON 格式 */
     private String otherParamsJson;
 
 }

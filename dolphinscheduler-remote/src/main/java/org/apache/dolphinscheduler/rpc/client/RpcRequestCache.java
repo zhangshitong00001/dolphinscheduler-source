@@ -20,12 +20,18 @@ package org.apache.dolphinscheduler.rpc.client;
 import org.apache.dolphinscheduler.rpc.future.RpcFuture;
 
 /**
- * Rpc Request Cache
+ * RPC请求缓存。关联RPC Future与服务名称，用于追踪和匹配异步RPC请求的响应。
  */
 public class RpcRequestCache {
 
+    /**
+     * RPC Future实例
+     */
     private RpcFuture rpcFuture;
 
+    /**
+     * 服务名称
+     */
     private String serviceName;
 
     public RpcFuture getRpcFuture() {

@@ -20,17 +20,17 @@ package org.apache.dolphinscheduler.server.master.dispatch.host.assign;
 import org.apache.dolphinscheduler.remote.utils.Host;
 
 /**
- * host worker
+ * Worker 主机信息。继承 Host，增加主机权重和 Worker 分组属性。
  */
 public class HostWorker extends Host {
 
     /**
-     * host weight
+     * 主机权重，用于负载均衡选择。
      */
     private int hostWeight;
 
     /**
-     * worker group
+     * Worker 所属分组。
      */
     private String workerGroup;
 

@@ -31,14 +31,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * H2 MEMORY DB Performance Monitor
+ * H2 内存数据库性能监控实现，采集会话连接数等基本性能指标。
  */
 public class H2Performance extends BaseDBPerformance {
 
     private static final Logger logger = LoggerFactory.getLogger(H2Performance.class);
 
     /**
-     * return the current database performance
+     * 获取 H2 数据库当前性能指标，包括数据库类型、连接会话数等。
      *
      * @param conn connection
      * @return MonitorRecord

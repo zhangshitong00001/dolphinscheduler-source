@@ -35,7 +35,8 @@ import java.util.regex.Pattern;
 import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 
 /**
- * check utils
+ * 校验工具类。提供用户名、邮箱、密码、电话号码、时区等参数的格式校验功能。
+ * 该类为工具类。
  */
 public class CheckUtils {
 
@@ -44,20 +45,20 @@ public class CheckUtils {
     }
 
     /**
-     * check username
+     * 校验用户名格式是否合法。
      *
-     * @param userName user name
-     * @return true if user name regex valid,otherwise return false
+     * @param userName 用户名
+     * @return 格式合法返回true，否则返回false
      */
     public static boolean checkUserName(String userName) {
         return regexChecks(userName, Constants.REGEX_USER_NAME);
     }
 
     /**
-     * check email
+     * 校验邮箱格式是否合法。要求至少包含二级域名。
      *
-     * @param email email
-     * @return true if email regex valid, otherwise return false
+     * @param email 邮箱地址
+     * @return 格式合法返回true，否则返回false
      */
     public static boolean checkEmail(String email) {
         if (StringUtils.isBlank(email)) {
@@ -74,10 +75,10 @@ public class CheckUtils {
     }
 
     /**
-     * check project description
+     * 校验项目描述长度。描述长度不能超过200字符。
      *
-     * @param desc desc
-     * @return true if description regex valid, otherwise return false
+     * @param desc 描述文本
+     * @return 校验结果Map，包含状态码
      */
     public static Map<String, Object> checkDesc(String desc) {
         Map<String, Object> result = new HashMap<>();
@@ -92,48 +93,50 @@ public class CheckUtils {
     }
 
     /**
-     * check extra info
+     * 校验其他参数是否为有效JSON格式。
      *
-     * @param otherParams other parames
-     * @return true if other parameters are valid, otherwise return false
+     * @param otherParams 其他参数JSON字符串
+     * @return 参数无效返回true，有效返回false
      */
     public static boolean checkOtherParams(String otherParams) {
         return !StringUtils.isEmpty(otherParams) && !JSONUtils.checkJsonValid(otherParams);
     }
 
     /**
-     * check password
+     * 校验密码是否为空且长度合法。
      *
-     * @param password password
-     * @return true if password regex valid, otherwise return false
+     * @param password 密码
+     * @return 密码合法返回true，否则返回false
      */
     public static boolean checkPassword(String password) {
         return !StringUtils.isEmpty(password) && checkPasswordLength(password);
     }
 
     /**
-     *  check password length
-     * @param password password
-     * @return true if password length valid, otherwise return false
+     * 校验密码长度是否在允许的范围内。
+     *
+     * @param password 密码
+     * @return 长度合法返回true，否则返回false
      */
     public static boolean checkPasswordLength(String password) {
         return password.length() >= USER_PASSWORD_MIN_LENGTH && password.length() <= USER_PASSWORD_MAX_LENGTH;
     }
 
     /**
-     * check phone phone can be empty.
+     * 校验电话号码格式。电话可以为空，非空时长度必须为11位。
      *
-     * @param phone phone
-     * @return true if phone regex valid, otherwise return false
+     * @param phone 电话号码
+     * @return 格式合法返回true，否则返回false
      */
     public static boolean checkPhone(String phone) {
         return StringUtils.isEmpty(phone) || phone.length() == 11;
     }
 
     /**
-     * check time zone parameter
-     * @param timeZone timeZone
-     * @return true if timeZone is valid, otherwise return false
+     * 校验时区参数是否为有效的ZoneId。
+     *
+     * @param timeZone 时区字符串
+     * @return 时区合法返回true，否则返回false
      */
     public static boolean checkTimeZone(String timeZone) {
         try {

@@ -73,7 +73,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * executor controller
+ * 执行控制器。提供工作流和任务执行的REST API，包括启动工作流实例、批量启动、执行动作（暂停/停止/恢复等）、
+ * 启动检查、查询正在执行的工作流详情以及启动任务实例等操作。
  */
 @Api(tags = "EXECUTOR_TAG")
 @RestController
@@ -86,24 +87,24 @@ public class ExecutorController extends BaseController {
     private ExecutorService execService;
 
     /**
-     * execute process instance
+     * 启动工作流实例。支持定时调度、补数和重跑等多种执行类型，可配置失败策略、告警方式和运行模式等参数。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processDefinitionCode process definition code
-     * @param scheduleTime schedule time when CommandType is COMPLEMENT_DATA  there are two ways to transfer parameters 1.date range, for example:{"complementStartDate":"2022-01-01 12:12:12","complementEndDate":"2022-01-6 12:12:12"} 2.manual input,  for example:{"complementScheduleDateList":"2022-01-01 00:00:00,2022-01-02 12:12:12,2022-01-03 12:12:12"}
-     * @param failureStrategy failure strategy
-     * @param startNodeList start nodes list
-     * @param taskDependType task depend type
-     * @param execType execute type
-     * @param warningType warning type
-     * @param warningGroupId warning group id
-     * @param runMode run mode
-     * @param processInstancePriority process instance priority
-     * @param workerGroup worker group
-     * @param timeout timeout
-     * @param expectedParallelismNumber the expected parallelism number when execute complement in parallel mode
-     * @return start process result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param scheduleTime 调度时间（补数模式下支持日期范围和手动输入两种方式）
+     * @param failureStrategy 失败策略
+     * @param startNodeList 启动节点列表
+     * @param taskDependType 任务依赖类型
+     * @param execType 执行类型
+     * @param warningType 告警类型
+     * @param warningGroupId 告警组ID
+     * @param runMode 运行模式
+     * @param processInstancePriority 工作流实例优先级
+     * @param workerGroup Worker组
+     * @param timeout 超时时间
+     * @param expectedParallelismNumber 补数并行数
+     * @return 启动结果状态码
      */
     @ApiOperation(value = "startProcessInstance", notes = "RUN_PROCESS_INSTANCE_NOTES")
     @ApiImplicitParams({
@@ -169,26 +170,24 @@ public class ExecutorController extends BaseController {
     }
 
     /**
-     * batch execute process instance
-     * If any processDefinitionCode cannot be found, the failure information is returned and the status is set to
-     * failed. The successful task will run normally and will not stop
+     * 批量启动工作流实例。对多个流程定义批量执行启动操作，任意流程定义编码不存在时返回失败信息但不影响其他成功任务。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processDefinitionCodes process definition codes
-     * @param scheduleTime schedule time
-     * @param failureStrategy failure strategy
-     * @param startNodeList start nodes list
-     * @param taskDependType task depend type
-     * @param execType execute type
-     * @param warningType warning type
-     * @param warningGroupId warning group id
-     * @param runMode run mode
-     * @param processInstancePriority process instance priority
-     * @param workerGroup worker group
-     * @param timeout timeout
-     * @param expectedParallelismNumber the expected parallelism number when execute complement in parallel mode
-     * @return start process result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCodes 流程定义编码列表（逗号分隔）
+     * @param scheduleTime 调度时间
+     * @param failureStrategy 失败策略
+     * @param startNodeList 启动节点列表
+     * @param taskDependType 任务依赖类型
+     * @param execType 执行类型
+     * @param warningType 告警类型
+     * @param warningGroupId 告警组ID
+     * @param runMode 运行模式
+     * @param processInstancePriority 工作流实例优先级
+     * @param workerGroup Worker组
+     * @param timeout 超时时间
+     * @param expectedParallelismNumber 补数并行数
+     * @return 批量启动结果状态码
      */
     @ApiOperation(value = "batchStartProcessInstance", notes = "BATCH_RUN_PROCESS_INSTANCE_NOTES")
     @ApiImplicitParams({
@@ -274,13 +273,13 @@ public class ExecutorController extends BaseController {
     }
 
     /**
-     * do action to process instance: pause, stop, repeat, recover from pause, recover from stop
+     * 对工作流实例执行操作。支持暂停、停止、重跑、恢复暂停、恢复停止等操作。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processInstanceId process instance id
-     * @param executeType execute type
-     * @return execute result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param processInstanceId 工作流实例ID
+     * @param executeType 执行类型
+     * @return 执行结果状态码
      */
     @ApiOperation(value = "execute", notes = "EXECUTE_ACTION_TO_PROCESS_INSTANCE_NOTES")
     @ApiImplicitParams({
@@ -300,13 +299,13 @@ public class ExecutorController extends BaseController {
     }
 
     /**
-     * batch execute and do action to process instance
+     * 批量对工作流实例执行操作。对多个工作流实例执行相同的操作类型。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processInstanceIds process instance ids, delimiter by "," if more than one id
-     * @param executeType execute type
-     * @return execute result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param processInstanceIds 工作流实例ID列表（逗号分隔）
+     * @param executeType 执行类型
+     * @return 批量执行结果状态码
      */
     @ApiOperation(value = "batchExecute", notes = "BATCH_EXECUTE_ACTION_TO_PROCESS_INSTANCE_NOTES")
     @ApiImplicitParams({
@@ -351,10 +350,10 @@ public class ExecutorController extends BaseController {
     }
 
     /**
-     * check process definition and all the son process definitions is online.
+     * 检查流程定义及其子流程是否均已上线。启动工作流实例前的预检查。
      *
-     * @param processDefinitionCode process definition code
-     * @return check result code
+     * @param processDefinitionCode 流程定义编码
+     * @return 检查结果状态码
      */
     @ApiOperation(value = "startCheckProcessDefinition", notes = "START_CHECK_PROCESS_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -370,7 +369,10 @@ public class ExecutorController extends BaseController {
     }
 
     /**
-     * query execute data of processInstance from master
+     * 查询正在执行的工作流实例数据。从Master节点获取工作流实例的实时执行信息。
+     *
+     * @param processInstanceId 工作流实例ID
+     * @return 工作流执行数据
      */
     @ApiOperation(value = "queryExecutingWorkflow", notes = "QUERY_WORKFLOW_EXECUTE_DATA")
     @ApiImplicitParams({
@@ -387,15 +389,15 @@ public class ExecutorController extends BaseController {
     }
 
     /**
-     * execute task instance
+     * 启动任务实例。直接启动指定版本的任务定义实例，适用于流式任务场景。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code taskDefinitionCode
-     * @param version taskDefinitionVersion
-     * @param warningGroupId warning group id
-     * @param workerGroup worker group
-     * @return start task result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param code 任务定义编码
+     * @param version 任务定义版本
+     * @param warningGroupId 告警组ID
+     * @param workerGroup Worker组
+     * @return 启动任务结果状态码
      */
     @ApiOperation(value = "startTaskInstance", notes = "RUN_TASK_INSTANCE_NOTES")
     @ApiImplicitParams({

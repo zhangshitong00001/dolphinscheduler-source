@@ -20,7 +20,9 @@ package org.apache.dolphinscheduler.spi.datasource;
 import java.io.Serializable;
 
 /**
- * The model of Datasource Connection param
+ * 数据源连接参数模型接口，所有连接参数类必须实现此接口。
+ * <p>
+ * 实现该接口的类可以序列化传输，用于在各个模块之间传递数据库连接配置信息。
  */
 public interface ConnectionParam extends Serializable {
 }

@@ -21,28 +21,54 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
- * Cluster mapper interface with Redis caching.
+ * 集群 Mapper 接口，封装对 t_ds_cluster 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供集群信息的查询、分页及删除等能力。
  */
-@CacheConfig(cacheNames = "cluster", keyGenerator = "cacheKeyGenerator")
 public interface ClusterMapper extends BaseMapper<Cluster> {
 
-    @Cacheable(sync = true)
-    Cluster selectById(int id);
-
-    @CacheEvict
-    int deleteById(int id);
-
-    @CacheEvict(key = "#p0.id")
-    int updateById(Cluster cluster);
-
+    /**
+     * 根据集群名称精确查询集群信息。
+     * SELECT * FROM t_ds_cluster WHERE name = #{clusterName}
+     *
+     * @param name 集群名称
+     * @return 集群实体，若不存在则返回 null
+     */
     Cluster queryByClusterName(@Param("clusterName") String name);
+
+    /**
+     * 根据集群编码（唯一标识）查询集群信息。
+     * SELECT * FROM t_ds_cluster WHERE code = #{clusterCode}
+     *
+     * @param clusterCode 集群编码
+     * @return 集群实体，若不存在则返回 null
+     */
     Cluster queryByClusterCode(@Param("clusterCode") Long clusterCode);
+
+    /**
+     * 查询所有集群列表。
+     * SELECT * FROM t_ds_cluster
+     *
+     * @return 全部集群列表
+     */
     List<Cluster> queryAllClusterList();
+
+    /**
+     * 分页查询集群列表，支持按名称搜索（LIKE 模糊匹配）。
+     *
+     * @param page 分页对象
+     * @param searchName 搜索名称关键字，用于 LIKE 模糊匹配
+     * @return 集群分页结果
+     */
     IPage<Cluster> queryClusterListPaging(IPage<Cluster> page, @Param("searchName") String searchName);
+
+    /**
+     * 根据集群编码删除集群记录。
+     * DELETE FROM t_ds_cluster WHERE code = #{code}
+     *
+     * @param code 集群编码
+     * @return 删除的记录数
+     */
     int deleteByCode(@Param("code") Long code);
 }

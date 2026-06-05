@@ -108,8 +108,7 @@ public class CacheEvictAspect {
         String cacheName = null;
         if (cacheEvict.cacheNames().length > 0) {
             cacheName = cacheEvict.cacheNames()[0];
-        }
-        if (cacheConfig.cacheNames().length > 0) {
+        } else if (cacheConfig != null && cacheConfig.cacheNames().length > 0) {
             cacheName = cacheConfig.cacheNames()[0];
         }
         if (cacheName == null) {

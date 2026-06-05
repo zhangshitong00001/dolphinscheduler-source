@@ -28,15 +28,13 @@ import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 
 /**
- * task log filter
+ * 任务日志过滤器，根据线程名和日志级别过滤日志事件。
  */
 public class TaskLogFilter extends Filter<ILoggingEvent> {
 
     private static Logger logger = LoggerFactory.getLogger(TaskLogFilter.class);
 
-    /**
-     * level
-     */
+    /** 日志级别 */
     private Level level;
 
     public void setLevel(String level) {
@@ -44,10 +42,10 @@ public class TaskLogFilter extends Filter<ILoggingEvent> {
     }
 
     /**
-     * Accept or reject based on thread name
+     * 根据线程名和日志级别判断是否接受该日志事件。
      *
-     * @param event event
-     * @return FilterReply
+     * @param event 日志事件
+     * @return 符合过滤条件则接受，否则拒绝
      */
     @Override
     public FilterReply decide(ILoggingEvent event) {

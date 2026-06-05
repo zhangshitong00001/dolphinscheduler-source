@@ -18,23 +18,18 @@
 package org.apache.dolphinscheduler.dao.entity;
 
 /**
- * count definition number group by user
+ * 按用户分组统计工作流定义数量的实体，非数据库表映射，用于 Dashboard 统计展示。
+ * 统计每个用户拥有多少条工作流定义，便于运维管理员了解工作流资产分布情况。
  */
 public class DefinitionGroupByUser {
 
-    /**
-     * user name
-     */
+    /** 用户名 */
     private String userName;
 
-    /**
-     * user id
-     */
+    /** 用户 ID */
     private Integer userId;
 
-    /**
-     * count number
-     */
+    /** 该用户拥有工作流定义的数量 */
     private int count;
 
     public String getUserName() {

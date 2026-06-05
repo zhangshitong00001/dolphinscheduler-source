@@ -47,257 +47,164 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
- * task instance
+ * 任务实例实体，映射到 t_ds_task_instance 表，存储任务运行时的实例数据。
  */
 @Data
 @TableName("t_ds_task_instance")
 public class TaskInstance implements Serializable {
 
-    /**
-     * id
-     */
+    /** 任务实例主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * task name
-     */
+    /** 任务名称 */
     private String name;
 
-    /**
-     * task type
-     */
+    /** 任务类型 */
     private String taskType;
 
-    /**
-     * process instance id
-     */
+    /** 流程实例 ID */
     private int processInstanceId;
 
-    /**
-     * task code
-     */
+    /** 任务编码 */
     private long taskCode;
 
-    /**
-     * task definition version
-     */
+    /** 任务定义版本号 */
     private int taskDefinitionVersion;
 
-    /**
-     * process instance name
-     */
+    /** 非数据库字段：流程实例名称 */
     @TableField(exist = false)
     private String processInstanceName;
 
-    /**
-     * process definition name
-     */
+    /** 非数据库字段：流程定义名称 */
     @TableField(exist = false)
     private String processDefinitionName;
 
-    /**
-     * process instance name
-     */
+    /** 非数据库字段：任务组优先级 */
     @TableField(exist = false)
     private int taskGroupPriority;
 
-    /**
-     * state
-     */
+    /** 任务执行状态 */
     private TaskExecutionStatus state;
 
-    /**
-     * task first submit time.
-     */
+    /** 任务首次提交时间 */
     private Date firstSubmitTime;
 
-    /**
-     * task submit time
-     */
+    /** 任务提交时间 */
     private Date submitTime;
 
-    /**
-     * task start time
-     */
+    /** 任务开始时间 */
     private Date startTime;
 
-    /**
-     * task end time
-     */
+    /** 任务结束时间 */
     private Date endTime;
 
-    /**
-     * task host
-     */
+    /** 执行任务的主机地址 */
     private String host;
 
-    /**
-     * task shell execute path and the resource down from hdfs
-     * default path: $base_run_dir/processInstanceId/taskInstanceId/retryTimes
-     */
+    /** 任务执行路径，资源从 HDFS 下载到该路径，默认路径：$base_run_dir/processInstanceId/taskInstanceId/retryTimes */
     private String executePath;
 
-    /**
-     * task log path
-     * default path: $base_run_dir/processInstanceId/taskInstanceId/retryTimes
-     */
+    /** 任务日志路径，默认路径：$base_run_dir/processInstanceId/taskInstanceId/retryTimes */
     private String logPath;
 
-    /**
-     * retry times
-     */
+    /** 重试次数 */
     private int retryTimes;
 
-    /**
-     * alert flag
-     */
+    /** 告警标志 */
     private Flag alertFlag;
 
-    /**
-     * process instance
-     */
+    /** 非数据库字段：关联的流程实例 */
     @TableField(exist = false)
     private ProcessInstance processInstance;
 
-    /**
-     * process definition
-     */
+    /** 非数据库字段：关联的流程定义 */
     @TableField(exist = false)
     private ProcessDefinition processDefine;
 
-    /**
-     * task definition
-     */
+    /** 非数据库字段：关联的任务定义 */
     @TableField(exist = false)
     private TaskDefinition taskDefine;
 
-    /**
-     * process id
-     */
+    /** 进程 ID */
     private int pid;
 
-    /**
-     * appLink
-     */
+    /** 应用链接 */
     private String appLink;
 
-    /**
-     * flag
-     */
+    /** 标志：是否有效 */
     private Flag flag;
 
-    /**
-     * dependency
-     */
+    /** 非数据库字段：依赖参数 */
     @TableField(exist = false)
     private DependentParameters dependency;
 
-    /**
-     * switch dependency
-     */
+    /** 非数据库字段：Switch 依赖参数 */
     @TableField(exist = false)
     private SwitchParameters switchDependency;
 
-    /**
-     * duration
-     */
+    /** 非数据库字段：任务执行持续时间 */
     @TableField(exist = false)
     private String duration;
 
-    /**
-     * max retry times
-     */
+    /** 最大重试次数 */
     private int maxRetryTimes;
 
-    /**
-     * task retry interval, unit: minute
-     */
+    /** 任务重试间隔，单位：分钟 */
     private int retryInterval;
 
-    /**
-     * task intance priority
-     */
+    /** 任务实例优先级 */
     private Priority taskInstancePriority;
 
-    /**
-     * process intance priority
-     */
+    /** 非数据库字段：流程实例优先级 */
     @TableField(exist = false)
     private Priority processInstancePriority;
 
-    /**
-     * dependent state
-     */
+    /** 非数据库字段：依赖判断结果 */
     @TableField(exist = false)
     private String dependentResult;
 
-    /**
-     * workerGroup
-     */
+    /** Worker 分组名称 */
     private String workerGroup;
 
-    /**
-     * environment code
-     */
+    /** 环境编码 */
     private Long environmentCode;
 
-    /**
-     * environment config
-     */
+    /** 环境配置 */
     private String environmentConfig;
 
-    /**
-     * executor id
-     */
+    /** 执行者 ID */
     private int executorId;
 
-    /**
-     * varPool string
-     */
+    /** 变量池，JSON 字符串格式 */
     private String varPool;
 
-    /**
-     * executor name
-     */
+    /** 非数据库字段：执行者名称 */
     @TableField(exist = false)
     private String executorName;
 
+    /** 非数据库字段：资源映射 */
     @TableField(exist = false)
     private Map<String, String> resources;
 
-    /**
-     * delay execution time.
-     */
+    /** 延时执行时间 */
     private int delayTime;
 
-    /**
-     * task params
-     */
+    /** 任务参数 */
     private String taskParams;
 
-    /**
-     * dry run flag
-     */
+    /** 试运行标志 */
     private int dryRun;
-    /**
-     * task group id
-     */
+    /** 任务组 ID */
     private int taskGroupId;
 
-    /**
-     * cpu quota
-     */
+    /** CPU 配额 */
     private Integer cpuQuota;
 
-    /**
-     * max memory
-     */
+    /** 最大内存 */
     private Integer memoryMax;
 
-    /**
-     * task execute type
-     */
+    /** 任务执行类型 */
     private TaskExecuteType taskExecuteType;
 
     public void init(String host, Date startTime, String executePath) {
@@ -372,10 +279,9 @@ public class TaskInstance implements Serializable {
     }
 
     /**
-     * determine if a task instance can retry
-     * if subProcess,
+     * 判断任务实例是否可以重试，子流程不可重试。
      *
-     * @return can try result
+     * @return 是否可重试
      */
     public boolean taskCanRetry() {
         if (this.isSubProcess()) {
@@ -388,9 +294,9 @@ public class TaskInstance implements Serializable {
     }
 
     /**
-     * whether the retry interval is timed out
+     * 判断重试间隔是否已超时
      *
-     * @return Boolean
+     * @return 是否超时
      */
     public boolean retryTaskIntervalOverTime() {
         if (getState() != TaskExecutionStatus.FAILURE) {

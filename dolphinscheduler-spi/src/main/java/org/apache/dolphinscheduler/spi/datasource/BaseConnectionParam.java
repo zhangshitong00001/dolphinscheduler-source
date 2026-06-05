@@ -23,27 +23,44 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+/**
+ * 数据库连接参数的抽象基类，定义了所有数据库类型通用的连接参数字段。
+ * <p>
+ * 包含用户名、密码、地址、数据库名、JDBC URL、驱动信息等核心连接属性。
+ * 具体数据库类型（MySQL、PostgreSQL等）应继承此类并添加各自的特有参数。
+ * JSON序列化时忽略null字段。
+ */
 @JsonInclude(Include.NON_NULL)
 public abstract class BaseConnectionParam implements ConnectionParam {
 
+    /** 数据库用户名 */
     protected String user;
 
+    /** 数据库密码 */
     protected String password;
 
+    /** 数据库地址（IP:端口） */
     protected String address;
 
+    /** 数据库名称 */
     protected String database;
 
+    /** JDBC连接URL */
     protected String jdbcUrl;
 
+    /** JDBC驱动jar包路径 */
     protected String driverLocation;
 
+    /** JDBC驱动类全限定名 */
     protected String driverClassName;
 
+    /** 用于校验连接有效性的SQL查询语句 */
     protected String validationQuery;
 
+    /** 其他额外JDBC连接参数 */
     protected String other;
 
+    /** 额外的连接属性键值对 */
     private Map<String, String> props = new HashMap<>();
 
     public String getUser() {

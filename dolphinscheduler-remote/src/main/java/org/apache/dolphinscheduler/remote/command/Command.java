@@ -21,16 +21,18 @@ import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- *  receive task log request command and content fill
- *  for netty data serializable transfer
+ * 命令消息。Netty远程通信的核心数据载体，封装了命令类型、唯一请求标识（opaque）、命令上下文和消息体，通过串行化在节点间传输。协议固定以魔数{@link #MAGIC}和版本号{@link #VERSION}开头。
  */
 public class Command implements Serializable {
 
     private static final long serialVersionUID = -1L;
 
+    /** 请求ID自增生成器 */
     private static final AtomicLong REQUEST_ID = new AtomicLong(1);
 
+    /** 协议魔数，用于校验数据包合法性 */
     public static final byte MAGIC = (byte) 0xbabe;
+    /** 协议版本号 */
     public static final byte VERSION = 0;
 
     public Command(){
@@ -42,22 +44,22 @@ public class Command implements Serializable {
     }
 
     /**
-     * command type
+     * 命令类型
      */
     private CommandType type;
 
     /**
-     *  request unique identification
+     * 请求唯一标识，用于关联请求与响应
      */
     private long opaque;
 
     /**
-     * request context
+     * 命令上下文，携带RPC调用的附属信息
      */
     private CommandContext context = new CommandContext();
 
     /**
-     *  data body
+     * 消息体，承载具体的业务数据
      */
     private byte[] body;
 

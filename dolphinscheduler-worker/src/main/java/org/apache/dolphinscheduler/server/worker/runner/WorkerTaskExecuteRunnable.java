@@ -61,6 +61,11 @@ import org.slf4j.LoggerFactory;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.google.common.base.Strings;
 
+/**
+ * Worker任务执行Runnable的抽象基类，定义了任务执行的完整生命周期流程。
+ * 包括任务初始化、前置检查、任务执行、后置处理（告警发送、结果回传、清理）以及异常处理。
+ * 子类需要实现executeTask方法来定义具体的任务执行逻辑。
+ */
 public abstract class WorkerTaskExecuteRunnable implements Runnable {
 
     protected final Logger logger = LoggerFactory
@@ -100,8 +105,18 @@ public abstract class WorkerTaskExecuteRunnable implements Runnable {
         logger.info("Set task logger name: {}", taskLogName);
     }
 
+    /**
+     * 执行具体的任务逻辑，由子类实现。
+     *
+     * @param taskCallBack 任务回调接口，用于在执行过程中更新应用信息
+     */
     protected abstract void executeTask(TaskCallBack taskCallBack);
 
+    /**
+     * 任务执行成功后的后置处理，包括发送告警、回传执行结果、移除缓存和清理执行路径。
+     *
+     * @throws TaskException 如果当前任务实例为空
+     */
     protected void afterExecute() throws TaskException {
         if (task == null) {
             throw new TaskException("The current task instance is null");
@@ -115,6 +130,12 @@ public abstract class WorkerTaskExecuteRunnable implements Runnable {
         clearTaskExecPathIfNeeded();
     }
 
+    /**
+     * 任务执行异常时的处理，取消任务并将失败结果发送给Master。
+     *
+     * @param throwable 捕获的异常
+     * @throws TaskException 如果处理过程中发生异常
+     */
     protected void afterThrowing(Throwable throwable) throws TaskException {
         cancelTask();
         TaskExecutionContextCacheManager.removeByTaskInstanceId(taskExecutionContext.getTaskInstanceId());
@@ -126,6 +147,9 @@ public abstract class WorkerTaskExecuteRunnable implements Runnable {
                 TaskExecutionStatus.FAILURE);
     }
 
+    /**
+     * 取消当前任务的执行，调用task.cancel并尝试取消关联的YARN/K8s应用。
+     */
     public void cancelTask() {
         // cancel the task
         if (task != null) {
@@ -144,6 +168,10 @@ public abstract class WorkerTaskExecuteRunnable implements Runnable {
         }
     }
 
+    /**
+     * 任务执行的主入口，包含完整的执行生命周期：
+     * 初始化任务 -> DryRun检查 -> 前置处理 -> 执行任务 -> 后置处理 -> 异常处理。
+     */
     @Override
     public void run() {
         try {
@@ -183,6 +211,9 @@ public abstract class WorkerTaskExecuteRunnable implements Runnable {
         }
     }
 
+    /**
+     * 初始化任务执行上下文，设置开始时间、环境文件路径和任务应用ID。
+     */
     protected void initializeTask() {
         logger.info("Begin to initialize task");
 
@@ -202,6 +233,10 @@ public abstract class WorkerTaskExecuteRunnable implements Runnable {
         logger.info("End initialize task");
     }
 
+    /**
+     * 任务执行前的准备工作，包括：
+     * 通知Master任务开始运行、检查租户存在性、创建本地执行路径、下载资源文件、初始化任务插件。
+     */
     protected void beforeExecute() {
         taskExecutionContext.setCurrentExecutionStatus(TaskExecutionStatus.RUNNING_EXECUTION);
         workerMessageSender.sendMessageWithRetry(taskExecutionContext, masterAddress, CommandType.TASK_EXECUTE_RUNNING);
@@ -236,6 +271,9 @@ public abstract class WorkerTaskExecuteRunnable implements Runnable {
 
     }
 
+    /**
+     * 如果任务需要告警，根据任务执行状态发送成功或失败告警。
+     */
     protected void sendAlertIfNeeded() {
         if (!task.getNeedAlert()) {
             return;
@@ -250,6 +288,9 @@ public abstract class WorkerTaskExecuteRunnable implements Runnable {
         logger.info("Success send alert");
     }
 
+    /**
+     * 将任务执行结果（状态、结束时间、进程ID、应用ID、变量池）发送给Master。
+     */
     protected void sendTaskResult() {
         taskExecutionContext.setCurrentExecutionStatus(task.getExitStatus());
         taskExecutionContext.setEndTime(new Date());
@@ -262,6 +303,9 @@ public abstract class WorkerTaskExecuteRunnable implements Runnable {
                 taskExecutionContext.getCurrentExecutionStatus());
     }
 
+    /**
+     * 在非开发模式下清理任务执行产生的本地文件目录。
+     */
     protected void clearTaskExecPathIfNeeded() {
 
         String execLocalPath = taskExecutionContext.getExecutePath();

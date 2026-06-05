@@ -18,7 +18,7 @@
 package org.apache.dolphinscheduler.remote.exceptions;
 
 /**
- * Custom runtime exception
+ * 远程运行时异常，用于包装远程通信过程中发生的运行时错误。
  */
 public class RemoteException extends RuntimeException {
 

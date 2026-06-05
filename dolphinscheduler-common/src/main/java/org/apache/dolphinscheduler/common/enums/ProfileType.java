@@ -21,13 +21,20 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+/**
+ * 配置文件类型枚举。
+ * 定义系统支持的数据源配置环境类型，用于多环境配置切换。
+ */
 public enum ProfileType {
     ;
 
+    /** H2数据库配置 */
     public static final String H2 = "h2";
 
+    /** MySQL数据库配置 */
     public static final String MYSQL = "mysql";
 
+    /** PostgreSQL数据库配置 */
     public static final String POSTGRESQL = "postgresql";
 
     public static final List<String> DATASOURCE_PROFILE = Lists.newArrayList(H2, MYSQL, POSTGRESQL);

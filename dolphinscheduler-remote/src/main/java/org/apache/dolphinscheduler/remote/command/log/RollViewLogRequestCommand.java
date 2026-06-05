@@ -27,7 +27,7 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 import java.io.Serializable;
 
 /**
- *  roll view log request command
+ * 滚动查看日志请求命令。支持分页滚动查看任务日志，通过指定日志路径、跳过的行数和查询行数来获取指定范围的日志内容。
  */
 @Data
 @NoArgsConstructor
@@ -35,17 +35,17 @@ import java.io.Serializable;
 public class RollViewLogRequestCommand implements Serializable {
 
     /**
-     *  log path
+     * 日志文件路径
      */
     private String path;
 
     /**
-     *  skip line number
+     * 跳过的行数，用于分页偏移
      */
     private int skipLineNum;
 
     /**
-     *  query line number
+     * 查询的行数，即每页大小
      */
     private int limit;
 

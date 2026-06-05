@@ -20,13 +20,13 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * user type
+ * 用户类型枚举。
+ * 定义系统中的用户角色类型。
  */
 public enum UserType {
-    /**
-     * 0 admin user; 1 general user
-     */
+    /** 管理员用户 */
     ADMIN_USER(0, "admin user"),
+    /** 普通用户 */
     GENERAL_USER(1, "general user");
 
     UserType(int code, String descp) {

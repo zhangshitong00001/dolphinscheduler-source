@@ -43,6 +43,9 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+/**
+ * 审计服务实现类。负责审计日志的记录和分页查询，支持按资源类型、操作类型、日期和用户等条件过滤。
+ */
 @Service
 public class AuditServiceImpl extends BaseServiceImpl implements AuditService {
 
@@ -53,12 +56,12 @@ public class AuditServiceImpl extends BaseServiceImpl implements AuditService {
     private AuditPublishService publishService;
 
     /**
-     * add new audit log
+     * 添加审计日志。通过消息发布服务异步记录用户操作。
      *
-     * @param user                  login user
-     * @param resourceType          resource type
-     * @param resourceId            resource id
-     * @param operation             operation type
+     * @param user 操作用户
+     * @param resourceType 资源类型
+     * @param resourceId 资源ID
+     * @param operation 操作类型
      */
     @Override
     public void addAudit(User user, AuditResourceType resourceType, Integer resourceId, AuditOperationType operation) {
@@ -66,17 +69,17 @@ public class AuditServiceImpl extends BaseServiceImpl implements AuditService {
     }
 
     /**
-     * query audit log paging
+     * 分页查询审计日志，支持按资源类型、操作类型、日期范围和用户名等条件过滤。
      *
-     * @param loginUser         login user
-     * @param resourceType      resource type
-     * @param operationType     operation type
-     * @param startDate         start time
-     * @param endDate           end time
-     * @param userName          query user name
-     * @param pageNo            page number
-     * @param pageSize          page size
-     * @return  audit log string data
+     * @param loginUser 当前登录用户
+     * @param resourceType 资源类型（可为null）
+     * @param operationType 操作类型（可为null）
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @param userName 操作人用户名
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页审计日志DTO的结果对象
      */
     @Override
     public Result queryLogListPaging(User loginUser, AuditResourceType resourceType,
@@ -119,10 +122,10 @@ public class AuditServiceImpl extends BaseServiceImpl implements AuditService {
     }
 
     /**
-     * transform AuditLog to AuditDto
+     * 将审计日志实体转换为前端DTO，解析资源类型和操作类型的编码为可读信息。
      *
-     * @param auditLog audit log
-     * @return audit dto
+     * @param auditLog 审计日志实体
+     * @return 审计日志DTO
      */
     private AuditDto transformAuditLog(AuditLog auditLog) {
         AuditDto auditDto = new AuditDto();

@@ -31,6 +31,7 @@ import org.apache.http.HttpStatus;
 
 import java.util.Date;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.WebUtils;
 
 /**
  * Login interceptor - validates user authentication on every request.
@@ -88,7 +90,14 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
                 return false;
             }
             // Refresh Redis session TTL (sliding expiration)
+            // Check both header and cookie, matching SessionServiceImpl behavior
             String sessionId = request.getHeader(Constants.SESSION_ID);
+            if (StringUtils.isEmpty(sessionId)) {
+                Cookie cookie = WebUtils.getCookie(request, Constants.SESSION_ID);
+                if (cookie != null) {
+                    sessionId = cookie.getValue();
+                }
+            }
             if (StringUtils.isNotEmpty(sessionId)) {
                 sessionManager.refreshSession(sessionId);
             }

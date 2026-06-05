@@ -20,12 +20,18 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * release semaphore
+ * 释放信号量。用于确保信号量仅被释放一次，防止重复释放导致的信号量计数错误。
  */
 public class ReleaseSemaphore {
 
+    /**
+     * 信号量实例
+     */
     private final Semaphore semaphore;
 
+    /**
+     * 是否已释放标志
+     */
     private final AtomicBoolean released;
 
     public ReleaseSemaphore(Semaphore semaphore){
@@ -33,6 +39,9 @@ public class ReleaseSemaphore {
         this.released = new AtomicBoolean(false);
     }
 
+    /**
+     * 释放信号量。使用CAS操作确保信号量仅被释放一次。
+     */
     public void release(){
         if(this.released.compareAndSet(false, true)){
             this.semaphore.release();

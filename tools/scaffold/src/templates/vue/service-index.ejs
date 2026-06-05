@@ -1,0 +1,50 @@
+<%- aslTs %>
+import { axios } from '@/service/service'
+import type {
+  ListReq,
+  <%= naming.pascal %>Req,
+  <%= naming.pascal %>Resp,
+  IdReq,
+} from './types'
+
+export function query<%= naming.pascal %>ListPaging(params: ListReq): Promise<<%= naming.pascal %>Resp> {
+  return axios({
+    url: '<%= baseUrl %>',
+    method: 'get',
+    params,
+  })
+}
+
+export function query<%= naming.pascal %>(id: IdReq): Promise<<%= naming.pascal %>Resp> {
+  return axios({
+    url: `<%= baseUrl %>/${id}`,
+    method: 'get',
+  })
+}
+
+export function create<%= naming.pascal %>(data: <%= naming.pascal %>Req): Promise<any> {
+  return axios({
+    url: '<%= baseUrl %>',
+    method: 'post',
+    data,
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    transformRequest: (params: any) => JSON.stringify(params),
+  })
+}
+
+export function update<%= naming.pascal %>(id: IdReq, data: <%= naming.pascal %>Req): Promise<any> {
+  return axios({
+    url: `<%= baseUrl %>/${id}`,
+    method: 'put',
+    data,
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    transformRequest: (params: any) => JSON.stringify(params),
+  })
+}
+
+export function delete<%= naming.pascal %>(id: IdReq): Promise<any> {
+  return axios({
+    url: `<%= baseUrl %>/${id}`,
+    method: 'delete',
+  })
+}

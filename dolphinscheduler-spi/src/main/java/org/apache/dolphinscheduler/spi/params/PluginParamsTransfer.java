@@ -30,20 +30,43 @@ import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
- * plugin params pojo and json transfer tool
+ * 插件参数传输工具类，提供 {@link PluginParams} 对象与JSON格式之间的转换方法。
+ * <p>
+ * 主要功能包括：
+ * <ul>
+ *   <li>将插件参数列表序列化为JSON字符串</li>
+ *   <li>将JSON字符串反序列化为插件参数列表</li>
+ *   <li>从JSON字符串提取参数名-值映射</li>
+ *   <li>根据模板生成带有实际值的完整参数列表</li>
+ * </ul>
  */
 public class PluginParamsTransfer {
 
+    /**
+     * 将插件参数列表转换为JSON字符串
+     *
+     * @param list 插件参数列表
+     * @return JSON字符串
+     */
     public static String transferParamsToJson(List<PluginParams> list) {
         return JSONUtils.toJsonString(list);
     }
 
+    /**
+     * 将JSON字符串转换为插件参数列表
+     *
+     * @param str JSON字符串
+     * @return 插件参数列表
+     */
     public static List<PluginParams> transferJsonToParamsList(String str) {
         return JSONUtils.toList(str, PluginParams.class);
     }
 
     /**
-     * return the plugin params map
+     * 将JSON字符串解析为参数名到参数值的映射
+     *
+     * @param paramsJsonStr 参数JSON字符串
+     * @return 参数名到参数值的映射Map
      */
     public static Map<String, String> getPluginParamsMap(String paramsJsonStr) {
         List<PluginParams> pluginParams = transferJsonToParamsList(paramsJsonStr);
@@ -55,11 +78,11 @@ public class PluginParamsTransfer {
     }
 
     /**
-     * generate Plugin Params
+     * 根据参数JSON字符串和模板生成完整的插件参数列表
      *
-     * @param paramsJsonStr paramsJsonStr value
-     * @param pluginParamsTemplate pluginParamsTemplate
-     * @return return plugin params value
+     * @param paramsJsonStr       参数值的JSON字符串（key-value形式）
+     * @param pluginParamsTemplate 插件参数模板JSON字符串
+     * @return 填充了实际值的参数列表
      */
     public static List<Map<String, Object>> generatePluginParams(String paramsJsonStr, String pluginParamsTemplate) {
         Map<String, Object> paramsMap = JSONUtils.toMap(paramsJsonStr, String.class, Object.class);
@@ -67,11 +90,12 @@ public class PluginParamsTransfer {
     }
 
     /**
-     * generate Plugin Params
+     * 根据参数Map和模板生成完整的插件参数列表。
+     * 实现原理：将模板中的每个参数项填充上paramsMap中对应的实际值。
      *
-     * @param paramsMap paramsMap
-     * @param pluginParamsTemplate pluginParamsTemplate
-     * @return return plugin params value
+     * @param paramsMap            参数名到参数值的映射
+     * @param pluginParamsTemplate 插件参数模板JSON字符串
+     * @return 填充了实际值的参数列表，如果paramsMap为空则返回null
      */
     public static List<Map<String, Object>> generatePluginParams(Map<String, Object> paramsMap, String pluginParamsTemplate) {
         if (paramsMap == null || paramsMap.isEmpty()) {

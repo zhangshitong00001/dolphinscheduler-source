@@ -19,15 +19,17 @@ package org.apache.dolphinscheduler.common.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
+/**
+ * Spark 版本枚举。
+ * 定义 Spark 任务支持的版本类型。
+ */
 public enum SparkVersion {
 
-    /**
-     * 0 SPARK1
-     * 1 SPARK2
-     * 2 SPARKSQL
-     */
+    /** Spark 1.x 版本 */
     SPARK1(0, "SPARK1"),
+    /** Spark 2.x 版本 */
     SPARK2(1, "SPARK2"),
+    /** Spark SQL */
     SPARKSQL(2, "SPARKSQL");
 
     SparkVersion(int code, String descp) {

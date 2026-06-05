@@ -67,4 +67,10 @@ public interface MetadataService {
      * @return true if connection is successful
      */
     boolean testConnection();
+
+    /**
+     * Clears all metadata cache entries from Redis.
+     * Typically called after schema changes in Hive to force a refresh.
+     */
+    void clearCache();
 }

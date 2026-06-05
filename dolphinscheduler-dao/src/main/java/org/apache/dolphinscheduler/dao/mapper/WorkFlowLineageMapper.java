@@ -26,120 +26,137 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 工作流血缘 Mapper 接口，封装对 t_ds_work_flow_lineage 及相关表的数据库操作。
+ * 提供工作流血缘关系的查询，包括上下游依赖、流程谱系以及任务依赖关系等能力。
+ */
 public interface WorkFlowLineageMapper {
 
     /**
-     * queryByName
+     * 根据项目编码和流程名称查询工作流血缘关系列表。
+     * SELECT * FROM t_ds_work_flow_lineage WHERE project_code = #{projectCode} AND work_flow_name LIKE CONCAT('%', #{workFlowName}, '%')
      *
-     * @param projectCode projectCode
-     * @param workFlowName workFlowName
-     * @return WorkFlowLineage list
+     * @param projectCode 项目编码
+     * @param workFlowName 流程名称搜索关键字
+     * @return 工作流血缘关系列表
      */
     List<WorkFlowLineage> queryWorkFlowLineageByName(@Param("projectCode") long projectCode, @Param("workFlowName") String workFlowName);
 
     /**
-     * queryWorkFlowLineageByCode
+     * 根据项目编码和流程编码精确查询工作流血缘关系。
+     * SELECT * FROM t_ds_work_flow_lineage WHERE project_code = #{projectCode} AND work_flow_code = #{workFlowCode}
      *
-     * @param projectCode projectCode
-     * @param workFlowCode workFlowCode
-     * @return WorkFlowLineage
+     * @param projectCode 项目编码
+     * @param workFlowCode 流程编码
+     * @return 工作流血缘关系实体，若不存在则返回 null
      */
     WorkFlowLineage queryWorkFlowLineageByCode(@Param("projectCode") long projectCode, @Param("workFlowCode") long workFlowCode);
 
     /**
-     * queryWorkFlowLineageByProcessDefinitionCodes
+     * 根据流程定义编码列表批量查询工作流血缘关系。
+     * SELECT * FROM t_ds_work_flow_lineage WHERE work_flow_code IN (#{workFlowCodes})
      *
-     * @param workFlowCodes workFlowCodes
-     * @return WorkFlowLineage
+     * @param workFlowCodes 流程编码列表
+     * @return 工作流血缘关系列表
      */
     List<WorkFlowLineage> queryWorkFlowLineageByProcessDefinitionCodes(@Param("workFlowCodes") List<Long> workFlowCodes);
 
     /**
-     * queryWorkFlowLineageByCode
+     * 根据流程血缘关系列表查询对应的工作流血缘详细信息。
+     * SELECT * FROM t_ds_work_flow_lineage WHERE (src_work_flow_code, dest_work_flow_code) IN (...)
      *
-     * @param processLineages processLineages
-     * @return WorkFlowLineage list
+     * @param processLineages 流程血缘关系列表
+     * @return 工作流血缘关系列表
      */
     List<WorkFlowLineage> queryWorkFlowLineageByLineage(@Param("processLineages") List<ProcessLineage> processLineages);
 
     /**
-     * queryProcessLineage
+     * 查询指定项目下所有流程的血缘关系。
+     * SELECT DISTINCT src_work_flow_code, dest_work_flow_code FROM t_ds_process_lineage WHERE project_code = #{projectCode}
      *
-     * @param projectCode projectCode
-     * @return ProcessLineage list
+     * @param projectCode 项目编码
+     * @return 流程血缘关系列表
      */
     List<ProcessLineage> queryProcessLineage(@Param("projectCode") long projectCode);
 
     /**
-     * queryCodeRelation
+     * 根据项目编码和流程定义编码查询该流程的上下游血缘关系。
+     * SELECT * FROM t_ds_process_lineage WHERE project_code = #{projectCode} AND (src_work_flow_code = #{processDefinitionCode} OR dest_work_flow_code = #{processDefinitionCode})
      *
-     * @param projectCode projectCode
-     * @param processDefinitionCode processDefinitionCode
-     * @return ProcessLineage list
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @return 流程血缘关系列表
      */
     List<ProcessLineage> queryProcessLineageByCode(@Param("projectCode") long projectCode,
                                                    @Param("processDefinitionCode") long processDefinitionCode);
 
     /**
-     * query process definition by name
+     * 根据流程定义编码查询其依赖的下游流程定义。
+     * SELECT * FROM t_ds_process_definition WHERE code IN (SELECT dest_work_flow_code FROM t_ds_process_lineage WHERE src_work_flow_code = #{code})
      *
-     * @return dependent process definition
+     * @param code 流程定义编码
+     * @return 依赖的下游流程定义列表
      */
     List<DependentProcessDefinition> queryDependentProcessDefinitionByProcessDefinitionCode(@Param("code") long code);
 
     /**
-     * query downstream work flow lineage by process definition code
+     * 根据流程定义编码和任务类型查询该流程的下游工作流血缘关系。
+     * SELECT * FROM t_ds_work_flow_lineage WHERE src_work_flow_code = #{code} AND task_type = #{taskType}
      *
-     * @return dependent process definition
+     * @param code 流程定义编码
+     * @param taskType 任务类型
+     * @return 下游工作流血缘关系列表
      */
     List<WorkFlowLineage> queryDownstreamLineageByProcessDefinitionCode(@Param("code") long code,
                                                                         @Param("taskType") String taskType);
 
 
     /**
-     * query upstream work flow dependent task params by process definition code
+     * 根据流程定义编码和任务类型查询该流程的上游依赖任务参数。
+     * SELECT task_params FROM t_ds_process_task_relation WHERE process_definition_code = #{code} AND task_type = #{taskType}
      *
-     * @return task_params
+     * @param code 流程定义编码
+     * @param taskType 任务类型
+     * @return 上游依赖的流程定义列表
      */
     List<DependentProcessDefinition> queryUpstreamDependentParamsByProcessDefinitionCode(@Param("code") long code,
                                                                                          @Param("taskType") String taskType);
 
     /**
-     * Query all tasks type sub process depend on process definition.
+     * 查询指定流程定义中所有类型为 SUB_PROCESS 的子流程依赖任务主信息。
+     * 查询所有上游子流程类型的任务。
+     * SELECT * FROM t_ds_task_definition WHERE process_definition_code = #{processDefinitionCode} AND task_type = 'SUB_PROCESS'
      *
-     * Query all upstream tasks from task type sub process.
-     *
-     * @param projectCode Project code want to query tasks dependence
-     * @param processDefinitionCode Process definition code want to query tasks dependence
-     * @return List of TaskMainInfo
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @return 子流程依赖的任务主信息列表
      */
     List<TaskMainInfo> queryTaskSubProcessDepOnProcess(@Param("projectCode") long projectCode,
                                                        @Param("processDefinitionCode") long processDefinitionCode);
 
     /**
-     * Query all tasks type dependent depend on process definition.
+     * 查询指定流程定义中所有类型为 DEPENDENT 的依赖任务主信息。
+     * 查询所有下游 DEPENDENT 类型任务。方法 queryTaskDepOnTask 是当前方法 queryTaskDependentDepOnProcess 的子集，
+     * 即对于相同的 processDefinitionCode 参数，queryTaskDepOnTask 的所有结果都包含在 queryTaskDependentDepOnProcess 的结果中。
+     * SELECT * FROM t_ds_task_definition WHERE process_definition_code = #{processDefinitionCode} AND task_type = 'DEPENDENT'
      *
-     * Query all downstream tasks from task type dependent, method `queryTaskDepOnTask` is a proper subset of
-     * current method `queryTaskDepOnProcess`. Which mean with the same parameter processDefinitionCode, all tasks in
-     * `queryTaskDepOnTask` are in the result of method `queryTaskDepOnProcess`.
-     *
-     * @param projectCode Project code want to query tasks dependence
-     * @param processDefinitionCode Process definition code want to query tasks dependence
-     * @return List of TaskMainInfo
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @return 依赖任务的主信息列表
      */
     List<TaskMainInfo> queryTaskDependentDepOnProcess(@Param("projectCode") long projectCode,
                                                       @Param("processDefinitionCode") long processDefinitionCode);
 
     /**
-     * Query all tasks depend on task, only downstream task support currently(from dependent task type).
+     * 查询依赖于指定任务的所有下游任务主信息（目前仅支持 DEPENDENT 任务类型）。
+     * 方法 queryTaskDepOnTask 是 queryTaskDependentDepOnProcess 的子集，
+     * 即对于相同的 processDefinitionCode，queryTaskDepOnTask 的所有结果都包含在 queryTaskDependentDepOnProcess 的结果中。
+     * SELECT * FROM t_ds_task_definition WHERE process_definition_code = #{processDefinitionCode} AND task_code = #{taskCode} AND task_type = 'DEPENDENT'
      *
-     * In case of dependent task type, method `queryTaskDepOnTask` is a proper subset of `queryTaskDepOnProcess`. Which
-     * mean with the same processDefinitionCode, all tasks in `queryTaskDepOnTask` are in method `queryTaskDepOnProcess`.
-     *
-     * @param projectCode Project code want to query tasks dependence
-     * @param processDefinitionCode Process definition code want to query tasks dependence
-     * @param taskCode Task code want to query tasks dependence
-     * @return dependent process definition
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param taskCode 任务编码
+     * @return 依赖该任务的下游任务主信息列表
      */
     List<TaskMainInfo> queryTaskDepOnTask(@Param("projectCode") long projectCode,
                                           @Param("processDefinitionCode") long processDefinitionCode,

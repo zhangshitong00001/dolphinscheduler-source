@@ -23,60 +23,42 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-
 /**
- * Queue mapper interface with Redis caching support.
- * <p>
- * Cache configuration:
- * - Cache name: "queue"
- * - TTL: 30 minutes (configured in RedisConfig)
- * - Key generation: custom CacheKeyGenerator (params joined by underscore)
- * - Cache is evicted on update/delete operations
+ * queue mapper interface
  */
-@CacheConfig(cacheNames = "queue", keyGenerator = "cacheKeyGenerator")
 public interface QueueMapper extends BaseMapper<Queue> {
 
     /**
-     * Query queue by ID with caching.
-     * Result is cached in Redis for 30 minutes.
-     */
-    @Cacheable(sync = true)
-    Queue selectById(int id);
-
-    /**
-     * Delete queue by ID, evicts cache.
-     */
-    @CacheEvict
-    int deleteById(int id);
-
-    /**
-     * Update queue, evicts cache for this entry.
-     */
-    @CacheEvict(key = "#p0.id")
-    int updateById(Queue queue);
-
-    /**
-     * Queue pagination query.
+     * queue page
+     * @param page page
+     * @param searchVal searchVal
+     * @return queue IPage
      */
     IPage<Queue> queryQueuePaging(IPage<Queue> page, @Param("ids")List<Integer> ids,
                                   @Param("searchVal") String searchVal);
 
     /**
-     * Query all queue list.
+     *  query all queue list
+     * @param queue queue
+     * @param queueName queueName
+     * @return queue list
      */
     List<Queue> queryAllQueueList(@Param("queue") String queue,
                              @Param("queueName") String queueName);
 
     /**
-     * Check if queue exists.
+     * check the target queue exist
+     * @param queue queue
+     * @param queueName queueName
+     * @return true if exist else return null
      */
     Boolean existQueue(@Param("queue") String queue, @Param("queueName") String queueName);
 
     /**
-     * Query queue by name.
+     * query simple queue object by queue name and queue
+     * @param queue queue
+     * @param queueName queueName
+     * @return queue object
      */
     Queue queryQueueName(@Param("queue") String queue, @Param("queueName") String queueName);
 }

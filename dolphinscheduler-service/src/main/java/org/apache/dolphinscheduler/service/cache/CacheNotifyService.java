@@ -19,6 +19,14 @@ package org.apache.dolphinscheduler.service.cache;
 
 import org.apache.dolphinscheduler.remote.command.Command;
 
+/**
+ * 缓存通知服务接口，用于将缓存变更事件通知到Master节点。
+ */
 public interface CacheNotifyService {
+    /**
+     * 向所有Master节点发送缓存变更命令通知。
+     *
+     * @param command 需要发送的命令
+     */
     void notifyMaster(Command command);
 }

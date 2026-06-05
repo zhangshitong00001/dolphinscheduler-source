@@ -25,12 +25,17 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * the props field in form-create`s json rule
+ * 分组组件的属性配置类，继承自 {@link ParamsProps}。
+ * <p>
+ * 定义分组组件的子控件列表（rules）和字体大小等属性。
+ * 通过 rules 可以将多个表单控件组织在一个分组容器内。
  */
 public class GroupParamsProps extends ParamsProps {
 
+    /** 分组内的子控件规则列表 */
     private List<PluginParams> rules;
 
+    /** 字体大小 */
     private int fontSize;
 
     @JsonProperty("rules")

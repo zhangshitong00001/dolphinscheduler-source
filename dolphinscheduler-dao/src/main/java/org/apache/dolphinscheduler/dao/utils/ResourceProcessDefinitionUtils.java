@@ -27,11 +27,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * resource process definition utils
+ * 资源与流程定义关联工具类，负责解析资源 ID 与流程定义编码的映射关系。
  */
 public class ResourceProcessDefinitionUtils {
     /**
-     * get resource process map key is resource id,value is the set of process definition code
+     * 构建资源 ID 到流程定义编码集合的映射。从资源列表中解析每个流程定义关联的资源 ID 并反转为资源视角的索引。
      *
      * @param resourceList the map key is process definition code and value is resource_ids
      * @return resource process definition map (resourceId -> processDefinitionCodes)

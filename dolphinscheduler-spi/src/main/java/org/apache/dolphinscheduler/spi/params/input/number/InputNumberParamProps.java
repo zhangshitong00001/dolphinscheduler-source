@@ -20,48 +20,34 @@ package org.apache.dolphinscheduler.spi.params.input.number;
 import org.apache.dolphinscheduler.spi.params.base.ParamsProps;
 
 /**
- * front-end input number component props attributes
+ * 前端数字输入框组件的属性配置类，继承自 {@link ParamsProps}。
+ * <p>
+ * 定义数字输入框的数值范围、步长、精度、控制按钮等属性。
  */
 public class InputNumberParamProps extends ParamsProps {
 
-    /**
-     * set the minimum value allowed by the counter
-     */
+    /** 计数器允许的最小值 */
     private Integer min;
 
-    /**
-     * set the maximum value allowed by the counter
-     */
+    /** 计数器允许的最大值 */
     private Integer max;
 
-    /**
-     * counter step
-     */
+    /** 计数器步长 */
     private Integer step;
 
-    /**
-     * numerical accuracy
-     */
+    /** 数值精度（小数位数） */
     private Integer precision;
 
-    /**
-     * whether to use the control button, the default value is true
-     */
+    /** 是否使用控制按钮，默认true */
     private Boolean controls;
 
-    /**
-     * control button position, the default value is right
-     */
+    /** 控制按钮位置，默认right */
     private String controlsPosition;
 
-    /**
-     * name attribute
-     */
+    /** name属性 */
     private String name;
 
-    /**
-     * the label text associated with the input box
-     */
+    /** 与输入框关联的label文本 */
     private String label;
 
     public Integer getMin() {

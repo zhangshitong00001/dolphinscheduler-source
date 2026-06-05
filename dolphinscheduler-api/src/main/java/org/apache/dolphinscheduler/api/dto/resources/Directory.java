@@ -18,7 +18,7 @@
 package org.apache.dolphinscheduler.api.dto.resources;
 
 /**
- * directory
+ * 目录资源组件。表示资源树中的目录节点，isDirctory方法始终返回true。
  */
 public class Directory extends ResourceComponent {
 

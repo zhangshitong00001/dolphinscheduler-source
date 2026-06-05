@@ -50,7 +50,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * queue controller
+ * 队列控制器，提供 YARN 队列的创建、更新、查询和验证 REST API。
  */
 @Api(tags = "QUEUE_TAG")
 @RestController
@@ -61,10 +61,10 @@ public class QueueController extends BaseController {
     private QueueService queueService;
 
     /**
-     * query queue list
+     * 查询队列列表。
      *
-     * @param loginUser login user
-     * @return queue list
+     * @param loginUser 登录用户
+     * @return 队列列表
      */
     @ApiOperation(value = "queryList", notes = "QUERY_QUEUE_LIST_NOTES")
     @GetMapping(value = "/list")
@@ -76,13 +76,13 @@ public class QueueController extends BaseController {
     }
 
     /**
-     * query queue list paging
+     * 查询队列分页列表。
      *
-     * @param loginUser login user
-     * @param pageNo    page number
-     * @param searchVal search value
-     * @param pageSize  page size
-     * @return queue list
+     * @param loginUser 登录用户
+     * @param pageNo    页码
+     * @param searchVal 搜索关键词
+     * @param pageSize  每页大小
+     * @return 队列分页列表
      */
     @ApiOperation(value = "queryQueueListPaging", notes = "QUERY_QUEUE_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -109,12 +109,12 @@ public class QueueController extends BaseController {
     }
 
     /**
-     * create queue
+     * 创建队列。
      *
-     * @param loginUser login user
-     * @param queue     queue
-     * @param queueName queue name
-     * @return create result
+     * @param loginUser 登录用户
+     * @param queue     YARN 队列
+     * @param queueName 队列名称
+     * @return 创建结果
      */
     @ApiOperation(value = "createQueue", notes = "CREATE_QUEUE_NOTES")
     @ApiImplicitParams({
@@ -132,13 +132,13 @@ public class QueueController extends BaseController {
     }
 
     /**
-     * update queue
+     * 更新队列。
      *
-     * @param loginUser login user
-     * @param queue     queue
-     * @param id        queue id
-     * @param queueName queue name
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param queue     YARN 队列
+     * @param id        队列 ID
+     * @param queueName 队列名称
+     * @return 更新结果
      */
     @ApiOperation(value = "updateQueue", notes = "UPDATE_QUEUE_NOTES")
     @ApiImplicitParams({
@@ -158,12 +158,12 @@ public class QueueController extends BaseController {
     }
 
     /**
-     * verify queue and queue name
+     * 验证队列与队列名称是否可用。
      *
-     * @param loginUser login user
-     * @param queue     queue
-     * @param queueName queue name
-     * @return true if the queue name not exists, otherwise return false
+     * @param loginUser 登录用户
+     * @param queue     YARN 队列
+     * @param queueName 队列名称
+     * @return 队列名称不存在则返回 true，否则返回 false
      */
     @ApiOperation(value = "verifyQueue", notes = "VERIFY_QUEUE_NOTES")
     @ApiImplicitParams({

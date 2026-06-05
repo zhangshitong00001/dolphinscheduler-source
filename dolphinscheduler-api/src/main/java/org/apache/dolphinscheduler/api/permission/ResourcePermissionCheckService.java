@@ -22,48 +22,61 @@ import org.slf4j.Logger;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 资源权限检查服务接口。定义权限校验的统一入口，包括资源权限检查、操作权限检查和用户授权资源获取等功能。
+ * 用于在不同授权场景下标准化权限验证流程。
+ *
+ * @param <T> 资源ID的类型
+ */
 public interface ResourcePermissionCheckService<T>{
     /**
-     * resourcePermissionCheck
-     * @param authorizationType
-     * @param needChecks
-     * @param userId
-     * @param logger
-     * @return
+     * 检查用户是否拥有指定资源的访问权限。
+     *
+     * @param authorizationType 授权类型
+     * @param needChecks        需要进行权限检查的资源数组
+     * @param userId            用户ID
+     * @param logger            日志记录器
+     * @return 有权限返回true，否则返回false
      */
     boolean resourcePermissionCheck(Object authorizationType, Object[] needChecks, Integer userId, Logger logger);
 
     /**
-     * userOwnedResourceIdsAcquisition
-     * @param authorizationType
-     * @param userId
-     * @param logger
-     * @param <T>
-     * @return
+     * 获取用户拥有的指定类型授权资源ID集合。
+     *
+     * @param authorizationType 授权类型
+     * @param userId            用户ID
+     * @param logger            日志记录器
+     * @param <T>               资源ID类型
+     * @return 用户拥有的资源ID集合
      */
     Set<T> userOwnedResourceIdsAcquisition(Object authorizationType, Integer userId, Logger logger);
 
     /**
-     * operationpermissionCheck
-     * @param authorizationType
-     * @param userId
-     * @param permissionKey
-     * @param logger
-     * @return
+     * 检查用户是否拥有指定权限键的操作权限。
+     *
+     * @param authorizationType 授权类型
+     * @param projectIds        项目ID数组
+     * @param userId            用户ID
+     * @param permissionKey     权限键
+     * @param logger            日志记录器
+     * @return 有操作权限返回true，否则返回false
      */
     boolean operationPermissionCheck(Object authorizationType, Object[] projectIds, Integer userId, String permissionKey, Logger logger);
 
     /**
-     * functionDisabled
-     * @return
+     * 判断权限检查功能是否已禁用。
+     *
+     * @return 已禁用返回true，否则返回false
      */
     boolean functionDisabled();
 
     /**
-     * associated with the current user after the resource is created
-     * @param authorizationType
-     * @param ids
-     * @param logger
+     * 资源创建后的后置处理，将新建资源与当前用户关联。
+     *
+     * @param authorizationType 授权类型
+     * @param userId            用户ID
+     * @param ids               资源ID列表
+     * @param logger            日志记录器
      */
     void postHandle(Object authorizationType, Integer userId, List<Integer> ids, Logger logger);
 }

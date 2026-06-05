@@ -26,10 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Text param
+ * 前端文本输入框组件参数类，继承自 {@link PluginParams}。
+ * <p>
+ * 用于在前端动态表单中渲染输入框（input）组件，支持文本、密码、文本域等多种模式，
+ * 通过Builder模式方便地设置占位符、尺寸、行数、类型等属性。
  */
 public class InputParam extends PluginParams {
 
+    /** 输入框组件专属属性 */
     private final InputParamProps props;
 
     private InputParam(Builder builder) {

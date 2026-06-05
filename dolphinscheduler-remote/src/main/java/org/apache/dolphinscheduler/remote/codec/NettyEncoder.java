@@ -26,7 +26,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
- * netty encoder
+ * Netty编码器。将{@link Command}消息对象按协议顺序编码为字节流，依次写入魔数、版本、命令类型、请求标识、上下文和消息体，用于网络传输。
  */
 @Sharable
 public class NettyEncoder extends MessageToByteEncoder<Command> {

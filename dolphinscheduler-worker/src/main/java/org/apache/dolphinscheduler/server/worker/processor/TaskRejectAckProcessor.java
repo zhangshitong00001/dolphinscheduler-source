@@ -31,6 +31,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 任务拒绝确认处理器。处理Master返回的任务拒绝确认消息。
+ * 当Master成功接收Worker发送的任务拒绝消息后，Worker收到此确认，
+ * 从重试队列中移除对应的任务拒绝消息，避免重复发送拒绝通知。
+ */
 @Component
 public class TaskRejectAckProcessor implements NettyRequestProcessor {
 
@@ -39,6 +44,13 @@ public class TaskRejectAckProcessor implements NettyRequestProcessor {
     @Autowired
     private MessageRetryRunner messageRetryRunner;
 
+    /**
+     * 处理任务拒绝确认命令。解析Master返回的确认消息，如果确认成功则从重试队列中
+     * 移除对应的TASK_REJECT消息；否则保留消息以便后续重试。
+     *
+     * @param channel Netty通道
+     * @param command 任务拒绝确认命令
+     */
     @Override
     public void process(Channel channel, Command command) {
         Preconditions.checkArgument(CommandType.TASK_REJECT_ACK == command.getType(),

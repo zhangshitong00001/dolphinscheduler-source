@@ -1,0 +1,17 @@
+<%- aslTs %>
+import { defineStore } from 'pinia'
+import type { <%= naming.pascal %>State } from '@/store/<%= domain %>/types'
+
+export const use<%= naming.pascal %>Store = defineStore({
+  id: '<%= naming.kebab %>',
+  state: (): <%= naming.pascal %>State => ({
+    // TODO: Add state fields
+  }),
+  persist: true,
+  getters: {
+    // TODO: Add getters
+  },
+  actions: {
+    // TODO: Add actions
+  },
+})

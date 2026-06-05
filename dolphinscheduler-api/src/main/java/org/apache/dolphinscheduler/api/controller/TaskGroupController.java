@@ -52,7 +52,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * task group controller
+ * 任务组控制器，提供任务组的创建、更新、启停、查询及任务组队列的优先级管理等 REST API。
  */
 @Api(tags = "task group")
 @RestController
@@ -63,14 +63,14 @@ public class TaskGroupController extends BaseController {
     private TaskGroupService taskGroupService;
 
     /**
-     * query task group list
+     * 创建任务组。
      *
-     * @param loginUser   login user
-     * @param name        name
-     * @param description description
-     * @param groupSize   group size
-     * @param name        project id
-     * @return result and msg code
+     * @param loginUser   登录用户
+     * @param name        任务组名称
+     * @param projectcode 项目编码
+     * @param description 描述
+     * @param groupSize   任务组容量
+     * @return 创建结果
      */
     @ApiOperation(value = "create", notes = "CREATE_TASK_GROUP_NOTE")
     @ApiImplicitParams({
@@ -94,14 +94,14 @@ public class TaskGroupController extends BaseController {
     }
 
     /**
-     * update task group list
+     * 更新任务组。
      *
-     * @param loginUser   login user
-     * @param name        name
-     * @param description description
-     * @param groupSize   group size
-     * @param name        project id
-     * @return result and msg code
+     * @param loginUser   登录用户
+     * @param id          任务组 ID
+     * @param name        任务组名称
+     * @param description 描述
+     * @param groupSize   任务组容量
+     * @return 更新结果
      */
     @ApiOperation(value = "update", notes = "UPDATE_TASK_GROUP_NOTE")
     @ApiImplicitParams({
@@ -125,12 +125,13 @@ public class TaskGroupController extends BaseController {
     }
 
     /**
-     * query task group list paging
+     * 查询任务组分页列表。
      *
-     * @param loginUser login user
-     * @param pageNo    page number
-     * @param pageSize  page size
-     * @return queue list
+     * @param loginUser 登录用户
+     * @param name      任务组名称
+     * @param pageNo    页码
+     * @param pageSize  每页大小
+     * @return 任务组分页列表
      */
     @ApiOperation(value = "list-paging", notes = "QUERY_ALL_TASK_GROUP_NOTES")
     @ApiImplicitParams({
@@ -152,13 +153,13 @@ public class TaskGroupController extends BaseController {
     }
 
     /**
-     * query task group list paging
+     * 根据状态查询任务组分页列表。
      *
-     * @param loginUser login user
-     * @param pageNo    page number
-     * @param status    status
-     * @param pageSize  page size
-     * @return queue list
+     * @param loginUser 登录用户
+     * @param pageNo    页码
+     * @param status    任务组状态
+     * @param pageSize  每页大小
+     * @return 任务组分页列表
      */
     @ApiOperation(value = "queryTaskGroupByStatus", notes = "QUERY_TASK_GROUP_LIST_BY_STATUS_NOTES")
     @ApiImplicitParams({
@@ -179,13 +180,13 @@ public class TaskGroupController extends BaseController {
     }
 
     /**
-     * query task group list paging by project code
+     * 根据项目编码查询任务组分页列表。
      *
-     * @param loginUser   login user
-     * @param pageNo      page number
-     * @param projectCode project code
-     * @param pageSize    page size
-     * @return queue list
+     * @param loginUser   登录用户
+     * @param pageNo      页码
+     * @param projectCode 项目编码
+     * @param pageSize    每页大小
+     * @return 任务组分页列表
      */
     @ApiOperation(value = "queryTaskGroupByName", notes = "QUERY_TASK_GROUP_LIST_BY_PROJECT_ID_NOTES")
     @ApiImplicitParams({
@@ -207,11 +208,11 @@ public class TaskGroupController extends BaseController {
     }
 
     /**
-     * close a task group
+     * 关闭任务组。
      *
-     * @param loginUser login user
-     * @param id        id
-     * @return result
+     * @param loginUser 登录用户
+     * @param id        任务组 ID
+     * @return 操作结果
      */
     @ApiOperation(value = "closeTaskGroup", notes = "CLOSE_TASK_GROUP_NOTES")
     @ApiImplicitParams({
@@ -229,11 +230,11 @@ public class TaskGroupController extends BaseController {
     }
 
     /**
-     * start a task group
+     * 启动任务组。
      *
-     * @param loginUser login user
-     * @param id        id
-     * @return result
+     * @param loginUser 登录用户
+     * @param id        任务组 ID
+     * @return 操作结果
      */
     @ApiOperation(value = "startTaskGroup", notes = "START_TASK_GROUP_NOTES")
     @ApiImplicitParams({
@@ -250,11 +251,11 @@ public class TaskGroupController extends BaseController {
     }
 
     /**
-     * force start task without task group
+     * 强制启动任务，跳过任务组限制。
      *
-     * @param loginUser login user
-     * @param queueId   task group queue id
-     * @return result
+     * @param loginUser 登录用户
+     * @param queueId   任务组队列 ID
+     * @return 操作结果
      */
     @ApiOperation(value = "forceStart", notes = "FORCE_START_TASK_GROUP")
     @ApiImplicitParams({
@@ -271,11 +272,12 @@ public class TaskGroupController extends BaseController {
     }
 
     /**
-     * force start task without task group
+     * 修改任务组队列中任务的优先级。
      *
-     * @param loginUser login user
-     * @param queueId   task group queue id
-     * @return result
+     * @param loginUser 登录用户
+     * @param queueId   任务组队列 ID
+     * @param priority  新优先级
+     * @return 操作结果
      */
     @ApiOperation(value = "modifyPriority", notes = "MODIFY_TASK_GROUP_PRIORITY")
     @ApiImplicitParams({
@@ -297,16 +299,16 @@ public class TaskGroupController extends BaseController {
     private TaskGroupQueueService taskGroupQueueService;
 
     /**
-     * query task group queue list paging
+     * 根据任务组 ID 查询任务组队列分页列表。
      *
-     * @param groupId     ID for task group
-     * @param taskName    Task Name
-     * @param processName Process instance name
-     * @param status      Task queue status
-     * @param loginUser   login user
-     * @param pageNo      page number
-     * @param pageSize    page size
-     * @return queue list
+     * @param groupId     任务组 ID
+     * @param taskName    任务名称
+     * @param processName 流程实例名称
+     * @param status      任务队列状态
+     * @param loginUser   登录用户
+     * @param pageNo      页码
+     * @param pageSize    每页大小
+     * @return 任务组队列分页列表
      */
     @ApiOperation(value = "queryTasksByGroupId", notes = "QUERY_ALL_TASKS_GROUP_NOTES")
     @ApiImplicitParams({

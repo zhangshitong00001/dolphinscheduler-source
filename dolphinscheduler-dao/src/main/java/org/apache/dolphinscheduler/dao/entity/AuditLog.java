@@ -24,44 +24,34 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 审计日志实体，映射到 t_ds_audit_log 表，记录用户对系统资源的操作历史。
+ * 用于安全审计和追溯，记录谁在什么时间对哪个资源执行了什么操作。
+ */
 @TableName("t_ds_audit_log")
 public class AuditLog {
 
-    /**
-     * id
-     */
+    /** 审计日志主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * user id
-     */
+    /** 操作用户 ID，对应 t_ds_user 表的 id */
     private Integer userId;
 
-    /**
-     * resource type
-     */
+    /** 资源类型，标识被操作的是哪种资源（如项目、工作流定义、任务定义、数据源等） */
     private Integer resourceType;
 
-    /**
-     * operation type
-     */
+    /** 操作类型，标识执行了什么操作（如创建、修改、删除、授权等） */
     private Integer operation;
 
-    /**
-     * resource id
-     */
+    /** 资源 ID，被操作的资源主键 */
     private Integer resourceId;
 
-    /**
-     * user name
-     */
+    /** 非数据库字段：操作者用户名，通过 userId 关联 t_ds_user 表查询填充 */
     @TableField(exist = false)
     private String userName;
 
-    /**
-     * operation time
-     */
+    /** 操作时间 */
     private Date time;
 
     public Integer getUserId() {

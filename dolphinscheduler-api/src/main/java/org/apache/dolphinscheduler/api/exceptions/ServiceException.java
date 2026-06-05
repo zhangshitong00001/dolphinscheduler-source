@@ -22,9 +22,13 @@ import java.text.MessageFormat;
 
 import lombok.Data;
 
+/**
+ * 服务异常类。封装业务异常的运行时异常，包含状态码和消息，支持国际化的错误信息格式化。
+ */
 @Data
 public class ServiceException extends RuntimeException {
 
+    /** 状态码 */
     private int code;
 
     public ServiceException() {

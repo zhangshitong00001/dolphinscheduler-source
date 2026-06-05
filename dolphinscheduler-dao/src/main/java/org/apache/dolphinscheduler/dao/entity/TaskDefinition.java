@@ -46,176 +46,115 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Strings;
 
+/**
+ * 任务定义实体，映射到 t_ds_task_definition 表，存储任务的元数据定义信息。
+ */
 @Data
 @TableName("t_ds_task_definition")
 public class TaskDefinition {
 
-    /**
-     * id
-     */
+    /** 任务定义主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * code
-     */
+    /** 任务编码，用于标识同一任务的唯一编码 */
     private long code;
 
-    /**
-     * name
-     */
+    /** 任务名称 */
     private String name;
 
-    /**
-     * version
-     */
+    /** 任务版本号 */
     private int version;
 
-    /**
-     * description
-     */
+    /** 任务描述 */
     private String description;
 
-    /**
-     * project code
-     */
+    /** 所属项目编码 */
     private long projectCode;
 
-    /**
-     * task user id
-     */
+    /** 任务所属用户 ID */
     private int userId;
 
-    /**
-     * task type
-     */
+    /** 任务类型 */
     private String taskType;
 
-    /**
-     * user defined parameters
-     */
+    /** 用户自定义任务参数，JSON 格式 */
     @JsonDeserialize(using = JSONUtils.JsonDataDeserializer.class)
     @JsonSerialize(using = JSONUtils.JsonDataSerializer.class)
     private String taskParams;
 
-    /**
-     * user defined parameter list
-     */
+    /** 非数据库字段：用户自定义参数列表 */
     @TableField(exist = false)
     private List<Property> taskParamList;
 
-    /**
-     * user defined parameter map
-     */
+    /** 非数据库字段：用户自定义参数映射表 */
     @TableField(exist = false)
     private Map<String, String> taskParamMap;
 
-    /**
-     * task is valid: yes/no
-     */
+    /** 任务是否有效：是/否 */
     private Flag flag;
 
-    /**
-     * task priority
-     */
+    /** 任务优先级 */
     private Priority taskPriority;
 
-    /**
-     * user name
-     */
+    /** 非数据库字段：用户名 */
     @TableField(exist = false)
     private String userName;
 
-    /**
-     * project name
-     */
+    /** 非数据库字段：项目名称 */
     @TableField(exist = false)
     private String projectName;
 
-    /**
-     * worker group
-     */
+    /** Worker 分组名称 */
     private String workerGroup;
 
-    /**
-     * environment code
-     */
+    /** 环境编码 */
     private long environmentCode;
 
-    /**
-     * fail retry times
-     */
+    /** 失败重试次数 */
     private int failRetryTimes;
 
-    /**
-     * fail retry interval
-     */
+    /** 失败重试间隔 */
     private int failRetryInterval;
 
-    /**
-     * timeout flag
-     */
+    /** 超时告警标志 */
     private TimeoutFlag timeoutFlag;
 
-    /**
-     * timeout notify strategy
-     */
+    /** 超时通知策略 */
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     private TaskTimeoutStrategy timeoutNotifyStrategy;
 
-    /**
-     * task warning time out. unit: minute
-     */
+    /** 任务超时告警时间，单位：分钟 */
     private int timeout;
 
-    /**
-     * delay execution time.
-     */
+    /** 延时执行时间 */
     private int delayTime;
 
-    /**
-     * resource ids
-     */
+    /** 资源 ID 列表 */
     private String resourceIds;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 
-    /**
-     * modify user name
-     */
+    /** 非数据库字段：修改人用户名 */
     @TableField(exist = false)
     private String modifyBy;
 
-    /**
-     * task group id
-     */
+    /** 任务组 ID */
     private int taskGroupId;
-    /**
-     * task group id
-     */
+    /** 任务组优先级 */
     private int taskGroupPriority;
 
-    /**
-     * cpu quota
-     */
+    /** CPU 配额 */
     private Integer cpuQuota;
 
-    /**
-     * max memory
-     */
+    /** 最大内存 */
     private Integer memoryMax;
 
-    /**
-     * task execute type
-     */
+    /** 任务执行类型 */
     private TaskExecuteType taskExecuteType;
 
     public TaskDefinition() {

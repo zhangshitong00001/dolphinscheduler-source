@@ -26,33 +26,40 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * resource user relation mapper interface
+ * 资源-用户关系 Mapper 接口，封装对 t_ds_relation_resources_user 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供资源与用户授权关系的查询和删除能力。
  */
 public interface ResourceUserMapper extends BaseMapper<ResourcesUser> {
 
     /**
-     * query resourcesId list by userId and perm
+     * 根据用户ID和权限级别查询该用户被授权的资源ID列表。
+     * SQL: SELECT resources_id FROM t_ds_relation_resources_user WHERE user_id = #{userId} AND perm = #{perm}
+     *
      * @param userId userId
-     * @param perm perm
-     * @return resourcesId list result
+     * @param perm   perm
+     * @return resourcesId list
      */
     List<Integer> queryResourcesIdListByUserIdAndPerm(@Param("userId") int userId,
                                                       @Param("perm") int perm);
 
     /**
-     * delete resource user relation
-     * @param userId userId
+     * 删除指定用户对指定资源的授权关系。
+     * SQL: DELETE FROM t_ds_relation_resources_user WHERE user_id = #{userId} AND resources_id = #{resourceId}
+     *
+     * @param userId     userId
      * @param resourceId resourceId
-     * @return delete result
+     * @return 删除的记录数
      */
     int deleteResourceUser(@Param("userId") int userId,
                            @Param("resourceId") int resourceId);
 
     /**
-     * delete resource user relation
+     * 批量删除指定用户对指定资源ID数组的授权关系。
+     * SQL: DELETE FROM t_ds_relation_resources_user WHERE user_id = #{userId} AND resources_id IN #{resIds}
+     *
      * @param userId userId
      * @param resIds resource Ids
-     * @return delete result
+     * @return 删除的记录数
      */
     int deleteResourceUserArray(@Param("userId") int userId,
                            @Param("resIds") Integer[] resIds);

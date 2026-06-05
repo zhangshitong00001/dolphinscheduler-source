@@ -17,12 +17,22 @@
 
 package org.apache.dolphinscheduler.spi.plugin;
 
+/**
+ * 带优先级的SPI插件接口，所有通过SPI机制加载的插件均应实现此接口。
+ * <p>
+ * 插件通过 {@link #getIdentify()} 返回唯一标识（名称+优先级）。
+ * 当多个插件具有相同名称时，优先级较高的插件会覆盖优先级较低的插件；
+ * 如果名称和优先级都相同，则抛出 {@code IllegalArgumentException}。
+ * <p>
+ * 实现此接口的插件类需要在 {@code META-INF/services} 中进行注册，
+ * 然后通过 {@link PrioritySPIFactory} 进行加载。
+ */
 public interface PrioritySPI extends Comparable<Integer> {
 
     /**
-     * The SPI identify, if the two plugin has the same name, will load the high priority.
-     * If the priority and name is all same, will throw <code>IllegalArgumentException</code>
-     * @return
+     * 获取插件的SPI标识信息（名称和优先级）
+     *
+     * @return 包含插件名称和优先级的标识对象
      */
     SPIIdentify getIdentify();
 

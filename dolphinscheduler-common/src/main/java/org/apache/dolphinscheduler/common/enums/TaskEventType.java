@@ -17,10 +17,19 @@
 
 package org.apache.dolphinscheduler.common.enums;
 
+/**
+ * 任务事件类型枚举。
+ * 定义任务在生命周期中产生的事件类型。
+ */
 public enum TaskEventType {
+    /** 任务分发 */
     DISPATCH,
+    /** 延迟执行 */
     DELAY,
+    /** 正在运行 */
     RUNNING,
+    /** 任务结果 */
     RESULT,
+    /** Worker 拒绝 */
     WORKER_REJECT
 }

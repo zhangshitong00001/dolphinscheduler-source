@@ -20,20 +20,19 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- *  define process and task priority
+ * 优先级枚举。
+ * 定义流程和任务的执行优先级。
  */
 public enum Priority {
-    /**
-     * 0 highest priority
-     * 1 higher priority
-     * 2 medium priority
-     * 3 lower priority
-     * 4 lowest priority
-     */
+    /** 最高优先级 */
     HIGHEST(0, "highest"),
+    /** 高优先级 */
     HIGH(1, "high"),
+    /** 中等优先级 */
     MEDIUM(2, "medium"),
+    /** 低优先级 */
     LOW(3, "low"),
+    /** 最低优先级 */
     LOWEST(4, "lowest");
 
     Priority(int code, String descp) {

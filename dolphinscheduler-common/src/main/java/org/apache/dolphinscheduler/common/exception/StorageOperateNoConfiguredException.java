@@ -18,7 +18,8 @@
 package org.apache.dolphinscheduler.common.exception;
 
 /**
- * exception for store
+ * 存储操作未配置异常，当存储服务未正确配置时抛出。
+ * 通常发生在OSS等存储服务未启用或配置缺失的情况下。
  */
 public class StorageOperateNoConfiguredException extends RuntimeException {
 

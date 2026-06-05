@@ -48,6 +48,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.annotation.PostConstruct;
 import java.util.Collection;
 
+/**
+ * Worker服务启动类，作为Spring Boot应用入口，负责初始化并启动Worker的所有组件。
+ * 启动顺序为：RPC服务端 -> RPC客户端 -> 插件加载 -> 注册中心 -> 任务管理线程 -> 消息重试器。
+ * 排除对process和queue服务的扫描，Worker不承担Master的职责。
+ */
 @SpringBootApplication
 @EnableTransactionManagement
 @ComponentScan(basePackages = "org.apache.dolphinscheduler", excludeFilters = {
@@ -58,30 +63,17 @@ import java.util.Collection;
 })
 public class WorkerServer implements IStoppable {
 
-    /**
-     * logger
-     */
     private static final Logger logger = LoggerFactory.getLogger(WorkerServer.class);
 
-    /**
-     * spring application context
-     * only use it for initialization
-     */
     @Autowired
     private SpringApplicationContext springApplicationContext;
 
-    /**
-     * alert model netty remote server
-     */
     @Autowired
     private AlertClientService alertClientService;
 
     @Autowired
     private WorkerManagerThread workerManagerThread;
 
-    /**
-     * worker registry
-     */
     @Autowired
     private WorkerRegistryClient workerRegistryClient;
 
@@ -101,15 +93,18 @@ public class WorkerServer implements IStoppable {
     private WorkerConfig workerConfig;
 
     /**
-     * worker server startup, not use web service
+     * Worker服务启动入口，启动Spring Boot应用（非Web模式）。
      *
-     * @param args arguments
+     * @param args 命令行参数
      */
     public static void main(String[] args) {
         Thread.currentThread().setName(Constants.THREAD_NAME_WORKER_SERVER);
         SpringApplication.run(WorkerServer.class);
     }
 
+    /**
+     * Worker服务初始化方法，按顺序启动所有Worker组件并注册JVM关闭钩子。
+     */
     @PostConstruct
     public void run() {
         this.workerRpcServer.start();
@@ -133,6 +128,11 @@ public class WorkerServer implements IStoppable {
         }));
     }
 
+    /**
+     * 关闭Worker服务，先终止所有运行中的任务，再关闭各个组件。
+     *
+     * @param cause 关闭原因
+     */
     public void close(String cause) {
         if (!ServerLifeCycleManager.toStopped()) {
             logger.warn("WorkerServer is already stopped, current cause: {}", cause);
@@ -161,7 +161,7 @@ public class WorkerServer implements IStoppable {
     }
 
     /**
-     * kill all tasks which are running
+     * 结束所有正在运行的任务，遍历缓存中的所有任务执行上下文并逐个终止。
      */
     public void killAllRunningTasks() {
         Collection<TaskExecutionContext> taskRequests = TaskExecutionContextCacheManager.getAllTaskRequestList();

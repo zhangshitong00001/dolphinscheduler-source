@@ -18,11 +18,13 @@
 package org.apache.dolphinscheduler.server.master.dispatch.enums;
 
 /**
- *  executor type
+ * 执行器类型枚举。定义任务分发到 Worker 节点还是 Client 节点。
  */
 public enum ExecutorType {
 
+    /** 分发到 Worker 节点执行。 */
     WORKER,
 
+    /** 分发到 Client 节点执行。 */
     CLIENT;
 }

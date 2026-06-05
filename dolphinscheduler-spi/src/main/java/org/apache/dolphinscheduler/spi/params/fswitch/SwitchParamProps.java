@@ -20,58 +20,41 @@ package org.apache.dolphinscheduler.spi.params.fswitch;
 import org.apache.dolphinscheduler.spi.params.base.ParamsProps;
 
 /**
- * front-end switch component props attributes
+ * 前端开关组件的属性配置类，继承自 {@link ParamsProps}。
+ * <p>
+ * 定义开关组件的所有可配置属性，包括开关宽度、开启/关闭状态的
+ * 图标、文本、取值和颜色等。
  */
 public class SwitchParamProps extends ParamsProps {
 
-    /**
-     * the width of the switch (pixels)
-     */
+    /** 开关宽度（像素） */
     private Integer width;
 
-    /**
-     * the class name of the icon displayed when the switch is turned on, setting this option will ignore active-text
-     */
+    /** 开关打开时显示的图标类名，设置此项会忽略 activeText */
     private String activeIconClass;
 
-    /**
-     * the class name of the icon displayed when the switch is closed, setting this option will ignore inactive-text
-     */
+    /** 开关关闭时显示的图标类名，设置此项会忽略 inactiveText */
     private String inactiveIconClass;
 
-    /**
-     * text description when switch is turned on
-     */
+    /** 开关打开时的文本描述 */
     private String activeText;
 
-    /**
-     * text description when switch is closed
-     */
+    /** 开关关闭时的文本描述 */
     private String inactiveText;
 
-    /**
-     * value when switch is turned on
-     */
+    /** 开关打开时的值 */
     private Object activeValue;
 
-    /**
-     * value when the switch is closed
-     */
+    /** 开关关闭时的值 */
     private Object inactiveValue;
 
-    /**
-     * the background color when the switch is turned on
-     */
+    /** 开关打开时的背景色 */
     private String activeColor;
 
-    /**
-     * the background color when the switch is closed
-     */
+    /** 开关关闭时的背景色 */
     private String inactiveColor;
 
-    /**
-     * name attribute
-     */
+    /** name属性 */
     private String name;
 
     public Integer getWidth() {

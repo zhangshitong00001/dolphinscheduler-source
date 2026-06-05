@@ -22,68 +22,69 @@ import com.cronutils.model.field.expression.QuestionMark;
 import org.apache.dolphinscheduler.common.enums.CycleEnum;
 
 /**
- * Crontab Cycle Tool Factory
+ * Cron周期工具工厂，根据Cron表达式创建对应的周期解析器。
+ * <p>包含分钟、小时、天、周、月、年六种周期类型的内部实现类。</p>
  */
 public class CycleFactory {
     private CycleFactory() {
         throw new IllegalStateException("CycleFactory class");
     }
     /**
-     * min
-     * @param cron cron
-     * @return AbstractCycle
+     * 创建分钟周期解析器。
+     * @param cron Cron对象
+     * @return 分钟周期解析器实例
      */
     public static AbstractCycle min(Cron cron) {
       return new MinCycle(cron);
     }
 
     /**
-     * hour
-     * @param cron cron
-     * @return AbstractCycle
+     * 创建小时周期解析器。
+     * @param cron Cron对象
+     * @return 小时周期解析器实例
      */
     public static AbstractCycle hour(Cron cron) {
       return new HourCycle(cron);
     }
 
     /**
-     * day
-     * @param cron cron
-     * @return AbstractCycle
+     * 创建天周期解析器。
+     * @param cron Cron对象
+     * @return 天周期解析器实例
      */
     public static AbstractCycle day(Cron cron) {
       return new DayCycle(cron);
     }
 
     /**
-     * week
-     * @param cron cron
-     * @return AbstractCycle
+     * 创建周周期解析器。
+     * @param cron Cron对象
+     * @return 周周期解析器实例
      */
     public static AbstractCycle week(Cron cron) {
       return new WeekCycle(cron);
     }
 
     /**
-     * month
-     * @param cron cron
-     * @return AbstractCycle
+     * 创建月周期解析器。
+     * @param cron Cron对象
+     * @return 月周期解析器实例
      */
     public static AbstractCycle month(Cron cron) {
       return new MonthCycle(cron);
     }
-    
+
     /**
-     * year
-     * @param cron cron
-     * @return AbstractCycle
+     * 创建年周期解析器。
+     * @param cron Cron对象
+     * @return 年周期解析器实例
      */
     public static AbstractCycle year(Cron cron) {
         return new YearCycle(cron);
     }
 
   /**
-   * day cycle
+   * 天周期解析器，判断Cron表达式是否代表按天调度的任务。
    */
   public static class DayCycle extends AbstractCycle {
 
@@ -124,7 +125,7 @@ public class CycleFactory {
   }
 
   /**
-   * hour cycle
+   * 小时周期解析器，判断Cron表达式是否代表按小时调度的任务。
    */
   public static class HourCycle extends AbstractCycle {
 
@@ -163,7 +164,7 @@ public class CycleFactory {
   }
 
   /**
-   * minute cycle
+   * 分钟周期解析器，判断Cron表达式是否代表按分钟调度的任务。
    */
   public static class MinCycle extends AbstractCycle {
 
@@ -201,7 +202,7 @@ public class CycleFactory {
   }
 
   /**
-   * month cycle
+   * 月周期解析器，判断Cron表达式是否代表按月调度的任务。
    */
   public static class MonthCycle extends AbstractCycle {
 
@@ -247,7 +248,7 @@ public class CycleFactory {
   }
 
   /**
-   * week cycle
+   * 周周期解析器，判断Cron表达式是否代表按周调度的任务。
    */
   public static class WeekCycle extends AbstractCycle {
     public WeekCycle(Cron cron) {
@@ -286,7 +287,7 @@ public class CycleFactory {
   }
     
     /**
-     * year cycle
+     * 年周期解析器，判断Cron表达式是否代表按年调度的任务。
      */
     public static class YearCycle extends AbstractCycle {
         public YearCycle(Cron cron) {

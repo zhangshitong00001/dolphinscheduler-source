@@ -20,7 +20,7 @@ package org.apache.dolphinscheduler.api.dto;
 import org.apache.dolphinscheduler.dao.entity.ProcessDefinition;
 
 /**
- * ProcessDefinitionDto
+ * 工作流定义DTO。继承自ProcessDefinition实体，用于API层传输工作流定义数据。
  */
 public class ProcessDefinitionDto extends ProcessDefinition {
 }

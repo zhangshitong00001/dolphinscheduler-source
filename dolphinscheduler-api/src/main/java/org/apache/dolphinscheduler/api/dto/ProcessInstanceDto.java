@@ -20,7 +20,7 @@ package org.apache.dolphinscheduler.api.dto;
 import org.apache.dolphinscheduler.dao.entity.ProcessInstance;
 
 /**
- * ProcessInstanceDto
+ * 工作流实例DTO。继承自ProcessInstance实体，用于API层传输工作流实例数据。
  */
 public class ProcessInstanceDto extends ProcessInstance {
 }

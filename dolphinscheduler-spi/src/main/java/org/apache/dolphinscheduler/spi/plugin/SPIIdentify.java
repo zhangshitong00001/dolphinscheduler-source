@@ -21,15 +21,25 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * SPI插件标识类，封装插件的名称和优先级信息。
+ * <p>
+ * 在SPI加载过程中，系统根据名称（name）判断是否存在同名插件，
+ * 根据优先级（priority）决定加载哪个插件。优先级数值越大，优先级越高。
+ * 默认优先级为0。
+ */
 @Data
 @Builder
 @AllArgsConstructor
 public class SPIIdentify {
 
+    /** 默认优先级 */
     private static final int DEFAULT_PRIORITY = 0;
 
+    /** 插件名称，用于唯一标识插件类型 */
     private String name;
 
+    /** 插件优先级，数值越大优先级越高 */
     @Builder.Default
     private int priority = DEFAULT_PRIORITY;
 

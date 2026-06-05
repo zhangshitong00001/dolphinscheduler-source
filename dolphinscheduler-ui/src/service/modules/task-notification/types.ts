@@ -21,36 +21,28 @@ interface ListReq {
   searchVal?: string
 }
 
-interface GroupNameReq {
-  groupName: string
+interface TaskNotificationReq {
+  name?: string
+  email?: string
 }
 
-interface IdReq {
-  id: number
+interface TaskNotificationResp {
+  code: number
+  msg: string
+  data: {
+    total: number
+    totalPage: number
+    totalList: Array<{
+      id: number
+      name: string
+      email: string
+      enabled: boolean
+      createTime: string
+      updateTime: string
+    }>
+  }
 }
 
-interface GroupReq extends GroupNameReq {
-  alertInstanceIds: string
-  description?: string
-}
+type IdReq = number
 
-interface AlarmGroupItem {
-  id: number
-  groupName: string
-  alertInstanceIds: string
-  description: string
-  createTime: string
-  updateTime: string
-  createUserId: number
-}
-
-interface AlarmGroupRes {
-  totalList: AlarmGroupItem[]
-  total: number
-  totalPage: number
-  pageSize: number
-  currentPage: number
-  start: number
-}
-
-export { ListReq, GroupNameReq, IdReq, GroupReq, AlarmGroupItem, AlarmGroupRes }
+export type { ListReq, TaskNotificationReq, TaskNotificationResp, IdReq }

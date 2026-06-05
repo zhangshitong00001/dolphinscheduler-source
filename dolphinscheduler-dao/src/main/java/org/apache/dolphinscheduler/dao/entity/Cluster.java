@@ -25,36 +25,36 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 集群实体，映射到 t_ds_cluster 表，表示一个大数据集群（如 Hadoop/YARN 集群）的配置信息。
+ * 工作流任务可以在指定的集群上运行，集群配置包含集群连接地址、配置文件等 JSON 格式的参数。
+ */
 @Data
 @TableName("t_ds_cluster")
 public class Cluster {
 
+    /** 集群主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * cluster code
-     */
+    /** 集群编码，全局唯一标识符 */
     private Long code;
 
-    /**
-     * cluster name
-     */
+    /** 集群名称，用户自定义的集群标识名 */
     private String name;
 
-    /**
-     * config content
-     */
+    /** 集群配置内容，JSON 格式，存储集群的连接参数和配置文件信息 */
     private String config;
 
+    /** 集群描述信息 */
     private String description;
 
-    /**
-     * operator user id
-     */
+    /** 操作者用户 ID，最后修改该集群配置的用户 */
     private Integer operator;
 
+    /** 创建时间 */
     private Date createTime;
 
+    /** 最后更新时间 */
     private Date updateTime;
 }

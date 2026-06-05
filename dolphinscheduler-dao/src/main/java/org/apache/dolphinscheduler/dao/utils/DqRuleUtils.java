@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * DqRuleUtils
+ * 数据质量规则工具类，提供规则输入项的 JSON 字段值解析与转换功能。
  */
 public class DqRuleUtils {
 
@@ -32,6 +32,12 @@ public class DqRuleUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * 将规则输入项列表中的 valuesMap JSON 字段解析并展开为具体的 value、is_show、can_edit 属性。
+     *
+     * @param ruleInputEntryList 待转换的规则输入项列表
+     * @return 转换后的规则输入项列表
+     */
     public static List<DqRuleInputEntry> transformInputEntry(List<DqRuleInputEntry> ruleInputEntryList) {
         for (DqRuleInputEntry dqRuleInputEntry : ruleInputEntryList) {
             Map<String, Object> valuesMap =

@@ -30,6 +30,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
 
+/**
+ * 任务告警内容，封装任务实例的告警上下文信息。
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -37,28 +40,40 @@ import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
 @JsonInclude(Include.NON_NULL)
 public class TaskAlertContent implements Serializable {
 
+    /** 任务实例 ID */
     @JsonProperty("taskInstanceId")
     private int taskInstanceId;
+    /** 任务名称 */
     @JsonProperty("taskName")
     private String taskName;
+    /** 任务类型 */
     @JsonProperty("taskType")
     private String taskType;
+    /** 流程定义 ID */
     @JsonProperty("processDefinitionId")
     private int processDefinitionId;
+    /** 流程定义名称 */
     @JsonProperty("processDefinitionName")
     private String processDefinitionName;
+    /** 流程实例 ID */
     @JsonProperty("processInstanceId")
     private int processInstanceId;
+    /** 流程实例名称 */
     @JsonProperty("processInstanceName")
     private String processInstanceName;
+    /** 任务执行状态 */
     @JsonProperty("state")
     private TaskExecutionStatus state;
+    /** 任务开始时间 */
     @JsonProperty("startTime")
     private Date startTime;
+    /** 任务结束时间 */
     @JsonProperty("endTime")
     private Date endTime;
+    /** 执行主机地址 */
     @JsonProperty("host")
     private String host;
+    /** 任务日志路径 */
     @JsonProperty("logPath")
     private String logPath;
 

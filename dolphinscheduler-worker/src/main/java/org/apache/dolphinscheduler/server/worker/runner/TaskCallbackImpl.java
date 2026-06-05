@@ -30,6 +30,10 @@ import lombok.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 任务回调实现类，负责在任务执行过程中向Master更新远程应用信息。
+ * 当任务产生新的ApplicationInfo时，通过WorkerMessageSender发送运行状态更新到Master。
+ */
 @Builder
 public class TaskCallbackImpl implements TaskCallBack {
 
@@ -45,6 +49,12 @@ public class TaskCallbackImpl implements TaskCallBack {
         this.masterAddress = masterAddress;
     }
 
+    /**
+     * 更新远程应用信息并通知Master，将ApplicationInfo中的appIds设置到任务执行上下文中。
+     *
+     * @param taskInstanceId 任务实例ID
+     * @param applicationInfo 应用信息，包含appIds
+     */
     @Override
     public void updateRemoteApplicationInfo(int taskInstanceId, ApplicationInfo applicationInfo) {
         TaskExecutionContext taskExecutionContext =

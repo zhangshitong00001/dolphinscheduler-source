@@ -19,6 +19,10 @@ package org.apache.dolphinscheduler.common.model;
 
 import java.util.Objects;
 
+/**
+ * 任务节点关系模型，表示DAG中两个任务节点之间的依赖关系。
+ * 包含起始节点名称和结束节点名称，定义了任务间的执行顺序。
+ */
 public class TaskNodeRelation {
 
     /**

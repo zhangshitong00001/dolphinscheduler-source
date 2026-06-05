@@ -21,14 +21,17 @@ import org.apache.dolphinscheduler.remote.utils.Constants;
 import org.apache.dolphinscheduler.remote.utils.Host;
 
 /**
- * host weight
+ * 主机权重。根据 CPU、内存、负载平均值和启动时间计算 Worker 节点的权重，用于低权重优先调度算法。
  */
 public class HostWeight {
 
+    /** CPU 权重因子。 */
     private final int CPU_FACTOR = 10;
 
+    /** 内存权重因子。 */
     private final int MEMORY_FACTOR = 20;
 
+    /** 负载平均值权重因子。 */
     private final int LOAD_AVERAGE_FACTOR = 70;
 
     private final HostWorker hostWorker;

@@ -35,7 +35,7 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 
 /**
- * task execute response processor
+ * 任务执行响应处理器。接收Worker返回的任务执行结果命令，将其转换为结果事件并添加到任务事件服务中。
  */
 @Component
 public class TaskExecuteResponseProcessor implements NettyRequestProcessor {
@@ -46,11 +46,10 @@ public class TaskExecuteResponseProcessor implements NettyRequestProcessor {
     private TaskEventService taskEventService;
 
     /**
-     * task final result response
-     * need master process , state persistence
+     * 处理任务执行结果响应。解析任务执行结果命令，创建结果事件并添加到任务事件队列中。
      *
-     * @param channel channel
-     * @param command command
+     * @param channel Netty通道
+     * @param command 任务执行结果命令
      */
     @Override
     public void process(Channel channel, Command command) {

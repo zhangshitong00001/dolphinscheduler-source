@@ -23,22 +23,27 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * session mapper interface
+ * 会话 Mapper 接口，封装对 t_ds_session 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供用户会话的按用户和IP查询能力。
  */
 public interface SessionMapper extends BaseMapper<Session> {
 
     /**
-     * query session list by userId
+     * 根据用户ID查询该用户的所有会话列表。
+     * SQL: SELECT * FROM t_ds_session WHERE user_id = #{userId}
+     *
      * @param userId userId
      * @return session list
      */
     List<Session> queryByUserId(@Param("userId") int userId);
 
     /**
-     * query session by userId and Ip
+     * 根据用户ID和IP地址查询对应的会话记录。
+     * SQL: SELECT * FROM t_ds_session WHERE user_id = #{userId} AND ip = #{ip} LIMIT 1
+     *
      * @param userId userId
-     * @param ip ip
-     * @return session
+     * @param ip     ip
+     * @return session 会话实体，未找到时返回 null
      */
     Session queryByUserIdAndIp(@Param("userId") int userId,@Param("ip") String ip);
 

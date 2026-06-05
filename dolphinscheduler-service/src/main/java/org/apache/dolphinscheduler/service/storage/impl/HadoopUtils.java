@@ -69,8 +69,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 /**
- * hadoop utils
- * single instance
+ * Hadoop HDFS工具类，单例模式。封装了HDFS文件系统的所有操作，包括文件上传下载、目录管理、Kerberos认证、
+ * YARN应用状态查询（支持HA）、文件内容查看等。通过 LoadingCache 实现带过期时间的单例管理。
  */
 public class HadoopUtils implements Closeable, StorageOperate {
 
@@ -175,28 +175,30 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * @return Configuration
+     * 获取Hadoop Configuration 配置对象。
+     *
+     * @return the Hadoop Configuration
      */
     public Configuration getConfiguration() {
         return configuration;
     }
 
     /**
-     * @return DefaultFS
+     * 获取HDFS默认文件系统URI。
+     *
+     * @return the default file system URI
      */
     public String getDefaultFS() {
         return getConfiguration().get(Constants.FS_DEFAULT_FS);
     }
 
     /**
-     * get application url
-     * if rmHaIds contains xx, it signs not use resourcemanager
-     * otherwise:
-     * if rmHaIds is empty, single resourcemanager enabled
-     * if rmHaIds not empty: resourcemanager HA enabled
+     * 获取YARN应用的URL地址。支持单ResourceManager和HA模式。
+     * 如果 rmHaIds 为空则为单ResourceManager模式，不为空则启用HA模式自动查找活跃的ResourceManager。
      *
-     * @param applicationId application id
-     * @return url of application
+     * @param applicationId the YARN application id
+     * @return the URL of the application
+     * @throws BaseException if URL generation fails
      */
     public String getApplicationUrl(String applicationId) throws BaseException {
 
@@ -216,11 +218,11 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * cat file on hdfs
+     * 读取HDFS文件内容并返回字节数组。
      *
-     * @param hdfsFilePath hdfs file path
-     * @return byte[] byte array
-     * @throws IOException errors
+     * @param hdfsFilePath the HDFS file path
+     * @return byte array of file content
+     * @throws IOException if I/O errors occur
      */
     public byte[] catFile(String hdfsFilePath) throws IOException {
 
@@ -235,13 +237,13 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * cat file on hdfs
+     * 分页读取HDFS文件内容，跳过指定行数后读取指定行数的内容。
      *
-     * @param hdfsFilePath hdfs file path
-     * @param skipLineNums skip line numbers
-     * @param limit        read how many lines
-     * @return content of file
-     * @throws IOException errors
+     * @param hdfsFilePath the HDFS file path
+     * @param skipLineNums lines to skip
+     * @param limit maximum lines to read
+     * @return list of file lines
+     * @throws IOException if I/O errors occur
      */
     public List<String> catFile(String hdfsFilePath, int skipLineNums, int limit) throws IOException {
 
@@ -310,14 +312,14 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * copy files between FileSystems
+     * 在HDFS文件系统之间复制文件。
      *
-     * @param srcPath      source hdfs path
-     * @param dstPath      destination hdfs path
-     * @param deleteSource whether to delete the src
-     * @param overwrite    whether to overwrite an existing file
-     * @return if success or not
-     * @throws IOException errors
+     * @param srcPath the source HDFS path
+     * @param dstPath the destination HDFS path
+     * @param deleteSource whether to delete the source file after copy
+     * @param overwrite whether to overwrite existing file
+     * @return true if copy succeeds
+     * @throws IOException if I/O errors occur
      */
     @Override
     public boolean copy(String srcPath, String dstPath, boolean deleteSource, boolean overwrite) throws IOException {
@@ -325,15 +327,14 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * the src file is on the local disk.  Add it to FS at
-     * the given dst name.
+     * 将本地文件复制到HDFS文件系统。
      *
-     * @param srcFile      local file
-     * @param dstHdfsPath  destination hdfs path
-     * @param deleteSource whether to delete the src
-     * @param overwrite    whether to overwrite an existing file
-     * @return if success or not
-     * @throws IOException errors
+     * @param srcFile the local source file
+     * @param dstHdfsPath the destination HDFS path
+     * @param deleteSource whether to delete the source file after copy
+     * @param overwrite whether to overwrite existing file
+     * @return true if copy succeeds
+     * @throws IOException if I/O errors occur
      */
     public boolean copyLocalToHdfs(String srcFile, String dstHdfsPath, boolean deleteSource,
                                    boolean overwrite) throws IOException {
@@ -389,14 +390,13 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * delete a file
+     * 删除HDFS上的文件或目录。如果目标是目录且 recursive 为 true，则递归删除目录及其内容。
      *
-     * @param hdfsFilePath the path to delete.
-     * @param recursive    if path is a directory and set to
-     *                     true, the directory is deleted else throws an exception. In
-     *                     case of a file the recursive can be set to either true or false.
-     * @return true if delete is successful else false.
-     * @throws IOException errors
+     * @param tenantCode the tenant code
+     * @param hdfsFilePath the HDFS path to delete
+     * @param recursive whether to delete recursively
+     * @return true if deletion succeeds
+     * @throws IOException if I/O errors occur
      */
     @Override
     public boolean delete(String tenantCode, String hdfsFilePath, boolean recursive) throws IOException {
@@ -404,11 +404,12 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * check if exists
+     * 检查HDFS文件或目录是否存在。
      *
-     * @param hdfsFilePath source file path
-     * @return result of exists or not
-     * @throws IOException errors
+     * @param tenantCode the tenant code
+     * @param hdfsFilePath the HDFS path to check
+     * @return true if the path exists
+     * @throws IOException if I/O errors occur
      */
     @Override
     public boolean exists(String tenantCode, String hdfsFilePath) throws IOException {
@@ -416,11 +417,11 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * Gets a list of files in the directory
+     * 获取HDFS目录下的文件列表。
      *
-     * @param filePath file path
-     * @return {@link FileStatus} file status
-     * @throws IOException errors
+     * @param filePath the HDFS directory path
+     * @return array of file statuses
+     * @throws IOException if I/O errors occur
      */
     public FileStatus[] listFileStatus(String filePath) throws IOException {
         try {
@@ -432,32 +433,32 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * Renames Path src to Path dst.  Can take place on local fs
-     * or remote DFS.
+     * 重命名HDFS上的文件或目录。
      *
-     * @param src path to be renamed
-     * @param dst new path after rename
-     * @return true if rename is successful
-     * @throws IOException on failure
+     * @param src the source path
+     * @param dst the destination path
+     * @return true if rename succeeds
+     * @throws IOException if I/O errors occur
      */
     public boolean rename(String src, String dst) throws IOException {
         return fs.rename(new Path(src), new Path(dst));
     }
 
     /**
-     * hadoop resourcemanager enabled or not
+     * 判断YARN ResourceManager是否已启用。
      *
-     * @return result
+     * @return true if YARN is enabled
      */
     public boolean isYarnEnabled() {
         return yarnEnabled;
     }
 
     /**
-     * get the state of an application
+     * 获取YARN应用的执行状态。首先从ResourceManager查询，查询不到则从JobHistory查询。
      *
-     * @param applicationId application id
-     * @return the return may be null or there may be other parse exceptions
+     * @param applicationId the YARN application id
+     * @return the application execution status, or null if not found
+     * @throws BaseException if error occurs during status retrieval
      */
     public TaskExecutionStatus getApplicationStatus(String applicationId) throws BaseException {
         if (StringUtils.isEmpty(applicationId)) {
@@ -523,9 +524,9 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * get data hdfs path
+     * 获取HDFS数据基础路径。
      *
-     * @return data hdfs path
+     * @return the HDFS data base path
      */
     public static String getHdfsDataBasePath() {
         if (FOLDER_SEPARATOR.equals(RESOURCE_UPLOAD_PATH)) {
@@ -536,11 +537,11 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * hdfs resource dir
+     * 根据资源类型获取租户在HDFS上的资源目录。
      *
-     * @param tenantCode   tenant code
-     * @param resourceType resource type
-     * @return hdfs resource dir
+     * @param resourceType the resource type (FILE or UDF)
+     * @param tenantCode the tenant code
+     * @return the HDFS directory path for the resource type
      */
     public static String getHdfsDir(ResourceType resourceType, String tenantCode) {
         String hdfsDir = "";
@@ -558,32 +559,32 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * hdfs resource dir
+     * 获取租户在HDFS上的资源文件目录路径。
      *
-     * @param tenantCode tenant code
-     * @return hdfs resource dir
+     * @param tenantCode the tenant code
+     * @return the HDFS resource directory for the tenant
      */
     public static String getHdfsResDir(String tenantCode) {
         return String.format("%s/" + RESOURCE_TYPE_FILE, getHdfsTenantDir(tenantCode));
     }
 
     /**
-     * hdfs udf dir
+     * 获取租户在HDFS上的UDF函数目录路径。
      *
-     * @param tenantCode tenant code
-     * @return get udf dir on hdfs
+     * @param tenantCode the tenant code
+     * @return the HDFS UDF directory for the tenant
      */
     public static String getHdfsUdfDir(String tenantCode) {
         return String.format("%s/" + RESOURCE_TYPE_UDF, getHdfsTenantDir(tenantCode));
     }
 
     /**
-     * get hdfs file name
+     * 获取HDFS上文件的完整路径。
      *
-     * @param resourceType resource type
-     * @param tenantCode   tenant code
-     * @param fileName     file name
-     * @return hdfs file name
+     * @param resourceType the resource type (FILE or UDF)
+     * @param tenantCode the tenant code
+     * @param fileName the file name
+     * @return the full HDFS file path
      */
     public static String getHdfsFileName(ResourceType resourceType, String tenantCode, String fileName) {
         if (fileName.startsWith(FOLDER_SEPARATOR)) {
@@ -593,11 +594,11 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * get absolute path and name for resource file on hdfs
+     * 获取租户资源文件在HDFS上的绝对路径和文件名。
      *
-     * @param tenantCode tenant code
-     * @param fileName   file name
-     * @return get absolute path and name for file on hdfs
+     * @param tenantCode the tenant code
+     * @param fileName the file name
+     * @return the absolute HDFS path for the resource file
      */
     public static String getHdfsResourceFileName(String tenantCode, String fileName) {
         if (fileName.startsWith(FOLDER_SEPARATOR)) {
@@ -607,11 +608,11 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * get absolute path and name for udf file on hdfs
+     * 获取租户UDF文件在HDFS上的绝对路径和文件名。
      *
-     * @param tenantCode tenant code
-     * @param fileName   file name
-     * @return get absolute path and name for udf file on hdfs
+     * @param tenantCode the tenant code
+     * @param fileName the file name
+     * @return the absolute HDFS path for the UDF file
      */
     public static String getHdfsUdfFileName(String tenantCode, String fileName) {
         if (fileName.startsWith(FOLDER_SEPARATOR)) {
@@ -629,11 +630,11 @@ public class HadoopUtils implements Closeable, StorageOperate {
     }
 
     /**
-     * getAppAddress
+     * 解析应用地址，在YARN HA模式下自动查找活跃的ResourceManager地址。
      *
-     * @param appAddress app address
-     * @param rmHa       resource manager ha
-     * @return app address
+     * @param appAddress the base application address template
+     * @param rmHa the ResourceManager HA IDs
+     * @return the resolved application address, or null if resolution fails
      */
     public static String getAppAddress(String appAddress, String rmHa) {
 

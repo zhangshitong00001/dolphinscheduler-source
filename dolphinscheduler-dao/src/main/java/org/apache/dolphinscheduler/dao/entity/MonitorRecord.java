@@ -23,40 +23,29 @@ import org.apache.dolphinscheduler.spi.enums.DbType;
 import java.util.Date;
 
 /**
- * monitor record for database
+ * 数据库监控记录，用于记录数据库连接池的运行状态指标，包括连接数、线程数等关键性能数据。
  */
 public class MonitorRecord {
 
+    /** 数据库类型 */
     private DbType dbType;
 
-    /**
-     * is normal or not , 1: normal
-     */
+    /** 数据库状态是否正常，1 表示正常 */
     private Flag state;
 
-    /**
-     * max connections
-     */
+    /** 最大连接数 */
     private long maxConnections;
 
-    /**
-     * max used connections
-     */
+    /** 最大已使用连接数 */
     private long maxUsedConnections;
 
-    /**
-     * threads connections
-     */
+    /** 线程连接数 */
     private long threadsConnections;
 
-    /**
-     * threads running connections
-     */
+    /** 正在运行的线程连接数 */
     private long threadsRunningConnections;
 
-    /**
-     * start date
-     */
+    /** 采集日期 */
     private Date date;
 
     public Flag getState() {

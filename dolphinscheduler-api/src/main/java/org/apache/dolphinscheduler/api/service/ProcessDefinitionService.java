@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * process definition service
+ * 流程定义服务接口。提供流程定义的创建、查询、更新、删除、发布、导入导出、版本管理等功能。
  */
 public interface ProcessDefinitionService {
 

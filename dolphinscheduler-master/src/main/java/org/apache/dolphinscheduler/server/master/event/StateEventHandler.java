@@ -20,15 +20,20 @@ package org.apache.dolphinscheduler.server.master.event;
 import org.apache.dolphinscheduler.common.enums.StateEventType;
 import org.apache.dolphinscheduler.server.master.runner.WorkflowExecuteRunnable;
 
+/**
+ * 状态事件处理器接口。定义了处理各类状态事件的契约，每种状态事件类型对应一个处理器实现，通过 SPI 机制自动注册。
+ */
 public interface StateEventHandler {
 
     /**
-     * Handle a event, if handle success will reture true, else return false
+     * 处理状态事件。处理成功返回 true，否则返回 false。
      *
-     * @param stateEvent given state event.
-     * @throws StateEventHandleException this exception means it can be recovered.
-     * @throws StateEventHandleError     this exception means it cannot be recovered, so the event need to drop.
-     * @throws StateEventHandleException this means it can be recovered.
+     * @param workflowExecuteRunnable 当前正在执行的工作流运行实例
+     * @param stateEvent 待处理的状态事件
+     * @return 处理成功返回 true，否则返回 false
+     * @throws StateEventHandleException 可恢复的异常，系统将重试该事件
+     * @throws StateEventHandleError 不可恢复的异常，系统将丢弃该事件
+     * @throws StateEventHandleFailure 处理失败异常，事件将被移入失败队列
      */
     boolean handleStateEvent(WorkflowExecuteRunnable workflowExecuteRunnable,
                              StateEvent stateEvent) throws StateEventHandleException, StateEventHandleError, StateEventHandleFailure;

@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * host manager config
+ * 主机管理器配置类。根据 Master 配置中的 HostSelector 策略创建对应的 HostManager Bean。
  */
 @Configuration
 public class HostManagerConfig {
@@ -41,6 +41,11 @@ public class HostManagerConfig {
         this.beanFactory = beanFactory;
     }
 
+    /**
+     * 根据配置的 HostSelector 创建对应的 HostManager 实例。
+     *
+     * @return HostManager 实例
+     */
     @Bean
     public HostManager hostManager() {
         HostSelector selector = masterConfig.getHostSelector();

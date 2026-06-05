@@ -1,0 +1,182 @@
+<%- aslJava %>
+package org.apache.dolphinscheduler.api.service.impl;
+
+import static org.apache.dolphinscheduler.api.constants.ApiFuncIdentificationConstant.<%= naming.snake %>_CREATE;
+import static org.apache.dolphinscheduler.api.constants.ApiFuncIdentificationConstant.<%= naming.snake %>_UPDATE;
+import static org.apache.dolphinscheduler.api.constants.ApiFuncIdentificationConstant.<%= naming.snake %>_DELETE;
+
+import org.apache.dolphinscheduler.api.enums.Status;
+import org.apache.dolphinscheduler.api.exceptions.ServiceException;
+import org.apache.dolphinscheduler.api.service.<%= naming.pascal %>Service;
+import org.apache.dolphinscheduler.api.utils.PageInfo;
+import org.apache.dolphinscheduler.api.utils.Result;
+import org.apache.dolphinscheduler.common.constants.Constants;
+import org.apache.dolphinscheduler.common.enums.AuthorizationType;
+import org.apache.dolphinscheduler.common.enums.UserType;
+import org.apache.dolphinscheduler.dao.entity.<%= naming.pascal %>;
+import org.apache.dolphinscheduler.dao.entity.User;
+import org.apache.dolphinscheduler.dao.mapper.<%= naming.pascal %>Mapper;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+/**
+ * <%= naming.kebab %> service impl
+ */
+@Service
+public class <%= naming.pascal %>ServiceImpl extends BaseServiceImpl implements <%= naming.pascal %>Service {
+
+    private static final Logger logger = LoggerFactory.getLogger(<%= naming.pascal %>ServiceImpl.class);
+
+    @Autowired
+    private <%= naming.pascal %>Mapper <%= naming.camel %>Mapper;
+
+    /**
+     * query <%= naming.kebab %> list
+     *
+     * @param loginUser login user
+     * @return <%= naming.kebab %> list
+     */
+    @Override
+    public Result queryList(User loginUser) {
+        Result result = new Result();
+        Set<Integer> ids = resourcePermissionCheckService.userOwnedResourceIdsAcquisition(AuthorizationType.<%= naming.snake %>, loginUser.getId(), logger);
+        if (loginUser.getUserType().equals(UserType.GENERAL_USER)) {
+            ids = ids.isEmpty() ? new HashSet<>() : ids;
+        }
+        List<<%= naming.pascal %>> <%= naming.camel %>List = <%= naming.camel %>Mapper.selectBatchIds(ids);
+        result.setData(<%= naming.camel %>List);
+        putMsg(result, Status.SUCCESS);
+        return result;
+    }
+
+    /**
+     * query <%= naming.kebab %> list paging
+     *
+     * @param loginUser login user
+     * @param searchVal search value
+     * @param pageNo page number
+     * @param pageSize page size
+     * @return <%= naming.kebab %> list
+     */
+    @Override
+    public Result queryList(User loginUser, String searchVal, Integer pageNo, Integer pageSize) {
+        Result result = new Result();
+        PageInfo<<%= naming.pascal %>> pageInfo = new PageInfo<>(pageNo, pageSize);
+        Set<Integer> ids = resourcePermissionCheckService.userOwnedResourceIdsAcquisition(AuthorizationType.<%= naming.snake %>, loginUser.getId(), logger);
+        if (ids.isEmpty()) {
+            result.setData(pageInfo);
+            putMsg(result, Status.SUCCESS);
+            return result;
+        }
+        Page<<%= naming.pascal %>> page = new Page<>(pageNo, pageSize);
+        IPage<<%= naming.pascal %>> <%= naming.camel %>List = <%= naming.camel %>Mapper.query<%= naming.pascal %>Paging(page, new ArrayList<>(ids), searchVal);
+        Integer count = (int) <%= naming.camel %>List.getTotal();
+        pageInfo.setTotal(count);
+        pageInfo.setTotalList(<%= naming.camel %>List.getRecords());
+        result.setData(pageInfo);
+        putMsg(result, Status.SUCCESS);
+        return result;
+    }
+
+    /**
+     * create <%= naming.kebab %>
+     *
+     * @param loginUser login user
+<% fields.filter(f => f.required).forEach(function(field) { -%>
+     * @param <%= field.name %> <%= field.description || field.name %>
+<% }); -%>
+     * @return create result
+     */
+    @Override
+    @Transactional
+    public Result create<%= naming.pascal %>(User loginUser<% fields.filter(f => f.required).forEach(function(field) { %>, <%= boxedType(field.type) %> <%= field.name %><% }); %>) {
+        Result result = new Result();
+        if (!canOperatorPermissions(loginUser, null, AuthorizationType.<%= naming.snake %>, <%= naming.snake %>_CREATE)) {
+            throw new ServiceException(Status.USER_NO_OPERATION_PERM);
+        }
+
+        <%= naming.pascal %> <%= naming.camel %> = new <%= naming.pascal %>();
+<% fields.filter(f => f.required).forEach(function(field) { -%>
+        <%= naming.camel %>.set<%= field.name.charAt(0).toUpperCase() + field.name.slice(1) %>(<%= field.name %>);
+<% }); -%>
+        <%= naming.camel %>Mapper.insert(<%= naming.camel %>);
+
+        result.setData(<%= naming.camel %>);
+        putMsg(result, Status.SUCCESS);
+        permissionPostHandle(AuthorizationType.<%= naming.snake %>, loginUser.getId(), Collections.singletonList(<%= naming.camel %>.getId()), logger);
+        return result;
+    }
+
+    /**
+     * update <%= naming.kebab %>
+     *
+     * @param loginUser login user
+     * @param id <%= naming.kebab %> id
+<% fields.filter(f => f.required).forEach(function(field) { -%>
+     * @param <%= field.name %> <%= field.description || field.name %>
+<% }); -%>
+     * @return update result
+     */
+    @Override
+    public Result update<%= naming.pascal %>(User loginUser, int id<% fields.filter(f => f.required).forEach(function(field) { %>, <%= boxedType(field.type) %> <%= field.name %><% }); %>) {
+        Result result = new Result();
+        if (!canOperatorPermissions(loginUser, new Object[]{id}, AuthorizationType.<%= naming.snake %>, <%= naming.snake %>_UPDATE)) {
+            throw new ServiceException(Status.USER_NO_OPERATION_PERM);
+        }
+
+        <%= naming.pascal %> <%= naming.camel %> = <%= naming.camel %>Mapper.selectById(id);
+        if (<%= naming.camel %> == null) {
+            throw new ServiceException(Status.<%= naming.snake %>_NOT_EXIST);
+        }
+
+<% fields.filter(f => f.required).forEach(function(field) { -%>
+        <%= naming.camel %>.set<%= field.name.charAt(0).toUpperCase() + field.name.slice(1) %>(<%= field.name %>);
+<% }); -%>
+        <%= naming.camel %>Mapper.updateById(<%= naming.camel %>);
+        result.setData(<%= naming.camel %>);
+        putMsg(result, Status.SUCCESS);
+        return result;
+    }
+
+    /**
+     * delete <%= naming.kebab %> by id
+     *
+     * @param loginUser login user
+     * @param id <%= naming.kebab %> id
+     * @return delete result
+     */
+    @Override
+    public Result delete<%= naming.pascal %>(User loginUser, int id) {
+        Result result = new Result();
+        if (!canOperatorPermissions(loginUser, new Object[]{id}, AuthorizationType.<%= naming.snake %>, <%= naming.snake %>_DELETE)) {
+            throw new ServiceException(Status.USER_NO_OPERATION_PERM);
+        }
+
+        <%= naming.pascal %> <%= naming.camel %> = <%= naming.camel %>Mapper.selectById(id);
+        if (<%= naming.camel %> == null) {
+            throw new ServiceException(Status.<%= naming.snake %>_NOT_EXIST);
+        }
+
+        <%= naming.camel %>Mapper.deleteById(id);
+        putMsg(result, Status.SUCCESS);
+        return result;
+    }
+}

@@ -26,11 +26,12 @@ import java.util.List;
 import lombok.Data;
 
 /**
- * project List response
+ * 项目列表响应DTO。继承自Result，用于封装查询项目列表的返回结果。
  */
 @Data
 public class ProjectListResponse extends Result {
 
+    /** 项目列表数据 */
     private List<Project> data;
 
     public ProjectListResponse(Result result) {

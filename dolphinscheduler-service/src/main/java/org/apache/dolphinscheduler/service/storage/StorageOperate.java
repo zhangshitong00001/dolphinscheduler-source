@@ -25,6 +25,10 @@ import org.apache.dolphinscheduler.spi.enums.ResourceType;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * 存储操作接口，定义了文件系统存储的统一操作规范。支持HDFS、OSS、S3等多种存储后端，
+ * 提供目录创建、文件上传下载、文件删除、文件查看等标准操作。所有实现类通过此接口实现存储层的多态。
+ */
 public interface StorageOperate {
 
     String RESOURCE_UPLOAD_PATH = PropertyUtils.getString(Constants.RESOURCE_UPLOAD_PATH, "/dolphinscheduler");

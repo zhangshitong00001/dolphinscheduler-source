@@ -33,7 +33,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * This rpc client is only used to send message, will not receive message, all response message should send to {@link WorkerRpcServer}.
+ * Worker RPC客户端，仅用于向Master发送消息，不接收消息。
+ * 所有响应消息应发送到 {@link WorkerRpcServer}。主要用于发送任务执行状态确认等ACK消息。
  */
 @Component
 public class WorkerRpcClient implements AutoCloseable {
@@ -51,6 +52,9 @@ public class WorkerRpcClient implements AutoCloseable {
 
     private NettyRemotingClient nettyRemotingClient;
 
+    /**
+     * 启动Worker RPC客户端，配置Netty客户端并注册ACK消息处理器。
+     */
     public void start() {
         logger.info("Worker rpc client starting");
         NettyClientConfig nettyClientConfig = new NettyClientConfig();
@@ -63,6 +67,13 @@ public class WorkerRpcClient implements AutoCloseable {
         logger.info("Worker rpc client started");
     }
 
+    /**
+     * 向指定主机发送命令消息。
+     *
+     * @param host 目标主机地址
+     * @param command 要发送的命令
+     * @throws RemotingException 如果发送过程中发生网络异常
+     */
     public void send(Host host, Command command) throws RemotingException {
         nettyRemotingClient.send(host, command);
     }

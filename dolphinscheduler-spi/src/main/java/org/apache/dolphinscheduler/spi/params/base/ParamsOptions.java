@@ -20,18 +20,20 @@ package org.apache.dolphinscheduler.spi.params.base;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * The options field in form-create`s json rule
- * Set radio, select, checkbox and other component option options
+ * 参数选项类，对应 form-create JSON规则中的 options 字段。
+ * <p>
+ * 用于设置单选、下拉选择、复选框等组件的候选项，
+ * 包含选项的显示标签、实际值和是否可选标记。
  */
 public class ParamsOptions {
 
+    /** 选项显示标签 */
     private String label;
 
+    /** 选项实际值 */
     private Object value;
 
-    /**
-     * is can be select
-     */
+    /** 是否禁用（不可选） */
     private boolean disabled;
 
     public ParamsOptions() {}

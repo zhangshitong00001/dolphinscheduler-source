@@ -20,19 +20,13 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * have_script
- * have_file
- * can_retry
- * have_arr_variables
- * have_map_variables
- * have_alert
+ * 标志位枚举。
+ * 用于表示任务或流程的各种布尔属性，如是否有脚本、是否有文件、是否可重试、是否有数组变量、是否有Map变量、是否有告警等。
  */
 public enum Flag {
-    /**
-     * 0 no
-     * 1 yes
-     */
+    /** 否 */
     NO(0, "no"),
+    /** 是 */
     YES(1, "yes");
 
     Flag(int code, String descp) {

@@ -23,15 +23,15 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * The listener used in {@link ServerNodeManager} to notify the change of worker info.
+ * Worker信息变更监听器接口。用于在Worker节点信息或分组映射发生变化时接收通知，由ServerNodeManager负责回调。
  */
 public interface WorkerInfoChangeListener {
 
     /**
-     * Used to notify the change of worker info.
+     * 通知Worker信息发生变更。
      *
-     * @param workerGroups   worker groups map, key is worker group name, value is worker address.
-     * @param workerNodeInfo worker node info map, key is worker address, value is worker info.
+     * @param workerGroups Worker分组映射，key为分组名称，value为该分组下的Worker地址集合
+     * @param workerNodeInfo Worker节点信息映射，key为Worker地址，value为Worker心跳信息
      */
     void notify(Map<String, Set<String>> workerGroups, Map<String, WorkerHeartBeat> workerNodeInfo);
 

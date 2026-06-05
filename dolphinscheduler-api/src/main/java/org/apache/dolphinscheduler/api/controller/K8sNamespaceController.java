@@ -58,7 +58,8 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * k8s namespace controller
+ * K8s命名空间控制器。提供K8s命名空间的增删改查REST API，包括命名空间创建、更新、分页查询、校验、
+ * 删除、授权/未授权管理以及可用命名空间列表查询等操作。
  */
 @Api(tags = "K8S_NAMESPACE_TAG")
 @RestController
@@ -70,13 +71,13 @@ public class K8sNamespaceController extends BaseController {
     private K8sNamespaceService k8sNamespaceService;
 
     /**
-     * query namespace list paging
+     * 分页查询K8s命名空间列表。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageSize  page size
-     * @param pageNo    page number
-     * @return namespace list which the login user have permission to see
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索值
+     * @param pageSize 每页大小
+     * @param pageNo 页码
+     * @return 命名空间分页列表
      */
     @ApiOperation(value = "queryNamespaceListPaging", notes = "QUERY_NAMESPACE_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -103,14 +104,14 @@ public class K8sNamespaceController extends BaseController {
     }
 
     /**
-     * create namespace,if not exist on k8s,will create,if exist only register in db
+     * 创建K8s命名空间。若K8s上不存在则创建，若已存在则仅在数据库注册。
      *
-     * @param loginUser
-     * @param namespace    k8s namespace
-     * @param clusterCode  clusterCode
-     * @param limitsCpu    max cpu
-     * @param limitsMemory max memory
-     * @return
+     * @param loginUser 当前登录用户
+     * @param namespace K8s命名空间名称
+     * @param clusterCode 集群编码
+     * @param limitsCpu CPU限制
+     * @param limitsMemory 内存限制
+     * @return 创建结果
      */
     @ApiOperation(value = "createK8sNamespace", notes = "CREATE_NAMESPACE_NOTES")
     @ApiImplicitParams({
@@ -134,13 +135,13 @@ public class K8sNamespaceController extends BaseController {
     }
 
     /**
-     * update namespace,namespace and k8s not allowed update, because may create on k8s,can delete and create new instead
+     * 更新K8s命名空间。不允许修改命名空间名称和K8s集群，仅可修改所属用户和资源限制。
      *
-     * @param loginUser
-     * @param userName     owner
-     * @param limitsCpu    max cpu
-     * @param limitsMemory max memory
-     * @return
+     * @param loginUser 当前登录用户
+     * @param userName 命名空间所属用户
+     * @param limitsCpu CPU限制
+     * @param limitsMemory 内存限制
+     * @return 更新结果
      */
     @ApiOperation(value = "updateK8sNamespace", notes = "UPDATE_NAMESPACE_NOTES")
     @ApiImplicitParams({
@@ -164,12 +165,12 @@ public class K8sNamespaceController extends BaseController {
     }
 
     /**
-     * verify namespace and k8s,one k8s namespace is unique
+     * 校验K8s命名空间是否已存在。同一K8s集群下的命名空间名称必须唯一。
      *
-     * @param loginUser   login user
-     * @param namespace   namespace
-     * @param clusterCode cluster code
-     * @return true if the k8s and namespace not exists, otherwise return false
+     * @param loginUser 当前登录用户
+     * @param namespace 命名空间名称
+     * @param clusterCode 集群编码
+     * @return 校验结果，命名空间不存在返回true，否则返回false
      */
     @ApiOperation(value = "verifyNamespaceK8s", notes = "VERIFY_NAMESPACE_K8S_NOTES")
     @ApiImplicitParams({
@@ -188,11 +189,11 @@ public class K8sNamespaceController extends BaseController {
     }
 
     /**
-     * delete namespace by id
+     * 根据ID删除K8s命名空间。
      *
-     * @param loginUser login user
-     * @param id        namespace id
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param id 命名空间ID
+     * @return 删除结果状态码
      */
     @ApiOperation(value = "delNamespaceById", notes = "DELETE_NAMESPACE_BY_ID_NOTES")
     @ApiImplicitParams({
@@ -209,11 +210,11 @@ public class K8sNamespaceController extends BaseController {
     }
 
     /**
-     * query unauthorized namespace
+     * 查询未授权给指定用户的命名空间列表。
      *
-     * @param loginUser login user
-     * @param userId    user id
-     * @return the namespaces which user have not permission to see
+     * @param loginUser 当前登录用户
+     * @param userId 用户ID
+     * @return 未授权的命名空间列表
      */
     @ApiOperation(value = "queryUnauthorizedNamespace", notes = "QUERY_UNAUTHORIZED_NAMESPACE_NOTES")
     @ApiImplicitParams({
@@ -230,11 +231,11 @@ public class K8sNamespaceController extends BaseController {
     }
 
     /**
-     * query unauthorized namespace
+     * 查询已授权给指定用户的命名空间列表。
      *
-     * @param loginUser login user
-     * @param userId    user id
-     * @return namespaces which the user have permission to see
+     * @param loginUser 当前登录用户
+     * @param userId 用户ID
+     * @return 已授权的命名空间列表
      */
     @ApiOperation(value = "queryAuthorizedNamespace", notes = "QUERY_AUTHORIZED_NAMESPACE_NOTES")
     @ApiImplicitParams({
@@ -251,10 +252,10 @@ public class K8sNamespaceController extends BaseController {
     }
 
     /**
-     * query namespace available
+     * 查询当前用户可用的K8s命名空间列表。
      *
-     * @param loginUser login user
-     * @return namespace list
+     * @param loginUser 当前登录用户
+     * @return 可用命名空间列表
      */
     @ApiOperation(value = "queryAvailableNamespaceList", notes = "QUERY_AVAILABLE_NAMESPACE_LIST_NOTES")
     @GetMapping(value = "/available-list")

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * scheduler service
+ * 调度服务接口。提供定时调度的创建、更新、删除、上下线以及调度预览功能。
  */
 public interface SchedulerService {
 

@@ -28,12 +28,19 @@ import org.springframework.stereotype.Repository;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+/**
+ * 流程定义数据访问实现类，通过 MyBatis-Plus 分页插件查询指定用户和项目下的流程定义列表。
+ */
 @Repository
 public class ProcessDefinitionDaoImpl implements ProcessDefinitionDao {
 
+    /** 流程定义 Mapper */
     @Autowired
     private ProcessDefinitionMapper processDefinitionMapper;
 
+    /**
+     * 分页查询指定用户和项目下的流程定义，支持按名称或描述模糊搜索。
+     */
     @Override
     public PageListingResult<ProcessDefinition> listingProcessDefinition(int pageNumber, int pageSize, String searchVal,
                                                                          int userId, long projectCode) {

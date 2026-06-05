@@ -23,6 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * 工作流事件队列。基于 LinkedBlockingQueue 实现的工作流事件阻塞队列，提供事件的入队、出队和清空操作。内部的 WorkflowEventDispatchThread 持续从该队列中消费事件并调度到对应的 WorkflowEventHandler 执行。
+ */
 @Component
 public class WorkflowEventQueue {
 
@@ -31,7 +34,9 @@ public class WorkflowEventQueue {
     private static final LinkedBlockingQueue<WorkflowEvent> workflowEventQueue = new LinkedBlockingQueue<>();
 
     /**
-     * Add a workflow event.
+     * 添加工作流事件到队列。
+     *
+     * @param workflowEvent 待添加的工作流事件
      */
     public void addEvent(WorkflowEvent workflowEvent) {
         workflowEventQueue.add(workflowEvent);
@@ -39,7 +44,10 @@ public class WorkflowEventQueue {
     }
 
     /**
-     * Pool the head of the workflow event queue and wait an workflow event.
+     * 从队列头部取出一个工作流事件，若队列为空则阻塞等待。
+     *
+     * @return 队列头部的工作流事件
+     * @throws InterruptedException 等待过程中线程被中断
      */
     public WorkflowEvent poolEvent() throws InterruptedException {
         return workflowEventQueue.take();

@@ -20,15 +20,17 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * alert sending(execution) status
+ * 告警发送（执行）状态枚举。
+ * 用于标识告警通知的发送/执行结果。
  */
 public enum AlertStatus {
-    /**
-     * 0 waiting executed; 1 execute successfully，2 execute failed
-     */
+    /** 等待执行（0） */
     WAIT_EXECUTION(0, "waiting executed"),
+    /** 执行成功（1） */
     EXECUTION_SUCCESS(1, "execute successfully"),
+    /** 执行失败（2） */
     EXECUTION_FAILURE(2, "execute failed"),
+    /** 部分执行成功（3） */
     EXECUTION_PARTIAL_SUCCESS(3, "execute partial successfully");
 
     AlertStatus(int code, String descp) {
@@ -36,15 +38,9 @@ public enum AlertStatus {
         this.descp = descp;
     }
 
+    /** MyBatis-Plus枚举值映射：状态码 */
     @EnumValue
     private final int code;
+    /** 状态描述 */
     private final String descp;
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDescp() {
-        return descp;
-    }
 }

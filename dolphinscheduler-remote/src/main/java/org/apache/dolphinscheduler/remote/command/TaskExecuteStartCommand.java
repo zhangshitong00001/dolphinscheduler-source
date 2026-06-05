@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * Task execute start message, from api to master.
+ * 任务执行启动命令，由API服务发送给Master，用于手动启动一个任务执行。
  */
 @Data
 @NoArgsConstructor
@@ -35,26 +35,37 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class TaskExecuteStartCommand extends BaseCommand {
 
+    /** 执行者ID */
     private int executorId;
 
+    /** 执行者名称 */
     private String executorName;
 
+    /** 项目编码 */
     private long projectCode;
 
+    /** 任务定义编码 */
     private long taskDefinitionCode;
 
+    /** 任务定义版本号 */
     private int taskDefinitionVersion;
 
+    /** 告警组ID */
     private int warningGroupId;
 
+    /** Worker分组 */
     private String workerGroup;
 
+    /** 环境编码 */
     private Long environmentCode;
 
+    /** 启动参数 */
     private Map<String, String> startParams;
 
+    /** 租户ID */
     private int tenantId;
 
+    /** 是否试运行 */
     private int dryRun;
 
     public TaskExecuteStartCommand(String messageSenderAddress, String messageReceiverAddress, long messageSendTime) {
@@ -62,9 +73,9 @@ public class TaskExecuteStartCommand extends BaseCommand {
     }
 
     /**
-     * package request command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

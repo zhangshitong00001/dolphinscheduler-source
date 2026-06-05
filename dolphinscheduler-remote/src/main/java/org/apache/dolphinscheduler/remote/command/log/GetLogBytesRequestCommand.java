@@ -27,7 +27,7 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 import java.io.Serializable;
 
 /**
- *  get log bytes request command
+ * 获取日志字节请求命令。根据日志文件路径向Worker请求获取指定范围的日志字节数据，用于分页加载日志内容。
  */
 @Data
 @NoArgsConstructor
@@ -35,7 +35,7 @@ import java.io.Serializable;
 public class GetLogBytesRequestCommand implements Serializable {
 
     /**
-     *  log path
+     * 日志文件路径
      */
     private String path;
 

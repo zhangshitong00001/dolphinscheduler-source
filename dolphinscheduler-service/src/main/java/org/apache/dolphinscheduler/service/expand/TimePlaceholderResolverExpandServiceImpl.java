@@ -19,6 +19,10 @@ package org.apache.dolphinscheduler.service.expand;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * 时间占位符解析扩展服务的默认实现，默认不做任何扩展计算。
+ * <p>用户可通过覆盖此实现来接入自定义的时间计算逻辑。</p>
+ */
 @Component
 public class TimePlaceholderResolverExpandServiceImpl implements TimePlaceholderResolverExpandService {
 

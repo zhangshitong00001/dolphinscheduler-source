@@ -1,0 +1,88 @@
+<%- aslTs %>
+import { defineComponent, watch, ref } from 'vue'
+import { NModal, NForm, NFormItem, NInput, NButton, NSpace } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
+import { useDetail } from './use-detail'
+import Modal from '@/components/modal'
+import type { PropType } from 'vue'
+
+const DetailModal = defineComponent({
+  name: '<%= naming.kebab %>-detail-modal',
+  props: {
+    show: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
+    id: {
+      type: Number as PropType<number | null>,
+      default: null,
+    },
+  },
+  emits: ['cancel', 'update'],
+  setup(props, ctx) {
+    const { t } = useI18n()
+    const { state, create<%= naming.pascal %>, update<%= naming.pascal %>, getDetail } = useDetail()
+
+    const onConfirm = async () => {
+      if (props.id !== null) {
+        await update<%= naming.pascal %>(props.id)
+      } else {
+        await create<%= naming.pascal %>()
+      }
+      ctx.emit('update')
+      onCancel()
+    }
+
+    const onCancel = () => {
+      ctx.emit('cancel')
+      resetForm()
+    }
+
+    const resetForm = () => {
+<% fields.filter(f => f.required).forEach(function(field) { -%>
+      state.<%= naming.camel %>Form.<%= field.name %> = ''
+<% }); -%>
+    }
+
+    watch(
+      () => props.show,
+      async (newVal) => {
+        if (newVal && props.id !== null) {
+          await getDetail(props.id)
+        }
+        if (!newVal) {
+          resetForm()
+        }
+      }
+    )
+
+    return { t, state, onConfirm, onCancel }
+  },
+  render() {
+    const { t, state, onConfirm, onCancel, id } = this
+
+    return (
+      <Modal
+        title={id !== null ? t('<%= localePrefix %>.edit') : t('<%= localePrefix %>.create')}
+        show={this.show}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+        confirmDisabled={!state.<%= naming.camel %>Form.name}
+        confirmLoading={state.loading}
+      >
+        <NForm>
+<% fields.filter(f => f.required).forEach(function(field) { -%>
+          <NFormItem label={t('<%= localePrefix %>.<%= field.name %>')} path="<%= field.name %>">
+            <NInput
+              v-model={[state.<%= naming.camel %>Form.<%= field.name %>, 'value']}
+              placeholder={t('<%= localePrefix %>.<%= field.name %>')}
+            />
+          </NFormItem>
+<% }); -%>
+        </NForm>
+      </Modal>
+    )
+  }
+})
+
+export default DetailModal

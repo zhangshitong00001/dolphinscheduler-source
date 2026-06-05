@@ -52,7 +52,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * worker group controller
+ * Worker 分组控制器，提供 Worker 分组的创建/更新、查询、删除及 Worker 地址列表查询 REST API。
  */
 @Api(tags = "WORKER_GROUP_TAG")
 @RestController
@@ -63,13 +63,13 @@ public class WorkerGroupController extends BaseController {
     WorkerGroupService workerGroupService;
 
     /**
-     * create or update a worker group
+     * 创建或更新 Worker 分组。
      *
-     * @param loginUser login user
-     * @param id worker group id
-     * @param name worker group name
-     * @param addrList addr list
-     * @return create or update result code
+     * @param loginUser 登录用户
+     * @param id Worker 分组 ID（为 0 时创建，否则更新）
+     * @param name Worker 分组名称
+     * @param addrList Worker 地址列表
+     * @return 创建或更新结果
      */
     @ApiOperation(value = "saveWorkerGroup", notes = "CREATE_WORKER_GROUP_NOTES")
     @ApiImplicitParams({
@@ -95,13 +95,13 @@ public class WorkerGroupController extends BaseController {
     }
 
     /**
-     * query worker groups paging
+     * 查询 Worker 分组分页列表。
      *
-     * @param loginUser login user
-     * @param pageNo page number
-     * @param searchVal search value
-     * @param pageSize page size
-     * @return worker group list page
+     * @param loginUser 登录用户
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @param searchVal 搜索关键词
+     * @return Worker 分组分页列表
      */
     @ApiOperation(value = "queryAllWorkerGroupsPaging", notes = "QUERY_WORKER_GROUP_PAGING_NOTES")
     @ApiImplicitParams({
@@ -128,10 +128,10 @@ public class WorkerGroupController extends BaseController {
     }
 
     /**
-     * query all worker groups
+     * 查询所有 Worker 分组列表。
      *
-     * @param loginUser login user
-     * @return all worker group list
+     * @param loginUser 登录用户
+     * @return 所有 Worker 分组列表
      */
     @ApiOperation(value = "queryAllWorkerGroups", notes = "QUERY_WORKER_GROUP_LIST_NOTES")
     @GetMapping(value = "/all")
@@ -144,11 +144,11 @@ public class WorkerGroupController extends BaseController {
     }
 
     /**
-     * delete worker group by id
+     * 根据 ID 删除 Worker 分组。
      *
-     * @param loginUser login user
-     * @param id group id
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param id Worker 分组 ID
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteWorkerGroupById", notes = "DELETE_WORKER_GROUP_BY_ID_NOTES")
     @ApiImplicitParams({
@@ -165,10 +165,10 @@ public class WorkerGroupController extends BaseController {
     }
 
     /**
-     * query worker address list
+     * 查询所有 Worker 地址列表。
      *
-     * @param loginUser login user
-     * @return all worker address list
+     * @param loginUser 登录用户
+     * @return 所有 Worker 地址列表
      */
     @ApiOperation(value = "queryWorkerAddressList", notes = "QUERY_WORKER_ADDRESS_LIST_NOTES")
     @GetMapping(value = "/worker-address-list")

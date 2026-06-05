@@ -18,14 +18,15 @@
 package org.apache.dolphinscheduler.rpc.common;
 
 /**
- * AbstractRpcCallBack
+ * RPC 异步回调抽象基类。当发送异步消息且响应成功返回后，会调用此回调方法。
+ * 子类需实现 run 方法以处理异步响应结果。
  */
 public abstract class AbstractRpcCallBack {
 
     /**
-     * When sending an asynchronous message, this method will be called after the response is successfully sent.
+     * 当异步消息的响应成功返回后被调用。
      *
-     * @param object response
+     * @param object RPC 响应结果对象
      */
     public abstract void run(Object object);
 

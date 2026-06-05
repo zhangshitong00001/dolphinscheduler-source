@@ -22,19 +22,15 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
- * task definition log
+ * 任务定义日志实体，映射到 t_ds_task_definition_log 表，记录任务定义的变更历史。
  */
 @TableName("t_ds_task_definition_log")
 public class TaskDefinitionLog extends TaskDefinition {
 
-    /**
-     * operator user id
-     */
+    /** 操作用户 ID */
     private int operator;
 
-    /**
-     * operate time
-     */
+    /** 操作时间 */
     private Date operateTime;
 
     public TaskDefinitionLog() {

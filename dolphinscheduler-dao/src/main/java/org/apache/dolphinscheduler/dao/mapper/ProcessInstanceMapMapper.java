@@ -25,38 +25,47 @@ import org.apache.dolphinscheduler.dao.entity.ProcessInstanceMap;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * process instance map mapper interface
+ * 流程实例映射 Mapper 接口，封装对 t_ds_process_instance_map 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，管理父子流程实例之间的关联映射关系（如子流程任务触发的子流程实例）。
  */
 public interface ProcessInstanceMapMapper extends BaseMapper<ProcessInstanceMap> {
 
     /**
-     * query process instance by parentId
-     * @param parentProcessId parentProcessId
-     * @param parentTaskId parentTaskId
-     * @return process instance map
+     * 根据父流程实例ID和父任务ID查询关联的子流程映射记录。
+     * SELECT * FROM t_ds_process_instance_map WHERE parent_process_instance_id = #{parentProcessId} AND parent_task_instance_id = #{parentTaskId}
+     *
+     * @param parentProcessId 父流程实例ID
+     * @param parentTaskId 父任务实例ID
+     * @return 流程实例映射实体
      */
     ProcessInstanceMap queryByParentId(@Param("parentProcessId") int parentProcessId,
                                        @Param("parentTaskId") int parentTaskId);
 
 
     /**
-     * query by sub process id
-     * @param subProcessId subProcessId
-     * @return process instance map
+     * 根据子流程实例ID反向查询其父流程映射记录。
+     * SELECT * FROM t_ds_process_instance_map WHERE process_instance_id = #{subProcessId}
+     *
+     * @param subProcessId 子流程实例ID
+     * @return 流程实例映射实体
      */
     ProcessInstanceMap queryBySubProcessId(@Param("subProcessId") Integer subProcessId);
 
     /**
-     * delete by parent process id
-     * @param parentProcessId parentProcessId
-     * @return delete result
+     * 根据父流程实例ID删除所有关联的子流程映射记录。
+     * DELETE FROM t_ds_process_instance_map WHERE parent_process_instance_id = #{parentProcessId}
+     *
+     * @param parentProcessId 父流程实例ID
+     * @return 删除的记录数
      */
     int deleteByParentProcessId(@Param("parentProcessId") int parentProcessId);
 
     /**
-     *  query sub process instance  ids by parent instance id
-     * @param parentInstanceId parentInstanceId
-     * @return sub process instance ids
+     * 根据父流程实例ID查询所有子流程实例ID列表。
+     * SELECT process_instance_id FROM t_ds_process_instance_map WHERE parent_process_instance_id = #{parentInstanceId}
+     *
+     * @param parentInstanceId 父流程实例ID
+     * @return 子流程实例ID列表
      */
     List<Integer> querySubIdListByParentId(@Param("parentInstanceId") int parentInstanceId);
 

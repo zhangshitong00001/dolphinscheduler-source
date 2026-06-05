@@ -35,7 +35,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 /**
- * logger utils
+ * 日志工具类，提供任务日志标识构建、文件内容读取以及MDC（映射诊断上下文）操作等功能。
+ * 用于在日志输出中关联工作流实例ID和任务实例ID。
  */
 @UtilityClass
 public class LoggerUtils {
@@ -43,9 +44,14 @@ public class LoggerUtils {
     private static final Logger logger = LoggerFactory.getLogger(LoggerUtils.class);
 
     /**
-     * build job id
+     * 构建任务日志标识ID，格式为 TASK-日期-流程定义编码_版本-流程实例ID-任务ID。
      *
-     * @return task id format
+     * @param firstSubmitTime the first submit time of the task
+     * @param processDefineCode the process definition code
+     * @param processDefineVersion the process definition version
+     * @param processInstId the process instance id
+     * @param taskId the task instance id
+     * @return the formatted task identifier string
      */
     public static String buildTaskId(Date firstSubmitTime,
                                      Long processDefineCode,
@@ -60,10 +66,10 @@ public class LoggerUtils {
     }
 
     /**
-     * read whole file content
+     * 读取文件的全部内容并以字符串返回。
      *
-     * @param filePath file path
-     * @return whole file content
+     * @param filePath the path of the file to read
+     * @return the entire file content as a string
      */
     public static String readWholeFileContent(String filePath) {
         String line;
@@ -79,6 +85,12 @@ public class LoggerUtils {
         return "";
     }
 
+    /**
+     * 同时设置工作流实例ID和任务实例ID到MDC上下文。
+     *
+     * @param workflowInstanceId the workflow instance id
+     * @param taskInstanceId the task instance id
+     */
     public static void setWorkflowAndTaskInstanceIDMDC(Integer workflowInstanceId, Integer taskInstanceId) {
         setWorkflowInstanceIdMDC(workflowInstanceId);
         setTaskInstanceIdMDC(taskInstanceId);
@@ -92,6 +104,9 @@ public class LoggerUtils {
         MDC.put(Constants.TASK_INSTANCE_ID_MDC_KEY, String.valueOf(taskInstanceId));
     }
 
+    /**
+     * 从MDC上下文中移除工作流实例ID和任务实例ID。
+     */
     public static void removeWorkflowAndTaskInstanceIdMDC() {
         removeWorkflowInstanceIdMDC();
         removeTaskInstanceIdMDC();

@@ -17,5 +17,9 @@
 
 package org.apache.dolphinscheduler.common.model;
 
+/**
+ * 心跳数据标记接口。
+ * 所有心跳数据类（如MasterHeartBeat、WorkerHeartBeat）应实现此接口。
+ */
 public interface HeartBeat {
 }

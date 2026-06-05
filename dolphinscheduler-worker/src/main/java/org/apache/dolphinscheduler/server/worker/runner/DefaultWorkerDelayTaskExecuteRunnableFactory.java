@@ -27,6 +27,9 @@ import org.apache.dolphinscheduler.service.task.TaskPluginManager;
 
 import javax.annotation.Nullable;
 
+/**
+ * 默认的延迟任务执行Runnable工厂实现，用于创建DefaultWorkerDelayTaskExecuteRunnable实例。
+ */
 public class DefaultWorkerDelayTaskExecuteRunnableFactory extends WorkerDelayTaskExecuteRunnableFactory<DefaultWorkerDelayTaskExecuteRunnable> {
 
     protected DefaultWorkerDelayTaskExecuteRunnableFactory(@NonNull TaskExecutionContext taskExecutionContext,

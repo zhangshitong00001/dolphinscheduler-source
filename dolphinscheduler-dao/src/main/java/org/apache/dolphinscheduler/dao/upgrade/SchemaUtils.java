@@ -35,7 +35,7 @@ import org.springframework.core.io.ClassPathResource;
 import com.google.common.base.Strings;
 
 /**
- * Metadata related common classes
+ * 数据库 Schema 工具类，提供 SQL 升级脚本的管理、版本号比较和当前软件版本读取等功能。
  */
 public class SchemaUtils {
     private static final Logger logger = LoggerFactory.getLogger(SchemaUtils.class);
@@ -44,6 +44,9 @@ public class SchemaUtils {
         throw new UnsupportedOperationException("Construct SchemaUtils");
     }
 
+    /**
+     * 获取所有升级 SQL 脚本的目录列表，按版本号排序。
+     */
     public static List<String> getAllSchemaList() throws IOException {
         final File[] schemaDirArr = new ClassPathResource("sql/upgrade").getFile().listFiles();
 
@@ -73,7 +76,7 @@ public class SchemaUtils {
     }
 
     /**
-     * Determine whether schemaVersion is higher than version
+     * 判断 schema 版本是否高于给定的版本号，按点分数字段逐级比较。
      *
      * @param schemaVersion schema version
      * @param version version
@@ -100,7 +103,7 @@ public class SchemaUtils {
     }
 
     /**
-     * Gets the current software version number of the system
+     * 获取当前系统的软件版本号，从 sql/soft_version 文件中读取。
      *
      * @return current software version
      */

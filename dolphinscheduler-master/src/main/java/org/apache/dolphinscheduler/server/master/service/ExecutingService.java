@@ -38,7 +38,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * executing service, to query executing data from memory, such workflow instance
+ * 执行数据查询服务，用于从内存缓存中查询正在执行的工作流实例数据。
+ * 提供将内存中的 ProcessInstance 和 TaskInstance 转换为 DTO 返回给 API 层的能力。
  */
 @Component
 public class ExecutingService {
@@ -48,6 +49,12 @@ public class ExecutingService {
     @Autowired
     private ProcessInstanceExecCacheManager processInstanceExecCacheManager;
 
+    /**
+     * 查询指定工作流实例的执行数据（包含任务实例列表）。
+     *
+     * @param processInstanceId 工作流实例 ID
+     * @return 工作流执行数据 DTO，如果不在缓存中则返回 empty
+     */
     public Optional<WorkflowExecuteDto> queryWorkflowExecutingData(Integer processInstanceId) {
         WorkflowExecuteRunnable workflowExecuteRunnable = processInstanceExecCacheManager.getByProcessInstanceId(processInstanceId);
         if (workflowExecuteRunnable == null) {

@@ -24,38 +24,29 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 资源用户关联实体，映射到 t_ds_relation_resources_user 表，表示用户与文件资源之间的权限关系。
+ */
 @Data
 @TableName("t_ds_relation_resources_user")
 public class ResourcesUser {
 
-    /**
-     * id
-     */
+    /** 主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * user id
-     */
+    /** 用户 ID */
     private int userId;
 
-    /**
-     * resource id
-     */
+    /** 资源 ID */
     private int resourcesId;
 
-    /**
-     * permission
-     */
+    /** 权限值 */
     private int perm;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 }

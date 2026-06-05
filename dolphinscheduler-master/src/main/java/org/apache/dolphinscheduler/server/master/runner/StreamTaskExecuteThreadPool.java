@@ -32,7 +32,8 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 /**
- * Used to execute {@link StreamTaskExecuteRunnable}.
+ * 流任务执行线程池，用于异步执行 {@link StreamTaskExecuteRunnable} 的事件处理。
+ * 提供线程池初始化、容量配置以及所有流任务事件处理的执行入口。
  */
 @Component
 public class StreamTaskExecuteThreadPool extends ThreadPoolTaskExecutor {
@@ -51,7 +52,9 @@ public class StreamTaskExecuteThreadPool extends ThreadPoolTaskExecutor {
     }
 
     /**
-     * Handle the events belong to the given stream task
+     * 处理指定流任务的所有待处理事件，异步提交执行并通过回调记录结果。
+     *
+     * @param streamTaskExecuteRunnable 流任务执行器
      */
     public void executeEvent(final StreamTaskExecuteRunnable streamTaskExecuteRunnable) {
         if (!streamTaskExecuteRunnable.isStart() || streamTaskExecuteRunnable.eventSize() == 0) {

@@ -20,14 +20,13 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * task execute type
+ * 任务执行类型枚举。
+ * 定义任务的执行方式：批处理或流处理。
  */
 public enum TaskExecuteType {
-    /**
-     * 0 batch
-     * 1 stream
-     */
+    /** 批处理 */
     BATCH(0, "batch"),
+    /** 流处理 */
     STREAM(1, "stream");
 
     TaskExecuteType(int code, String desc) {

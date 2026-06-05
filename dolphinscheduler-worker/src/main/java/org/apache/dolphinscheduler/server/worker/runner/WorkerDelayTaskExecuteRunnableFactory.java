@@ -27,6 +27,12 @@ import org.apache.dolphinscheduler.service.task.TaskPluginManager;
 
 import javax.annotation.Nullable;
 
+/**
+ * 延迟任务执行Runnable的抽象工厂，持有任务执行所需的各种依赖。
+ * 子类通过实现createWorkerTaskExecuteRunnable方法创建具体的WorkerDelayTaskExecuteRunnable实例。
+ *
+ * @param <T> WorkerDelayTaskExecuteRunnable的具体子类类型
+ */
 public abstract class WorkerDelayTaskExecuteRunnableFactory<T extends WorkerDelayTaskExecuteRunnable> implements WorkerTaskExecuteRunnableFactory<T> {
 
     protected final @NonNull TaskExecutionContext taskExecutionContext;

@@ -17,7 +17,17 @@
 
 package org.apache.dolphinscheduler.server.worker.runner;
 
+/**
+ * Worker任务执行Runnable的工厂接口，定义创建任务执行Runnable的规范。
+ *
+ * @param <T> 任务执行Runnable的具体类型
+ */
 public interface WorkerTaskExecuteRunnableFactory<T> {
 
+    /**
+     * 创建一个新的任务执行Runnable实例。
+     *
+     * @return 新创建的任务执行Runnable实例
+     */
     T createWorkerTaskExecuteRunnable();
 }

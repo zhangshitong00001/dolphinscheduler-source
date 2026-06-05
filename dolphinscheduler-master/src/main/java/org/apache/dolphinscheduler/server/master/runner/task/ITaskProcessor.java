@@ -22,16 +22,40 @@ import org.apache.dolphinscheduler.dao.entity.TaskInstance;
 import org.apache.dolphinscheduler.spi.plugin.PrioritySPI;
 
 /**
- * interface of task processor in master
+ * Master 端任务处理器的标准接口，定义了任务在 Master 中的生命周期管理操作。
+ * 所有任务类型处理器（通用任务、条件任务、依赖任务、子流程等）均需实现此接口。
+ * 通过 SPI 机制加载不同的任务处理器实现。
  */
 public interface ITaskProcessor extends PrioritySPI {
 
+    /**
+     * 初始化任务处理器，注入任务实例和工作流实例。
+     *
+     * @param taskInstance    任务实例
+     * @param processInstance 工作流实例
+     */
     void init(TaskInstance taskInstance, ProcessInstance processInstance);
 
+    /**
+     * 执行指定的任务动作。
+     *
+     * @param taskAction 任务动作类型
+     * @return 是否执行成功
+     */
     boolean action(TaskAction taskAction);
 
+    /**
+     * 获取任务处理器对应的任务类型标识。
+     *
+     * @return 任务类型字符串
+     */
     String getType();
 
+    /**
+     * 获取当前绑定的任务实例。
+     *
+     * @return 任务实例
+     */
     TaskInstance taskInstance();
 
 }

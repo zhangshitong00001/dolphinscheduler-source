@@ -32,21 +32,21 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * common host manager
+ * 通用主机管理器抽象类。提供根据执行上下文选择主机的基础逻辑，子类实现具体的 HostWorker 选择策略。
  */
 public abstract class CommonHostManager implements HostManager {
 
     /**
-     * server node manager
+     * 服务节点管理器。
      */
     @Autowired
     protected ServerNodeManager serverNodeManager;
 
     /**
-     * select host
+     * 根据执行上下文选择目标主机。按执行器类型获取候选节点列表，再委托子类选择。
      *
-     * @param context context
-     * @return host
+     * @param context 执行上下文
+     * @return 选中的主机
      */
     @Override
     public Host select(ExecutionContext context) {
@@ -69,8 +69,20 @@ public abstract class CommonHostManager implements HostManager {
         return select(candidates);
     }
 
+    /**
+     * 子类实现从候选节点列表中选择一个 HostWorker 的具体策略。
+     *
+     * @param nodes 候选节点列表
+     * @return 选中的 HostWorker
+     */
     protected abstract HostWorker select(Collection<HostWorker> nodes);
 
+    /**
+     * 获取指定 Worker 分组的候选节点列表。
+     *
+     * @param workerGroup Worker 分组名称
+     * @return 候选 HostWorker 列表
+     */
     protected List<HostWorker> getWorkerCandidates(String workerGroup) {
         List<HostWorker> hostWorkers = new ArrayList<>();
         Set<String> nodes = serverNodeManager.getWorkerGroupNodes(workerGroup);

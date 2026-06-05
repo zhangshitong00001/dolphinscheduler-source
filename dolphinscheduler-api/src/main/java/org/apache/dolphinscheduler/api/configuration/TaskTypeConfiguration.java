@@ -44,6 +44,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 任务类型配置。从task-type-config.yaml读取任务类型分类配置，将任务分为通用、云服务、逻辑、
+ * 数据集成、数据质量、机器学习和其它等类别，并生成默认收藏任务类型集合。
+ */
 @Component
 @EnableConfigurationProperties
 @PropertySource(value = {"classpath:task-type-config.yaml"}, factory = YamlPropertySourceFactory.class)
@@ -61,6 +65,11 @@ public class TaskTypeConfiguration {
 
     private List<String> machineLearning;
 
+    /**
+     * 获取默认任务类型集合。将配置中的所有分类任务类型转换为FavTaskDto集合并返回。
+     *
+     * @return 默认任务类型集合
+     */
     public Set<FavTaskDto> getDefaultTaskTypes() {
         Set<FavTaskDto> defaultTaskTypes = new HashSet<>();
         if (CollectionUtils.isNotEmpty(defaultTaskTypes)) {

@@ -32,14 +32,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * MySQL performance
+ * MySQL 数据库性能监控实现，通过查询全局变量和状态采集最大连接数、当前连接数、活跃线程数等指标。
  */
 public class MySQLPerformance extends BaseDBPerformance {
 
     private static Logger logger = LoggerFactory.getLogger(MySQLPerformance.class);
 
     /**
-     * get monitor record
+     * 获取 MySQL 数据库当前性能指标，包括最大连接数、已用最大连接数、当前连接数和运行线程数。
+     *
      * @param conn connection
      * @return MonitorRecord
      */

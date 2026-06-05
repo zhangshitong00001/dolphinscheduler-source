@@ -29,7 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Tool to run database scripts
+ * 数据库脚本执行工具，用于读取并执行SQL脚本文件。
+ * 支持自定义分隔符、自动提交控制和错误处理策略。
  */
 public class ScriptRunner {
 
@@ -57,11 +58,11 @@ public class ScriptRunner {
     }
 
     /**
-     * Runs an SQL script (read in using the Reader parameter)
+     * 执行SQL脚本，从Reader中读取SQL语句并执行。
      *
-     * @param reader - the source of the script
-     * @throws IOException errors
-     * @throws SQLException errors
+     * @param reader SQL脚本的字符输入源
+     * @throws IOException 读取脚本时发生IO错误
+     * @throws SQLException 执行SQL时发生错误
      */
     public void runScript(Reader reader) throws IOException, SQLException {
         try {

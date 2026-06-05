@@ -18,13 +18,14 @@
 package org.apache.dolphinscheduler.common.enums;
 
 /**
- * http parameters type
+ * HTTP参数类型枚举。
+ * 定义HTTP任务中参数传递的位置类型。
  */
 public enum HttpParametersType {
-    /**
-     * 0 parameter;
-     * 1 body;
-     * 2 headers;
-     */
-    PARAMETER,BODY,HEADERS
+    /** 请求参数 */
+    PARAMETER,
+    /** 请求体 */
+    BODY,
+    /** 请求头 */
+    HEADERS
 }

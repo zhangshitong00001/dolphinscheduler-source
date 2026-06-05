@@ -19,12 +19,26 @@ package org.apache.dolphinscheduler.spi.datasource;
 
 import java.sql.Connection;
 
+/**
+ * 数据源客户端接口，封装了与数据库的实际连接管理。
+ * <p>
+ * 实现类负责创建和管理底层JDBC连接，提供连接健康检查和资源释放能力。
+ * 继承自 {@link AutoCloseable}，支持try-with-resources模式。
+ */
 public interface DataSourceClient extends AutoCloseable {
 
+    /**
+     * 检查客户端连接是否有效（通常通过执行一条验证查询实现）
+     */
     void checkClient();
 
     @Override
     void close();
 
+    /**
+     * 获取底层JDBC数据库连接
+     *
+     * @return JDBC连接对象
+     */
     Connection getConnection();
 }

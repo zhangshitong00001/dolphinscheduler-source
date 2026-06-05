@@ -18,20 +18,28 @@
 package org.apache.dolphinscheduler.api.enums;
 
 /**
- * execute type
+ * 工作流执行类型枚举。定义工作流实例的各种操作类型，如重复运行、恢复暂停、恢复失败、停止和暂停等。
  */
 public enum ExecuteType {
 
-    /**
-     * operation type
-     * 1 repeat running
-     * 2 resume pause
-     * 3 resume failure
-     * 4 stop
-     * 5 pause
-     */
-    NONE, REPEAT_RUNNING, RECOVER_SUSPENDED_PROCESS, START_FAILURE_TASK_PROCESS, STOP, PAUSE;
+    /** 无操作 */
+    NONE,
+    /** 重复运行 */
+    REPEAT_RUNNING,
+    /** 恢复暂停的流程 */
+    RECOVER_SUSPENDED_PROCESS,
+    /** 启动失败任务流程 */
+    START_FAILURE_TASK_PROCESS,
+    /** 停止 */
+    STOP,
+    /** 暂停 */
+    PAUSE;
 
+    /**
+     * 根据序号获取对应的执行类型
+     * @param value 枚举序号
+     * @return 对应的ExecuteType枚举值，未找到则返回null
+     */
     public static ExecuteType getEnum(int value) {
         for (ExecuteType e: ExecuteType.values()) {
             if (e.ordinal() == value) {

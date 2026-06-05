@@ -35,6 +35,9 @@ import org.springframework.validation.annotation.Validated;
 
 import java.time.Duration;
 
+/**
+ * Master 服务配置类。绑定 application.yml 中以 "master" 为前缀的配置项，并提供参数校验。
+ */
 @Data
 @Validated
 @Configuration
@@ -44,59 +47,66 @@ public class MasterConfig implements Validator {
     private Logger logger = LoggerFactory.getLogger(MasterConfig.class);
 
     /**
-     * The master RPC server listen port.
+     * Master RPC 服务监听端口。
      */
     private int listenPort = 5678;
     /**
-     * The max batch size used to fetch command from database.
+     * 从数据库批量拉取命令的最大数量。
      */
     private int fetchCommandNum = 10;
     /**
-     * The thread number used to prepare processInstance. This number shouldn't bigger than fetchCommandNum.
+     * 用于准备流程实例的线程数，该值不应大于 fetchCommandNum。
      */
     private int preExecThreads = 10;
     /**
-     * todo: We may need to split the process/task into different thread size.
-     * The thread number used to handle processInstance and task event.
-     * Will create two thread poll to execute {@link WorkflowExecuteRunnable} and {@link TaskExecuteRunnable}.
+     * 用于处理流程实例和任务事件的线程数。
+     * 将创建两个线程池分别执行 {@link WorkflowExecuteRunnable} 和 {@link TaskExecuteRunnable}。
      */
     private int execThreads = 10;
     /**
-     * The task dispatch thread pool size.
+     * 任务分发线程池大小。
      */
     private int dispatchTaskNumber = 3;
     /**
-     * Worker select strategy.
+     * Worker 选择策略。
      */
     private HostSelector hostSelector = HostSelector.LOWER_WEIGHT;
     /**
-     * Master heart beat task execute interval.
+     * Master 心跳任务执行间隔。
      */
     private Duration heartbeatInterval = Duration.ofSeconds(10);
     /**
-     * task submit max retry times.
+     * 任务提交最大重试次数。
      */
     private int taskCommitRetryTimes = 5;
     /**
-     * task submit retry interval.
+     * 任务提交重试间隔。
      */
     private Duration taskCommitInterval = Duration.ofSeconds(1);
     /**
-     * state wheel check interval, if this value is bigger, may increase the delay of task/processInstance.
+     * 状态轮询检查间隔，值越大可能增大任务/流程实例的延迟。
      */
     private Duration stateWheelInterval = Duration.ofMillis(5);
+    /** CPU 最大负载平均值。 */
     private double maxCpuLoadAvg = -1;
+    /** 预留内存比例。 */
     private double reservedMemory = 0.3;
+    /** 故障转移间隔。 */
     private Duration failoverInterval = Duration.ofMinutes(10);
+    /** 任务故障转移时是否终止 Yarn 作业。 */
     private boolean killYarnJobWhenTaskFailover = true;
+    /** 注册中心断开连接策略。 */
     private ConnectStrategyProperties registryDisconnectStrategy = new ConnectStrategyProperties();
 
+    /** Worker 分组刷新间隔。 */
     private Duration workerGroupRefreshInterval = Duration.ofSeconds(10L);
 
     // ip:listenPort
+    /** Master 地址（格式：ip:listenPort）。 */
     private String masterAddress;
 
     // /nodes/master/ip:listenPort
+    /** Master 注册中心路径（格式：/nodes/master/ip:listenPort）。 */
     private String masterRegistryPath;
 
     @Override

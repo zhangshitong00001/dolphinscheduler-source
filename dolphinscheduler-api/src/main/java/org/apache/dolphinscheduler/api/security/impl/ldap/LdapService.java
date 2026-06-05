@@ -41,6 +41,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.support.filter.EqualsFilter;
 import org.springframework.stereotype.Component;
 
+/**
+ * LDAP服务。提供与LDAP服务器的连接、用户搜索和登录验证功能。
+ * 通过JNDI接口与LDAP服务器通信，支持根据配置的用户标识属性查找用户并进行密码验证。
+ *
+ * 认证流程：
+ * 1. 使用管理员凭证连接到LDAP服务器
+ * 2. 根据用户标识属性搜索用户条目
+ * 3. 使用用户DN和密码重新连接LDAP服务器以验证密码
+ * 4. 验证成功后返回用户的邮箱地址
+ */
 @Component
 @Configuration
 public class LdapService {
@@ -71,21 +81,23 @@ public class LdapService {
     @Value("${security.authentication.ldap.user.not-exist-action:CREATE}")
     private String ldapUserNotExistAction;
 
-    /***
-     * get user type by configured admin userId
-     * @param userId login userId
-     * @return user type
+    /**
+     * 根据配置的管理员用户ID判断用户类型。
+     *
+     * @param userId 登录用户ID
+     * @return 如果是管理员用户则返回ADMIN_USER，否则返回GENERAL_USER
      */
     public UserType getUserType(String userId) {
         return adminUserId.equalsIgnoreCase(userId) ? UserType.ADMIN_USER : UserType.GENERAL_USER;
     }
 
     /**
-     * login by userId and return user email
+     * 通过LDAP服务器进行用户登录验证。
+     * 先用管理员凭证搜索用户，再用用户DN和密码重新连接以验证密码正确性。
      *
-     * @param userId user identity id
-     * @param userPwd user login password
-     * @return user email
+     * @param userId  用户身份标识
+     * @param userPwd 用户登录密码
+     * @return 验证成功返回用户邮箱地址，失败返回null
      */
     public String ldapLogin(String userId, String userPwd) {
         Properties searchEnv = getManagerLdapEnv();
@@ -134,9 +146,10 @@ public class LdapService {
         return null;
     }
 
-    /***
-     * get ldap env fot ldap server search
-     * @return Properties
+    /**
+     * 构建LDAP服务器连接的环境配置参数。
+     *
+     * @return 包含连接工厂、认证方式、管理员凭证和LDAP URL的Properties对象
      */
     Properties getManagerLdapEnv() {
         Properties env = new Properties();

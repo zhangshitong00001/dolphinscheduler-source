@@ -30,33 +30,36 @@ import java.util.List;
 
 import org.slf4j.Logger;
 
+/**
+ * 权限检查通用类。根据授权类型和资源列表，校验用户是否拥有指定资源的访问权限。
+ * 支持按资源数组或资源信息列表两种方式进行检查。
+ *
+ * @param <T> 需要进行权限检查的资源类型
+ */
 public class PermissionCheck<T> {
-    /**
-     * logger
-     */
     private Logger logger;
     /**
-     * Authorization Type
+     * 授权类型
      */
     private AuthorizationType authorizationType;
 
     /**
-     * Authorization Type
+     * 流程服务
      */
     private ProcessService processService;
 
     /**
-     * need check array
+     * 需要进行权限检查的资源数组
      */
     private T[] needChecks;
 
     /**
-     * resoruce info
+     * 资源信息列表
      */
     private List<ResourceInfo> resourceList;
 
     /**
-     * user id
+     * 用户ID
      */
     private int userId;
 
@@ -144,9 +147,9 @@ public class PermissionCheck<T> {
     }
 
     /**
-     * has permission
+     * 检查当前用户是否拥有所需资源的访问权限。
      *
-     * @return true if has permission
+     * @return 有权限返回true，否则返回false
      */
     public boolean hasPermission() {
         try {
@@ -158,9 +161,9 @@ public class PermissionCheck<T> {
     }
 
     /**
-     * check permission
+     * 执行权限校验。如果是管理员用户则直接通过；否则校验用户是否对needChecks中所有资源均有授权。
      *
-     * @throws ServiceException exception
+     * @throws ServiceException 用户不存在或存在未授权资源时抛出
      */
     public void checkPermission() throws ServiceException {
         if (this.needChecks.length > 0) {

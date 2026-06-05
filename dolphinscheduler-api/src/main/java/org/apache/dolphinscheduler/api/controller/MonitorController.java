@@ -43,7 +43,7 @@ import io.swagger.annotations.ApiOperation;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
- * monitor controller
+ * 监控控制器，提供 Master/Worker 列表及数据库状态查询 REST API。
  */
 @Api(tags = "MONITOR_TAG")
 @RestController
@@ -54,10 +54,10 @@ public class MonitorController extends BaseController {
     private MonitorService monitorService;
 
     /**
-     * master list
+     * 查询 Master 服务列表。
      *
-     * @param loginUser login user
-     * @return master list
+     * @param loginUser 登录用户
+     * @return Master 列表
      */
     @ApiOperation(value = "listMaster", notes = "MASTER_LIST_NOTES")
     @GetMapping(value = "/masters")
@@ -70,10 +70,10 @@ public class MonitorController extends BaseController {
     }
 
     /**
-     * worker list
+     * 查询 Worker 服务列表。
      *
-     * @param loginUser login user
-     * @return worker information list
+     * @param loginUser 登录用户
+     * @return Worker 信息列表
      */
     @ApiOperation(value = "listWorker", notes = "WORKER_LIST_NOTES")
     @GetMapping(value = "/workers")
@@ -86,10 +86,10 @@ public class MonitorController extends BaseController {
     }
 
     /**
-     * query database state
+     * 查询数据库连接状态。
      *
-     * @param loginUser login user
-     * @return data base state
+     * @param loginUser 登录用户
+     * @return 数据库状态信息
      */
     @ApiOperation(value = "queryDatabaseState", notes = "QUERY_DATABASE_STATE_NOTES")
     @GetMapping(value = "/databases")

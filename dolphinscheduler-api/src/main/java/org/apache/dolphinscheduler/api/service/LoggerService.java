@@ -24,7 +24,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * logger service
+ * 日志服务接口。提供任务实例日志的查询和下载功能，支持分页读取日志内容。
  */
 public interface LoggerService {
 

@@ -19,6 +19,9 @@ package org.apache.dolphinscheduler.api.dto;
 
 import java.util.Date;
 
+/**
+ * 审计 DTO，用于传输审计日志信息，包含操作用户、资源、操作类型、时间和资源名称。
+ */
 public class AuditDto {
 
     private String userName;

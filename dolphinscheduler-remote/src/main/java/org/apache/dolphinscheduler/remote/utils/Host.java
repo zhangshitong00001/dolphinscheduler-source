@@ -23,26 +23,29 @@ import java.util.Objects;
 import lombok.NonNull;
 
 /**
- * server address
+ * 主机地址封装类。存储IP、端口和组合地址，支持地址解析与版本兼容性检测。
  */
 public class Host implements Serializable {
 
     private static final String COLON = ":";
 
+    /**
+     * 空主机实例
+     */
     public static final Host EMPTY = new Host();
 
     /**
-     * address
+     * 组合地址（ip:port格式）
      */
     private String address;
 
     /**
-     * ip
+     * IP地址
      */
     private String ip;
 
     /**
-     * port
+     * 端口号
      */
     private int port;
 
@@ -92,7 +95,7 @@ public class Host implements Serializable {
     }
 
     /**
-     * address convert host
+     * 从地址字符串创建Host实例。
      *
      * @param address address
      * @return host
@@ -103,7 +106,7 @@ public class Host implements Serializable {
     }
 
     /**
-     * address convert host
+     * 将地址字符串按冒号拆分为IP和端口数组。
      *
      * @param address address
      * @return host
@@ -120,7 +123,7 @@ public class Host implements Serializable {
     }
 
     /**
-     * whether old version
+     * 检测是否为旧版本地址格式（不含端口号的地址）。
      *
      * @param address address
      * @return old version is true , otherwise is false

@@ -18,8 +18,16 @@
 package org.apache.dolphinscheduler.common.enums;
 
 /**
- * data base types
+ * 资源上传类型枚举。
+ * 定义资源文件上传的目标存储类型。
  */
 public enum ResUploadType {
-    HDFS, S3, OSS, NONE
+    /** HDFS 分布式文件系统 */
+    HDFS,
+    /** AWS S3 对象存储 */
+    S3,
+    /** 阿里云 OSS 对象存储 */
+    OSS,
+    /** 不上传 */
+    NONE
 }

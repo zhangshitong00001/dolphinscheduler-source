@@ -27,73 +27,51 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 数据质量任务统计值实体，映射到 t_ds_dq_task_statistics_value 表，记录数据质量任务执行时采集到的统计数值。
+ * 每次数据质量检查会生成一个或多个统计值（如行数、空值数、重复数等），用于与阈值比较来判断数据质量是否达标。
+ */
 @Data
 @TableName("t_ds_dq_task_statistics_value")
 public class DqTaskStatisticsValue implements Serializable {
 
-    /**
-     * primary key
-     */
+    /** 统计值主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    /**
-     * process defined id
-     */
+    /** 关联的工作流定义 ID */
     @TableField(value = "process_definition_id")
     private long processDefinitionId;
-    /**
-     * process definition name
-     */
+    /** 非数据库字段：工作流定义名称，通过 processDefinitionId 关联查询填充 */
     @TableField(exist = false)
     private String processDefinitionName;
-    /**
-     * task instance id
-     */
+    /** 关联的任务实例 ID */
     @TableField(value = "task_instance_id")
     private long taskInstanceId;
-    /**
-     * task name
-     */
+    /** 非数据库字段：任务名称，通过 taskInstanceId 关联查询填充 */
     @TableField(exist = false)
     private String taskName;
-    /**
-     * rule id
-     */
+    /** 关联的规则 ID，对应 t_ds_dq_rule 表的 id */
     @TableField(value = "rule_id")
     private long ruleId;
-    /**
-     * rule type
-     */
+    /** 非数据库字段：规则类型，通过 ruleId 关联查询填充 */
     @TableField(exist = false)
     private int ruleType;
-    /**
-     * rule name
-     */
+    /** 非数据库字段：规则名称，通过 ruleId 关联查询填充 */
     @TableField(exist = false)
     private String ruleName;
-    /**
-     * statistics value
-     */
+    /** 统计值，SQL 执行得到的实际数值（如行数为 1000） */
     @TableField(value = "statistics_value")
     private double statisticsValue;
-    /**
-     * comparison value
-     */
+    /** 统计指标名称，描述该统计值的含义（如 "row_count"、"null_count"） */
     @TableField(value = "statistics_name")
     private String statisticsName;
-    /**
-     * data time
-     */
+    /** 数据时间，统计值对应的业务数据时间 */
     @TableField(value = "data_time")
     private Date dataTime;
-    /**
-     * create time
-     */
+    /** 创建时间 */
     @TableField(value = "create_time")
     private Date createTime;
-    /**
-     * update time
-     */
+    /** 最后更新时间 */
     @TableField(value = "update_time")
     private Date updateTime;
 }

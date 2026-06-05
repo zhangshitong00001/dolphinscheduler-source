@@ -18,7 +18,7 @@
 package org.apache.dolphinscheduler.server.master.event;
 
 /**
- * This exception represent the exception can be recovered, when we get this exception, we will retry the event.
+ * 状态事件处理异常。表示可恢复的异常，当捕获此异常时，系统将重新尝试处理该事件。
  */
 public class StateEventHandleException extends Exception {
 

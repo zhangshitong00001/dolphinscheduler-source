@@ -28,18 +28,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 任务数量统计DTO。用于统计各状态任务实例的数量，并提供按状态汇总的功能。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskCountDto {
-    /**
-     * total count
-     */
+    /** 任务总数 */
     private int totalCount;
 
-    /**
-     * task state count list
-     */
+    /** 任务状态数量列表 */
     private List<TaskStateCount> taskCountDtos;
 
     public TaskCountDto(List<ExecuteStatusCount> taskInstanceStateCounts) {

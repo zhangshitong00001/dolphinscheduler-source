@@ -34,6 +34,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+/**
+ * 任务运行中事件处理器。处理 Worker 上报的任务运行中事件，更新任务实例状态为运行中并记录 Worker 地址、日志路径等运行时信息，完成后提交 TASK_STATE_CHANGE 状态事件。
+ */
 @Component
 public class TaskRunningEventHandler implements TaskEventHandler {
 

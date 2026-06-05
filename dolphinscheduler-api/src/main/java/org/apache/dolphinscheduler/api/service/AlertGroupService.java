@@ -23,75 +23,76 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * alert group service
+ * 告警组服务接口。提供告警组的创建、查询、更新、删除以及名称校验等功能。
+ * 告警组用于将多个告警插件实例组合在一起，统一管理告警通知的发送。
  */
 public interface AlertGroupService {
 
     /**
-     * query alert group list
+     * 查询当前用户的告警组列表。
      *
-     * @param loginUser
-     * @return alert group list
+     * @param loginUser 登录用户
+     * @return 告警组列表
      */
     Map<String, Object> queryAlertgroup(User loginUser);
 
     /**
-     * query alert group by id
+     * 根据ID查询告警组详情。
      *
-     * @param loginUser login user
-     * @param id alert group id
-     * @return one alert group
+     * @param loginUser 登录用户
+     * @param id        告警组ID
+     * @return 单个告警组信息
      */
     Map<String, Object> queryAlertGroupById(User loginUser, Integer id);
 
     /**
-     * paging query alarm group list
+     * 分页查询告警组列表。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return alert group list page
+     * @param loginUser 登录用户
+     * @param searchVal 搜索关键字
+     * @param pageNo    页码
+     * @param pageSize  每页大小
+     * @return 分页查询结果
      */
     Result listPaging(User loginUser, String searchVal, Integer pageNo, Integer pageSize);
 
     /**
-     * create alert group
+     * 创建告警组。
      *
-     * @param loginUser login user
-     * @param groupName group name
-     * @param desc description
-     * @param alertInstanceIds alertInstanceIds
-     * @return create result code
+     * @param loginUser        登录用户
+     * @param groupName        告警组名称
+     * @param desc             描述
+     * @param alertInstanceIds 告警插件实例ID列表
+     * @return 创建结果
      */
     Map<String, Object> createAlertgroup(User loginUser, String groupName, String desc, String alertInstanceIds);
 
     /**
-     * updateProcessInstance alert group
+     * 更新告警组信息。
      *
-     * @param loginUser login user
-     * @param id alert group id
-     * @param groupName group name
-     * @param desc description
-     * @param alertInstanceIds alertInstanceIds
-     * @return update result code
+     * @param loginUser        登录用户
+     * @param id               告警组ID
+     * @param groupName        告警组名称
+     * @param desc             描述
+     * @param alertInstanceIds 告警插件实例ID列表
+     * @return 更新结果
      */
     Map<String, Object> updateAlertgroup(User loginUser, int id, String groupName, String desc, String alertInstanceIds);
 
     /**
-     * delete alert group by id
+     * 根据ID删除告警组。
      *
-     * @param loginUser login user
-     * @param id alert group id
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param id        告警组ID
+     * @return 删除结果
      */
     Map<String, Object> delAlertgroupById(User loginUser, int id);
 
     /**
-     * verify group name exists
+     * 检查告警组名称是否已存在。
      *
-     * @param groupName group name
-     * @return check result code
+     * @param groupName 告警组名称
+     * @return 存在返回true，否则返回false
      */
     boolean existGroupName(String groupName);
 }

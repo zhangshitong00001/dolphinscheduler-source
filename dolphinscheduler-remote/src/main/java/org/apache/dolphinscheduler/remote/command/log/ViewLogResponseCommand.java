@@ -27,7 +27,7 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 import java.io.Serializable;
 
 /**
- *  view log response command
+ * 查看完整日志响应命令。封装Worker返回的任务完整日志内容字符串。
  */
 @Data
 @NoArgsConstructor
@@ -35,7 +35,7 @@ import java.io.Serializable;
 public class ViewLogResponseCommand implements Serializable {
 
     /**
-     *  response data
+     * 日志内容字符串
      */
     private String msg;
 

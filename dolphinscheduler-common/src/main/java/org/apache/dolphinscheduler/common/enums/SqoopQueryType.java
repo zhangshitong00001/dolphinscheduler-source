@@ -17,9 +17,15 @@
 
 package org.apache.dolphinscheduler.common.enums;
 
+/**
+ * Sqoop 查询类型枚举。
+ * 定义 Sqoop 任务的查询方式：表单模式或 SQL 模式。
+ */
 public enum SqoopQueryType {
 
+    /** 表单查询 */
     FORM(0, "SQOOP_QUERY_FORM"),
+    /** SQL 查询 */
     SQL(1, "SQOOP_QUERY_SQL");
 
     private final Integer code;

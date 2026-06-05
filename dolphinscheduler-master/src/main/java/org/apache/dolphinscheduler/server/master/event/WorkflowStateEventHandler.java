@@ -26,6 +26,9 @@ import org.apache.dolphinscheduler.server.master.runner.WorkflowExecuteRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 工作流状态事件处理器。处理 PROCESS_STATE_CHANGE 状态事件，根据目标状态（停止、完成、提交失败等）执行相应的流程实例状态更新、结束处理或补数逻辑。
+ */
 @AutoService(StateEventHandler.class)
 public class WorkflowStateEventHandler implements StateEventHandler {
 

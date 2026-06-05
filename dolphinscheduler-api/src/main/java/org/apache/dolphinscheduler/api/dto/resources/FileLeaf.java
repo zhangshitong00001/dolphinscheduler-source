@@ -17,7 +17,7 @@
 package org.apache.dolphinscheduler.api.dto.resources;
 
 /**
- * file leaf
+ * 文件叶子节点资源组件。表示资源树中的文件节点，不包含子节点。
  */
 public class FileLeaf extends ResourceComponent{
 

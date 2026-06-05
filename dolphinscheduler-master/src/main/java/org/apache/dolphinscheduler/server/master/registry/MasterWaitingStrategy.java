@@ -38,7 +38,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 
 /**
- * This strategy will change the server status to {@link ServerStatus#WAITING} when disconnect from {@link Registry}.
+ * Master等待连接策略。当Master与注册中心断开连接时，将服务器状态切换为WAITING，清理资源并尝试在超时时间内重新连接。若重连成功则恢复资源，失败则停止服务器。
  */
 @Service
 @ConditionalOnProperty(prefix = "master.registry-disconnect-strategy", name = "strategy", havingValue = "waiting")
@@ -59,6 +59,9 @@ public class MasterWaitingStrategy implements MasterConnectStrategy {
     @Autowired
     private StateWheelExecuteThread stateWheelExecuteThread;
 
+    /**
+     * 断开连接时的处理逻辑。将服务器状态置为WAITING，清理Master资源，尝试在最大等待时间内重连注册中心。若超时或发生异常则停止服务器。
+     */
     @Override
     public void disconnect() {
         try {
@@ -90,6 +93,9 @@ public class MasterWaitingStrategy implements MasterConnectStrategy {
         }
     }
 
+    /**
+     * 重连时的处理逻辑。若当前服务器状态为RUNNING则无需处理，否则从WAITING状态恢复并重新启动Master资源。
+     */
     @Override
     public void reconnect() {
         if (ServerLifeCycleManager.isRunning()) {
@@ -111,6 +117,11 @@ public class MasterWaitingStrategy implements MasterConnectStrategy {
         }
     }
 
+    /**
+     * 获取策略类型。
+     *
+     * @return 策略类型，始终返回WAITING
+     */
     @Override
     public StrategyType getStrategyType() {
         return StrategyType.WAITING;

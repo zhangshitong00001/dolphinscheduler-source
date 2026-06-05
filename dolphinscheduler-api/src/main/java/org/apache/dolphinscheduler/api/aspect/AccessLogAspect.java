@@ -45,6 +45,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+/**
+ * 访问日志切面。拦截带有{@link AccessLogAnnotation}注解的方法，自动记录请求URI、方法、参数和响应信息，
+ * 并对密码等敏感数据自动脱敏处理。
+ */
 @Aspect
 @Component
 public class AccessLogAspect {
@@ -52,6 +56,7 @@ public class AccessLogAspect {
 
     private static final String TRACE_ID = "traceId";
 
+    /** 敏感数据正则表达式，用于匹配并脱敏密码等敏感参数。 */
     public static final String sensitiveDataRegEx = "(password=[\'\"]+)(\\S+)([\'\"]+)";
 
     private static final Pattern sensitiveDataPattern = Pattern.compile(sensitiveDataRegEx, Pattern.CASE_INSENSITIVE);
@@ -61,6 +66,13 @@ public class AccessLogAspect {
         // Do nothing because of it's a pointcut
     }
 
+    /**
+     * 环绕通知。拦截带有{@link AccessLogAnnotation}注解的方法执行，记录请求参数和响应信息。
+     *
+     * @param proceedingJoinPoint 切点连接点
+     * @return 目标方法的返回值
+     * @throws Throwable 目标方法执行异常
+     */
     @Around("logPointCut()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();

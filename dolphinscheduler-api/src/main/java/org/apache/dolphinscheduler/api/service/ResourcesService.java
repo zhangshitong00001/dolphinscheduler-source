@@ -29,7 +29,7 @@ import java.util.Map;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * resources service
+ * 资源服务接口。提供文件资源的创建、上传、更新、删除、在线编辑、下载及授权管理等功能。
  */
 public interface ResourcesService {
 

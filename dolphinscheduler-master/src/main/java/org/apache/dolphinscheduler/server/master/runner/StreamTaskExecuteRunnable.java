@@ -79,7 +79,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * stream task execute
+ * 流任务执行器，负责流式任务的创建、提交和执行状态管理。
+ * 管理流任务从创建 TaskInstance、分发到 Worker 执行、处理 Worker 回传的状态事件到任务完成的完整生命周期。
+ * 与工作流执行器不同，流任务不依赖于 ProcessInstance，独立执行。
  */
 public class StreamTaskExecuteRunnable implements Runnable {
 
@@ -206,7 +208,8 @@ public class StreamTaskExecuteRunnable implements Runnable {
     }
 
     /**
-     * handle event
+     * 处理流任务的状态事件，从事件队列中取出事件并逐个处理。
+     * 不同类型的异常采用不同的重试策略：StateEventHandleError 移除事件，StateEventHandleException 和未知异常则重试。
      */
     public void handleEvents() {
         if (!isStart()) {
@@ -322,10 +325,10 @@ public class StreamTaskExecuteRunnable implements Runnable {
     }
 
     /**
-     * get TaskExecutionContext
+     * 构建任务执行上下文，包含租户、资源、参数解析等信息。
      *
-     * @param taskInstance taskInstance
-     * @return TaskExecutionContext
+     * @param taskInstance 任务实例
+     * @return 任务执行上下文
      */
     protected TaskExecutionContext getTaskExecutionContext(TaskInstance taskInstance) {
         int userId = taskDefinition == null ? 0 : taskDefinition.getUserId();
@@ -364,7 +367,10 @@ public class StreamTaskExecuteRunnable implements Runnable {
     }
 
     /**
-     * get resource map key is full name and value is tenantCode
+     * 获取资源全名到租户编码的映射，用于任务执行时的资源访问。
+     *
+     * @param taskInstance 任务实例
+     * @return key 为资源全名，value 为租户编码的映射
      */
     protected Map<String, String> getResourceFullNames(TaskInstance taskInstance) {
         Map<String, String> resourcesMap = new HashMap<>();

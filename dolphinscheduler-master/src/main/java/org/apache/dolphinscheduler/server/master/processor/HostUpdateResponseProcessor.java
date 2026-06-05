@@ -29,10 +29,19 @@ import com.google.common.base.Preconditions;
 
 import io.netty.channel.Channel;
 
+/**
+ * 主机更新响应处理器。接收并记录Worker节点返回的主机更新响应命令。
+ */
 public class HostUpdateResponseProcessor implements NettyRequestProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(HostUpdateResponseProcessor.class);
 
+    /**
+     * 处理主机更新响应命令。解析并记录响应内容。
+     *
+     * @param channel Netty通道
+     * @param command 主机更新响应命令
+     */
     @Override
     public void process(Channel channel, Command command) {
         Preconditions.checkArgument(CommandType.PROCESS_HOST_UPDATE_RESPONSE == command.getType(), String.format("invalid command type : %s", command.getType()));

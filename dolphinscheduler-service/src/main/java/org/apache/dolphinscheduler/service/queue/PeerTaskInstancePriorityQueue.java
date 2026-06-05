@@ -32,8 +32,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.base.Preconditions;
 
 /**
- * Task instances priority queue implementation
- * All the task instances are in the same process instance.
+ * 同级任务实例优先级队列，用于管理同一流程实例中的所有任务实例。基于 PriorityQueue 实现，支持任务的入队、出队、移除和包含检查等操作。
  */
 public class PeerTaskInstancePriorityQueue implements TaskPriorityQueue<TaskInstance> {
     /**
@@ -48,9 +47,9 @@ public class PeerTaskInstancePriorityQueue implements TaskPriorityQueue<TaskInst
     private final Set<String> taskInstanceIdentifySet = Collections.synchronizedSet(new HashSet<>());
 
     /**
-     * put task instance to priority queue
+     * 将任务实例放入优先级队列。
      *
-     * @param taskInstance taskInstance
+     * @param taskInstance the task instance to put
      */
     @Override
     public void put(TaskInstance taskInstance) {
@@ -60,10 +59,10 @@ public class PeerTaskInstancePriorityQueue implements TaskPriorityQueue<TaskInst
     }
 
     /**
-     * take task info
+     * 从优先级队列中取出任务实例（阻塞等待）。
      *
-     * @return task instance
-     * @throws TaskPriorityQueueException
+     * @return the task instance removed from the queue
+     * @throws TaskPriorityQueueException if queue operation fails
      */
     @Override
     public TaskInstance take() throws TaskPriorityQueueException {
@@ -75,16 +74,12 @@ public class PeerTaskInstancePriorityQueue implements TaskPriorityQueue<TaskInst
     }
 
     /**
-     * poll task info with timeout
-     * <p>
-     * WARN: Please use PriorityBlockingQueue if you want to use poll(timeout, unit)
-     * because this method of override interface used without considering accuracy of timeout
+     * 带超时的轮询操作。注意：此实现未考虑超时精度，建议使用 PriorityBlockingQueue 替代。
      *
-     * @param timeout
-     * @param unit
-     * @return
-     * @throws TaskPriorityQueueException
-     * @throws InterruptedException
+     * @param timeout the maximum time to wait
+     * @param unit the time unit of the timeout argument
+     * @return the task instance, or null if timeout
+     * @throws TaskPriorityQueueException if operation is not supported
      */
     @Override
     public TaskInstance poll(long timeout, TimeUnit unit) throws TaskPriorityQueueException {
@@ -92,18 +87,18 @@ public class PeerTaskInstancePriorityQueue implements TaskPriorityQueue<TaskInst
     }
 
     /**
-     * peek taskInfo
+     * 查看队列头部的任务实例但不移除。
      *
-     * @return task instance
+     * @return the head task instance, or null if empty
      */
     public TaskInstance peek() {
         return queue.peek();
     }
 
     /**
-     * queue size
+     * 获取队列中的任务实例数量。
      *
-     * @return size
+     * @return the number of task instances in the queue
      */
     @Override
     public int size() {
@@ -111,8 +106,7 @@ public class PeerTaskInstancePriorityQueue implements TaskPriorityQueue<TaskInst
     }
 
     /**
-     * clear task
-     *
+     * 清空任务实例队列。
      */
     public void clear() {
         queue.clear();
@@ -120,10 +114,10 @@ public class PeerTaskInstancePriorityQueue implements TaskPriorityQueue<TaskInst
     }
 
     /**
-     * whether contains the task instance
+     * 判断队列中是否包含指定的任务实例。
      *
-     * @param taskInstance task instance
-     * @return true is contains
+     * @param taskInstance the task instance to check
+     * @return true if the task instance is contained
      */
     public boolean contains(TaskInstance taskInstance) {
         Preconditions.checkNotNull(taskInstance);
@@ -131,10 +125,10 @@ public class PeerTaskInstancePriorityQueue implements TaskPriorityQueue<TaskInst
     }
 
     /**
-     * remove task
+     * 从队列中移除指定的任务实例。
      *
-     * @param taskInstance task instance
-     * @return true if remove success
+     * @param taskInstance the task instance to remove
+     * @return true if the task instance was removed successfully
      */
     public boolean remove(TaskInstance taskInstance) {
         Preconditions.checkNotNull(taskInstance);
@@ -143,9 +137,9 @@ public class PeerTaskInstancePriorityQueue implements TaskPriorityQueue<TaskInst
     }
 
     /**
-     * get iterator
+     * 获取队列的迭代器，用于遍历所有任务实例。
      *
-     * @return Iterator
+     * @return an iterator over the task instances in the queue
      */
     public Iterator<TaskInstance> iterator() {
         return queue.iterator();

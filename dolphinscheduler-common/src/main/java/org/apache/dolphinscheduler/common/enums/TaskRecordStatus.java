@@ -18,18 +18,17 @@
 package org.apache.dolphinscheduler.common.enums;
 
 /**
- * task record status
- *
+ * 任务记录状态枚举。
+ * 定义任务记录的最终执行结果状态。
  */
 public enum TaskRecordStatus {
 
-    /**
-     * status：
-     * 0 success
-     * 1 failure
-     * 2 exception
-     */
-    SUCCESS,FAILURE,EXCEPTION
+    /** 成功 */
+    SUCCESS,
+    /** 失败 */
+    FAILURE,
+    /** 异常 */
+    EXCEPTION
 
 
 }

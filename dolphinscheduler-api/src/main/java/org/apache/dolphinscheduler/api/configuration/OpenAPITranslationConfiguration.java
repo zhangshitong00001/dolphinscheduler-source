@@ -33,9 +33,15 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.OperationBuilderPlugin;
 import springfox.documentation.spi.service.contexts.OperationContext;
 
+/**
+ * OpenAPI翻译配置。为Swagger文档提供国际化翻译支持。
+ */
 @Component
 public class OpenAPITranslationConfiguration {
 
+    /**
+     * 翻译操作构建插件。在生成Swagger文档时对API描述、标签和参数进行国际化翻译。
+     */
     @Component
     @RequiredArgsConstructor
     @Order(Ordered.LOWEST_PRECEDENCE)

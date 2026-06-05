@@ -32,11 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A base class for running a Unix command.
- * 
- * <code>AbstractShell</code> can be used to run unix commands like <code>du</code> or
- * <code>df</code>. It also offers facilities to gate commands by 
- * time-intervals.
+ * Shell命令执行的抽象基类，提供Unix命令的执行框架。
+ * 支持命令超时控制、工作目录设置、环境变量配置和定时刷新机制。
+ * 包含进程容器管理，用于跟踪和销毁所有子进程。
+ * 该类用于执行如 du、df 等Unix命令，支持按时间间隔控制命令执行频率。
  */
 public abstract class AbstractShell {
   
@@ -253,8 +252,10 @@ public abstract class AbstractShell {
         return process;
     }
 
-    /** get the exit code
-     * @return the exit code of the process
+    /**
+     * 获取命令执行的退出码。
+     *
+     * @return 进程退出码
      */
     public int getExitCode() {
         return exitCode;
@@ -297,7 +298,7 @@ public abstract class AbstractShell {
     }
 
     /**
-     * This is an IOException with exit code added.
+     * 带退出码的IO异常类，用于封装Shell命令执行失败时的退出码和错误信息。
      */
     public static class ExitCodeException extends IOException {
         int exitCode;
@@ -313,8 +314,8 @@ public abstract class AbstractShell {
     }
 
     /**
-     * process manage container
-     *
+     * 进程管理容器，用于跟踪并管理所有由Shell启动的子进程。
+     * 提供进程的添加、删除和批量销毁功能。
      */
     public static class ProcessContainer extends ConcurrentHashMap<Integer, Process> {
         private static final ProcessContainer container = new ProcessContainer();

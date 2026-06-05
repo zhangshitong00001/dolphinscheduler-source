@@ -28,6 +28,10 @@ import org.apache.dolphinscheduler.server.worker.rpc.WorkerRpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 任务执行结果消息发送器。负责构建任务执行结果消息，并通过RPC客户端将任务完成后的状态、
+ * 输出日志路径、应用ID、变量池等结果信息发送给Master节点。
+ */
 @Component
 public class TaskExecuteResultMessageSender implements MessageSender<TaskExecuteResultCommand> {
 
@@ -37,11 +41,25 @@ public class TaskExecuteResultMessageSender implements MessageSender<TaskExecute
     @Autowired
     private WorkerRpcClient workerRpcClient;
 
+    /**
+     * 发送任务执行结果消息。通过RPC客户端将消息发送到指定的Master地址。
+     *
+     * @param message 任务执行结果消息
+     * @throws RemotingException 无法连接到目标主机时抛出
+     */
     @Override
     public void sendMessage(TaskExecuteResultCommand message) throws RemotingException {
         workerRpcClient.send(Host.of(message.getMessageReceiverAddress()), message.convert2Command());
     }
 
+    /**
+     * 构建任务执行结果消息。从任务执行上下文中提取流程实例ID、任务实例ID、执行状态、
+     * 日志路径、应用ID、进程ID、主机地址、起止时间和变量池等信息，封装为结果消息命令。
+     *
+     * @param taskExecutionContext 任务执行上下文
+     * @param messageReceiverAddress 消息接收方（Master）的地址
+     * @return 任务执行结果消息命令
+     */
     public TaskExecuteResultCommand buildMessage(TaskExecutionContext taskExecutionContext,
                                                  String messageReceiverAddress) {
         TaskExecuteResultCommand taskExecuteResultMessage
@@ -63,6 +81,11 @@ public class TaskExecuteResultMessageSender implements MessageSender<TaskExecute
         return taskExecuteResultMessage;
     }
 
+    /**
+     * 获取此发送器对应的命令类型。
+     *
+     * @return TASK_EXECUTE_RESULT 命令类型
+     */
     @Override
     public CommandType getMessageType() {
         return CommandType.TASK_EXECUTE_RESULT;

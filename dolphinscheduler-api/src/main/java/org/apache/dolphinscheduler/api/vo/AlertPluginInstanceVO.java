@@ -21,41 +21,44 @@ import java.util.Date;
 
 import lombok.Data;
 
+/**
+ * 告警插件实例视图对象。用于返回告警插件实例的前端展示数据。
+ */
 @Data
 public class AlertPluginInstanceVO {
 
     /**
-     * id
+     * 告警插件实例ID
      */
     private int id;
 
     /**
-     * plugin_define_id
+     * 插件定义ID
      */
     private int pluginDefineId;
 
     /**
-     * alert plugin instance name
+     * 告警插件实例名称
      */
     private String instanceName;
 
     /**
-     * plugin_instance_params
+     * 插件实例参数
      */
     private String pluginInstanceParams;
 
     /**
-     * create_time
+     * 创建时间
      */
     private Date createTime;
 
     /**
-     * update_time
+     * 更新时间
      */
     private Date updateTime;
 
     /**
-     * alert plugin name
+     * 告警插件名称
      */
     private String alertPluginName;
 }

@@ -32,6 +32,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 任务组队列实体，映射到 t_ds_task_group_queue 表，管理任务组中的任务排队和执行顺序。
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -39,66 +42,36 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @TableName("t_ds_task_group_queue")
 public class TaskGroupQueue implements Serializable {
 
-    /**
-     * key
-     */
+    /** 队列记录主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    /**
-     * taskInstanceId
-     */
+    /** 任务实例 ID */
     private int taskId;
-    /**
-     * TaskInstance name
-     */
+    /** 任务实例名称 */
     private String taskName;
-    /**
-     * project name
-     */
+    /** 非数据库字段：项目名称 */
     @TableField(exist = false)
     private String projectName;
-    /**
-     * project code
-     */
+    /** 非数据库字段：项目编码 */
     @TableField(exist = false)
     private String projectCode;
-    /**
-     * process instance name
-     */
+    /** 非数据库字段：流程实例名称 */
     @TableField(exist = false)
     private String processInstanceName;
-    /**
-     * taskGroup id
-     */
+    /** 任务组 ID */
     private int groupId;
-    /**
-     * processInstance id
-     */
+    /** 流程实例 ID */
     private int processId;
-    /**
-     * the priority of task instance
-     */
+    /** 任务实例优先级 */
     private int priority;
-    /**
-     * is force start
-     * 0 NO ,1 YES
-     */
+    /** 是否强制启动：0 否，1 是 */
     private int forceStart;
-    /**
-     * ready to get the queue by other task finish
-     * 0 NO ,1 YES
-     */
+    /** 是否在队列中等待：0 否，1 是 */
     private int inQueue;
-    /**
-     * -1: waiting  1: running  2: finished
-     */
+    /** 队列状态：-1 等待中，1 运行中，2 已完成 */
     private TaskGroupQueueStatus status;
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 }

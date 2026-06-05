@@ -21,12 +21,12 @@ import org.apache.dolphinscheduler.dao.entity.DagData;
 import org.apache.dolphinscheduler.dao.entity.Schedule;
 
 /**
- * DagDataSchedule
+ * DAG 数据及调度 DTO，继承 DagData 并增加调度配置信息，用于含调度的流程定义数据传输。
  */
 public class DagDataSchedule extends DagData {
 
     /**
-     * schedule
+     * 调度配置
      */
     private Schedule schedule;
 

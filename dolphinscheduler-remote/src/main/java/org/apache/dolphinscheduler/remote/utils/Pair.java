@@ -18,15 +18,21 @@
 package org.apache.dolphinscheduler.remote.utils;
 
 /**
- * key value pair
+ * 键值对容器类。存储一对泛型数据，常用于需要同时传递两个关联值的场景。
  *
- * @param <L> L generic type
- * @param <R> R generic type
+ * @param <L> 左值类型
+ * @param <R> 右值类型
  */
 public class Pair<L, R> {
 
+    /**
+     * 左值
+     */
     private L left;
 
+    /**
+     * 右值
+     */
     private R right;
 
     public Pair(L left, R right) {
@@ -50,6 +56,15 @@ public class Pair<L, R> {
         this.right = right;
     }
 
+    /**
+     * 创建Pair实例的静态工厂方法。
+     *
+     * @param <L> 左值类型
+     * @param <R> 右值类型
+     * @param left 左值
+     * @param right 右值
+     * @return 新的Pair实例
+     */
     public static <L, R> Pair<L, R> of(L left, R right) {
         return new Pair<>(left, right);
     }

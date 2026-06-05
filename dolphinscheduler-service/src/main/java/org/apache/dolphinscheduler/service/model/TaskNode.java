@@ -41,6 +41,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+/**
+ * 任务节点模型，表示工作流DAG中的一个任务节点。包含任务的基本信息、依赖关系、超时配置、资源配额等属性。
+ */
 public class TaskNode {
 
     /**
@@ -278,6 +281,11 @@ public class TaskNode {
         this.runFlag = runFlag;
     }
 
+    /**
+     * 判断任务节点是否被禁止执行。当运行标志为 FORBIDDEN 或任务执行类型为 STREAM 时返回 true。
+     *
+     * @return true if the task node is forbidden
+     */
     public boolean isForbidden() {
         // skip stream task when run DAG
         if (taskExecuteType == TaskExecuteType.STREAM) {
@@ -396,7 +404,8 @@ public class TaskNode {
     }
 
     /**
-     * get task time out parameter
+     * 获取任务超时参数，将超时策略字符串解析为 TaskTimeoutParameter 对象。
+     * 如果未设置超时时间，则返回默认的未启用超时参数。
      *
      * @return task time out parameter
      */
@@ -410,10 +419,20 @@ public class TaskNode {
         return new TaskTimeoutParameter(false);
     }
 
+    /**
+     * 判断当前任务节点是否为条件任务类型。
+     *
+     * @return true if this task node is a conditions task
+     */
     public boolean isConditionsTask() {
         return TASK_TYPE_CONDITIONS.equalsIgnoreCase(this.getType());
     }
 
+    /**
+     * 判断当前任务节点是否为分支(Switch)任务类型。
+     *
+     * @return true if this task node is a switch task
+     */
     public boolean isSwitchTask() {
         return TASK_TYPE_SWITCH.equalsIgnoreCase(this.getType());
     }
@@ -422,6 +441,11 @@ public class TaskNode {
         return preTaskNodeList;
     }
 
+    /**
+     * 判断当前任务节点是否为阻塞任务类型。
+     *
+     * @return true if this task node is a blocking task
+     */
     public boolean isBlockingTask() {
         return TASK_TYPE_BLOCKING.equalsIgnoreCase(this.getType());
     }
@@ -430,6 +454,11 @@ public class TaskNode {
         this.preTaskNodeList = preTaskNodeList;
     }
 
+    /**
+     * 获取完整的任务参数字符串，将条件结果、依赖、分支结果和等待启动超时等参数合并到任务参数中。
+     *
+     * @return task params JSON string with all merged parameters
+     */
     public String getTaskParams() {
         Map<String, Object> taskParams = JSONUtils.parseObject(this.params, new TypeReference<Map<String, Object>>() {
         });
@@ -444,6 +473,12 @@ public class TaskNode {
         return JSONUtils.toJsonString(taskParams);
     }
 
+    /**
+     * 将任务参数字符串解析为 Map 对象，如果解析失败则返回空 HashMap。
+     *
+     * @param taskParams the task parameters JSON string
+     * @return parsed task parameters map
+     */
     public Map<String, Object> taskParamsToJsonObj(String taskParams) {
         Map<String, Object> taskParamsMap = JSONUtils.parseObject(taskParams, new TypeReference<Map<String, Object>>() {
         });

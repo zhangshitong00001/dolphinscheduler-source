@@ -26,11 +26,12 @@ import java.util.List;
 import lombok.Data;
 
 /**
- * user List response
+ * 用户列表响应DTO。继承自Result，用于封装查询用户列表的返回结果。
  */
 @Data
 public class UserListResponse extends Result {
 
+    /** 用户列表数据 */
     private List<User> data;
 
     public UserListResponse(Result result) {

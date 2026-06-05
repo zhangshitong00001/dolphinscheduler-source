@@ -25,36 +25,36 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 环境实体，映射到 t_ds_environment 表，表示一个任务运行环境配置（如开发环境、测试环境、生产环境）。
+ * 环境配置包含环境变量、依赖路径等 JSON 格式的参数，工作流定义可以指定在哪个环境下执行。
+ */
 @Data
 @TableName("t_ds_environment")
 public class Environment {
 
+    /** 环境主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * environment code
-     */
+    /** 环境编码，全局唯一标识符 */
     private Long code;
 
-    /**
-     * environment name
-     */
+    /** 环境名称，用户自定义的标识名（如 "生产环境"、"开发环境"、"测试环境"） */
     private String name;
 
-    /**
-     * config content
-     */
+    /** 环境配置内容，JSON 格式，存储环境变量、依赖路径等参数 */
     private String config;
 
+    /** 环境描述信息 */
     private String description;
 
-    /**
-     * operator user id
-     */
+    /** 操作者用户 ID，最后修改该环境配置的用户 */
     private Integer operator;
 
+    /** 创建时间 */
     private Date createTime;
 
+    /** 最后更新时间 */
     private Date updateTime;
 }

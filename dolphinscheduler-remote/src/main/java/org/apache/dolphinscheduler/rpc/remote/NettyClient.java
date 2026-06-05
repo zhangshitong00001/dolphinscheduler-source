@@ -55,14 +55,21 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 
 /**
- * NettyClient
+ * Netty RPC 客户端。基于 Netty Bootstrap 实现的 RPC 客户端，支持连接复用和同步/异步调用。
+ * 内部维护 Host 到 Channel 的映射以复用连接，并通过静态内部类实现线程安全的单例模式。
  */
 public class NettyClient {
 
+    /**
+     * 获取 NettyClient 单例实例。
+     *
+     * @return NettyClient 实例
+     */
     public static NettyClient getInstance() {
         return NettyClient.NettyClientInner.INSTANCE;
     }
 
+    /** 静态内部类实现的单例持有者 */
     private static class NettyClientInner {
 
         private static final NettyClient INSTANCE = new NettyClient(new NettyClientConfig());
@@ -70,34 +77,27 @@ public class NettyClient {
 
     private final Logger logger = LoggerFactory.getLogger(NettyClient.class);
 
-    /**
-     * worker group
-     */
+    /** Netty 工作线程组 */
     private final EventLoopGroup workerGroup;
 
-    /**
-     * client config
-     */
+    /** 客户端配置 */
     private final NettyClientConfig clientConfig;
 
 
-    /**
-     * client bootstrap
-     */
+    /** Netty Bootstrap 启动器 */
     private final Bootstrap bootstrap = new Bootstrap();
 
-    /**
-     * started flag
-     */
+    /** 客户端启动状态标志 */
     private final AtomicBoolean isStarted = new AtomicBoolean(false);
 
-    /**
-     * channels
-     */
+    /** Host 到 Channel 的连接池映射，用于连接复用 */
     private final ConcurrentHashMap<Host, Channel> channels = new ConcurrentHashMap<>(128);
 
     /**
-     * get channel
+     * 获取指定主机的通道，若不存在或已断开则自动创建。
+     *
+     * @param host 目标主机
+     * @return Netty Channel，创建失败返回 null
      */
     private Channel getChannel(Host host) {
         Channel channel = channels.get(host);
@@ -108,11 +108,11 @@ public class NettyClient {
     }
 
     /**
-     * create channel
+     * 创建到指定主机的 Netty 连接通道。
      *
-     * @param host host
-     * @param isSync sync flag
-     * @return channel
+     * @param host 目标主机
+     * @param isSync 是否同步等待连接完成
+     * @return 创建的 Channel，失败返回 null
      */
     public Channel createChannel(Host host, boolean isSync) {
         ChannelFuture future;
@@ -135,9 +135,9 @@ public class NettyClient {
     }
 
     /**
-     * client init
+     * NettyClient 构造函数，初始化 EventLoopGroup 并启动客户端。
      *
-     * @param clientConfig client config
+     * @param clientConfig 客户端配置
      */
     private NettyClient(final NettyClientConfig clientConfig) {
         this.clientConfig = clientConfig;
@@ -165,7 +165,7 @@ public class NettyClient {
     }
 
     /**
-     * start
+     * 启动 Netty 客户端，配置通道选项和处理器链（编码器、解码器、空闲检测、业务处理器）。
      */
     private void start() {
 
@@ -192,6 +192,14 @@ public class NettyClient {
         isStarted.compareAndSet(false, true);
     }
 
+    /**
+     * 向指定主机发送 RPC 请求消息，支持同步和异步模式。
+     *
+     * @param host 目标主机
+     * @param protocol RPC 协议消息
+     * @param async 是否异步发送
+     * @return RPC 响应结果，异步模式直接返回空响应
+     */
     public RpcResponse sendMsg(Host host, RpcProtocol<RpcRequest> protocol, Boolean async) {
 
         Channel channel = getChannel(host);
@@ -226,7 +234,7 @@ public class NettyClient {
     }
 
     /**
-     * close
+     * 关闭 Netty 客户端，关闭所有连接通道并优雅关闭工作线程组。
      */
     public void close() {
         if (isStarted.compareAndSet(true, false)) {
@@ -243,7 +251,7 @@ public class NettyClient {
     }
 
     /**
-     * close channels
+     * 关闭所有已建立的连接通道并清空连接池。
      */
     private void closeChannels() {
         for (Channel channel : this.channels.values()) {

@@ -35,7 +35,7 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 
 /**
- * task recall processor
+ * 任务召回处理器。接收Worker返回的任务拒绝/召回命令，将其转换为召回事件并添加到任务事件服务中重新调度。
  */
 @Component
 public class TaskRecallProcessor implements NettyRequestProcessor {
@@ -46,10 +46,10 @@ public class TaskRecallProcessor implements NettyRequestProcessor {
     private TaskEventService taskEventService;
 
     /**
-     * task ack process
+     * 处理任务召回命令。解析Worker拒绝命令并创建召回事件，添加到任务事件队列等待重新调度。
      *
-     * @param channel channel channel
-     * @param command command TaskExecuteAckCommand
+     * @param channel Netty通道
+     * @param command 任务拒绝命令
      */
     @Override
     public void process(Channel channel, Command command) {

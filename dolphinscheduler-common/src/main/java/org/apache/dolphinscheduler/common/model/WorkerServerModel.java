@@ -22,6 +22,9 @@ import java.util.Set;
 
 import lombok.Data;
 
+/**
+ * Worker服务节点模型，包含Worker节点的ID、主机、端口、ZK目录和心跳时间等注册信息。
+ */
 @Data
 public class WorkerServerModel {
 

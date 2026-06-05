@@ -22,6 +22,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 收藏任务 DTO，用于传输用户收藏的任务信息，包含任务名称、收藏状态和任务类型。
+ */
 @NoArgsConstructor
 @Getter
 @Setter

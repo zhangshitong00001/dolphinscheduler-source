@@ -35,60 +35,53 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 /**
- * plugin params
+ * 插件参数类，定义了前端动态表单中单个表单项的完整描述信息。
+ * <p>
+ * 包含字段名、显示标题、表单控件类型、初始值、校验规则、属性配置等。
+ * 使用Builder模式构建，支持JSON序列化/反序列化，用于前后端之间的参数传递。
  */
 @JsonDeserialize(builder = PluginParams.Builder.class)
 public class PluginParams {
 
-    /**
-     * param name
-     */
+    /** 参数字段名（前端使用的key） */
     @JsonProperty(STRING_PLUGIN_PARAM_FIELD)
     protected String name;
 
-    /**
-     * param name
-     */
+    /** 参数名称（显示用） */
     @JsonProperty(STRING_PLUGIN_PARAM_NAME)
     protected String fieldName;
 
+    /** 控件属性配置 */
     @JsonProperty(STRING_PLUGIN_PARAM_PROPS)
     protected ParamsProps props;
 
+    /** 表单控件类型 */
     @JsonProperty(STRING_PLUGIN_PARAM_TYPE)
     protected String formType;
 
-    /**
-     * Name displayed on the page
-     */
+    /** 页面显示的标题 */
     @JsonProperty(STRING_PLUGIN_PARAM_TITLE)
     protected String title;
 
-    /**
-     * prompt information
-     */
+    /** 提示信息 */
     protected String info;
 
-    /**
-     * default value or value input by user in the page
-     */
+    /** 默认值或用户在页面输入的值 */
     @JsonProperty(STRING_PLUGIN_PARAM_VALUE)
     protected Object value;
 
+    /** 校验规则列表 */
     @JsonProperty(STRING_PLUGIN_PARAM_VALIDATE)
     protected List<Validate> validateList;
 
+    /** 依赖触发的字段名列表 */
     @JsonProperty(STRING_PLUGIN_PARAM_EMIT)
     protected List<String> emit;
 
-    /**
-     * whether to hide, the default value is false
-     */
+    /** 是否隐藏，默认false */
     protected Boolean hidden;
 
-    /**
-     * whether to display, the default value is true
-     */
+    /** 是否显示，默认true */
     protected Boolean display;
 
     protected PluginParams(Builder builder) {

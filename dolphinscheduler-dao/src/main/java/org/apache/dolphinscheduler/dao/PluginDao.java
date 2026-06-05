@@ -31,24 +31,28 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 插件数据访问对象，负责插件定义（PluginDefine）的持久化操作，支持插件的注册与参数更新。
+ */
 @Slf4j
 @Component
 public class PluginDao {
 
+    /** 插件定义 Mapper */
     @Autowired
     private PluginDefineMapper pluginDefineMapper;
 
     /**
-     * check plugin define table exist
+     * 检查插件定义表是否存在。
      *
-     * @return boolean
+     * @return boolean 表存在返回 true
      */
     public boolean checkPluginDefineTableExist() {
         return pluginDefineMapper.checkTableExist() > 0;
     }
 
     /**
-     * add or update plugin define
+     * 新增或更新插件定义。如果插件已存在则比较参数是否变化，有变化则更新；如果不存在则插入新记录。
      *
      * @param pluginDefine new pluginDefine
      * @return plugin id
@@ -89,7 +93,7 @@ public class PluginDao {
     }
 
     /**
-     * query plugin define by id
+     * 根据插件定义 ID 查询插件定义信息。
      *
      * @param pluginDefineId plugin define id
      * @return PluginDefine

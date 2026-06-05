@@ -26,6 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+/**
+ * Worker停止策略，当Worker与注册中心断开连接时直接停止Worker服务。
+ * 这是默认的注册中心断连策略，配置项为 worker.registry-disconnect-strategy.strategy=stop。
+ */
 @Service
 @ConditionalOnProperty(prefix = "worker.registry-disconnect-strategy", name = "strategy", havingValue = "stop", matchIfMissing = true)
 public class WorkerStopStrategy implements WorkerConnectStrategy {
@@ -37,12 +41,18 @@ public class WorkerStopStrategy implements WorkerConnectStrategy {
     @Autowired
     private WorkerConfig workerConfig;
 
+    /**
+     * 当与注册中心断开连接时，立即停止Worker服务。
+     */
     @Override
     public void disconnect() {
         registryClient.getStoppable()
                 .stop("Worker disconnected from registry, will stop myself due to the stop strategy");
     }
 
+    /**
+     * 停止策略下不会尝试重新连接注册中心。
+     */
     @Override
     public void reconnect() {
         logger.warn("The current connect strategy is stop, so the worker will not reconnect to registry");

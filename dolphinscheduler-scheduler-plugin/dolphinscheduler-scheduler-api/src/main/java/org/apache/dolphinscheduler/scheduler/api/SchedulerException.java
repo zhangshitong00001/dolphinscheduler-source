@@ -17,6 +17,11 @@
 
 package org.apache.dolphinscheduler.scheduler.api;
 
+/**
+ * 调度器运行时异常，用于包装调度器操作过程中发生的所有异常。
+ * <p>
+ * 包括但不限于：调度器启动失败、任务插入/更新失败、任务删除失败、关闭失败等。
+ */
 public class SchedulerException extends RuntimeException {
 
     public SchedulerException(String message) {

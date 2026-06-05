@@ -30,6 +30,15 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 安全配置类。根据配置的认证类型（PASSWORD或LDAP），动态创建对应的Authenticator Bean。
+ * 通过Spring的AutowireCapableBeanFactory手动注入依赖，确保认证器实例完成装配。
+ *
+ * 认证流程配置：
+ * 1. 读取 security.authentication.type 配置项
+ * 2. 根据类型创建PasswordAuthenticator或LdapAuthenticator实例
+ * 3. 通过BeanFactory完成依赖注入后返回
+ */
 @Configuration
 public class SecurityConfig {
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);

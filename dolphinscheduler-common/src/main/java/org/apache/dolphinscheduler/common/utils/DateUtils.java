@@ -37,6 +37,11 @@ import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 日期时间工具类，提供日期格式化、解析、转换和计算等常用方法。
+ * 支持时区感知的日期操作，包含毫秒、秒、分钟、小时、天等单位换算的内部常量。
+ * 该类为工具类，不可实例化。
+ */
 public final class DateUtils {
 
     static final long C0 = 1L;
@@ -102,21 +107,22 @@ public final class DateUtils {
     }
 
     /**
-     * get the date string in the specified format of the current time
+     * 获取当前时间的指定格式字符串。
      *
-     * @param format date format
-     * @return date string
+     * @param format 日期格式
+     * @return 格式化后的日期字符串
      */
     public static String getCurrentTime(String format) {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern(format));
     }
 
     /**
-     * get the formatted date string
+     * 将Date对象按指定格式和时区转换为日期字符串。
      *
-     * @param date   date
-     * @param format e.g. yyyy-MM-dd HH:mm:ss
-     * @return date string
+     * @param date 日期对象
+     * @param format 日期格式，如 yyyy-MM-dd HH:mm:ss
+     * @param timezone 时区，为null时使用系统默认时区
+     * @return 格式化后的日期字符串
      */
     public static String format(Date date, String format, String timezone) {
         return format(date, DateTimeFormatter.ofPattern(format), timezone);
@@ -129,11 +135,11 @@ public final class DateUtils {
     }
 
     /**
-     * get the formatted date string
+     * 将LocalDateTime对象按指定格式转换为日期字符串。
      *
-     * @param localDateTime local data time
-     * @param format        yyyy-MM-dd HH:mm:ss
-     * @return date string
+     * @param localDateTime 本地日期时间
+     * @param format 日期格式，如 yyyy-MM-dd HH:mm:ss
+     * @return 格式化后的日期字符串
      */
     public static String format(LocalDateTime localDateTime, String format) {
         return format(localDateTime, DateTimeFormatter.ofPattern(format));
@@ -144,65 +150,65 @@ public final class DateUtils {
     }
 
     /**
-     * convert time to yyyy-MM-dd HH:mm:ss format
+     * 将Date对象转换为 yyyy-MM-dd HH:mm:ss 格式的字符串。
      *
-     * @param date date
-     * @return date string
+     * @param date 日期对象
+     * @return yyyy-MM-dd HH:mm:ss 格式的日期字符串
      */
     public static String dateToString(Date date) {
         return format(date, YYYY_MM_DD_HH_MM_SS, null);
     }
 
     /**
-     * convert time to yyyy-MM-dd HH:mm:ss format
+     * 将Date对象按指定时区转换为 yyyy-MM-dd HH:mm:ss 格式的字符串。
      *
-     * @param date     date
-     * @param timezone timezone
-     * @return date string
+     * @param date 日期对象
+     * @param timezone 时区
+     * @return yyyy-MM-dd HH:mm:ss 格式的日期字符串
      */
     public static String dateToString(Date date, String timezone) {
         return format(date, YYYY_MM_DD_HH_MM_SS, timezone);
     }
 
     /**
-     * convert zone date time to yyyy-MM-dd HH:mm:ss format
+     * 将ZonedDateTime对象转换为 yyyy-MM-dd HH:mm:ss 格式的字符串。
      *
-     * @param zonedDateTime zone date time
-     * @return zone date time string
+     * @param zonedDateTime 带时区的日期时间
+     * @return yyyy-MM-dd HH:mm:ss 格式的日期字符串
      */
     public static String dateToString(ZonedDateTime zonedDateTime) {
         return YYYY_MM_DD_HH_MM_SS.format(zonedDateTime);
     }
 
     /**
-     * convert zone date time to yyyy-MM-dd HH:mm:ss format
+     * 将ZonedDateTime对象按指定时区转换为 yyyy-MM-dd HH:mm:ss 格式的字符串。
      *
-     * @param zonedDateTime zone date time
-     * @param timezone      time zone
-     * @return zone date time string
+     * @param zonedDateTime 带时区的日期时间
+     * @param timezone 目标时区
+     * @return yyyy-MM-dd HH:mm:ss 格式的日期字符串
      */
     public static String dateToString(ZonedDateTime zonedDateTime, String timezone) {
         return dateToString(zonedDateTime, ZoneId.of(timezone));
     }
 
     /**
-     * convert zone date time to yyyy-MM-dd HH:mm:ss format
+     * 将ZonedDateTime对象按指定ZoneId转换为 yyyy-MM-dd HH:mm:ss 格式的字符串。
      *
-     * @param zonedDateTime zone date time
-     * @param zoneId        zone id
-     * @return zone date time string
+     * @param zonedDateTime 带时区的日期时间
+     * @param zoneId 时区ID
+     * @return yyyy-MM-dd HH:mm:ss 格式的日期字符串
      */
     public static String dateToString(ZonedDateTime zonedDateTime, ZoneId zoneId) {
         return DateTimeFormatter.ofPattern(DateConstants.YYYY_MM_DD_HH_MM_SS).withZone(zoneId).format(zonedDateTime);
     }
 
     /**
-     * convert string to date and time
+     * 将日期字符串按指定格式和时区解析为Date对象。
      *
-     * @param date     date
-     * @param format   format
-     * @param timezone timezone, if null, use system default timezone
-     * @return date
+     * @param date 日期字符串
+     * @param format 日期格式
+     * @param timezone 时区，可为null（使用系统默认时区）
+     * @return 解析后的Date对象，解析失败返回null
      */
     public static Date parse(String date, String format, String timezone) {
         return parse(date, DateTimeFormatter.ofPattern(format), timezone);
@@ -231,10 +237,10 @@ public final class DateUtils {
     }
 
     /**
-     * convert date str to yyyy-MM-dd HH:mm:ss format
+     * 将 yyyy-MM-dd HH:mm:ss 格式的日期字符串解析为Date对象。
      *
-     * @param date date string
-     * @return yyyy-MM-dd HH:mm:ss format
+     * @param date yyyy-MM-dd HH:mm:ss 格式的日期字符串
+     * @return 解析后的Date对象，或null
      */
     public static @Nullable Date stringToDate(String date) {
         return parse(date, YYYY_MM_DD_HH_MM_SS, null);
@@ -251,22 +257,22 @@ public final class DateUtils {
     }
 
     /**
-     * convert date str to yyyy-MM-dd HH:mm:ss format
+     * 将 yyyy-MM-dd HH:mm:ss 格式的日期字符串按指定时区解析为Date对象。
      *
-     * @param date     date string
-     * @param timezone
-     * @return yyyy-MM-dd HH:mm:ss format
+     * @param date yyyy-MM-dd HH:mm:ss 格式的日期字符串
+     * @param timezone 时区
+     * @return 解析后的Date对象
      */
     public static Date stringToDate(String date, String timezone) {
         return parse(date, YYYY_MM_DD_HH_MM_SS, timezone);
     }
 
     /**
-     * get seconds between two dates
+     * 计算两个日期之间相差的秒数。
      *
-     * @param d1 date1
-     * @param d2 date2
-     * @return differ seconds
+     * @param d1 日期1
+     * @param d2 日期2
+     * @return 相差的秒数
      */
     public static long differSec(Date d1, Date d2) {
         if (d1 == null || d2 == null) {
@@ -276,22 +282,22 @@ public final class DateUtils {
     }
 
     /**
-     * get ms between two dates
+     * 计算两个日期之间相差的毫秒数。
      *
-     * @param d1 date1
-     * @param d2 date2
-     * @return differ ms
+     * @param d1 日期1
+     * @param d2 日期2
+     * @return 相差的毫秒数
      */
     public static long differMs(Date d1, Date d2) {
         return Math.abs(d1.getTime() - d2.getTime());
     }
 
     /**
-     * get the date of the specified date in the days before and after
+     * 获取指定日期前后若干天的日期。
      *
-     * @param date date
-     * @param day  day
-     * @return the date of the specified date in the days before and after
+     * @param date 基准日期
+     * @param day 偏移天数，正数表示之后，负数表示之前
+     * @return 偏移后的日期
      */
     public static Date getSomeDay(Date date, int day) {
         Calendar calendar = Calendar.getInstance();
@@ -301,10 +307,10 @@ public final class DateUtils {
     }
 
     /**
-     * get the hour of day.
+     * 获取指定日期的小时数（0-23）。
      *
-     * @param date date
-     * @return hour of day
+     * @param date 日期对象
+     * @return 小时数
      */
     public static int getHourIndex(Date date) {
         Calendar calendar = Calendar.getInstance();
@@ -313,21 +319,21 @@ public final class DateUtils {
     }
 
     /**
-     * compare two dates
+     * 比较两个日期，判断future是否晚于old。
      *
-     * @param future future date
-     * @param old    old date
-     * @return true if future time greater than old time
+     * @param future 较新的日期
+     * @param old 较旧的日期
+     * @return 如果future时间晚于old时间则返回true
      */
     public static boolean compare(Date future, Date old) {
         return future.getTime() > old.getTime();
     }
 
     /**
-     * format time to readable
+     * 将毫秒数格式化为可读的时间字符串（dd HH:mm:ss格式）。
      *
-     * @param ms ms
-     * @return format time
+     * @param ms 毫秒数
+     * @return 格式化的可读时间字符串
      */
     public static String format2Readable(long ms) {
 
@@ -341,11 +347,11 @@ public final class DateUtils {
     }
 
     /**
-     * format time to duration, if end date is null, use current time as end time
+     * 计算两个日期之间的持续时间，如果结束日期为null则使用当前时间作为结束时间。
      *
-     * @param start start
-     * @param end end
-     * @return format time
+     * @param start 开始日期
+     * @param end 结束日期，可为null
+     * @return 格式化的持续时间字符串
      */
     public static String format2Duration(Date start, Date end) {
         if (start == null) {
@@ -358,10 +364,10 @@ public final class DateUtils {
     }
 
     /**
-     * format time to duration
+     * 将毫秒数格式化为持续时间字符串（如 "1d 2h 3m 4s"）。
      *
-     * @param ms ms
-     * @return format time
+     * @param ms 毫秒数
+     * @return 格式化的持续时间字符串
      */
     public static String format2Duration(long ms) {
 
@@ -386,12 +392,11 @@ public final class DateUtils {
     }
 
     /**
-     * get monday
-     * <p>
-     * note: Set the first day of the week to Monday, the default is Sunday
+     * 获取指定日期所在周的周一日期。
+     * 注意：将每周的第一天设为周一（默认为周日）。
      *
-     * @param date date
-     * @return get monday
+     * @param date 基准日期
+     * @return 周一对应的日期
      */
     public static Date getMonday(Date date) {
         Calendar cal = Calendar.getInstance();
@@ -405,12 +410,11 @@ public final class DateUtils {
     }
 
     /**
-     * get sunday
-     * <p>
-     * note: Set the first day of the week to Monday, the default is Sunday
+     * 获取指定日期所在周的周日日期。
+     * 注意：将每周的第一天设为周一（默认为周日）。
      *
-     * @param date date
-     * @return get sunday
+     * @param date 基准日期
+     * @return 周日对应的日期
      */
     public static Date getSunday(Date date) {
         Calendar cal = Calendar.getInstance();
@@ -423,10 +427,10 @@ public final class DateUtils {
     }
 
     /**
-     * get first day of month
+     * 获取指定日期所在月的第一天。
      *
-     * @param date date
-     * @return first day of month
+     * @param date 基准日期
+     * @return 当月第一天对应的日期
      */
     public static Date getFirstDayOfMonth(Date date) {
         Calendar cal = Calendar.getInstance();
@@ -438,11 +442,11 @@ public final class DateUtils {
     }
 
     /**
-     * get some hour of day
+     * 获取指定日期偏移若干小时后的整点时间。
      *
-     * @param date       date
-     * @param offsetHour hours
-     * @return some hour of day
+     * @param date 基准日期
+     * @param offsetHour 偏移小时数
+     * @return 偏移后的整点日期
      */
     public static Date getSomeHourOfDay(Date date, int offsetHour) {
         Calendar cal = Calendar.getInstance();
@@ -457,10 +461,10 @@ public final class DateUtils {
     }
 
     /**
-     * get last day of month
+     * 获取指定日期所在月的最后一天。
      *
-     * @param date date
-     * @return get last day of month
+     * @param date 基准日期
+     * @return 当月最后一天对应的日期
      */
     public static Date getLastDayOfMonth(Date date) {
         Calendar cal = Calendar.getInstance();
@@ -475,10 +479,10 @@ public final class DateUtils {
     }
 
     /**
-     * return YYYY-MM-DD 00:00:00
+     * 获取指定日期当天的起始时间（00:00:00.000）。
      *
-     * @param inputDay date
-     * @return start day
+     * @param inputDay 输入日期
+     * @return 当天起始时间
      */
     public static Date getStartOfDay(Date inputDay) {
         Calendar cal = Calendar.getInstance();
@@ -491,10 +495,10 @@ public final class DateUtils {
     }
 
     /**
-     * return YYYY-MM-DD 23:59:59
+     * 获取指定日期当天的结束时间（23:59:59.999）。
      *
-     * @param inputDay day
-     * @return end of day
+     * @param inputDay 输入日期
+     * @return 当天结束时间
      */
     public static Date getEndOfDay(Date inputDay) {
         Calendar cal = Calendar.getInstance();
@@ -507,10 +511,10 @@ public final class DateUtils {
     }
 
     /**
-     * return YYYY-MM-DD 00:00:00
+     * 获取指定日期所在小时的起始时间（xx:00:00.000）。
      *
-     * @param inputDay day
-     * @return start of hour
+     * @param inputDay 输入日期
+     * @return 该小时起始时间
      */
     public static Date getStartOfHour(Date inputDay) {
         Calendar cal = Calendar.getInstance();
@@ -522,10 +526,10 @@ public final class DateUtils {
     }
 
     /**
-     * return YYYY-MM-DD 23:59:59
+     * 获取指定日期所在小时的结束时间（xx:59:59.999）。
      *
-     * @param inputDay day
-     * @return end of hour
+     * @param inputDay 输入日期
+     * @return 该小时结束时间
      */
     public static Date getEndOfHour(Date inputDay) {
         Calendar cal = Calendar.getInstance();
@@ -537,21 +541,21 @@ public final class DateUtils {
     }
 
     /**
-     * get current date
+     * 获取当前日期时间。
      *
-     * @return current date
+     * @return 当前Date对象
      */
     public static Date getCurrentDate() {
         return new Date();
     }
 
     /**
-     * get date
+     * 对指定日期进行字段加减操作。
      *
-     * @param date          date
-     * @param calendarField calendarField
-     * @param amount        amount
-     * @return date
+     * @param date 基准日期，不能为null
+     * @param calendarField Calendar字段，如Calendar.DAY_OF_MONTH
+     * @param amount 增减量
+     * @return 计算后的Date
      */
     public static Date add(final Date date, final int calendarField, final int amount) {
         if (date == null) {
@@ -564,12 +568,12 @@ public final class DateUtils {
     }
 
     /**
-     * starting from the current time, get how many seconds are left before the target time.
-     * targetTime = baseTime + intervalSeconds
+     * 从当前时间起，计算距离目标时间还剩多少秒。
+     * 目标时间 = 基准时间 + 间隔秒数。
      *
-     * @param baseTime        base time
-     * @param intervalSeconds a period of time
-     * @return the number of seconds
+     * @param baseTime 基准时间
+     * @param intervalSeconds 间隔秒数
+     * @return 剩余秒数
      */
     public static long getRemainTime(Date baseTime, long intervalSeconds) {
         if (baseTime == null) {
@@ -580,28 +584,35 @@ public final class DateUtils {
     }
 
     /**
-     * get current time stamp : yyyyMMddHHmmssSSS
+     * 获取当前时间戳字符串，格式为 yyyyMMddHHmmssSSS。
      *
-     * @return date string
+     * @return 当前时间戳字符串
      */
     public static String getCurrentTimeStamp() {
         return getCurrentTime(DateConstants.YYYYMMDDHHMMSSSSS);
     }
 
     /**
-     * transform date to target timezone date
-     * sourceTimeZoneId is system default timezone
+     * 将日期从系统默认时区转换到目标时区。
+     * 源时区为系统默认时区。
+     *
+     * @param date 原始日期
+     * @param targetTimezoneId 目标时区ID
+     * @return 转换时区后的日期
      */
     public static Date transformTimezoneDate(Date date, String targetTimezoneId) {
         return transformTimezoneDate(date, ZoneId.systemDefault().getId(), targetTimezoneId);
     }
 
     /**
-     * transform date from source timezone date to target timezone date
-     * <p>e.g.
-     * <p> if input date is `Thu Apr 28 10:00:00 UTC 2022`, sourceTimezoneId is UTC
-     * <p>targetTimezoneId is Asia/Shanghai
-     * <p>this method will return `Thu Apr 28 02:00:00 UTC 2022`
+     * 将日期从源时区转换到目标时区。
+     * 例如：输入日期 `Thu Apr 28 10:00:00 UTC 2022`，源时区为UTC，目标时区为 Asia/Shanghai，
+     * 将返回 `Thu Apr 28 02:00:00 UTC 2022`。
+     *
+     * @param date 原始日期
+     * @param sourceTimezoneId 源时区ID
+     * @param targetTimezoneId 目标时区ID
+     * @return 转换时区后的日期
      */
     public static Date transformTimezoneDate(Date date, String sourceTimezoneId, String targetTimezoneId) {
         if (StringUtils.isEmpty(sourceTimezoneId) || StringUtils.isEmpty(targetTimezoneId)) {
@@ -616,7 +627,10 @@ public final class DateUtils {
     }
 
     /**
-     * get timezone by timezoneId
+     * 根据时区ID获取对应的TimeZone对象。
+     *
+     * @param timezoneId 时区ID
+     * @return 对应的TimeZone，如果ID为空则返回null
      */
     public static TimeZone getTimezone(String timezoneId) {
         if (StringUtils.isEmpty(timezoneId)) {
@@ -626,7 +640,7 @@ public final class DateUtils {
     }
 
     /**
-     * Time unit representing one thousandth of a second
+     * 毫秒时间单位工具类，提供天、小时、分钟、秒的换算方法。
      */
     public static class MILLISECONDS {
         public static long toDays(long d) {
@@ -648,19 +662,20 @@ public final class DateUtils {
     }
 
     /**
-     * transform timeStamp to local date
+     * 将时间戳（毫秒）转换为Date对象。
      *
-     * @param timeStamp time stamp (milliseconds)
-     * @return local date
+     * @param timeStamp 时间戳（毫秒）
+     * @return 转换后的Date，如果时间戳<=0则返回null
      */
     public static @Nullable Date timeStampToDate(long timeStamp) {
         return timeStamp <= 0L ? null : new Date(timeStamp);
     }
 
     /**
-     * transform date to timeStamp
-     * @param date date
-     * @return time stamp (milliseconds)
+     * 将Date对象转换为时间戳（毫秒）。
+     *
+     * @param date Date对象
+     * @return 时间戳（毫秒），如果date为null则返回0
      */
     public static long dateToTimeStamp(Date date) {
         return date == null ? 0L : date.getTime();
@@ -673,17 +688,21 @@ public final class DateUtils {
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
-     * @param timeMillis timeMillis like System.currentTimeMillis()
-     * @return string formatted as yyyy-MM-dd HH:mm:ss
+     * 将时间戳（毫秒）格式化为 yyyy-MM-dd HH:mm:ss 字符串。
+     *
+     * @param timeMillis 毫秒时间戳，如 System.currentTimeMillis()
+     * @return yyyy-MM-dd HH:mm:ss 格式的日期字符串
      */
     public static String formatTimeStamp(long timeMillis) {
         return formatTimeStamp(timeMillis, DEFAULT_DATETIME_FORMATTER);
     }
 
     /**
-     * @param timeMillis timeMillis like System.currentTimeMillis()
-     * @param dateTimeFormatter expect formatter, like yyyy-MM-dd HH:mm:ss
-     * @return formatted string
+     * 使用指定的DateTimeFormatter将时间戳格式化为字符串。
+     *
+     * @param timeMillis 毫秒时间戳
+     * @param dateTimeFormatter 日期格式化器，如 yyyy-MM-dd HH:mm:ss
+     * @return 格式化后的日期字符串
      */
     public static String formatTimeStamp(long timeMillis, DateTimeFormatter dateTimeFormatter) {
         Objects.requireNonNull(dateTimeFormatter);
@@ -692,22 +711,22 @@ public final class DateUtils {
     }
 
     /**
-     * get the formatted date string
+     * 将Date对象按指定格式转换为日期字符串（使用系统默认时区）。
      *
-     * @param date date
-     * @param format e.g. yyyy-MM-dd HH:mm:ss
-     * @return date string
+     * @param date 日期对象
+     * @param format 日期格式，如 yyyy-MM-dd HH:mm:ss
+     * @return 格式化后的日期字符串
      */
     public static String format(Date date, String format) {
         return format(date2LocalDateTime(date), format);
     }
 
     /**
-     * convert string to date and time
+     * 将日期字符串按指定格式解析为Date对象（使用系统默认时区）。
      *
-     * @param date date
-     * @param format format
-     * @return date
+     * @param date 日期字符串
+     * @param format 日期格式
+     * @return 解析后的Date，解析失败返回null
      */
     public static Date parse(String date, String format) {
         try {
@@ -720,10 +739,10 @@ public final class DateUtils {
     }
 
     /**
-     * convert schedule string to date
+     * 将调度时间字符串转换为Date对象。
      *
-     * @param schedule schedule
-     * @return convert schedule string to date
+     * @param schedule yyyy-MM-dd HH:mm:ss 格式的调度时间字符串
+     * @return 解析后的Date对象
      */
     public static Date getScheduleDate(String schedule) {
         return stringToDate(schedule);

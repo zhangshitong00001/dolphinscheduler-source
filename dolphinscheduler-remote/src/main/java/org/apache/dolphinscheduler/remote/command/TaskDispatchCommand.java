@@ -27,7 +27,7 @@ import lombok.ToString;
 
 
 /**
- * The task dispatch message, means dispatch a task to worker.
+ * 任务派发命令，表示将一个任务派发给Worker节点执行。
  */
 @Data
 @NoArgsConstructor
@@ -37,6 +37,7 @@ public class TaskDispatchCommand extends BaseCommand {
 
     private static final long serialVersionUID = -1L;
 
+    /** 任务执行上下文 */
     private TaskExecutionContext taskExecutionContext;
 
     public TaskDispatchCommand(TaskExecutionContext taskExecutionContext,

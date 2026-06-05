@@ -28,20 +28,23 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
- * DqExecuteResultMapper
+ * 数据质量执行结果 Mapper 接口，封装对 t_ds_dq_execute_result 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供数据质量任务执行结果的分页查询和详情查询能力。
  */
 public interface DqExecuteResultMapper extends BaseMapper<DqExecuteResult> {
 
     /**
-     * data quality task execute result page
+     * 多条件分页查询数据质量执行结果列表。
+     * 支持按搜索值（LIKE 模糊匹配）、用户权限、状态数组（IN 条件）、规则类型及时间范围进行过滤。
      *
-     * @param page page
-     * @param searchVal searchVal
-     * @param user user
-     * @param statusArray states
-     * @param ruleType ruleType
-     * @param startTime startTime
-     * @return endTime endTime
+     * @param page 分页对象
+     * @param searchVal 搜索关键字，用于模糊匹配规则名称
+     * @param user 当前用户，用于权限过滤
+     * @param statusArray 状态数组，用于 IN 条件过滤
+     * @param ruleType 规则类型
+     * @param startTime 执行时间范围起始
+     * @param endTime 执行时间范围结束
+     * @return 数据质量执行结果分页
      */
     IPage<DqExecuteResult> queryResultListPaging(IPage<DqExecuteResult> page,
                                                  @Param("searchVal") String searchVal,
@@ -52,9 +55,11 @@ public interface DqExecuteResultMapper extends BaseMapper<DqExecuteResult> {
                                                  @Param("endTime") Date endTime);
 
     /**
-     * get execute result by id
-     * @param taskInstanceId taskInstanceId
-     * @return DqExecuteResult
+     * 根据任务实例ID查询数据质量执行结果。
+     * SELECT * FROM t_ds_dq_execute_result WHERE task_instance_id = #{taskInstanceId}
+     *
+     * @param taskInstanceId 任务实例ID
+     * @return 数据质量执行结果实体
      */
     DqExecuteResult getExecuteResultById(@Param("taskInstanceId") int taskInstanceId);
 }

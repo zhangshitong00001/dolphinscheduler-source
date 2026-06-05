@@ -77,7 +77,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * DqRuleServiceImpl
+ * 数据质量规则服务实现类。负责数据质量规则的查询、表单生成和参数转换，支持将规则输入条目转换为前端可渲染的插件参数格式。
  */
 @Service
 public class DqRuleServiceImpl extends BaseServiceImpl implements DqRuleService {
@@ -99,6 +99,12 @@ public class DqRuleServiceImpl extends BaseServiceImpl implements DqRuleService 
     @Autowired
     private DqComparisonTypeMapper dqComparisonTypeMapper;
 
+    /**
+     * 根据规则ID获取前端表单创建所需的JSON格式插件参数。
+     *
+     * @param id 规则ID
+     * @return 包含插件参数JSON的结果Map
+     */
     @Override
     public Map<String, Object> getRuleFormCreateJsonById(int id) {
 
@@ -116,6 +122,11 @@ public class DqRuleServiceImpl extends BaseServiceImpl implements DqRuleService 
         return result;
     }
 
+    /**
+     * 查询所有数据质量规则列表。
+     *
+     * @return 包含所有规则列表的结果Map
+     */
     @Override
     public Map<String, Object> queryAllRuleList() {
         Map<String, Object> result = new HashMap<>();
@@ -129,6 +140,12 @@ public class DqRuleServiceImpl extends BaseServiceImpl implements DqRuleService 
         return result;
     }
 
+    /**
+     * 根据数据源类型ID获取可选的数据源选项列表，用于前端下拉选择。
+     *
+     * @param datasourceId 数据源类型ID
+     * @return 包含ParamsOptions列表的结果Map
+     */
     @Override
     public Map<String, Object> getDatasourceOptionsById(int datasourceId) {
         Map<String, Object> result = new HashMap<>();
@@ -151,6 +168,18 @@ public class DqRuleServiceImpl extends BaseServiceImpl implements DqRuleService 
         return result;
     }
 
+    /**
+     * 分页查询数据质量规则列表，支持按规则类型和日期范围过滤，结果中包含解析后的规则JSON定义。
+     *
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索关键字
+     * @param ruleType 规则类型（可为null）
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页规则列表的结果对象
+     */
     @Override
     public Result queryRuleListPaging(User loginUser,
                                       String searchVal,

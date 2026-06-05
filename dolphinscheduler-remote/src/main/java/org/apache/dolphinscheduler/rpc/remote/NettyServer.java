@@ -46,41 +46,32 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 
 /**
- * NettyServer
+ * Netty RPC 服务器。基于 Netty ServerBootstrap 实现的 RPC 服务端，负责监听端口、
+ * 接收客户端连接并处理 RPC 请求。支持 Epoll（Linux）和 NIO 两种传输模式。
  */
 public class NettyServer {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
 
-    /**
-     * boss group
-     */
+    /** Boss 线程组，负责接收客户端连接 */
     private final EventLoopGroup bossGroup;
 
-    /**
-     * worker group
-     */
+    /** Worker 线程组，负责处理 I/O 读写 */
     private final EventLoopGroup workGroup;
 
-    /**
-     * server config
-     */
+    /** 服务端配置 */
     private final NettyServerConfig serverConfig;
 
-    /**
-     * server bootstrap
-     */
+    /** Netty ServerBootstrap 启动器 */
     private final ServerBootstrap serverBootstrap = new ServerBootstrap();
 
-    /**
-     * started flag
-     */
+    /** 服务端启动状态标志 */
     private final AtomicBoolean isStarted = new AtomicBoolean(false);
 
     /**
-     * server init
+     * NettyServer 构造函数，根据系统环境选择 Epoll 或 NIO 实现并启动服务。
      *
-     * @param serverConfig server config
+     * @param serverConfig 服务端配置
      */
     public NettyServer(final NettyServerConfig serverConfig) {
         this.serverConfig = serverConfig;
@@ -125,7 +116,8 @@ public class NettyServer {
     }
 
     /**
-     * server start
+     * 启动 Netty 服务端，绑定监听端口并配置通道选项和处理器链。
+     * 若绑定失败则抛出 RuntimeException。
      */
     public void start() {
         if (isStarted.compareAndSet(false, true)) {
@@ -165,9 +157,9 @@ public class NettyServer {
     }
 
     /**
-     * init netty channel
+     * 初始化 Netty 通道处理器链：解码器、编码器、空闲检测、业务处理器。
      *
-     * @param ch socket channel
+     * @param ch Socket 通道
      */
     private void initNettyChannel(SocketChannel ch) {
         ch.pipeline()
@@ -177,6 +169,9 @@ public class NettyServer {
                 .addLast("handler", new NettyServerHandler());
     }
 
+    /**
+     * 关闭 Netty 服务端，优雅关闭 Boss 和 Worker 线程组。
+     */
     public void close() {
         if (isStarted.compareAndSet(true, false)) {
             try {

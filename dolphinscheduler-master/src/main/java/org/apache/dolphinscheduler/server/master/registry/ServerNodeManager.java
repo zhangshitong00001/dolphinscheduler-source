@@ -67,6 +67,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 服务器节点管理器。负责管理Master和Worker节点的注册信息，维护Worker分组映射，监听注册中心节点变更，并通知Worker信息变更监听器。
+ */
 @Service
 public class ServerNodeManager implements InitializingBean {
 
@@ -83,7 +86,7 @@ public class ServerNodeManager implements InitializingBean {
     private final ReentrantReadWriteLock.WriteLock workerNodeInfoWriteLock = workerNodeInfoLock.writeLock();
 
     /**
-     * worker group nodes, workerGroup -> ips, combining registryWorkerGroupNodes and dbWorkerGroupNodes
+     * Worker分组节点映射表，key为Worker分组名称，value为该分组下的活跃Worker地址集合
      */
     private final ConcurrentHashMap<String, Set<String>> workerGroupNodes = new ConcurrentHashMap<>();
 
@@ -92,7 +95,7 @@ public class ServerNodeManager implements InitializingBean {
     private final Map<String, WorkerHeartBeat> workerNodeInfo = new HashMap<>();
 
     /**
-     * executor service
+     * 定时调度线程池，用于定期同步Worker节点信息和分组映射
      */
     private ScheduledExecutorService executorService;
 
@@ -124,6 +127,9 @@ public class ServerNodeManager implements InitializingBean {
         return totalSlot;
     }
 
+    /**
+     * Bean属性设置后的初始化方法。加载注册中心中的Master和Worker节点信息，初始化分组映射，启动定时同步任务并注册节点变更监听器。
+     */
     @Override
     public void afterPropertiesSet() {
 
@@ -177,7 +183,7 @@ public class ServerNodeManager implements InitializingBean {
     }
 
     /**
-     * worker group node listener
+     * Worker节点数据监听器。监听注册中心中Worker节点的增删改事件，在节点新增时记录日志，节点移除时发送告警，节点更新时同步节点信息。
      */
     class WorkerDataListener implements SubscribeListener {
 
@@ -296,9 +302,10 @@ public class ServerNodeManager implements InitializingBean {
     }
 
     /**
-     * sync master nodes
+     * 同步Master节点列表。更新内存中的Master节点集合、优先级队列以及当前Master的槽位信息。
      *
-     * @param nodes master nodes
+     * @param nodes 注册中心中的Master节点路径集合
+     * @param masterNodes Master服务器信息列表
      */
     private void syncMasterNodes(Collection<String> nodes, List<Server> masterNodes) {
         masterLock.lock();
@@ -319,6 +326,11 @@ public class ServerNodeManager implements InitializingBean {
         }
     }
 
+    /**
+     * 获取所有Worker分组节点映射的不可变副本。
+     *
+     * @return 所有Worker分组及其节点地址集合的映射
+     */
     public Map<String, Set<String>> getWorkerGroupNodes() {
         workerGroupReadLock.lock();
         try {
@@ -329,10 +341,10 @@ public class ServerNodeManager implements InitializingBean {
     }
 
     /**
-     * get worker group nodes
+     * 获取指定Worker分组下的活跃Worker节点地址集合。
      *
-     * @param workerGroup workerGroup
-     * @return worker nodes
+     * @param workerGroup Worker分组名称
+     * @return 该分组下的Worker节点地址集合，若分组不存在则返回空集合
      */
     public Set<String> getWorkerGroupNodes(String workerGroup) {
         workerGroupReadLock.lock();
@@ -350,10 +362,21 @@ public class ServerNodeManager implements InitializingBean {
         }
     }
 
+    /**
+     * 获取所有Worker节点心跳信息的不可变副本。
+     *
+     * @return Worker地址到心跳信息的映射
+     */
     public Map<String, WorkerHeartBeat> getWorkerNodeInfo() {
         return Collections.unmodifiableMap(workerNodeInfo);
     }
 
+    /**
+     * 获取指定Worker节点的心跳信息。
+     *
+     * @param workerServerAddress Worker服务器地址
+     * @return 该Worker的心跳信息Optional，若不存在则返回empty
+     */
     public Optional<WorkerHeartBeat> getWorkerNodeInfo(String workerServerAddress) {
         workerNodeInfoReadLock.lock();
         try {
@@ -373,9 +396,9 @@ public class ServerNodeManager implements InitializingBean {
     }
 
     /**
-     * Add the resource change listener, when the resource changed, the listener will be notified.
+     * 添加Worker信息变更监听器。当Worker节点信息发生变化时，该监听器将被触发通知。
      *
-     * @param listener will be trigger, when the worker node info changed.
+     * @param listener Worker信息变更监听器
      */
     public synchronized void addWorkerInfoChangeListener(WorkerInfoChangeListener listener) {
         workerInfoChangeListeners.add(listener);
@@ -389,6 +412,9 @@ public class ServerNodeManager implements InitializingBean {
         }
     }
 
+    /**
+     * Bean销毁时的清理方法。关闭定时调度线程池。
+     */
     @PreDestroy
     public void destroy() {
         executorService.shutdownNow();

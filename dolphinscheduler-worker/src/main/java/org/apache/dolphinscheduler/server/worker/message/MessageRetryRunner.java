@@ -49,6 +49,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 消息重试运行器。作为守护线程运行，负责管理Worker向Master发送消息失败时的重试机制。
+ * 维护需要重试的消息映射表，定期扫描并重新发送超时未确认的消息。
+ */
 @Component
 public class MessageRetryRunner extends BaseDaemonThread {
 
@@ -68,6 +72,9 @@ public class MessageRetryRunner extends BaseDaemonThread {
 
     private Map<Integer, Map<CommandType, BaseCommand>> needToRetryMessages = new ConcurrentHashMap<>();
 
+    /**
+     * 启动消息重试运行器。初始化所有MessageSender，将其注册到消息发送器映射表中，然后启动守护线程。
+     */
     @Override
     public synchronized void start() {
         logger.info("Message retry runner staring");
@@ -79,11 +86,24 @@ public class MessageRetryRunner extends BaseDaemonThread {
         logger.info("Message retry runner started");
     }
 
+    /**
+     * 添加需要重试的消息。将指定的消息添加到重试队列中，按任务实例ID和消息类型进行分组管理。
+     *
+     * @param taskInstanceId 任务实例ID
+     * @param messageType 消息类型
+     * @param baseCommand 待重试的消息命令
+     */
     public void addRetryMessage(int taskInstanceId, @NonNull CommandType messageType, BaseCommand baseCommand) {
         needToRetryMessages.computeIfAbsent(taskInstanceId, k -> new ConcurrentHashMap<>()).put(messageType,
                 baseCommand);
     }
 
+    /**
+     * 移除指定类型的重试消息。当Master确认收到消息后，从重试队列中移除对应类型的消息。
+     *
+     * @param taskInstanceId 任务实例ID
+     * @param messageType 要移除的消息类型
+     */
     public void removeRetryMessage(int taskInstanceId, @NonNull CommandType messageType) {
         Map<CommandType, BaseCommand> retryMessages = needToRetryMessages.get(taskInstanceId);
         if (retryMessages != null) {
@@ -91,10 +111,21 @@ public class MessageRetryRunner extends BaseDaemonThread {
         }
     }
 
+    /**
+     * 移除指定任务实例的所有重试消息。当任务完成或终止后，清理该任务的所有待重试消息。
+     *
+     * @param taskInstanceId 任务实例ID
+     */
     public void removeRetryMessages(int taskInstanceId) {
         needToRetryMessages.remove(taskInstanceId);
     }
 
+    /**
+     * 更新消息的目标主机地址。当Master发生故障转移时，更新所有待重试消息的接收方地址。
+     *
+     * @param taskInstanceId 任务实例ID
+     * @param messageReceiverHost 新的消息接收方主机地址
+     */
     public void updateMessageHost(int taskInstanceId, String messageReceiverHost) {
         Map<CommandType, BaseCommand> needToRetryMessages = this.needToRetryMessages.get(taskInstanceId);
         if (needToRetryMessages != null) {
@@ -104,6 +135,10 @@ public class MessageRetryRunner extends BaseDaemonThread {
         }
     }
 
+    /**
+     * 守护线程主循环。定期扫描待重试消息队列，对超过重试窗口时间的消息进行重新发送。
+     * 在服务停止前持续运行，直到线程被中断。
+     */
     public void run() {
         while (!ServerLifeCycleManager.isStopped()) {
             try {
@@ -143,6 +178,9 @@ public class MessageRetryRunner extends BaseDaemonThread {
         }
     }
 
+    /**
+     * 清空所有待重试消息。移除重试队列中的所有消息记录。
+     */
     public void clearMessage() {
         needToRetryMessages.clear();
     }

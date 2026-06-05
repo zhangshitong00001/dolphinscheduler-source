@@ -35,7 +35,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * common utils
+ * 通用工具类，提供DolphinScheduler服务层常用的工具方法。包括系统环境路径获取、开发模式判断、
+ * Kerberos认证配置加载、密码加密解密、资源存储类型判断等功能。
  */
 public class CommonUtils {
 
@@ -48,7 +49,9 @@ public class CommonUtils {
     }
 
     /**
-     * @return get the path of system environment variables
+     * 获取系统环境变量配置文件的路径。
+     *
+     * @return the path of the system environment variables file
      */
     public static String getSystemEnvPath() {
         String envPath = PropertyUtils.getString(Constants.DOLPHINSCHEDULER_ENV_PATH);
@@ -67,7 +70,9 @@ public class CommonUtils {
     }
 
     /**
-     * @return is develop mode
+     * 判断当前是否为开发模式。
+     *
+     * @return true if running in development mode
      */
     public static boolean isDevelopMode() {
         return PropertyUtils.getBoolean(Constants.DEVELOPMENT_STATE, true);
@@ -78,9 +83,9 @@ public class CommonUtils {
     }
 
     /**
-     * if upload resource is HDFS and kerberos startup is true , else false
+     * 判断是否启用了Kerberos认证。当资源存储类型为HDFS且Kerberos启动状态为true时返回true。
      *
-     * @return true if upload resource is HDFS and kerberos startup
+     * @return true if Kerberos is enabled
      */
     public static boolean getKerberosStartupState() {
         String resUploadStartupType = PropertyUtils.getUpperCaseString(Constants.RESOURCE_STORAGE_TYPE);
@@ -91,11 +96,11 @@ public class CommonUtils {
     }
 
     /**
-     * load kerberos configuration
+     * 加载Kerberos配置，从系统属性读取相关参数并进行认证登录。
      *
-     * @param configuration
-     * @return load kerberos config return true
-     * @throws IOException errors
+     * @param configuration the Hadoop Configuration to configure
+     * @return true if Kerberos config was loaded successfully
+     * @throws IOException if I/O errors occur during Kerberos authentication
      */
     public static boolean loadKerberosConf(Configuration configuration) throws IOException {
         return loadKerberosConf(PropertyUtils.getString(Constants.JAVA_SECURITY_KRB5_CONF_PATH),
@@ -104,12 +109,12 @@ public class CommonUtils {
     }
 
     /**
-     * load kerberos configuration
+     * 使用指定的Kerberos参数加载配置并认证。
      *
-     * @param javaSecurityKrb5Conf javaSecurityKrb5Conf
-     * @param loginUserKeytabUsername loginUserKeytabUsername
-     * @param loginUserKeytabPath loginUserKeytabPath
-     * @throws IOException errors
+     * @param javaSecurityKrb5Conf the krb5.conf file path
+     * @param loginUserKeytabUsername the Kerberos principal username
+     * @param loginUserKeytabPath the keytab file path
+     * @throws IOException if I/O errors occur
      */
     public static void loadKerberosConf(String javaSecurityKrb5Conf, String loginUserKeytabUsername,
                                         String loginUserKeytabPath) throws IOException {
@@ -117,14 +122,14 @@ public class CommonUtils {
     }
 
     /**
-     * load kerberos configuration
+     * 使用指定参数和配置对象加载Kerberos认证。
      *
-     * @param javaSecurityKrb5Conf javaSecurityKrb5Conf
-     * @param loginUserKeytabUsername loginUserKeytabUsername
-     * @param loginUserKeytabPath loginUserKeytabPath
-     * @param configuration configuration
-     * @return load kerberos config return true
-     * @throws IOException errors
+     * @param javaSecurityKrb5Conf the krb5.conf file path
+     * @param loginUserKeytabUsername the Kerberos principal username
+     * @param loginUserKeytabPath the keytab file path
+     * @param configuration the Hadoop Configuration to configure
+     * @return true if Kerberos config was loaded successfully
+     * @throws IOException if I/O errors occur
      */
     public static boolean loadKerberosConf(String javaSecurityKrb5Conf, String loginUserKeytabUsername,
                                            String loginUserKeytabPath, Configuration configuration) throws IOException {
@@ -144,7 +149,10 @@ public class CommonUtils {
     }
 
     /**
-     * encode password
+     * 使用Base64加盐编码加密密码。如果加密功能未启用则直接返回原密码。
+     *
+     * @param password the plain text password
+     * @return the encoded password
      */
     public static String encodePassword(String password) {
         if (StringUtils.isEmpty(password)) {
@@ -164,7 +172,10 @@ public class CommonUtils {
     }
 
     /**
-     * decode password
+     * 使用Base64解码并去除盐值解密密码。如果加密功能未启用则直接返回原密码。
+     *
+     * @param password the encoded password
+     * @return the decoded plain text password
      */
     public static String decodePassword(String password) {
         if (StringUtils.isEmpty(password)) {

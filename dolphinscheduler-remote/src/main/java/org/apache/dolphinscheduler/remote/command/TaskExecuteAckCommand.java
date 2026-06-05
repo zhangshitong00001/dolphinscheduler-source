@@ -25,8 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * task execute response ack command
- * from master to worker
+ * 任务执行确认命令，由Master发送给Worker，用于确认已收到任务执行结果。
  */
 @Data
 @NoArgsConstructor
@@ -34,7 +33,9 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class TaskExecuteAckCommand extends BaseCommand {
 
+    /** 任务实例ID */
     private int taskInstanceId;
+    /** 是否成功 */
     private boolean success;
 
     public TaskExecuteAckCommand(boolean success,
@@ -48,9 +49,9 @@ public class TaskExecuteAckCommand extends BaseCommand {
     }
 
     /**
-     * package response command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

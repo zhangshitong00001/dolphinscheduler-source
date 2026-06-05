@@ -19,8 +19,14 @@ package org.apache.dolphinscheduler.common.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
+/**
+ * Sqoop 任务类型枚举。
+ * 定义 Sqoop 任务的作业类型：自定义或模板。
+ */
 public enum  SqoopJobType {
+    /** 自定义 */
     CUSTOM(0, "CUSTOM"),
+    /** 模板 */
     TEMPLATE(1, "TEMPLATE");
 
     SqoopJobType(int code, String descp) {

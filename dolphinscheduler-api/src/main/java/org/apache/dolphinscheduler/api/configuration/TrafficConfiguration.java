@@ -25,6 +25,10 @@ import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 流量控制配置。读取以"traffic.control"为前缀的配置属性，
+ * 提供全局QPS限流和租户级QPS限流的开关与阈值配置，支持自定义各租户的QPS限制。
+ */
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "traffic.control")

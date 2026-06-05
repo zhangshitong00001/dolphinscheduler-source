@@ -21,22 +21,27 @@ import org.apache.dolphinscheduler.spi.params.base.PluginParams;
 
 import java.util.List;
 
+/**
+ * UI通道工厂接口，定义了前端页面上可配置参数的插件契约。
+ * <p>
+ * 所有需要在前端UI上展示参数配置的插件（如告警插件、任务插件等）
+ * 都需要实现此接口，提供插件名称和参数列表供前端动态渲染表单。
+ * 插件名称必须全局唯一。
+ */
 public interface UiChannelFactory {
 
     /**
-     * plugin name
-     * Must be UNIQUE .
-     * This alert plugin name eg: email , message ...
-     * Name can often be displayed on the page ui eg : email , message , MR , spark , hive ...
+     * 获取插件名称，必须全局唯一。
+     * 该名称通常也用于前端页面展示，如 email、message、MR、spark、hive 等。
      *
-     * @return this alert plugin name
+     * @return 插件名称
      */
     String getName();
 
     /**
-     * Returns the configurable parameters that this plugin needs to display on the web ui
+     * 返回该插件需要在前端页面展示的可配置参数列表
      *
-     * @return this alert plugin params
+     * @return 插件参数列表
      */
     List<PluginParams> getParams();
 

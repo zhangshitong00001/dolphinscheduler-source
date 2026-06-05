@@ -21,20 +21,38 @@ import org.apache.dolphinscheduler.rpc.common.AbstractRpcCallBack;
 import org.apache.dolphinscheduler.rpc.common.ConsumerConfigConstants;
 
 /**
- * We will cache the consumer configuration, when the rpc call is generated, the consumer configuration will be first obtained from here
+ * 消费者配置。缓存RPC调用的消费者配置，包括服务回调类、ACK回调类、异步模式、重试次数等，在RPC调用生成时优先从此处获取。
  */
 public class ConsumerConfig {
 
+    /**
+     * 服务回调类
+     */
     private Class<? extends AbstractRpcCallBack> serviceCallBackClass;
 
+    /**
+     * ACK回调类
+     */
     private Class<? extends AbstractRpcCallBack> ackCallBackClass;
 
+    /**
+     * 服务名称
+     */
     private String serviceName;
 
+    /**
+     * 是否异步调用
+     */
     private Boolean async = ConsumerConfigConstants.DEFAULT_SYNC;
 
+    /**
+     * 是否启用回调
+     */
     private Boolean callBack = ConsumerConfigConstants.DEFAULT_CALL_BACK;
 
+    /**
+     * 失败重试次数
+     */
     private Integer retries = ConsumerConfigConstants.DEFAULT_RETRIES;
 
     public Class<? extends AbstractRpcCallBack> getServiceCallBackClass() {

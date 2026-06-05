@@ -31,77 +31,55 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+/**
+ * 流程任务关系实体，映射到 t_ds_process_task_relation 表，表示工作流中两个任务节点之间的连线关系。
+ * 记录上游节点与下游节点的连接信息以及条件分支参数。
+ */
 @Data
 @NoArgsConstructor
 @TableName("t_ds_process_task_relation")
 public class ProcessTaskRelation {
 
-    /**
-     * id
-     */
+    /** 关系主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * name
-     */
+    /** 关系名称 */
     private String name;
 
-    /**
-     * process version
-     */
+    /** 流程定义版本号 */
     private int processDefinitionVersion;
 
-    /**
-     * project code
-     */
+    /** 项目编码 */
     private long projectCode;
 
-    /**
-     * process code
-     */
+    /** 流程定义编码 */
     private long processDefinitionCode;
 
-    /**
-     * pre task code
-     */
+    /** 上游任务编码 */
     private long preTaskCode;
 
-    /**
-     * pre node version
-     */
+    /** 上游节点版本号 */
     private int preTaskVersion;
 
-    /**
-     * post task code
-     */
+    /** 下游任务编码 */
     private long postTaskCode;
 
-    /**
-     * post node version
-     */
+    /** 下游节点版本号 */
     private int postTaskVersion;
 
-    /**
-     * condition type
-     */
+    /** 条件类型 */
     private ConditionType conditionType;
 
-    /**
-     * condition parameters
-     */
+    /** 条件参数（JSON 格式） */
     @JsonDeserialize(using = JSONUtils.JsonDataDeserializer.class)
     @JsonSerialize(using = JSONUtils.JsonDataSerializer.class)
     private String conditionParams;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 
     public ProcessTaskRelation(String name,

@@ -26,54 +26,45 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * K8s 命名空间与用户关联实体，映射到 t_ds_relation_namespace_user 表，表示用户与 Kubernetes 命名空间之间的权限关系。
+ */
 @Data
 @TableName("t_ds_relation_namespace_user")
 public class K8sNamespaceUser {
 
-    /**
-     * id
-     */
+    /** 主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * user id
-     */
+    /** 用户 ID */
     @TableField("user_id")
     private int userId;
 
-    /**
-     * namespace id
-     */
+    /** 命名空间 ID */
     @TableField("namespace_id")
     private int namespaceId;
 
-    /**
-     * k8s cluster
-     */
+    /** 非数据库字段：K8s 集群标识 */
     @TableField(exist = false)
     private String k8s;
 
-    /**
-     * namespace name
-     */
+    /** 非数据库字段：命名空间名称 */
     @TableField(exist = false)
     private String namespaceName;
 
-    /**
-     * user name
-     */
+    /** 非数据库字段：用户名 */
     @TableField(exist = false)
     private String userName;
 
-    /**
-     * permission
-     */
+    /** 权限值 */
     private int perm;
 
+    /** 创建时间 */
     @TableField("create_time")
     private Date createTime;
 
+    /** 更新时间 */
     @TableField("update_time")
     private Date updateTime;
 }

@@ -46,7 +46,7 @@ import static org.apache.dolphinscheduler.api.enums.Status.DELETE_TASK_TYPE_ERRO
 import static org.apache.dolphinscheduler.api.enums.Status.LIST_TASK_TYPE_ERROR;
 
 /**
- * fav controller
+ * 收藏任务控制器。提供用户收藏任务类型的REST API，包括获取任务类型列表、添加收藏和删除收藏操作。
  */
 @Api(tags = "FAVOURITE")
 @RestController
@@ -57,10 +57,10 @@ public class FavTaskController extends BaseController {
     private FavTaskService favTaskService;
 
     /**
-     * get task type list
+     * 获取任务类型列表。返回当前用户收藏的任务类型列表。
      *
-     * @param loginUser login user
-     * @return task type list
+     * @param loginUser 当前登录用户
+     * @return 任务类型列表
      */
     @ApiOperation(value = "listTaskType", notes = "QUERY_TASK_TYPE_LIST")
     @GetMapping(value = "/taskTypes")
@@ -73,10 +73,11 @@ public class FavTaskController extends BaseController {
     }
 
     /**
-     * delete task fav
+     * 删除任务收藏。从用户的收藏列表中移除指定任务类型。
      *
-     * @param loginUser login user
-     * @return
+     * @param loginUser 当前登录用户
+     * @param taskName 任务名称
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteTaskType", notes = "DELETE_TASK_TYPE")
     @DeleteMapping(value = "/{taskName}")
@@ -90,10 +91,11 @@ public class FavTaskController extends BaseController {
     }
 
     /**
-     * add task fav
+     * 添加任务收藏。将指定任务类型添加到用户的收藏列表中。
      *
-     * @param loginUser login user
-     * @return
+     * @param loginUser 当前登录用户
+     * @param taskName 任务名称
+     * @return 添加结果
      */
     @ApiOperation(value = "addTaskType", notes = "ADD_TASK_TYPE")
     @PostMapping(value = "/{taskName}")

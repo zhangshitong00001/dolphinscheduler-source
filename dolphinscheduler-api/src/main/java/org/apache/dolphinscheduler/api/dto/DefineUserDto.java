@@ -22,7 +22,7 @@ import org.apache.dolphinscheduler.dao.entity.DefinitionGroupByUser;
 import java.util.List;
 
 /**
- * user process define dto
+ * 用户流程定义统计 DTO，用于按用户分组统计流程定义数量。
  */
 public class DefineUserDto {
 

@@ -26,14 +26,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * front-end switch component
+ * 前端开关组件参数类，继承自 {@link PluginParams}。
+ * <p>
+ * 用于在前端动态表单中渲染开关（switch）组件。支持设置开关打开/关闭时的
+ * 文本描述、图标样式、颜色和对应的值等属性。
  */
 public class SwitchParam extends PluginParams {
 
     private SwitchParam(Builder builder) {
         super(builder);
     }
-    
+
+    /** 开关组件专属属性 */
     private SwitchParamProps props;
 
     public static Builder newBuilder(String name, String title) {

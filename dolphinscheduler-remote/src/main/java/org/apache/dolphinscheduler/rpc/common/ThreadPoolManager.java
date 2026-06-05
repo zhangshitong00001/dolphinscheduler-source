@@ -23,13 +23,21 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor.DiscardPolicy;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * RPC 线程池管理器。基于枚举单例模式，为 RPC 模块提供统一的线程池用于异步任务处理。
+ * 核心线程数为 CPU 核数 x2，最大线程数为 CPU 核数 x4，空闲保活时间为60秒，队列容量为200。
+ */
 public enum ThreadPoolManager {
 
+    /** 单例实例 */
     INSTANCE;
 
+    /** 线程池执行器 */
     ExecutorService executorService;
 
+    /** 工作队列大小 */
     private static final int WORK_QUEUE_SIZE = 200;
+    /** 线程空闲保活时间（秒） */
     private static final long KEEP_ALIVE_TIME = 60;
 
     ThreadPoolManager() {
@@ -38,6 +46,11 @@ public enum ThreadPoolManager {
                 new DiscardPolicy());
     }
 
+    /**
+     * 提交任务到线程池执行。
+     *
+     * @param task 待执行的任务
+     */
     public void addExecuteTask(Runnable task) {
         executorService.submit(task);
     }

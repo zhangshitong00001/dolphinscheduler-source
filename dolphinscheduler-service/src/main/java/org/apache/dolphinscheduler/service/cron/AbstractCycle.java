@@ -30,7 +30,8 @@ import com.cronutils.model.field.expression.FieldExpression;
 import com.cronutils.model.field.expression.On;
 
 /**
- * Cycle
+ * Cron表达式周期抽象基类，解析Cron各字段以判断调度周期类型。
+ * <p>通过{@link #getCycle()}和{@link #getMiniCycle()}方法确定最大和最小调度周期。</p>
  */
 public abstract class AbstractCycle {
 

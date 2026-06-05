@@ -27,30 +27,31 @@ import org.apache.dolphinscheduler.server.master.dispatch.enums.ExecutorType;
 import lombok.Data;
 
 /**
- *  execution context
+ * 执行上下文。封装任务分发所需的命令、主机、执行器类型和工作组等信息。
  */
 @Data
 public class ExecutionContext {
 
     /**
-     * host
+     * 目标主机。
      */
     private Host host;
 
     /**
-     * command
+     * 待执行的命令。
      */
     private final Command command;
 
+    /** 任务实例。 */
     private final TaskInstance taskInstance;
 
     /**
-     * executor type : worker or client
+     * 执行器类型：WORKER 或 CLIENT。
      */
     private final ExecutorType executorType;
 
     /**
-     * worker group
+     * Worker 分组。
      */
     private final String workerGroup;
 

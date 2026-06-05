@@ -19,16 +19,16 @@ package org.apache.dolphinscheduler.dao.entity;
 
 import org.apache.dolphinscheduler.common.enums.CommandType;
 
+/**
+ * 命令统计实体，非数据库表映射，用于命令数量的统计结果封装。
+ * 按命令类型统计各状态的命令数量，通常用于 Dashboard 展示运维概览数据。
+ */
 public class CommandCount {
 
-    /**
-     * execution state
-     */
+    /** 命令类型，枚举值如 START_PROCESS、COMPLEMENT_DATA 等 */
     private CommandType commandType;
 
-    /**
-     * count for state
-     */
+    /** 该类型命令的数量 */
     private int count;
 
     public CommandType getCommandType() {

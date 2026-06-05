@@ -21,37 +21,39 @@ import org.apache.dolphinscheduler.server.master.dispatch.context.ExecutionConte
 import org.apache.dolphinscheduler.server.master.dispatch.exceptions.ExecuteException;
 
 /**
- *  executor manager
+ * 执行器管理器接口。定义任务执行的生命周期方法：前置处理、执行、直接执行和后置处理。
+ *
+ * @param <T> 执行结果类型
  */
 public interface ExecutorManager<T> {
 
     /**
-     * before execute
+     * 任务执行前的回调。
      *
-     * @param executeContext executeContext
-     * @throws ExecuteException if error throws ExecuteException
+     * @param executeContext 执行上下文
+     * @throws ExecuteException 若执行异常则抛出
      */
     void beforeExecute(ExecutionContext executeContext) throws ExecuteException;
 
     /**
-     * execute task
-     * @param context context
-     * @return T
-     * @throws ExecuteException if error throws ExecuteException
+     * 执行任务，支持重试。
+     * @param context 执行上下文
+     * @return 执行结果
+     * @throws ExecuteException 若执行异常则抛出
      */
     T execute(ExecutionContext context) throws ExecuteException;
 
     /**
-     * execute task directly without retry
-     * @param context context
-     * @throws ExecuteException if error throws ExecuteException
+     * 直接执行任务，不进行重试。
+     * @param context 执行上下文
+     * @throws ExecuteException 若执行异常则抛出
      */
     void executeDirectly(ExecutionContext context) throws ExecuteException;
 
     /**
-     *  after execute
-     * @param context context
-     * @throws ExecuteException if error throws ExecuteException
+     * 任务执行后的回调。
+     * @param context 执行上下文
+     * @throws ExecuteException 若执行异常则抛出
      */
     void afterExecute(ExecutionContext context) throws ExecuteException;
 }

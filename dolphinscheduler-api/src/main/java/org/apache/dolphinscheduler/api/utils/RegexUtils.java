@@ -22,7 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.regex.Pattern;
 
 /**
- * This is Regex expression utils.
+ * 正则表达式工具类。提供Linux用户名校验以及日志安全转义功能。
+ * 该类为工具类。
  */
 public class RegexUtils {
 
@@ -32,9 +33,10 @@ public class RegexUtils {
     }
 
     /**
-     * check if the input is a valid linux username
-     * @param str input
-     * @return boolean
+     * 校验输入是否为合法的Linux用户名格式。
+     *
+     * @param str 输入字符串
+     * @return 合法返回true，否则返回false
      */
     public static boolean isValidLinuxUserName(String str) {
         Pattern pattern = Pattern.compile(LINUX_USERNAME_PATTERN);

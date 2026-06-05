@@ -25,7 +25,7 @@ import io.netty.channel.Channel;
 import javax.annotation.Nullable;
 
 /**
- * state event
+ * 状态事件接口。定义了流程实例和任务实例相关的状态事件契约，所有状态事件（如任务状态变化、工作流状态变化、任务重试、任务超时等）均需实现此接口。
  */
 public interface StateEvent {
 

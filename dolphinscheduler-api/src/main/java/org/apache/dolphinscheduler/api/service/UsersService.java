@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * users service
+ * 用户服务接口。提供用户管理相关的所有业务方法，包括用户创建、查询、更新、删除、
+ * 项目/资源/数据源/命名空间/UDF函数授权，以及用户注册与激活等功能。
  */
 public interface UsersService {
 

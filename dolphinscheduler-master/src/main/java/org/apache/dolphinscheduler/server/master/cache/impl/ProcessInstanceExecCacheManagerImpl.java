@@ -33,7 +33,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
 
 /**
- * cache of process instance id and WorkflowExecuteThread
+ * 流程实例执行缓存管理器实现。使用 ConcurrentHashMap 缓存流程实例 ID 与 WorkflowExecuteRunnable 的映射关系。
  */
 @Component
 public class ProcessInstanceExecCacheManagerImpl implements ProcessInstanceExecCacheManager {

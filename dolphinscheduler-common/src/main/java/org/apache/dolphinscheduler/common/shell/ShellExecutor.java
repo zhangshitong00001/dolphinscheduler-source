@@ -23,12 +23,10 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * shell command executor.
- *
- * <code>ShellExecutor</code> should be used in cases where the output
- * of the command needs no explicit parsing and where the command, working
- * directory and the environment remains unchanged. The output of the command
- * is stored as-is and is expected to be small.
+ * Shell命令执行器，AbstractShell的具体实现类。
+ * 适用于无需显式解析输出的简单命令执行场景，命令执行后输出按原样存储。
+ * 支持工作目录、环境变量和超时时间的配置。
+ * 输出较小，适合一次性获取的场景。
  */
 public class ShellExecutor extends AbstractShell {
 
@@ -49,18 +47,12 @@ public class ShellExecutor extends AbstractShell {
     }
 
     /**
-     * Create a new instance of the ShellExecutor to execute a command.
+     * 创建ShellExecutor实例以执行命令。
      *
-     * @param execString The command to execute with arguments
-     * @param dir If not-null, specifies the directory which should be set
-     *            as the current working directory for the command.
-     *            If null, the current working directory is not modified.
-     * @param env If not-null, environment of the command will include the
-     *            key-value pairs specified in the map. If null, the current
-     *            environment is not modified.
-     * @param timeout Specifies the time in milliseconds, after which the
-     *                command will be killed and the status marked as timedout.
-     *                If 0, the command will not be timed out.
+     * @param execString 要执行的命令及其参数
+     * @param dir 命令的工作目录，为null时不修改当前工作目录
+     * @param env 环境变量Map，为null时不修改当前环境
+     * @param timeout 超时时间（毫秒），0表示不超时
      */
     public ShellExecutor(String[] execString, File dir,
                                 Map<String, String> env, long timeout) {
@@ -75,26 +67,25 @@ public class ShellExecutor extends AbstractShell {
     }
 
     /**
-     * Static method to execute a shell command.
-     * Covers most of the simple cases without requiring the user to implement
-     * the <code>AbstractShell</code> interface.
-     * @param cmd shell command to execute.
-     * @return the output of the executed command.
-     * @throws IOException errors
+     * 静态方法，执行Shell命令的快捷方式。
+     * 覆盖大多数简单场景，无需用户实现AbstractShell接口。
+     *
+     * @param cmd 要执行的Shell命令
+     * @return 命令执行的输出
+     * @throws IOException IO异常
      */
     public static String execCommand(String... cmd) throws IOException {
         return execCommand(null, cmd, 0L);
     }
 
     /**
-     * Static method to execute a shell command.
-     * Covers most of the simple cases without requiring the user to implement
-     * the <code>AbstractShell</code> interface.
-     * @param env the map of environment key=value
-     * @param cmd shell command to execute.
-     * @param timeout time in milliseconds after which script should be marked timeout
-     * @return the output of the executed command.
-     * @throws IOException errors
+     * 静态方法，带环境变量和超时的Shell命令执行。
+     *
+     * @param env 环境变量Map
+     * @param cmd 要执行的命令数组
+     * @param timeout 超时时间（毫秒），超时后命令被终止并标记为超时
+     * @return 命令执行的输出
+     * @throws IOException IO异常
      */
     public static String execCommand(Map<String, String> env, String[] cmd,
                                      long timeout) throws IOException {
@@ -105,13 +96,12 @@ public class ShellExecutor extends AbstractShell {
     }
 
     /**
-     * Static method to execute a shell command.
-     * Covers most of the simple cases without requiring the user to implement
-     * the <code>AbstractShell</code> interface.
-     * @param env the map of environment key=value
-     * @param cmd shell command to execute.
-     * @return the output of the executed command.
-     * @throws IOException errors
+     * 静态方法，带环境变量的Shell命令执行（无超时）。
+     *
+     * @param env 环境变量Map
+     * @param cmd 要执行的Shell命令
+     * @return 命令执行的输出
+     * @throws IOException IO异常
      */
     public static String execCommand(Map<String,String> env, String... cmd)
             throws IOException {
@@ -119,8 +109,9 @@ public class ShellExecutor extends AbstractShell {
     }
 
     /**
-     * Execute the shell command
-     * @throws IOException errors
+     * 执行Shell命令。
+     *
+     * @throws IOException IO异常
      */
     public void execute() throws IOException {
         this.run();
@@ -144,8 +135,9 @@ public class ShellExecutor extends AbstractShell {
     }
 
     /**
+     * 获取Shell命令的输出。
      *
-     * @return the output of the shell command
+     * @return 命令输出字符串
      */
     public String getOutput() {
         return (output == null) ? "" : output.toString();

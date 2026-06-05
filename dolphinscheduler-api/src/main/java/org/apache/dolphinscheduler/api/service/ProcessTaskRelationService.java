@@ -22,7 +22,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * process task relation service
+ * 任务关系服务接口。提供任务节点间依赖关系的增删查操作，支持上游和下游关系的独立管理。
  */
 public interface ProcessTaskRelationService {
 

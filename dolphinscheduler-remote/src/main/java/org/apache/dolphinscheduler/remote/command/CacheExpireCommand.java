@@ -23,11 +23,13 @@ import org.apache.dolphinscheduler.common.utils.JSONUtils;
 import java.io.Serializable;
 
 /**
- * db task ack request command
+ * 缓存过期命令。用于通知集群中其他节点清除指定类型的缓存数据，支持按缓存类型和缓存键进行精准过期。
  */
 public class CacheExpireCommand implements Serializable {
 
+    /** 缓存类型 */
     private CacheType cacheType;
+    /** 缓存键 */
     private String cacheKey;
 
     public CacheExpireCommand() {

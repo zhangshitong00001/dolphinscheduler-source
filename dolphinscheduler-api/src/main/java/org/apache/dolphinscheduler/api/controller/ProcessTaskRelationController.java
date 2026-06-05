@@ -54,7 +54,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * process task relation controller
+ * 流程任务关系控制器，管理工作流中各任务节点之间的上下游连线关系的创建、删除与查询 REST API。
  */
 @Api(tags = "PROCESS_TASK_RELATION_TAG")
 @RestController
@@ -65,14 +65,14 @@ public class ProcessTaskRelationController extends BaseController {
     private ProcessTaskRelationService processTaskRelationService;
 
     /**
-     * create process task relation
+     * 创建任务关系（连线）。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processDefinitionCode processDefinitionCode
-     * @param preTaskCode preTaskCode
-     * @param postTaskCode postTaskCode
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param preTaskCode 上游任务编码
+     * @param postTaskCode 下游任务编码
+     * @return 创建结果
      */
     @ApiOperation(value = "save", notes = "CREATE_PROCESS_TASK_RELATION_NOTES")
     @ApiImplicitParams({
@@ -103,13 +103,13 @@ public class ProcessTaskRelationController extends BaseController {
     }
 
     /**
-     * delete process task relation (delete task from workflow)
+     * 删除任务关系（从工作流中移除任务节点）。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processDefinitionCode process definition code
-     * @param taskCode the post task code
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param taskCode 下游任务编码
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteRelation", notes = "DELETE_PROCESS_TASK_RELATION_NOTES")
     @ApiImplicitParams({
@@ -130,13 +130,13 @@ public class ProcessTaskRelationController extends BaseController {
     }
 
     /**
-     * delete task upstream relation
+     * 删除任务的上游关系。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param preTaskCodes the pre task codes, sep ','
-     * @param taskCode the post task code
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param preTaskCodes 上游任务编码列表，逗号分隔
+     * @param taskCode 下游任务编码
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteUpstreamRelation", notes = "DELETE_UPSTREAM_RELATION_NOTES")
     @ApiImplicitParams({
@@ -157,13 +157,13 @@ public class ProcessTaskRelationController extends BaseController {
     }
 
     /**
-     * delete task downstream relation
+     * 删除任务的下游关系。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param postTaskCodes the post task codes, sep ','
-     * @param taskCode the pre task code
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param postTaskCodes 下游任务编码列表，逗号分隔
+     * @param taskCode 上游任务编码
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteDownstreamRelation", notes = "DELETE_DOWNSTREAM_RELATION_NOTES")
     @ApiImplicitParams({
@@ -184,12 +184,12 @@ public class ProcessTaskRelationController extends BaseController {
     }
 
     /**
-     * query task upstream relation
+     * 查询任务的上游关系。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param taskCode current task code (post task code)
-     * @return process task relation list
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param taskCode 当前任务编码（下游任务编码）
+     * @return 上游任务关系列表
      */
     @ApiOperation(value = "queryUpstreamRelation", notes = "QUERY_UPSTREAM_RELATION_NOTES")
     @ApiImplicitParams({
@@ -207,12 +207,12 @@ public class ProcessTaskRelationController extends BaseController {
     }
 
     /**
-     * query task downstream relation
+     * 查询任务的下游关系。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param taskCode pre task code
-     * @return process task relation list
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param taskCode 上游任务编码
+     * @return 下游任务关系列表
      */
     @ApiOperation(value = "queryDownstreamRelation", notes = "QUERY_DOWNSTREAM_RELATION_NOTES")
     @ApiImplicitParams({
@@ -230,14 +230,14 @@ public class ProcessTaskRelationController extends BaseController {
     }
 
     /**
-     * delete edge
+     * 删除两个任务之间的连线（边）。
      *
-     * @param loginUser             login user
-     * @param projectCode           project code
-     * @param processDefinitionCode process definition code
-     * @param preTaskCode pre task code
-     * @param postTaskCode post task code
-     * @return delete result code
+     * @param loginUser             登录用户
+     * @param projectCode           项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param preTaskCode 上游任务编码
+     * @param postTaskCode 下游任务编码
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteEdge", notes = "DELETE_EDGE_NOTES")
     @ApiImplicitParams({
