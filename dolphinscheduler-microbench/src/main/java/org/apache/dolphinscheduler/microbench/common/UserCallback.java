@@ -20,9 +20,14 @@ package org.apache.dolphinscheduler.microbench.common;
 import org.apache.dolphinscheduler.rpc.common.AbstractRpcCallBack;
 
 /**
- * UserCallback
+ * RPC用户服务回调实现。用于异步RPC调用完成后的结果处理，继承自 {@link AbstractRpcCallBack}。
  */
 public class UserCallback extends AbstractRpcCallBack {
+    /**
+     * RPC回调执行方法。当RPC异步调用完成时被触发。
+     *
+     * @param object RPC调用返回的结果对象
+     */
     @Override
     public void run(Object object) {
 

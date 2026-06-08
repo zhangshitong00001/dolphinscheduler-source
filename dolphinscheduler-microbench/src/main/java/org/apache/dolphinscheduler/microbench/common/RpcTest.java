@@ -38,18 +38,31 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
+/**
+ * DolphinScheduler RPC调用的JMH性能基准测试。测试RPC客户端创建并调用远程服务的吞吐量和平均耗时。
+ */
 @Warmup(iterations = 5, time = 1)
 @Measurement(iterations = 10, time = 1)
 @State(Scope.Benchmark)
 @BenchmarkMode({Mode.Throughput, Mode.AverageTime, Mode.SampleTime})
 public class RpcTest extends AbstractBaseBenchmark {
+    /** Netty RPC服务端实例 */
     private NettyServer nettyServer;
 
+    /** RPC用户服务代理 */
     private IUserService userService;
 
+    /** RPC目标主机地址 */
     private Host host;
+    /** RPC客户端实例 */
     private IRpcClient rpcClient = new RpcClient();
 
+    /**
+     * 基准测试前的初始化方法。
+     * 启动Netty服务端，创建RPC客户端并连接到本地主机。
+     *
+     * @throws Exception 当服务启动或连接失败时抛出
+     */
     @Setup
     public void before() throws Exception {
         nettyServer = new NettyServer(new NettyServerConfig());
@@ -59,6 +72,11 @@ public class RpcTest extends AbstractBaseBenchmark {
 
     }
 
+    /**
+     * 执行RPC调用基准测试。创建RPC代理并调用 {@link IUserService#hi(int)} 方法。
+     *
+     * @throws Exception 当RPC调用失败时抛出
+     */
     @Benchmark
     @BenchmarkMode({Mode.Throughput, Mode.AverageTime, Mode.SampleTime})
     @OutputTimeUnit(TimeUnit.MILLISECONDS)
@@ -68,6 +86,10 @@ public class RpcTest extends AbstractBaseBenchmark {
         Integer result = userService.hi(1);
     }
 
+    /**
+     * 基准测试后的清理方法。
+     * 关闭Netty客户端连接和RPC服务端。
+     */
     @TearDown
     public void after() {
         NettyClient.getInstance().close();

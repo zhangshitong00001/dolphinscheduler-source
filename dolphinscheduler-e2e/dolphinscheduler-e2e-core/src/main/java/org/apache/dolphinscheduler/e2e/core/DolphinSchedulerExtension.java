@@ -61,21 +61,41 @@ import com.google.common.net.HostAndPort;
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.utility.DockerImageName;
 
+/**
+ * DolphinScheduler端到端测试的JUnit 5扩展。负责在测试前启动Docker Compose容器和Selenium浏览器容器，
+ * 在测试中注入WebDriver，并在测试后清理所有资源。支持本地模式和Docker模式两种运行方式。
+ */
 @Slf4j
 final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
+    /** 是否为本地运行模式，由系统属性 "local" 控制 */
     private final boolean LOCAL_MODE = Objects.equals(System.getProperty("local"), "true");
 
+    /** 是否在M1芯片上运行，由系统属性 "m1_chip" 控制 */
     private final boolean M1_CHIP_FLAG = Objects.equals(System.getProperty("m1_chip"), "true");
 
+    /** Selenium远程WebDriver实例 */
     private RemoteWebDriver driver;
+    /** Docker Compose容器实例 */
     private DockerComposeContainer<?> compose;
+    /** Selenium浏览器容器实例 */
     private BrowserWebDriverContainer<?> browser;
+    /** Docker网络实例 */
     private Network network;
+    /** DolphinScheduler服务的主机地址和端口 */
     private HostAndPort address;
+    /** DolphinScheduler UI的根路径 */
     private String rootPath;
 
+    /** 浏览器操作录制文件的输出路径 */
     private Path record;
 
+    /**
+     * 在所有测试之前初始化测试环境。
+     * 设置超时策略、录制路径，根据模式启动Docker容器或本地环境，初始化浏览器和WebDriver。
+     *
+     * @param context JUnit扩展上下文
+     * @throws IOException 当创建录制目录失败时抛出
+     */
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public void beforeAll(ExtensionContext context) throws IOException {
@@ -116,12 +136,20 @@ final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCall
               .forEach(it -> setDriver(clazz, it));
     }
 
+    /**
+     * 配置本地运行模式。暴露宿主机端口并设置地址指向本地。
+     */
     private void runInLocal() {
         Testcontainers.exposeHostPorts(3000);
         address = HostAndPort.fromParts("host.testcontainers.internal", 3000);
         rootPath = "/";
     }
 
+    /**
+     * 配置Docker容器运行模式。启动Docker Compose并获取DolphinScheduler容器的网络信息。
+     *
+     * @param context JUnit扩展上下文
+     */
     private void runInDockerContainer(ExtensionContext context) {
         compose = createDockerCompose(context);
         compose.start();
@@ -148,6 +176,10 @@ final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCall
         rootPath = "/dolphinscheduler/ui/";
     }
 
+    /**
+     * 根据操作系统和芯片类型配置浏览器容器。
+     * M1芯片本地模式使用seleniarm镜像，其他模式使用标准selenium镜像。
+     */
     private void setBrowserContainerByOsName() {
         DockerImageName imageName;
 
@@ -170,6 +202,11 @@ final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCall
         }
     }
 
+    /**
+     * 设置浏览器操作录制文件的输出路径。优先使用环境变量 {@code RECORDING_PATH}，否则创建临时目录。
+     *
+     * @throws IOException 当创建录制目录失败时抛出
+     */
     private void setRecordPath() throws IOException {
         if (!Strings.isNullOrEmpty(System.getenv("RECORDING_PATH"))) {
             record = Paths.get(System.getenv("RECORDING_PATH"));
@@ -183,6 +220,12 @@ final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCall
         }
     }
 
+    /**
+     * 在所有测试之后清理测试环境。
+     * 停止浏览器录制、关闭浏览器容器，并销毁Docker Compose容器。
+     *
+     * @param context JUnit扩展上下文
+     */
     @Override
     public void afterAll(ExtensionContext context) {
         browser.afterTest(new TestDescription(context), Optional.empty());
@@ -192,6 +235,11 @@ final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCall
         }
     }
 
+    /**
+     * 在每个测试方法执行前，将WebDriver注入到测试实例中的 {@link WebDriver} 类型字段。
+     *
+     * @param context JUnit扩展上下文
+     */
     @Override
     public void beforeEach(ExtensionContext context) {
         final Object instance = context.getRequiredTestInstance();
@@ -200,6 +248,12 @@ final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCall
               .forEach(it -> setDriver(instance, it));
     }
 
+    /**
+     * 通过反射将WebDriver实例设置到目标对象的指定字段中。
+     *
+     * @param object 目标对象实例
+     * @param field  目标字段
+     */
     private void setDriver(Object object, Field field) {
         try {
             field.setAccessible(true);
@@ -209,6 +263,12 @@ final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCall
         }
     }
 
+    /**
+     * 根据测试类上的 @DolphinScheduler 注解配置，创建对应的Docker Compose容器实例。
+     *
+     * @param context JUnit扩展上下文，用于获取测试类和注解信息
+     * @return 配置好的DockerComposeContainer实例
+     */
     private DockerComposeContainer<?> createDockerCompose(ExtensionContext context) {
         final Class<?> clazz = context.getRequiredTestClass();
         final DolphinScheduler annotation = clazz.getAnnotation(DolphinScheduler.class);
