@@ -20,7 +20,18 @@
       "Edit(**/*)",
       "Read(**/*)",
       "Bash(cd /)",
-      "Bash(PYTHONPATH=/ python3 -c ' *)"
+      "Bash(PYTHONPATH=/ python3 -c ' *)",
+      "Workflow(deep-research)",
+      "WebSearch",
+      "WebFetch(domain:www.whaleops.com)",
+      "WebFetch(domain:www.fivetran.com)",
+      "WebFetch(domain:sixthsense.rakuten.com)",
+      "WebFetch(domain:flink.apache.org)",
+      "WebFetch(domain:taskscape.com)",
+      "Skill(hookify:help)",
+      "Bash(mkdir -p /root/.claude/hooks)",
+      "Bash(cp /home/claude/bigdata_work_flow/dolphinscheduler-source/.claude/hooks/log-command.py /root/.claude/hooks/log-command.py)",
+      "Skill(hookify:configure)"
     ]
   }
 }

@@ -27,11 +27,7 @@
       "Write(**/*)",
       "Read(**/*)"
     ],
-    "deny": [
-      "Bash(rm -rf /*)",
-      "Bash(sudo *)",
-      "Bash(kubectl *)"
-    ]
+    "deny": ["Bash(rm -rf /*)", "Bash(sudo *)", "Bash(kubectl *)"]
   },
   "hooks": {
     "PreToolUse": [
