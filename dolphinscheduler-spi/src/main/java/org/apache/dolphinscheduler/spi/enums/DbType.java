@@ -58,6 +58,8 @@ public enum DbType {
     REDSHIFT(10,"redshift"),
     /** AWS Athena查询服务 */
     ATHENA(11,"athena"),
+    /** Apache Doris数据库 */
+    DORIS(12, "doris"),
     ;
 
     @EnumValue

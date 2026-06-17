@@ -51,6 +51,8 @@ public class DataSourceConstants {
     public static final String COM_REDSHIFT_JDBC_DRIVER = "com.amazon.redshift.jdbc42.Driver";
     /** Athena JDBC驱动 */
     public static final String COM_ATHENA_JDBC_DRIVER = "com.simba.athena.jdbc.Driver";
+    /** Apache Doris JDBC驱动 (兼容MySQL协议) */
+    public static final String COM_DORIS_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 
     // ==================== 数据库连接验证SQL ====================
 
@@ -74,6 +76,8 @@ public class DataSourceConstants {
     public static final String REDHIFT_VALIDATION_QUERY = "select 1";
     /** Athena连接验证SQL */
     public static final String ATHENA_VALIDATION_QUERY = "select 1";
+    /** Apache Doris连接验证SQL */
+    public static final String DORIS_VALIDATION_QUERY = "select 1";
 
     // ==================== JDBC URL前缀 ====================
 
@@ -99,6 +103,8 @@ public class DataSourceConstants {
     public static final String JDBC_REDSHIFT = "jdbc:redshift://";
     /** Athena JDBC URL前缀 */
     public static final String JDBC_ATHENA = "jdbc:awsathena://";
+    /** Apache Doris JDBC URL前缀 (使用MySQL协议) */
+    public static final String JDBC_DORIS = "jdbc:mysql://";
 
     // ==================== 数据库类型标识 ====================
 
