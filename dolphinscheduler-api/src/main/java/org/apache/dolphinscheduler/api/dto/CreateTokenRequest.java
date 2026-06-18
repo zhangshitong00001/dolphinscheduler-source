@@ -20,6 +20,9 @@ package org.apache.dolphinscheduler.api.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
+/**
+ * 创建 Token 请求 DTO，包含用户 ID、过期时间和 Token 值。
+ */
 public class CreateTokenRequest {
     @ApiModelProperty(example = "1", required = true)
     Integer userId;

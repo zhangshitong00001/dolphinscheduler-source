@@ -18,7 +18,8 @@
 package org.apache.dolphinscheduler.common.thread;
 
 /**
- * All thread used in DolphinScheduler should extend with this class to avoid the server hang issue.
+ * DolphinScheduler守护线程基类，所有DolphinScheduler中的线程都应继承此类。
+ * 设置为守护线程（Daemon Thread），防止JVM因用户线程未退出而无法正常关闭，避免服务挂起问题。
  */
 public abstract class BaseDaemonThread extends Thread {
 

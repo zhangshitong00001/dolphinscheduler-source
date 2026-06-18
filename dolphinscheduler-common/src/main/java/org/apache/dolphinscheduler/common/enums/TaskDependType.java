@@ -20,16 +20,15 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * task node depend type
+ * 任务节点依赖类型枚举。
+ * 定义补数或重跑时任务节点的依赖执行策略。
  */
 public enum TaskDependType {
-    /**
-     * 0 run current tasks only
-     * 1 run current tasks and previous tasks
-     * 2 run current tasks and the other tasks that depend on current tasks;
-     */
+    /** 仅执行当前任务节点 */
     TASK_ONLY(0, "task only"),
+    /** 执行当前任务节点及其上游任务 */
     TASK_PRE(1, "task pre"),
+    /** 执行当前任务节点及其下游任务 */
     TASK_POST(2, "task post");
 
     TaskDependType(int code, String descp) {

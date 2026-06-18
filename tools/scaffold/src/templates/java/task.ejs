@@ -1,0 +1,56 @@
+<%- aslJava %>
+package org.apache.dolphinscheduler.plugin.task.<%= naming.lower %>;
+
+import org.apache.dolphinscheduler.plugin.task.api.AbstractTask;
+import org.apache.dolphinscheduler.plugin.task.api.TaskExecutionContext;
+import org.apache.dolphinscheduler.plugin.task.api.model.TaskResponse;
+import org.apache.dolphinscheduler.plugin.task.api.utils.TaskConstants;
+
+public class <%= naming.pascal %>Task extends AbstractTask {
+
+    /**
+     * task parameters
+     */
+    private <%= naming.pascal %>Parameters <%= naming.camel %>Parameters;
+
+    /**
+     * Constructor
+     *
+     * @param taskRequest task request
+     */
+    public <%= naming.pascal %>Task(TaskExecutionContext taskRequest) {
+        super(taskRequest);
+    }
+
+    @Override
+    public void init() {
+        logger.info("<%= naming.kebab %> task init ...");
+        this.<%= naming.camel %>Parameters = <%= naming.pascal %>Parameters.class.cast(taskRequest.getParameters());
+    }
+
+    @Override
+    public void handle() throws Exception {
+        try {
+            logger.info("<%= naming.kebab %> task starting ...");
+
+            // TODO: Implement your task logic here
+
+            setExitStatusCode(TaskConstants.EXIT_CODE_SUCCESS);
+            logger.info("<%= naming.kebab %> task completed successfully.");
+        } catch (Exception e) {
+            logger.error("<%= naming.kebab %> task failed.", e);
+            setExitStatusCode(TaskConstants.EXIT_CODE_FAILURE);
+        }
+    }
+
+    @Override
+    public void cancel() throws Exception {
+        logger.info("<%= naming.kebab %> task cancelled.");
+        setExitStatusCode(TaskConstants.EXIT_CODE_KILL);
+    }
+
+    @Override
+    public <%= naming.pascal %>Parameters getParameters() {
+        return this.<%= naming.camel %>Parameters;
+    }
+}

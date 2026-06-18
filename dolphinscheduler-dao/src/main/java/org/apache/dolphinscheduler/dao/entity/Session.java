@@ -23,30 +23,22 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
 
 /**
- * session
+ * 会话实体，映射到 t_ds_session 表，存储用户登录会话信息。
  */
 @TableName("t_ds_session")
 public class Session {
 
-    /**
-     * id
-     */
+    /** 会话主键 ID */
     @TableId(value="id", type=IdType.INPUT)
     private String id;
 
-    /**
-     * user id
-     */
+    /** 用户 ID */
     private int userId;
 
-    /**
-     * last login time
-     */
+    /** 最后登录时间 */
     private Date lastLoginTime;
 
-    /**
-     * user login ip
-     */
+    /** 用户登录 IP 地址 */
     private String ip;
 
     public String getId() {

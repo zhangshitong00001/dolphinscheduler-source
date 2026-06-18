@@ -24,31 +24,25 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 队列实体，映射到 t_ds_queue 表，表示系统配置的任务执行队列。
+ * 用于将任务提交到指定的资源调度队列（如 YARN 队列）中执行。
+ */
 @Data
 @TableName("t_ds_queue")
 public class Queue {
 
-    /**
-     * id
-     */
+    /** 队列主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    /**
-     * queue name
-     */
+    /** 队列名称 */
     private String queueName;
-    /**
-     * yarn queue name
-     */
+    /** YARN 队列名称（或其他资源调度系统的队列标识） */
     private String queue;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 
     public Queue() {

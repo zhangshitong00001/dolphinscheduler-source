@@ -26,8 +26,19 @@ import org.springframework.core.io.support.PropertySourceFactory;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * YAML属性源工厂，实现Spring的PropertySourceFactory接口，
+ * 用于从YAML格式的配置文件中加载属性源。
+ */
 public class YamlPropertySourceFactory implements PropertySourceFactory {
 
+    /**
+     * 从YAML资源中创建属性源。
+     * @param name 属性源名称，可为null（此时使用资源文件名）
+     * @param resource 编码后的YAML资源
+     * @return 包含YAML配置的属性源对象
+     * @throws IOException 读取资源失败时抛出
+     */
     @Override
     public PropertySource<?> createPropertySource(String name, EncodedResource resource) throws IOException {
         Properties propertiesFromYaml = loadYamlIntoProperties(resource);
@@ -35,6 +46,11 @@ public class YamlPropertySourceFactory implements PropertySourceFactory {
         return new PropertiesPropertySource(sourceName, propertiesFromYaml);
     }
 
+    /**
+     * 使用YamlPropertiesFactoryBean将YAML资源解析为Properties对象。
+     * @param resource 编码后的YAML资源
+     * @return 解析后的Properties对象
+     */
     private Properties loadYamlIntoProperties(EncodedResource resource) {
         YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
         factory.setResources(resource.getResource());

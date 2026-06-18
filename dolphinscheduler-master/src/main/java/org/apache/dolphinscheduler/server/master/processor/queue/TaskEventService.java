@@ -34,23 +34,23 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * task manager
+ * 任务事件管理服务。负责管理任务事件的队列、分发和处理，包含事件分发线程和事件处理线程两个守护线程。
  */
 @Component
 public class TaskEventService {
 
     /**
-     * logger
+     * 日志记录器
      */
     private final Logger logger = LoggerFactory.getLogger(TaskEventService.class);
 
     /**
-     * attemptQueue
+     * 任务事件阻塞队列
      */
     private final BlockingQueue<TaskEvent> eventQueue = new LinkedBlockingQueue<>();
 
     /**
-     * task event worker
+     * 任务事件分发工作线程
      */
     private Thread taskEventThread;
 
@@ -59,6 +59,9 @@ public class TaskEventService {
     @Autowired
     private TaskExecuteThreadPool taskExecuteThreadPool;
 
+    /**
+     * 启动任务事件服务。创建并启动事件分发线程和事件处理线程。
+     */
     @PostConstruct
     public void start() {
         this.taskEventThread = new TaskEventDispatchThread();
@@ -72,6 +75,9 @@ public class TaskEventService {
         logger.info("TaskEvent handle thread started");
     }
 
+    /**
+     * 停止任务事件服务。中断工作线程并处理队列中剩余的事件。
+     */
     @PreDestroy
     public void stop() {
         try {
@@ -91,16 +97,16 @@ public class TaskEventService {
     }
 
     /**
-     * add event
+     * 将任务事件添加到事件队列中。
      *
-     * @param taskEvent taskEvent
+     * @param taskEvent 任务事件
      */
     public void addEvent(TaskEvent taskEvent) {
         eventQueue.add(taskEvent);
     }
 
     /**
-     * Dispatch event to target task runnable.
+     * 任务事件分发线程。循环从事件队列中取出任务事件并提交到线程池进行处理。
      */
     class TaskEventDispatchThread extends BaseDaemonThread {
 
@@ -127,7 +133,7 @@ public class TaskEventService {
     }
 
     /**
-     * event handler thread
+     * 任务事件处理线程。定时调用线程池的事件处理方法，处理已提交的任务事件。
      */
     class TaskEventHandlerThread extends BaseDaemonThread {
 

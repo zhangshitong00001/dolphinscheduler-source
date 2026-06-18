@@ -17,17 +17,20 @@
 
 package org.apache.dolphinscheduler.server.master.runner;
 
+/**
+ * 工作流提交状态的枚举，表示 WorkflowExecuteRunnable 提交执行的结果。
+ */
 public enum WorkflowSubmitStatue {
     /**
-     * Submit success
+     * 提交成功。
      */
     SUCCESS,
     /**
-     * Submit failed, this status should be retry
+     * 提交失败，可重试。
      */
     FAILED,
     /**
-     * Duplicated submitted, this status should never occur.
+     * 重复提交，不应发生。
      */
     DUPLICATED_SUBMITTED,
     ;

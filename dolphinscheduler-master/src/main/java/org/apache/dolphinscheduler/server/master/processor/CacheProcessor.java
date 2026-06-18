@@ -36,7 +36,7 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 
 /**
- * cache process from master/api
+ * 缓存处理器。接收来自Master或API服务的缓存过期命令，执行对应的缓存驱逐操作。
  */
 @Component
 public class CacheProcessor implements NettyRequestProcessor {
@@ -46,6 +46,12 @@ public class CacheProcessor implements NettyRequestProcessor {
     @Autowired
     private CacheManager cacheManager;
 
+    /**
+     * 处理缓存过期命令。解析命令并执行对应缓存类型的驱逐操作。
+     *
+     * @param channel Netty通道
+     * @param command 缓存过期命令
+     */
     @Override
     public void process(Channel channel, Command command) {
         Preconditions.checkArgument(CommandType.CACHE_EXPIRE == command.getType(), String.format("invalid command type: %s", command.getType()));

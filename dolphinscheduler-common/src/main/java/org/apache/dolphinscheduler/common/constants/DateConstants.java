@@ -17,75 +17,52 @@
 
 package org.apache.dolphinscheduler.common.constants;
 
+/**
+ * 日期常量类。
+ * 定义系统中使用的日期格式化模板、内置时间参数名以及时间函数关键字。
+ * 这些常量用于时间参数替换和Cron表达式生成。
+ */
 public class DateConstants {
 
-    /**
-     * date format of yyyy-MM-dd HH:mm:ss
-     */
+    // ==================== 日期时间格式化模板 ====================
+
+    /** 标准日期时间格式: yyyy-MM-dd HH:mm:ss */
     public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
-
-    /**
-     * date format of yyyyMMdd
-     */
+    /** 年月日格式: yyyyMMdd */
     public static final String YYYYMMDD = "yyyyMMdd";
-
-    /**
-     * date format of yyyyMMddHHmmss
-     */
+    /** 年月日时分秒格式: yyyyMMddHHmmss */
     public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
-
-    /**
-     * date format of yyyyMMddHHmmssSSS
-     */
+    /** 年月日时分秒毫秒格式: yyyyMMddHHmmssSSS */
     public static final String YYYYMMDDHHMMSSSSS = "yyyyMMddHHmmssSSS";
 
-    /**
-     * date format of yyyyMMdd
-     */
-    public static final String PARAMETER_FORMAT_DATE = "yyyyMMdd";
+    // ==================== 参数格式化常量 ====================
 
-    /**
-     * date format of yyyyMMddHHmmss
-     */
+    /** 日期参数格式: yyyyMMdd */
+    public static final String PARAMETER_FORMAT_DATE = "yyyyMMdd";
+    /** 时间参数格式: yyyyMMddHHmmss */
     public static final String PARAMETER_FORMAT_TIME = "yyyyMMddHHmmss";
 
-    /**
-     * system date(yyyyMMddHHmmss)
-     */
+    // ==================== 内置系统时间参数名 ====================
+
+    /** 系统日期时间参数: 当前日期时间(yyyyMMddHHmmss) */
     public static final String PARAMETER_DATETIME = "system.datetime";
-
-    /**
-     * system date(yyyymmdd) today
-     */
+    /** 系统业务当前日期: 今天(yyyyMMdd) */
     public static final String PARAMETER_CURRENT_DATE = "system.biz.curdate";
-
-    /**
-     * system date(yyyymmdd) yesterday
-     */
+    /** 系统业务日期: 昨天(yyyyMMdd)，通常等于T-1日 */
     public static final String PARAMETER_BUSINESS_DATE = "system.biz.date";
 
-    /**
-     * month_begin
-     */
+    // ==================== 自定义时间函数关键字 ====================
+
+    /** 月初函数: 返回传入日期的月初日期 */
     public static final String MONTH_BEGIN = "month_begin";
-    /**
-     * add_months
-     */
+    /** 月份加法函数: 对传入日期增加月份 */
     public static final String ADD_MONTHS = "add_months";
-    /**
-     * month_end
-     */
+    /** 月末函数: 返回传入日期的月末日期 */
     public static final String MONTH_END = "month_end";
-    /**
-     * week_begin
-     */
+    /** 周初函数: 返回传入日期所在周的周一 */
     public static final String WEEK_BEGIN = "week_begin";
-    /**
-     * week_end
-     */
+    /** 周末函数: 返回传入日期所在周的周日 */
     public static final String WEEK_END = "week_end";
-    /**
-     * timestamp
-     */
+    /** 时间戳函数: 返回Unix时间戳 */
     public static final String TIMESTAMP = "timestamp";
 }

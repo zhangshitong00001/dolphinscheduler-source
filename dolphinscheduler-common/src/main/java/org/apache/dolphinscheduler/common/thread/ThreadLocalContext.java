@@ -18,12 +18,18 @@
 package org.apache.dolphinscheduler.common.thread;
 
 /**
- * thread local context
+ * 线程本地上下文，用于在线程级别存储时区等上下文信息。
+ * 提供ThreadLocal变量来隔离不同线程的时区设置，确保多线程环境下时区信息的安全性。
  */
 public class ThreadLocalContext {
 
     public static final ThreadLocal<String> timezoneThreadLocal = new ThreadLocal<>();
 
+    /**
+     * 获取时区信息的ThreadLocal变量。
+     *
+     * @return 存储时区字符串的ThreadLocal
+     */
     public static ThreadLocal<String> getTimezoneThreadLocal() {
         return timezoneThreadLocal;
     }

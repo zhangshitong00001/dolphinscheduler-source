@@ -22,15 +22,17 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * page query dto
+ * 分页查询请求DTO。用于封装分页查询的通用参数，包含页码和每页大小。
  */
 @ApiModel("QUERY-PAGE-INFO")
 @Data
 public class PageQueryDto {
 
+    /** 每页大小 */
     @ApiModelProperty(example = "10", required = true)
     private Integer pageSize;
 
+    /** 页码 */
     @ApiModelProperty(example = "1", required = true)
     private Integer pageNo;
 }

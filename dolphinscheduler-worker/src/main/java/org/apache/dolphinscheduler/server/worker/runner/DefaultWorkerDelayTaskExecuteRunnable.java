@@ -29,6 +29,9 @@ import org.apache.dolphinscheduler.service.task.TaskPluginManager;
 
 import javax.annotation.Nullable;
 
+/**
+ * 默认的延迟任务执行Runnable实现，通过调用task.handle处理任务回调来执行延迟任务。
+ */
 public class DefaultWorkerDelayTaskExecuteRunnable extends WorkerDelayTaskExecuteRunnable {
 
     public DefaultWorkerDelayTaskExecuteRunnable(@NonNull TaskExecutionContext taskExecutionContext,
@@ -41,6 +44,12 @@ public class DefaultWorkerDelayTaskExecuteRunnable extends WorkerDelayTaskExecut
         super(taskExecutionContext, workerConfig, workflowMaster, workerMessageSender, alertClientService, taskPluginManager, storageOperate);
     }
 
+    /**
+     * 执行延迟任务，调用task.handle处理任务回调。
+     *
+     * @param taskCallBack 任务回调接口
+     * @throws TaskException 如果任务插件未初始化
+     */
     @Override
     public void executeTask(TaskCallBack taskCallBack) throws TaskException {
         if (task == null) {

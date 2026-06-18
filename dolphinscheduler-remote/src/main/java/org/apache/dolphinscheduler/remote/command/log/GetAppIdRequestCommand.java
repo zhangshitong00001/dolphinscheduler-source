@@ -26,11 +26,15 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 
 import java.io.Serializable;
 
+/**
+ * 获取AppId请求命令。根据日志文件路径向Worker请求获取对应YARN应用程序ID，用于日志查询和关联。
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAppIdRequestCommand implements Serializable {
 
+    /** 日志文件路径 */
     private String logPath;
 
     public Command convert2Command() {

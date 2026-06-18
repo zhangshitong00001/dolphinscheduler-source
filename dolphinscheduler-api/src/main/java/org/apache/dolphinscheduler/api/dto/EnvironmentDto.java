@@ -22,23 +22,26 @@ import java.util.List;
 
 import lombok.Data;
 
+/**
+ * 环境配置 DTO，用于传输环境配置信息，包含环境名称、配置内容和关联的 Worker 分组列表。
+ */
 @Data
 public class EnvironmentDto {
 
     private Integer id;
 
     /**
-     * environment code
+     * 环境编码
      */
     private Long code;
 
     /**
-     * environment name
+     * 环境名称
      */
     private String name;
 
     /**
-     * config content
+     * 环境配置内容
      */
     private String config;
 
@@ -47,7 +50,7 @@ public class EnvironmentDto {
     private List<String> workerGroups;
 
     /**
-     * operator user id
+     * 操作者用户 ID
      */
     private Integer operator;
 

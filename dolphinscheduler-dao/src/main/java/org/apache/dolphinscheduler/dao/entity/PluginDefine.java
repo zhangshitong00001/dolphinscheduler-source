@@ -26,43 +26,34 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 插件定义实体，映射到 t_ds_plugin_define 表，表示系统中注册的一个插件及其参数配置信息。
+ */
 @Data
 @TableName("t_ds_plugin_define")
 public class PluginDefine {
 
-    /**
-     * id
-     */
+    /** 插件主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * plugin name
-     */
+    /** 插件名称 */
     @TableField("plugin_name")
     private String pluginName;
 
-    /**
-     * plugin_type
-     */
+    /** 插件类型 */
     @TableField("plugin_type")
     private String pluginType;
 
-    /**
-     * plugin_params
-     */
+    /** 插件参数（JSON 格式） */
     @TableField("plugin_params")
     private String pluginParams;
 
-    /**
-     * create_time
-     */
+    /** 创建时间 */
     @TableField("create_time")
     private Date createTime;
 
-    /**
-     * update_time
-     */
+    /** 更新时间 */
     @TableField("update_time")
     private Date updateTime;
 

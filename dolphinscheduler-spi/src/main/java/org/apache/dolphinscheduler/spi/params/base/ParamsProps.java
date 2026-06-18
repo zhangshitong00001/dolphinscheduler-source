@@ -20,20 +20,20 @@ package org.apache.dolphinscheduler.spi.params.base;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * the props field in form-create`s json rule
+ * 参数属性类，对应 form-create JSON规则中的 props 字段。
+ * <p>
+ * 用于配置前端表单控件的样式和行为属性，
+ * 如占位符文本、控件大小、是否禁用等。
  */
 public class ParamsProps {
 
+    /** 输入框占位符文本 */
     private String placeholder;
 
-    /**
-     * input box size, optional value medium/small/mini
-     */
+    /** 输入框尺寸，可选值 medium/small/mini */
     private String size = "small";
 
-    /**
-     * whether to disable, the default value is false
-     */
+    /** 是否禁用，默认false */
     private Boolean disabled;
 
     public void setSize(String size) {

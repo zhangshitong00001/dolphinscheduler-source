@@ -39,7 +39,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * DataQualityResultOperator
+ * 数据质量结果处理器，负责在数据质量任务执行完毕后对结果进行判定和操作。
+ * 根据统计值、比较值、阈值和检查类型，使用公式 {checkType} {operator} {threshold} 计算 DQC 结果，
+ * 如果结果为失败，则根据失败策略（ALERT/BLOCK）决定是否告警或阻塞工作流。
  */
 @Component
 public class DataQualityResultOperator {
@@ -53,11 +55,11 @@ public class DataQualityResultOperator {
     private ProcessAlertManager alertManager;
 
     /**
-     * When the task type is data quality, it will get the statistics value、comparison value、
-     * threshold、check type、operator and failure strategy，use the formula that
-     * {check type} {operator} {threshold} to get dqc result . If result is failure, it will alert or block
-     * @param taskResponseEvent
-     * @param taskInstance
+     * 处理数据质量任务的执行结果，判断是否需要告警或阻塞。
+     * 如果任务失败或取消，则删除执行结果和统计值；否则进行 DQC 结果检查和对应的失败策略操作。
+     *
+     * @param taskResponseEvent 任务响应事件
+     * @param taskInstance      任务实例
      */
     public void operateDqExecuteResult(TaskEvent taskResponseEvent, TaskInstance taskInstance) {
         if (TASK_TYPE_DATA_QUALITY.equals(taskInstance.getTaskType())) {
@@ -85,11 +87,11 @@ public class DataQualityResultOperator {
     }
 
     /**
-     * get the data quality check result
-     * and if the result is failure that will alert or block
-     * @param taskResponseEvent
-     * @param dqExecuteResult
-     * @param processInstance
+     * 检查数据质量执行结果，如果为失败则根据失败策略执行对应操作（ALERT 仅告警，BLOCK 告警且将任务设为失败）。
+     *
+     * @param taskResponseEvent 任务响应事件
+     * @param dqExecuteResult   数据质量执行结果
+     * @param processInstance   工作流实例
      */
     private void checkDqExecuteResult(TaskEvent taskResponseEvent,
                                       DqExecuteResult dqExecuteResult,
@@ -119,9 +121,10 @@ public class DataQualityResultOperator {
     }
 
     /**
-     * It is used to judge whether the result of the data quality task is failed
-     * @param dqExecuteResult
-     * @return
+     * 判断数据质量任务的执行结果是否为失败，根据检查类型和操作符计算比较结果。
+     *
+     * @param dqExecuteResult 数据质量执行结果
+     * @return 是否失败
      */
     private boolean isFailure(DqExecuteResult dqExecuteResult) {
         CheckType checkType = CheckType.of(dqExecuteResult.getCheckType());

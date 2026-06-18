@@ -18,7 +18,8 @@
 package org.apache.dolphinscheduler.common;
 
 /**
- * server stop interface.
+ * 服务可停止接口，定义服务停止的标准行为。
+ * 所有需要支持优雅停止的DolphinScheduler服务组件应实现此接口。
  */
 public interface IStoppable {
 

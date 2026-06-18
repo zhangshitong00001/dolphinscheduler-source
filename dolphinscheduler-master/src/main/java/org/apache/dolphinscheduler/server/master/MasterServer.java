@@ -42,6 +42,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * DolphinScheduler Master服务器主类。负责Master服务的启动、初始化各组件以及优雅关闭，是整个Master节点的入口。
+ */
 @SpringBootApplication
 @ComponentScan("org.apache.dolphinscheduler")
 @EnableTransactionManagement
@@ -74,13 +77,18 @@ public class MasterServer implements IStoppable {
     @Autowired
     private MasterRPCServer masterRPCServer;
 
+    /**
+     * Master服务器启动入口方法。
+     *
+     * @param args 命令行参数
+     */
     public static void main(String[] args) {
         Thread.currentThread().setName(Constants.THREAD_NAME_MASTER_SERVER);
         SpringApplication.run(MasterServer.class);
     }
 
     /**
-     * run master server
+     * 启动Master服务器。初始化RPC服务、加载任务插件、启动注册中心、调度器和事件执行服务等核心组件。
      */
     @PostConstruct
     public void run() throws SchedulerException {
@@ -110,9 +118,9 @@ public class MasterServer implements IStoppable {
     }
 
     /**
-     * gracefully close
+     * 优雅关闭Master服务器。设置停止标识后，依次关闭调度器、RPC服务、注册中心客户端和Spring应用上下文。
      *
-     * @param cause close cause
+     * @param cause 关闭的原因描述
      */
     public void close(String cause) {
         // set stop signal is true

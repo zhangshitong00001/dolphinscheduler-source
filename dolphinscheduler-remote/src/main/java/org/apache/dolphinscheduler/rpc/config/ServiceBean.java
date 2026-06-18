@@ -30,20 +30,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * ServiceBean find all rpcService
+ * RPC 服务发现与注册中心。通过 classpath 扫描带 @RpcService 注解的类，
+ * 将服务名与服务实现类的映射维护在内存中，供 RPC 服务器端反射调用。
  */
 public class ServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceBean.class);
 
+    /** 服务名到服务实现类的映射 */
     private static Map<String, Class> serviceMap = new HashMap<>();
 
+    /** 是否已初始化的标志 */
     private static AtomicBoolean initialized = new AtomicBoolean(false);
 
     private ServiceBean() {
         throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * 初始化服务扫描，使用 Reflections 扫描 classpath 下的所有 @RpcService 注解类。
+     */
     private static synchronized void init() {
         // todo config
         if (initialized.get()) {
@@ -59,6 +65,12 @@ public class ServiceBean {
         initialized.set(true);
     }
 
+    /**
+     * 根据服务名获取对应的服务实现类。首次调用时自动触发初始化扫描。
+     *
+     * @param className 服务名称（注解 @RpcService 的值）
+     * @return 对应的服务实现类，若不存在则返回 null
+     */
     public static Class getServiceClass(String className) {
         if (initialized.get()) {
             return serviceMap.get(className);

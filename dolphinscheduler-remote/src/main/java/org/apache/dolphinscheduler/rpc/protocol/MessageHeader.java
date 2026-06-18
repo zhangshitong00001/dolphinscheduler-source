@@ -17,18 +17,28 @@
 
 package org.apache.dolphinscheduler.rpc.protocol;
 
+/**
+ * RPC 协议消息头。定义 DolphinScheduler RPC 协议的固定头部格式，
+ * 包含魔数、版本、事件类型、序列化方式、请求ID和消息体长度等字段，共计17字节。
+ */
 public class MessageHeader {
 
+    /** 协议版本号，默认为1 */
     private byte version = 1;
 
+    /** 事件类型（心跳/请求/响应） */
     private byte eventType;
 
+    /** 消息体长度，默认为0 */
     private int msgLength = 0;
 
+    /** 请求ID，用于关联请求与响应 */
     private long requestId = 0L;
 
+    /** 序列化方式标识 */
     private byte serialization = 0;
 
+    /** 协议魔数，用于校验数据包有效性 */
     private short magic = RpcProtocolConstants.MAGIC;
 
     public short getMagic() {

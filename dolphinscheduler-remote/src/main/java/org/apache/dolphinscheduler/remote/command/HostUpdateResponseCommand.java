@@ -21,12 +21,18 @@ import org.apache.dolphinscheduler.common.utils.JSONUtils;
 
 import java.io.Serializable;
 
+/**
+ * 主机更新响应命令。封装主机更新请求的处理结果，包含任务实例ID、更新后的主机地址和处理状态码。
+ */
 public class HostUpdateResponseCommand implements Serializable {
 
+    /** 任务实例ID */
     private int taskInstanceId;
 
+    /** 进程执行主机地址 */
     private String processHost;
 
+    /** 处理状态码 */
     private int status;
 
     public HostUpdateResponseCommand(int taskInstanceId, String processHost, int code) {

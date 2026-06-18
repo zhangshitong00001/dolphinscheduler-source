@@ -24,11 +24,27 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Set;
 
 /**
- * fav mapper interface
+ * 收藏任务 Mapper 接口，封装对 t_ds_fav_task 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，管理用户收藏的任务类型，提供查询和删除收藏的能力。
  */
 public interface FavTaskMapper extends BaseMapper<FavTask> {
 
+    /**
+     * 查询指定用户收藏的所有任务类型名称集合。
+     * SELECT DISTINCT task_name FROM t_ds_fav_task WHERE user_id = #{userId}
+     *
+     * @param userId 用户ID
+     * @return 用户收藏的任务类型名称集合
+     */
     Set<String> getUserFavTaskTypes(@Param("userId") int userId);
 
+    /**
+     * 删除指定用户对某个任务类型的收藏记录。
+     * DELETE FROM t_ds_fav_task WHERE user_id = #{userId} AND task_name = #{taskName}
+     *
+     * @param userId 用户ID
+     * @param taskName 任务类型名称
+     * @return 删除成功返回 true，否则返回 false
+     */
     boolean deleteUserFavTask(@Param("userId") int userId, @Param("taskName") String taskName);
 }

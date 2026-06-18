@@ -20,93 +20,62 @@ package org.apache.dolphinscheduler.spi.params.select;
 import org.apache.dolphinscheduler.spi.params.base.ParamsProps;
 
 /**
- * front-end select component props attributes
+ * 前端下拉选择框组件的属性配置类，继承自 {@link ParamsProps}。
+ * <p>
+ * 定义下拉选择框的完整属性配置，包括多选、可清空、可搜索、
+ * 可创建新条目、最大可选数、过滤与远程搜索等丰富配置。
  */
 public class SelectParamProps extends ParamsProps {
 
-    /**
-     * whether to select multiple, the default value is false
-     */
+    /** 是否多选，默认false */
     private Boolean multiple;
 
-    /**
-     * as the key name that uniquely identifies the value, it is required when the binding value is the object type
-     */
+    /** 唯一标识值的键名，绑定值为对象类型时必填 */
     private String valueKey;
 
-    /**
-     * input box size, optional value medium/small/mini
-     */
+    /** 选择框尺寸，可选值medium/small/mini */
     private String size;
 
-    /**
-     * whether the option can be cleared, the default value is false
-     */
+    /** 选项是否可清空，默认false */
     private Boolean clearable;
 
-    /**
-     * whether to display the selected value in the form of text when multiple selections, the default value is false
-     */
+    /** 多选时是否将选中值以文字形式展示，默认false */
     private Boolean collapseTags;
 
-    /**
-     * the maximum number of items that the user can select when multiple selections are made, if it is 0, there is no limit
-     */
+    /** 多选时用户最多可选择的项目数，为0则不限制 */
     private Integer multipleLimit;
 
-    /**
-     * select input name attribute
-     */
+    /** select输入框的name属性 */
     private String name;
 
-    /**
-     * select input autocomplete attribute, the default value is off
-     */
+    /** select输入框的autocomplete属性，默认off */
     private String autocomplete;
 
-    /**
-     * whether it is searchable, the default value is false
-     */
+    /** 是否可搜索，默认false */
     private Boolean filterable;
 
-    /**
-     * whether to allow users to create new entries, it needs to be used with filterable, the default value is false
-     */
+    /** 是否允许用户创建新条目，需与filterable配合使用，默认false */
     private Boolean allowCreate;
 
-    /**
-     * the text displayed when there is no match for the search criteria
-     */
+    /** 搜索条件无匹配时显示的文本 */
     private String noMatchText;
 
-    /**
-     * the text displayed when the option is empty
-     */
+    /** 选项为空时显示的文本 */
     private String noDataText;
 
-    /**
-     * Select the class name of the drop-down box
-     */
+    /** 下拉框的CSS类名 */
     private String popperClass;
 
-    /**
-     * when multiple selection and searchable, whether to keep the current search keywords after selecting an option, the default value is false
-     */
+    /** 多选且可搜索时，选中选项后是否保留当前搜索关键词，默认false */
     private Boolean reserveKeyword;
 
-    /**
-     * press Enter in the input box to select the first match. need to be used with filterable or remote, the default value is false
-     */
+    /** 在输入框中按回车选择第一个匹配项，需与filterable或remote配合使用，默认false */
     private Boolean defaultFirstOption;
 
-    /**
-     * whether to insert a pop-up box into the body element. when there is a problem with the positioning of the pop-up box, this property can be set to false
-     */
+    /** 是否将弹出框插入到body元素中，弹出框定位有问题时可设为false */
     private Boolean popperAppendToBody;
 
-    /**
-     * for non-searchable Select, whether to automatically pop up the option menu after the input box gets the focus, the default value is false
-     */
+    /** 对于非可搜索的Select，输入框获取焦点后是否自动弹出选项菜单，默认false */
     private Boolean automaticDropdown;
 
     public Boolean getMultiple() {

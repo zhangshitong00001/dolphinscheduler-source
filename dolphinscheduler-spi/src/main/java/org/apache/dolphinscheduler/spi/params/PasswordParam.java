@@ -26,7 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * password param
+ * 前端密码输入框组件参数类，继承自 {@link PluginParams}。
+ * <p>
+ * 用于在前端动态表单中渲染密码输入框，输入内容会被遮蔽显示。
+ * 在构建时自动初始化 ParamsProps，便于设置占位符等属性。
  */
 public class PasswordParam extends PluginParams {
 

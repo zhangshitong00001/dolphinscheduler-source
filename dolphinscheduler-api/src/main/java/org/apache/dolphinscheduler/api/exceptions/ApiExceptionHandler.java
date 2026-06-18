@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
 
 /**
- * Exception Handler
+ * API全局异常处理器。使用Spring的@RestControllerAdvice注解，统一处理ServiceException和普通Exception，根据ApiException注解确定返回状态码。
  */
 @RestControllerAdvice
 @ResponseBody
@@ -36,12 +36,24 @@ public class ApiExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
+    /**
+     * 处理ServiceException异常
+     * @param e  ServiceException异常
+     * @param hm 处理器方法
+     * @return 包含错误码和错误信息的Result
+     */
     @ExceptionHandler(ServiceException.class)
     public Result exceptionHandler(ServiceException e, HandlerMethod hm) {
         logger.error("ServiceException: ", e);
         return new Result(e.getCode(), e.getMessage());
     }
 
+    /**
+     * 处理通用Exception异常，根据方法上的ApiException注解确定返回状态
+     * @param e  Exception异常
+     * @param hm 处理器方法
+     * @return 包含错误状态的Result
+     */
     @ExceptionHandler(Exception.class)
     public Result exceptionHandler(Exception e, HandlerMethod hm) {
         ApiException ce = hm.getMethodAnnotation(ApiException.class);

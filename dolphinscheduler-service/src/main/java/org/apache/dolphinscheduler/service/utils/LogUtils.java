@@ -34,6 +34,10 @@ import ch.qos.logback.classic.sift.SiftingAppender;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.spi.AppenderAttachable;
 
+/**
+ * 日志路径工具类，用于根据任务上下文信息构建任务日志文件的存储路径。
+ * 日志路径格式为：基础日志目录/日期/流程定义编码_版本-流程实例ID-任务实例ID.log
+ */
 public class LogUtils {
 
     public static final String LOG_TAILFIX = ".log";
@@ -43,7 +47,14 @@ public class LogUtils {
     }
 
     /**
-     * get task log path
+     * 根据流程和任务信息构建任务日志文件的完整路径。
+     *
+     * @param firstSubmitTime the first submit time
+     * @param processDefineCode the process definition code
+     * @param processDefineVersion the process definition version
+     * @param processInstanceId the process instance id
+     * @param taskInstanceId the task instance id
+     * @return the full task log file path
      */
     public static String getTaskLogPath(Date firstSubmitTime, Long processDefineCode, int processDefineVersion,
                                         int processInstanceId, int taskInstanceId) {
@@ -72,7 +83,10 @@ public class LogUtils {
     }
 
     /**
-     * get task log path by TaskExecutionContext
+     * 根据任务执行上下文构建任务日志文件的完整路径。
+     *
+     * @param taskExecutionContext the task execution context
+     * @return the full task log file path
      */
     public static String getTaskLogPath(TaskExecutionContext taskExecutionContext) {
         return getTaskLogPath(taskExecutionContext.getFirstSubmitTime(), taskExecutionContext.getProcessDefineCode(),

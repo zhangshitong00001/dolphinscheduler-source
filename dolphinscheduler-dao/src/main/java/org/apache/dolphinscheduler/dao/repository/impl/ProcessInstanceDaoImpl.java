@@ -27,23 +27,36 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 流程实例数据访问实现类，提供流程实例的增、改、插入或更新操作。
+ */
 @Slf4j
 @Repository
 public class ProcessInstanceDaoImpl implements ProcessInstanceDao {
 
+    /** 流程实例 Mapper */
     @Autowired
     private ProcessInstanceMapper processInstanceMapper;
 
+    /**
+     * 插入新的流程实例记录。
+     */
     @Override
     public int insertProcessInstance(ProcessInstance processInstance) {
         return processInstanceMapper.insert(processInstance);
     }
 
+    /**
+     * 更新已有的流程实例记录。
+     */
     @Override
     public int updateProcessInstance(ProcessInstance processInstance) {
         return processInstanceMapper.updateById(processInstance);
     }
 
+    /**
+     * 插入或更新流程实例。如果 ID 已存在则更新，否则插入新记录。
+     */
     @Override
     public int upsertProcessInstance(@NonNull ProcessInstance processInstance) {
         if (processInstance.getId() != null) {

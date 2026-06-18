@@ -27,17 +27,20 @@ import org.apache.dolphinscheduler.remote.utils.JsonSerializer;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 告警发送响应命令。封装告警发送的整体响应结果，包含成功状态（全部成功则为true，任一失败则为false）和各个告警通道的详细结果列表。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlertSendResponseCommand implements Serializable {
 
     /**
-     * true:All alert are successful,
-     * false:As long as one alert fails
+     * 告警发送整体结果：true表示所有告警通道均成功，false表示至少有一个告警通道失败
      */
     private boolean success;
 
+    /** 各告警通道的响应结果列表 */
     private List<AlertSendResponseResult> resResults;
 
     /**

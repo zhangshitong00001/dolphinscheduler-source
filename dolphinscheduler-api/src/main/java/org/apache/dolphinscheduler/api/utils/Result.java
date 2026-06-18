@@ -22,23 +22,23 @@ import org.apache.dolphinscheduler.api.enums.Status;
 import java.text.MessageFormat;
 
 /**
- * result
+ * 统一API响应结果封装类。用于封装接口调用的状态码、消息和数据，支持成功和错误响应的构建。
  *
- * @param <T> T
+ * @param <T> 数据类型
  */
 public class Result<T> {
     /**
-     * status
+     * 状态码
      */
     private Integer code;
 
     /**
-     * message
+     * 响应消息
      */
     private String msg;
 
     /**
-     * data
+     * 响应数据
      */
     private T data;
 
@@ -64,11 +64,11 @@ public class Result<T> {
     }
 
     /**
-     * Call this function if there is success
+     * 创建成功响应结果。包含成功状态码和数据。
      *
-     * @param data data
-     * @param <T> type
-     * @return resule
+     * @param data 响应数据
+     * @param <T>  数据类型
+     * @return 成功Result对象
      */
     public static <T> Result<T> success(T data) {
         return new Result<>(Status.SUCCESS.getCode(), Status.SUCCESS.getMsg(), data);
@@ -91,21 +91,23 @@ public class Result<T> {
     }
 
     /**
-     * Call this function if there is any error
+     * 创建错误响应结果。使用预定义的Status枚举构建。
      *
-     * @param status status
-     * @return result
+     * @param status 状态枚举
+     * @param <T>    数据类型
+     * @return 错误Result对象
      */
     public static <T> Result<T> error(Status status) {
         return new Result<>(status);
     }
 
     /**
-     * Call this function if there is any error
+     * 创建带格式化参数的错误响应结果。使用MessageFormat格式化状态消息。
      *
-     * @param status status
-     * @param args args
-     * @return result
+     * @param status 状态枚举
+     * @param args   消息格式化参数
+     * @param <T>    数据类型
+     * @return 错误Result对象
      */
     public static <T> Result<T> errorWithArgs(Status status, Object... args) {
         return new Result<>(status.getCode(), MessageFormat.format(status.getMsg(), args));

@@ -62,7 +62,9 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.common.base.Strings;
 
 /**
- * json utils
+ * JSON工具类，基于Jackson提供JSON序列化、反序列化和节点操作功能。
+ * 支持LocalDateTime的自动序列化与反序列化，配置了宽松的解析策略。
+ * 该类为工具类，不可实例化。
  */
 public class JSONUtils {
 
@@ -109,11 +111,11 @@ public class JSONUtils {
     }
 
     /**
-     * json representation of object
+     * 将对象转换为JSON字符串，支持指定序列化特性。
      *
-     * @param object object
-     * @param feature feature
-     * @return object to json string
+     * @param object 要序列化的对象
+     * @param feature Jackson序列化特性
+     * @return JSON字符串，序列化失败返回null
      */
     public static String toJsonString(Object object, SerializationFeature feature) {
         try {
@@ -127,18 +129,13 @@ public class JSONUtils {
     }
 
     /**
-     * This method deserializes the specified Json into an object of the specified class. It is not
-     * suitable to use if the specified class is a generic type since it will not have the generic
-     * type information because of the Type Erasure feature of Java. Therefore, this method should not
-     * be used if the desired type is a generic type. Note that this method works fine if the any of
-     * the fields of the specified object are generics, just the object itself should not be a
-     * generic type.
+     * 将JSON字符串反序列化为指定类型的对象。
+     * 注意：由于Java类型擦除，该方法不适用于泛型类型。如需反序列化泛型类型，请使用{@link #parseObject(String, TypeReference)}。
      *
-     * @param json the string from which the object is to be deserialized
-     * @param clazz the class of T
-     * @param <T> T
-     * @return an object of type T from the string
-     * classOfT
+     * @param json JSON字符串
+     * @param clazz 目标类型的Class对象
+     * @param <T> 目标类型
+     * @return 反序列化后的对象，如果json为空或解析失败则返回null
      */
     public static @Nullable <T> T parseObject(String json, Class<T> clazz) {
         if (Strings.isNullOrEmpty(json)) {
@@ -154,12 +151,12 @@ public class JSONUtils {
     }
 
     /**
-     *  deserialize
+     * 将字节数组反序列化为指定类型的对象。
      *
-     * @param src byte array
-     * @param clazz class
-     * @param <T> deserialize type
-     * @return deserialize type
+     * @param src 字节数组
+     * @param clazz 目标类型的Class对象
+     * @param <T> 目标类型
+     * @return 反序列化后的对象，如果src为null则返回null
      */
     public static <T> T parseObject(byte[] src, Class<T> clazz) {
         if (src == null) {
@@ -170,12 +167,12 @@ public class JSONUtils {
     }
 
     /**
-     * json to list
+     * 将JSON数组字符串反序列化为指定类型的List。
      *
-     * @param json json string
-     * @param clazz class
-     * @param <T> T
-     * @return list
+     * @param json JSON数组字符串
+     * @param clazz 列表元素类型
+     * @param <T> 列表元素类型
+     * @return 反序列化后的List，如果json为空或解析失败则返回空列表
      */
     public static <T> List<T> toList(String json, Class<T> clazz) {
         if (Strings.isNullOrEmpty(json)) {
@@ -193,10 +190,10 @@ public class JSONUtils {
     }
 
     /**
-     * check json object valid
+     * 检查JSON字符串是否合法。
      *
-     * @param json json
-     * @return true if valid
+     * @param json JSON字符串
+     * @return 如果是合法的JSON返回true，否则返回false
      */
     public static boolean checkJsonValid(String json) {
 
@@ -215,13 +212,12 @@ public class JSONUtils {
     }
 
     /**
-     * Method for finding a JSON Object field with specified name in this
-     * node or its child nodes, and returning value it has.
-     * If no matching field is found in this node or its descendants, returns null.
+     * 在JsonNode及其子节点中查找指定字段的值。
+     * 如果当前节点或其后代节点中没有找到匹配的字段，返回null。
      *
-     * @param jsonNode json node
-     * @param fieldName Name of field to look for
-     * @return Value of first matching node found, if any; null if none
+     * @param jsonNode JSON节点
+     * @param fieldName 要查找的字段名
+     * @return 第一个匹配节点的文本值，未找到则返回null
      */
     public static String findValue(JsonNode jsonNode, String fieldName) {
         JsonNode node = jsonNode.findValue(fieldName);
@@ -234,11 +230,10 @@ public class JSONUtils {
     }
 
     /**
-     * json to map
-     * {@link #toMap(String, Class, Class)}
+     * 将JSON字符串转换为Map&lt;String, String&gt;。
      *
-     * @param json json
-     * @return json to map
+     * @param json JSON字符串
+     * @return 转换后的Map，如果json为空则返回空Map
      */
     public static Map<String, String> toMap(String json) {
         return parseObject(json, new TypeReference<Map<String, String>>() {
@@ -246,14 +241,14 @@ public class JSONUtils {
     }
 
     /**
-     * json to map
+     * 将JSON字符串转换为指定键值类型的Map。
      *
-     * @param json json
-     * @param classK classK
-     * @param classV classV
-     * @param <K> K
-     * @param <V> V
-     * @return to map
+     * @param json JSON字符串
+     * @param classK 键的类型
+     * @param classV 值的类型
+     * @param <K> 键类型
+     * @param <V> 值类型
+     * @return 转换后的Map，如果json为空或解析失败则返回空Map
      */
     public static <K, V> Map<K, V> toMap(String json, Class<K> classK, Class<V> classV) {
         if (Strings.isNullOrEmpty(json)) {
@@ -271,10 +266,11 @@ public class JSONUtils {
     }
 
     /**
-     * from the key-value generated json  to get the str value no matter the real type of value
-     * @param json the json str
-     * @param nodeName key
-     * @return the str value of key
+     * 从JSON字符串中获取指定节点的字符串值，不管节点的实际类型。
+     *
+     * @param json JSON字符串
+     * @param nodeName 节点名称
+     * @return 节点的字符串值，未找到或解析失败返回空字符串
      */
     public static String getNodeString(String json, String nodeName) {
         try {
@@ -290,12 +286,12 @@ public class JSONUtils {
     }
 
     /**
-     * json to object
+     * 将JSON字符串反序列化为指定TypeReference类型的对象，支持泛型类型。
      *
-     * @param json json string
-     * @param type type reference
-     * @param <T>
-     * @return return parse object
+     * @param json JSON字符串
+     * @param type TypeReference类型引用
+     * @param <T> 目标类型
+     * @return 反序列化后的对象，如果json为空或解析失败则返回null
      */
     public static <T> T parseObject(String json, TypeReference<T> type) {
         if (Strings.isNullOrEmpty(json)) {
@@ -312,10 +308,11 @@ public class JSONUtils {
     }
 
     /**
-     * object to json string
+     * 将对象序列化为JSON字符串。
      *
-     * @param object object
-     * @return json string
+     * @param object 要序列化的对象
+     * @return JSON字符串
+     * @throws RuntimeException 序列化失败时抛出
      */
     public static String toJsonString(Object object) {
         try {
@@ -334,11 +331,11 @@ public class JSONUtils {
     }
 
     /**
-     * serialize to json byte
+     * 将对象序列化为JSON字节数组。
      *
-     * @param obj object
-     * @param <T> object type
-     * @return byte array
+     * @param obj 要序列化的对象
+     * @param <T> 对象类型
+     * @return JSON字节数组，如果obj为null则返回null
      */
     public static <T> byte[] toJsonByteArray(T obj) {
         if (obj == null) {
@@ -375,7 +372,7 @@ public class JSONUtils {
     }
 
     /**
-     * json serializer
+     * JSON原始数据序列化器，将字符串作为原始JSON值写入。
      */
     public static class JsonDataSerializer extends JsonSerializer<String> {
 
@@ -387,7 +384,7 @@ public class JSONUtils {
     }
 
     /**
-     * json data deserializer
+     * JSON原始数据反序列化器，将JSON节点转换为字符串形式。
      */
     public static class JsonDataDeserializer extends JsonDeserializer<String> {
 

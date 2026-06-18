@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 
 /**
- * Smooth Weight Round Robin
+ * 平滑加权轮询选择器。基于平滑加权轮询算法选择 Worker 节点，权重越高的节点被选中的概率越大。
  */
 @Service
 public class RoundRobinSelector extends AbstractSelector<HostWorker> {

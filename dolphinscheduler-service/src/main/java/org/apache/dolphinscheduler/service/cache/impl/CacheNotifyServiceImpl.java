@@ -40,7 +40,8 @@ import org.springframework.stereotype.Service;
 import io.netty.channel.Channel;
 
 /**
- * cache notify service
+ * 缓存通知服务实现，通过Netty远程通信将缓存变更命令发送到所有Master节点。
+ * <p>内部维护远程通道缓存{@code REMOTE_CHANNELS}以复用连接。</p>
  */
 @Service
 public class CacheNotifyServiceImpl implements CacheNotifyService {
@@ -50,14 +51,10 @@ public class CacheNotifyServiceImpl implements CacheNotifyService {
     @Autowired
     private RegistryClient registryClient;
 
-    /**
-     * remote channels
-     */
+    /** 远程通道缓存，按Host地址复用Netty连接 */
     private static final ConcurrentHashMap<Host, NettyRemoteChannel> REMOTE_CHANNELS = new ConcurrentHashMap<>();
 
-    /**
-     * netty remoting client
-     */
+    /** Netty远程通信客户端 */
     private final NettyRemotingClient nettyRemotingClient;
 
     public CacheNotifyServiceImpl() {
@@ -107,9 +104,9 @@ public class CacheNotifyServiceImpl implements CacheNotifyService {
     }
 
     /**
-     * send result to master
+     * 向所有在线的Master节点发送缓存变更命令通知。
      *
-     * @param command command
+     * @param command 需要发送的缓存变更命令
      */
     @Override
     public void notifyMaster(Command command) {

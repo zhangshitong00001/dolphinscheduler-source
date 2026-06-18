@@ -18,20 +18,26 @@
 package org.apache.dolphinscheduler.rpc.common;
 
 /**
- * RpcRequest
+ * RPC 请求封装体。包含远程调用的目标类名、方法名、参数类型、参数值以及请求事件类型等元数据。
  */
 public class RpcRequest {
 
+    /** 目标服务类全限定名 */
     private String className;
+    /** 目标方法名 */
     private String methodName;
+    /** 方法参数类型数组 */
     private Class<?>[] parameterTypes;
+    /** 方法参数值数组 */
     private Object[] parameters;
 
     /**
+     * 请求事件类型，默认为业务请求。
      * @see RequestEventType
      */
     private Byte eventType = RequestEventType.BUSINESS.getType();
 
+    /** 是否需要ACK确认 */
     private Boolean ack;
 
     public Byte getEventType() {

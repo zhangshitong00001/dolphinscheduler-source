@@ -26,17 +26,24 @@ import org.apache.dolphinscheduler.remote.utils.JsonSerializer;
 
 import java.io.Serializable;
 
+/**
+ * 告警发送请求命令。封装告警发送请求的数据传输对象，包含告警分组ID、标题、内容和告警类型，用于跨节点告警发送通信。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlertSendRequestCommand implements Serializable {
 
+    /** 告警分组ID */
     private int groupId;
 
+    /** 告警标题 */
     private String title;
 
+    /** 告警内容 */
     private String content;
 
+    /** 告警类型 */
     private int warnType;
 
     /**

@@ -23,7 +23,7 @@ import java.util.List;
 import lombok.Data;
 
 /**
- * ClusterDto
+ * 集群 DTO，用于传输集群配置信息，包含集群名称、配置内容和关联的流程定义列表。
  */
 @Data
 public class ClusterDto {
@@ -31,17 +31,17 @@ public class ClusterDto {
     private int id;
 
     /**
-     * clluster code
+     * 集群编码
      */
     private Long code;
 
     /**
-     * clluster name
+     * 集群名称
      */
     private String name;
 
     /**
-     * config content
+     * 集群配置内容
      */
     private String config;
 
@@ -50,7 +50,7 @@ public class ClusterDto {
     private List<String> processDefinitions;
 
     /**
-     * operator user id
+     * 操作者用户 ID
      */
     private Integer operator;
 

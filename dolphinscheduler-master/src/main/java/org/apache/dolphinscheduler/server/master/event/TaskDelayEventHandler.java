@@ -35,6 +35,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 任务延迟事件处理器。处理 Worker 上报的任务延迟事件，当 Worker 未能在预期时间内执行任务或主流程状态已变更时产生该事件。成功处理后转换并提交 TASK_STATE_CHANGE 状态事件。
+ */
 @Component
 public class TaskDelayEventHandler implements TaskEventHandler {
 

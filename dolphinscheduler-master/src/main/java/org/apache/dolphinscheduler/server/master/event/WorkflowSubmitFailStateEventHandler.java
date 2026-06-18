@@ -26,6 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.google.auto.service.AutoService;
 
+/**
+ * 工作流提交失败状态事件处理器。处理 PROCESS_SUBMIT_FAILED 状态事件，负责更新流程实例状态为失败并结束流程，通常在工作流启动处理器提交失败时触发。
+ */
 @AutoService(StateEventHandler.class)
 @Slf4j
 public class WorkflowSubmitFailStateEventHandler implements StateEventHandler {

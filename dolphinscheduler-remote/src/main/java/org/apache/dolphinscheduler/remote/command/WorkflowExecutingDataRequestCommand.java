@@ -26,19 +26,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * workflow executing data request, from api to master
+ * 工作流执行数据请求命令，由API服务发送给Master，用于查询工作流实例的执行数据。
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkflowExecutingDataRequestCommand implements Serializable {
 
+    /** 流程实例ID */
     private Integer processInstanceId;
 
     /**
-     * package request command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

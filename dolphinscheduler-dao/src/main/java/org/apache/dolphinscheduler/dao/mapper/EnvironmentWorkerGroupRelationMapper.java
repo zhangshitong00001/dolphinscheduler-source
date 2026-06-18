@@ -26,32 +26,36 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * environment worker group relation mapper interface
+ * 环境-工作组关联 Mapper 接口，封装对 t_ds_environment_worker_group_relation 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，管理环境配置与 Worker 工作组之间的多对多关联关系。
  */
 public interface EnvironmentWorkerGroupRelationMapper extends BaseMapper<EnvironmentWorkerGroupRelation> {
 
     /**
-     * environment worker group relation by environmentCode
+     * 根据环境编码查询该环境绑定的所有工作组关联记录。
+     * SELECT * FROM t_ds_environment_worker_group_relation WHERE environment_code = #{environmentCode}
      *
-     * @param environmentCode environmentCode
-     * @return EnvironmentWorkerGroupRelation list
+     * @param environmentCode 环境编码
+     * @return 环境-工作组关联列表
      */
     List<EnvironmentWorkerGroupRelation> queryByEnvironmentCode(@Param("environmentCode") Long environmentCode);
 
     /**
-     * environment worker group relation by workerGroupName
+     * 根据工作组名称查询该工作组关联的所有环境记录。
+     * SELECT * FROM t_ds_environment_worker_group_relation WHERE worker_group = #{workerGroupName}
      *
-     * @param workerGroupName workerGroupName
-     * @return EnvironmentWorkerGroupRelation list
+     * @param workerGroupName Worker 工作组名称
+     * @return 环境-工作组关联列表
      */
     List<EnvironmentWorkerGroupRelation> queryByWorkerGroupName(@Param("workerGroupName") String workerGroupName);
 
     /**
-     * delete environment worker group relation by processCode
+     * 根据环境编码和工作组名称删除关联记录。
+     * DELETE FROM t_ds_environment_worker_group_relation WHERE environment_code = #{environmentCode} AND worker_group = #{workerGroupName}
      *
-     * @param environmentCode environmentCode
-     * @param workerGroupName workerGroupName
-     * @return int
+     * @param environmentCode 环境编码
+     * @param workerGroupName Worker 工作组名称
+     * @return 删除的记录数
      */
     int deleteByCode(@Param("environmentCode") Long environmentCode, @Param("workerGroupName") String workerGroupName);
 }

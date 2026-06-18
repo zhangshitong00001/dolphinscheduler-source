@@ -25,124 +25,127 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 工作流执行DTO，用于在远程通信中传输工作流实例的完整执行数据。
+ */
 @Setter
 @Getter
 public class WorkflowExecuteDto {
 
+    /** 流程实例ID */
     private int id;
 
+    /** 流程实例名称 */
     private String name;
 
+    /** 流程定义编码 */
     private Long processDefinitionCode;
 
+    /** 流程定义版本号 */
     private int processDefinitionVersion;
 
+    /** 工作流执行状态 */
     private WorkflowExecutionStatus state;
 
-    /**
-     * recovery flag for failover
-     */
+    /** 容错恢复标志 */
     private Flag recovery;
 
+    /** 开始时间 */
     private Date startTime;
 
+    /** 结束时间 */
     private Date endTime;
 
+    /** 运行次数 */
     private int runTimes;
 
+    /** 执行主机 */
     private String host;
 
+    /** 命令类型 */
     private CommandType commandType;
 
+    /** 命令参数 */
     private String commandParam;
 
-    /**
-     * node depend type
-     */
+    /** 任务依赖类型 */
     private TaskDependType taskDependType;
 
+    /** 最大尝试次数 */
     private int maxTryTimes;
 
-    /**
-     * failure strategy when task failed.
-     */
+    /** 任务失败时的失败策略 */
     private FailureStrategy failureStrategy;
 
-    /**
-     * warning type
-     */
+    /** 告警类型 */
     private WarningType warningType;
 
+    /** 告警组ID */
     private Integer warningGroupId;
 
+    /** 调度时间 */
     private Date scheduleTime;
 
+    /** 命令开始时间 */
     private Date commandStartTime;
 
-    /**
-     * user define parameters string
-     */
+    /** 用户自定义参数 */
     private String globalParams;
 
-    /**
-     * executor id
-     */
+    /** 执行者ID */
     private int executorId;
 
-    /**
-     * executor name
-     */
+    /** 执行者名称 */
     private String executorName;
 
-    /**
-     * tenant code
-     */
+    /** 租户编码 */
     private String tenantCode;
 
-    /**
-     * queue
-     */
+    /** 队列 */
     private String queue;
 
-    /**
-     * process is sub process
-     */
+    /** 是否为子流程 */
     private Flag isSubProcess;
 
-    /**
-     * history command
-     */
+    /** 历史命令 */
     private String historyCmd;
 
-    /**
-     * depend processes schedule time
-     */
+    /** 依赖流程的调度时间 */
     private String dependenceScheduleTimes;
 
+    /** 运行时长 */
     private String duration;
 
+    /** 流程实例优先级 */
     private Priority processInstancePriority;
 
+    /** Worker分组 */
     private String workerGroup;
 
+    /** 环境编码 */
     private Long environmentCode;
 
+    /** 超时时间 */
     private int timeout;
 
+    /** 租户ID */
     private int tenantId;
 
-    /**
-     * varPool string
-     */
+    /** 变量池字符串 */
     private String varPool;
 
+    /** 下一个流程实例ID */
     private int nextProcessInstanceId;
 
+    /** 是否试运行 */
     private int dryRun;
 
+    /** 重启时间 */
     private Date restartTime;
 
+    /** 是否被阻塞 */
     private boolean isBlocked;
 
+    /** 任务实例集合 */
     private Collection<TaskInstanceExecuteDto> taskInstances;
 }

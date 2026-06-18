@@ -35,16 +35,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * base controller
+ * 基础控制器。提供分页参数校验、客户端IP获取、标准结果封装等通用功能方法，供所有Controller子类继承使用。
  */
 public class BaseController {
 
     /**
-     * check params
+     * 校验分页参数。
      *
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return check result code
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 校验结果状态码
      */
     // todo: directly throw exception
     public Result checkPageParams(int pageNo, int pageSize) {
@@ -64,10 +64,10 @@ public class BaseController {
     }
 
     /**
-     * get ip address in the http request
+     * 从HTTP请求中获取客户端IP地址。优先从X-Forwarded-For和X-Real-IP头获取，无代理时返回远程地址。
      *
-     * @param request http servlet request
-     * @return client ip address
+     * @param request HTTP请求对象
+     * @return 客户端IP地址
      */
     public static String getClientIpAddress(HttpServletRequest request) {
         String clientIp = request.getHeader(HTTP_X_FORWARDED_FOR);
@@ -90,10 +90,10 @@ public class BaseController {
     }
 
     /**
-     * return data list
+     * 返回数据列表。根据Service层返回的Map结果自动构建标准成功或错误响应。
      *
-     * @param result result code
-     * @return result code
+     * @param result 包含status和data的Map结果
+     * @return 标准结果对象
      */
     public Result returnDataList(Map<String, Object> result) {
         Status status = (Status) result.get(Constants.STATUS);
@@ -109,9 +109,9 @@ public class BaseController {
     }
 
     /**
-     * success
+     * 返回成功结果（无数据）。
      *
-     * @return success result code
+     * @return 成功结果对象
      */
     public Result success() {
         Result result = new Result();
@@ -122,10 +122,10 @@ public class BaseController {
     }
 
     /**
-     * success does not need to return data
+     * 返回成功结果，携带自定义消息。
      *
-     * @param msg success message
-     * @return success result code
+     * @param msg 成功消息
+     * @return 成功结果对象
      */
     public Result success(String msg) {
         Result result = new Result();
@@ -136,46 +136,45 @@ public class BaseController {
     }
 
     /**
-     * return data no paging
+     * 返回成功结果，携带消息和数据列表（不分页）。
      *
-     * @param msg success message
-     * @param list data list
-     * @return success result code
+     * @param msg 成功消息
+     * @param list 数据列表
+     * @return 成功结果对象
      */
     public Result success(String msg, Object list) {
         return getResult(msg, list);
     }
 
     /**
-     * return data no paging
+     * 返回成功结果，携带对象数据（不分页）。
      *
-     * @param list success
-     * @return success result code
+     * @param list 数据对象
+     * @return 成功结果对象
      */
     public Result success(Object list) {
         return getResult(Status.SUCCESS.getMsg(), list);
     }
 
     /**
-     * return the data use Map format, for example, passing the value of key, value, passing a value
-     * eg. "/user/add"  then return user name: zhangsan
+     * 返回成功结果，携带Map格式的数据。
      *
-     * @param msg message
-     * @param object success object data
-     * @return success result code
+     * @param msg 成功消息
+     * @param object Map格式数据
+     * @return 成功结果对象
      */
     public Result success(String msg, Map<String, Object> object) {
         return getResult(msg, object);
     }
 
     /**
-     * return data with paging
+     * 返回分页数据。包含数据列表、当前页码、总记录数和总页数。
      *
-     * @param totalList success object list
-     * @param currentPage current page
-     * @param total total
-     * @param totalPage total page
-     * @return success result code
+     * @param totalList 数据列表
+     * @param currentPage 当前页码
+     * @param total 总记录数
+     * @param totalPage 总页数
+     * @return 成功结果对象
      */
     public Result success(Object totalList, Integer currentPage,
                           Integer total, Integer totalPage) {
@@ -193,11 +192,11 @@ public class BaseController {
     }
 
     /**
-     * error handle
+     * 返回错误结果。
      *
-     * @param code result code
-     * @param msg result message
-     * @return error result code
+     * @param code 错误码
+     * @param msg 错误消息
+     * @return 错误结果对象
      */
     public Result error(Integer code, String msg) {
         Result result = new Result();
@@ -207,11 +206,11 @@ public class BaseController {
     }
 
     /**
-     * put message to map
+     * 将状态信息放入Map结果中。
      *
-     * @param result result
-     * @param status status
-     * @param statusParams object messages
+     * @param result 结果Map
+     * @param status 状态枚举
+     * @param statusParams 状态参数（用于消息格式化）
      */
     protected void putMsg(Map<String, Object> result, Status status, Object... statusParams) {
         result.put(Constants.STATUS, status);
@@ -223,11 +222,11 @@ public class BaseController {
     }
 
     /**
-     * put message to result object
+     * 将状态信息放入Result对象中。
      *
-     * @param result result
-     * @param status status
-     * @param statusParams status parameters
+     * @param result Result对象
+     * @param status 状态枚举
+     * @param statusParams 状态参数（用于消息格式化）
      */
     protected void putMsg(Result result, Status status, Object... statusParams) {
         result.setCode(status.getCode());

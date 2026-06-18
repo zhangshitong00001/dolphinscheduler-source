@@ -18,19 +18,15 @@
 package org.apache.dolphinscheduler.spi.enums;
 
 /**
- * have_script
- * have_file
- * can_retry
- * have_arr_variables
- * have_map_variables
- * have_alert
+ * 通用是否标志枚举，用于各种布尔型标志位字段。
+ * <p>
+ * 常见用途包括：是否有脚本、是否有文件、是否可重试、
+ * 是否有数组变量、是否有Map变量、是否有告警等。
  */
 public enum Flag {
-    /**
-     * 0 no
-     * 1 yes
-     */
+    /** 否/无 */
     NO(0, "no"),
+    /** 是/有 */
     YES(1, "yes");
 
     Flag(int code, String descp) {

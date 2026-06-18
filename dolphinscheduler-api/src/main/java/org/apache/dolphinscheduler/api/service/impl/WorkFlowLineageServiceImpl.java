@@ -57,7 +57,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 /**
- * work flow lineage service impl
+ * 工作流血缘关系服务实现类。用于查询工作流之间的依赖关系和任务依赖关系，
+ * 支持根据名称、Code查询工作流血缘，以及查询任务间的上下游依赖。
  */
 @Service
 public class WorkFlowLineageServiceImpl extends BaseServiceImpl implements WorkFlowLineageService {
@@ -74,6 +75,13 @@ public class WorkFlowLineageServiceImpl extends BaseServiceImpl implements WorkF
     @Autowired
     private TaskDefinitionMapper taskDefinitionMapper;
 
+    /**
+     * 根据项目Code和工作流名称查询工作流血缘关系。
+     *
+     * @param projectCode  项目Code
+     * @param workFlowName 工作流名称
+     * @return 工作流血缘关系列表Map
+     */
     @Override
     public Map<String, Object> queryWorkFlowLineageByName(long projectCode, String workFlowName) {
         Map<String, Object> result = new HashMap<>();
@@ -88,6 +96,13 @@ public class WorkFlowLineageServiceImpl extends BaseServiceImpl implements WorkF
         return result;
     }
 
+    /**
+     * 根据项目Code和源工作流Code递归查询工作流血缘关系（包括上游和下游）。
+     *
+     * @param projectCode        项目Code
+     * @param sourceWorkFlowCode 源工作流Code
+     * @return 包含工作流列表和关系列表的Map
+     */
     @Override
     public Map<String, Object> queryWorkFlowLineageByCode(long projectCode, long sourceWorkFlowCode) {
         Map<String, Object> result = new HashMap<>();
@@ -156,6 +171,12 @@ public class WorkFlowLineageServiceImpl extends BaseServiceImpl implements WorkF
         }
     }
 
+    /**
+     * 查询项目下所有工作流的血缘关系及工作流间的依赖关系。
+     *
+     * @param projectCode 项目Code
+     * @return 包含工作流血缘关系列表和关系列表的Map
+     */
     @Override
     public Map<String, Object> queryWorkFlowLineage(long projectCode) {
         Map<String, Object> result = new HashMap<>();

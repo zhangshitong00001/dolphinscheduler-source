@@ -26,7 +26,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.sift.AbstractDiscriminator;
 
 /**
- * Task Log Discriminator
+ * 任务日志鉴别器，根据日志线程名决定日志文件的输出路径。
+ * <p>线程名格式为：Task-{processDefinitionId}-{processInstanceId}-{taskInstanceId}，将转换为目录结构。</p>
  */
 public class TaskLogDiscriminator extends AbstractDiscriminator<ILoggingEvent> {
 

@@ -20,13 +20,12 @@ package org.apache.dolphinscheduler.spi.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * resource type
+ * 资源类型枚举，定义DolphinScheduler中资源文件的两大分类。
  */
 public enum ResourceType {
-    /**
-     * 0 file, 1 udf
-     */
+    /** 普通文件资源 */
     FILE(0, "file"),
+    /** UDF（用户自定义函数）资源 */
     UDF(1, "udf");
 
     ResourceType(int code, String descp) {

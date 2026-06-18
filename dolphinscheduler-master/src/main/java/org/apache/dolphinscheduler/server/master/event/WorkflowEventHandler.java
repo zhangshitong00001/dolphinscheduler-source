@@ -17,13 +17,17 @@
 
 package org.apache.dolphinscheduler.server.master.event;
 
+/**
+ * 工作流事件处理器接口。定义了处理工作流级别事件的契约，如工作流启动事件，通过 WorkflowEventQueue 消费工作流事件并调度到对应的处理器执行。
+ */
 public interface WorkflowEventHandler {
 
     /**
-     * Handle a workflow event,
+     * 处理工作流事件。
      *
-     * @throws WorkflowEventHandleError     if this exception happen, means the event is broken, need to drop this event.
-     * @throws WorkflowEventHandleException if this exception happen, means we need to retry this event.
+     * @param workflowEvent 待处理的工作流事件
+     * @throws WorkflowEventHandleError 不可恢复的错误，系统将丢弃该事件
+     * @throws WorkflowEventHandleException 可恢复的异常，系统将重试该事件
      */
     void handleWorkflowEvent(WorkflowEvent workflowEvent) throws WorkflowEventHandleError, WorkflowEventHandleException;
 

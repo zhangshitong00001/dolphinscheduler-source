@@ -17,6 +17,9 @@
 
 package org.apache.dolphinscheduler.server.master.event;
 
+/**
+ * 工作流事件类型枚举。定义工作流级别的事件类型，用于区分不同的工作流事件。
+ */
 public enum WorkflowEventType {
 
     START_WORKFLOW,

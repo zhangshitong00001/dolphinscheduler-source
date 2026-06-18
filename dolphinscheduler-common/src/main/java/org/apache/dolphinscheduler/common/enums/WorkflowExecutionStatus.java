@@ -23,20 +23,37 @@ import lombok.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 工作流执行状态枚举。
+ * 定义工作流实例从提交到结束的完整生命周期状态。
+ * 该类从 ExecutionStatus 拆分而来（#11339），为兼容旧值，状态码不连续。
+ */
 public enum WorkflowExecutionStatus {
     // This class is split from <code>ExecutionStatus</code> #11339.
     // In order to compatible with the old value, the code is not consecutive
+    /** 提交成功 */
     SUBMITTED_SUCCESS(0, "submit success"),
+    /** 正在运行 */
     RUNNING_EXECUTION(1, "running"),
+    /** 准备暂停 */
     READY_PAUSE(2, "ready pause"),
+    /** 已暂停 */
     PAUSE(3, "pause"),
+    /** 准备停止 */
     READY_STOP(4, "ready stop"),
+    /** 已停止 */
     STOP(5, "stop"),
+    /** 失败 */
     FAILURE(6, "failure"),
+    /** 成功 */
     SUCCESS(7, "success"),
+    /** 延迟执行 */
     DELAY_EXECUTION(12, "delay execution"),
+    /** 串行等待 */
     SERIAL_WAIT(14, "serial wait"),
+    /** 准备阻塞 */
     READY_BLOCK(15, "ready block"),
+    /** 已阻塞 */
     BLOCK(16, "block"),
     ;
 

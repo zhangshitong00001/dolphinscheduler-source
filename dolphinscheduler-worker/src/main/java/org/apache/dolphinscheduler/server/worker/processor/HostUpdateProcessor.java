@@ -34,8 +34,8 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 
 /**
- * update process host
- * this used when master failover
+ * 主机更新处理器。当Master发生故障转移时，接收新的Master主机地址，
+ * 并更新所有待重试消息的目标地址，确保消息能正确发送到新的Master节点。
  */
 @Component
 public class HostUpdateProcessor implements NettyRequestProcessor {
@@ -45,6 +45,13 @@ public class HostUpdateProcessor implements NettyRequestProcessor {
     @Autowired
     private MessageRetryRunner messageRetryRunner;
 
+    /**
+     * 处理主机更新命令。解析Master故障转移后发送的主机更新请求，
+     * 更新消息重试运行器中对应任务实例的消息目标地址。
+     *
+     * @param channel Netty通道
+     * @param command 主机更新命令
+     */
     @Override
     public void process(Channel channel, Command command) {
         Preconditions.checkArgument(CommandType.PROCESS_HOST_UPDATE_REQUEST == command.getType(),

@@ -18,16 +18,21 @@
 package org.apache.dolphinscheduler.rpc.common;
 
 /**
- * RpcResponse
+ * RPC 响应封装体。包含远程调用的请求ID、响应状态码、返回结果、消息和响应事件类型。
  */
 public class RpcResponse {
 
+    /** 对应的请求ID */
     private String requestId;
+    /** 响应消息 */
     private String msg;
+    /** 响应结果对象 */
     private Object result;
+    /** 响应状态码：0表示成功，-1表示失败 */
     private Byte status;
 
     /**
+     * 响应事件类型，用于标识是确认应答还是业务响应。
      * @see ResponseEventType
      */
     private Byte responseType;

@@ -17,7 +17,16 @@
 
 package org.apache.dolphinscheduler.common.enums;
 
+/**
+ * 槽位检查状态枚举。
+ * 定义任务组槽位检查的结果状态。
+ */
 public enum SlotCheckState {
 
-    PASS,INJECT,CHANGE
+    /** 通过 */
+    PASS,
+    /** 注入 */
+    INJECT,
+    /** 变更 */
+    CHANGE
 }

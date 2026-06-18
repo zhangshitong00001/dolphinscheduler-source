@@ -31,45 +31,60 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * response future
+ * 响应Future。封装异步请求的响应处理，支持超时等待、回调执行和Future表扫描清理。
  */
 public class ResponseFuture {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResponseFuture.class);
 
+    /**
+     * 全局Future映射表，通过opaque标识关联请求与响应
+     */
     private static final ConcurrentHashMap<Long, ResponseFuture> FUTURE_TABLE = new ConcurrentHashMap<>(256);
 
     /**
-     * request unique identification
+     * 请求唯一标识
      */
     private final long opaque;
 
     /**
-     * timeout
+     * 超时时间（毫秒）
      */
     private final long timeoutMillis;
 
     /**
-     * invokeCallback function
+     * 回调函数
      */
     private final InvokeCallback invokeCallback;
 
     /**
-     * releaseSemaphore
+     * 信号量释放器
      */
     private final ReleaseSemaphore releaseSemaphore;
 
+    /**
+     * 闭锁，用于同步等待响应
+     */
     private final CountDownLatch latch = new CountDownLatch(1);
 
+    /**
+     * 开始时间戳
+     */
     private final long beginTimestamp = System.currentTimeMillis();
 
     /**
-     * response command
+     * 响应命令
      */
     private Command responseCommand;
 
+    /**
+     * 发送是否成功标志
+     */
     private volatile boolean sendOk = true;
 
+    /**
+     * 异常原因
+     */
     private Throwable cause;
 
     public ResponseFuture(long opaque, long timeoutMillis, InvokeCallback invokeCallback, ReleaseSemaphore releaseSemaphore) {
@@ -81,9 +96,9 @@ public class ResponseFuture {
     }
 
     /**
-     * wait for response
+     * 等待响应返回，在超时时间内阻塞当前线程。
      *
-     * @return command
+     * @return command 响应命令，超时返回null
      */
     public Command waitResponse() throws InterruptedException {
         this.latch.await(timeoutMillis, TimeUnit.MILLISECONDS);
@@ -91,9 +106,9 @@ public class ResponseFuture {
     }
 
     /**
-     * put response
+     * 设置响应命令并释放闭锁，唤醒等待线程，同时从Future映射表中移除当前Future。
      *
-     * @param responseCommand responseCommand
+     * @param responseCommand 响应命令
      */
     public void putResponse(final Command responseCommand) {
         this.responseCommand = responseCommand;
@@ -105,14 +120,17 @@ public class ResponseFuture {
         return FUTURE_TABLE.get(opaque);
     }
 
+    /**
+     * 从Future映射表中移除当前Future。
+     */
     public void removeFuture() {
         FUTURE_TABLE.remove(opaque);
     }
 
     /**
-     * whether timeout
+     * 判断是否已超时。
      *
-     * @return timeout
+     * @return 是否超时
      */
     public boolean isTimeout() {
         long diff = System.currentTimeMillis() - this.beginTimestamp;
@@ -120,7 +138,7 @@ public class ResponseFuture {
     }
 
     /**
-     * execute invoke callback
+     * 执行回调函数，通知调用方响应已完成。
      */
     public void executeInvokeCallback() {
         if (invokeCallback != null) {
@@ -169,7 +187,7 @@ public class ResponseFuture {
     }
 
     /**
-     * release
+     * 释放信号量，归还并发控制许可。
      */
     public void release() {
         if (this.releaseSemaphore != null) {
@@ -178,7 +196,7 @@ public class ResponseFuture {
     }
 
     /**
-     * scan future table
+     * 扫描Future映射表，清理超时的Future并执行其回调。
      */
     public static void scanFutureTable() {
         final List<ResponseFuture> futureList = new LinkedList<>();

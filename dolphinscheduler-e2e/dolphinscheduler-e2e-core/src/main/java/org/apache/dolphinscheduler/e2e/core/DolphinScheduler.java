@@ -30,6 +30,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+/**
+ * DolphinScheduler端到端测试注解。标记测试类以启用Docker Compose容器化测试环境，
+ * 并通过 {@link DolphinSchedulerExtension} 扩展实现自动启停容器和浏览器录制。
+ */
 @Inherited
 @Testcontainers
 @Target(ElementType.TYPE)
@@ -37,5 +41,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @TestMethodOrder(OrderAnnotation.class)
 @ExtendWith(DolphinSchedulerExtension.class)
 public @interface DolphinScheduler {
+    /** Docker Compose配置文件路径列表，相对于classpath */
     String[] composeFiles();
 }

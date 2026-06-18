@@ -31,110 +31,76 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 定时调度实体，映射到 t_ds_schedules 表，表示工作流的一次定时调度配置。
+ * 包含 Cron 表达式、生效时间范围、时区、告警配置、Worker 分组等调度参数。
+ */
 @Data
 @TableName("t_ds_schedules")
 public class Schedule {
 
+    /** 调度主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * process definition code
-     */
+    /** 流程定义编码 */
     private long processDefinitionCode;
 
-    /**
-     * process definition name
-     */
+    /** 非数据库字段：流程定义名称 */
     @TableField(exist = false)
     private String processDefinitionName;
 
-    /**
-     * project name
-     */
+    /** 非数据库字段：项目名称 */
     @TableField(exist = false)
     private String projectName;
 
-    /**
-     * schedule description
-     */
+    /** 非数据库字段：流程定义描述 */
     @TableField(exist = false)
     private String definitionDescription;
 
-    /**
-     * schedule start time
-     */
+    /** 调度开始时间 */
     private Date startTime;
 
-    /**
-     * schedule end time
-     */
+    /** 调度结束时间 */
     private Date endTime;
 
-    /**
-     * timezoneId
-     * <p>see {@link java.util.TimeZone#getTimeZone(String)}
-     */
+    /** 时区 ID，参见 {@link java.util.TimeZone#getTimeZone(String)} */
     private String timezoneId;
 
-    /**
-     * crontab expression
-     */
+    /** Cron 表达式 */
     private String crontab;
 
-    /**
-     * failure strategy
-     */
+    /** 失败策略 */
     private FailureStrategy failureStrategy;
 
-    /**
-     * warning type
-     */
+    /** 告警类型 */
     private WarningType warningType;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 
-    /**
-     * created user id
-     */
+    /** 创建者用户 ID */
     private int userId;
 
-    /**
-     * created user name
-     */
+    /** 非数据库字段：创建者用户名 */
     @TableField(exist = false)
     private String userName;
 
-    /**
-     * release state
-     */
+    /** 发布状态 */
     private ReleaseState releaseState;
 
-    /**
-     * warning group id
-     */
+    /** 告警组 ID */
     private int warningGroupId;
 
-    /**
-     * process instance priority
-     */
+    /** 流程实例优先级 */
     private Priority processInstancePriority;
 
-    /**
-     *  worker group
-     */
+    /** Worker 分组 */
     private String workerGroup;
 
-    /**
-     * environment code
-     */
+    /** 环境编码 */
     private Long environmentCode;
 }

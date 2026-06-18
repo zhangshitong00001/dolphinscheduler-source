@@ -60,6 +60,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * Worker 故障转移服务，负责在 Worker 节点宕机后将其上运行的任务进行故障转移。
+ * 查找状态为 SUBMITTED_SUCCESS/DISPATCH/RUNNING_EXECUTION/DELAY_EXECUTION/READY_PAUSE/READY_STOP
+ * 且属于故障 Worker 的任务，将其状态改为 NEED_FAULT_TOLERANCE 并通过事件通知对应的 WorkflowExecuteRunnable 重新调度。
+ * 仅故障转移属于当前 Master 的工作流实例中的任务。
+ */
 @Service
 public class WorkerFailoverService {
 
@@ -89,12 +95,10 @@ public class WorkerFailoverService {
     }
 
     /**
-     * Do the worker failover. Will find the SUBMITTED_SUCCESS/DISPATCH/RUNNING_EXECUTION/DELAY_EXECUTION/READY_PAUSE/READY_STOP tasks belong the given worker,
-     * and failover these tasks.
-     * <p>
-     * Note: When we do worker failover, the master will only failover the processInstance belongs to the current master.
+     * 执行 Worker 故障转移，查找属于故障 Worker 且需要故障转移的任务实例，逐个进行故障转移。
+     * 注意：仅故障转移属于当前 Master 的工作流实例。
      *
-     * @param workerHost worker host
+     * @param workerHost 故障 Worker 的主机地址
      */
     public void failoverWorker(@NonNull String workerHost) {
         LOGGER.info("Worker[{}] failover starting", workerHost);
@@ -149,14 +153,13 @@ public class WorkerFailoverService {
     }
 
     /**
-     * failover task instance
-     * <p>
-     * 1. kill yarn job if run on worker and there are yarn jobs in tasks.
-     * 2. change task state from running to need failover.
-     * 3. try to notify local master
+     * 执行单个任务实例的故障转移：
+     * 1. 如果非 Master 本地任务，终止相关 Yarn 任务
+     * 2. 将任务状态改为 NEED_FAULT_TOLERANCE，flag 设为 NO
+     * 3. 提交 TaskStateEvent 到工作流线程池，触发重新调度
      *
-     * @param processInstance
-     * @param taskInstance
+     * @param processInstance 工作流实例
+     * @param taskInstance    任务实例
      */
     private void failoverTaskInstance(@NonNull ProcessInstance processInstance, @NonNull TaskInstance taskInstance) {
         TaskMetrics.incTaskInstanceByState("failover");
@@ -195,9 +198,15 @@ public class WorkerFailoverService {
     }
 
     /**
-     * task needs failover if task start before server starts
+     * 检查任务实例是否需要故障转移：
+     * - 工作流必须属于当前 Master
+     * - 任务未完成
+     * - 如果 Worker 已恢复，则只故障转移在 Worker 启动前提交的任务
      *
-     * @return true if task instance need fail over
+     * @param needFailoverWorkerStartTime 故障 Worker 的启动时间
+     * @param processInstance             工作流实例
+     * @param taskInstance                任务实例
+     * @return 是否需要故障转移
      */
     private boolean checkTaskInstanceNeedFailover(Optional<Date> needFailoverWorkerStartTime,
                                                   @Nullable ProcessInstance processInstance,

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DAG Cycle judge
+ * DAG周期判定器，支持链式组合多个周期解析器，按优先级依次判定调度周期。
  */
 public class CycleLinks extends AbstractCycle {
   private final List<AbstractCycle> cycleList = new ArrayList<>();

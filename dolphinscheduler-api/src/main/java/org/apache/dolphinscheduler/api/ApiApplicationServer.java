@@ -40,6 +40,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 
+/**
+ * DolphinScheduler API应用服务启动类。作为Spring Boot应用入口，负责启动API服务并在应用就绪后加载任务插件信息到数据库。
+ */
 @ServletComponentScan
 @SpringBootApplication
 @ComponentScan("org.apache.dolphinscheduler")
@@ -60,6 +63,11 @@ public class ApiApplicationServer {
         SpringApplication.run(ApiApplicationServer.class);
     }
 
+    /**
+     * 应用就绪事件处理。在Spring上下文就绪后加载所有任务插件并将插件参数同步到数据库。
+     *
+     * @param readyEvent 应用就绪事件
+     */
     @EventListener
     public void run(ApplicationReadyEvent readyEvent) {
         logger.info("Received spring application context ready event will load taskPlugin and write to DB");

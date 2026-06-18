@@ -56,26 +56,34 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
+/**
+ * 告警数据访问对象，负责告警记录、告警发送状态、告警插件实例等告警相关数据的持久化操作。
+ */
 @Component
 public class AlertDao {
 
+    /** 故障告警抑制时长（分钟），在该时间窗口内的重复告警将被抑制 */
     @Value("${alert.alarm-suppression.crash:60}")
     private Integer crashAlarmSuppression;
 
+    /** 告警记录 Mapper */
     @Autowired
     private AlertMapper alertMapper;
 
+    /** 告警插件实例 Mapper */
     @Autowired
     private AlertPluginInstanceMapper alertPluginInstanceMapper;
 
+    /** 告警组 Mapper */
     @Autowired
     private AlertGroupMapper alertGroupMapper;
 
+    /** 告警发送状态 Mapper */
     @Autowired
     private AlertSendStatusMapper alertSendStatusMapper;
 
     /**
-     * insert alert
+     * 新增告警记录，生成告警签名后写入数据库。
      *
      * @param alert alert
      * @return add alert result
@@ -87,7 +95,7 @@ public class AlertDao {
     }
 
     /**
-     * update alert sending(execution) status
+     * 更新告警的发送（执行）状态。
      *
      * @param alertStatus alertStatus
      * @param log alert results json
@@ -104,7 +112,7 @@ public class AlertDao {
     }
 
     /**
-     * generate sign for alert
+     * 根据告警内容生成签名，使用 SHA1 算法，用于告警去重。
      *
      * @param alert alert
      * @return sign's str
@@ -118,7 +126,7 @@ public class AlertDao {
     }
 
     /**
-     * add AlertSendStatus
+     * 新增告警发送状态记录，记录告警通过特定插件实例发送的结果。
      *
      * @param sendStatus alert send status
      * @param log log
@@ -137,7 +145,7 @@ public class AlertDao {
     }
 
     /**
-     * MasterServer or WorkerServer stopped
+     * 发送 MasterServer 或 WorkerServer 宕机告警，利用 SQL 条件避免重复插入。
      *
      * @param alertGroupId alertGroupId
      * @param host host
@@ -168,7 +176,7 @@ public class AlertDao {
     }
 
     /**
-     * process time out alert
+     * 发送流程实例超时告警，构建告警内容后写入数据库。
      *
      * @param processInstance processInstance
      * @param projectUser projectUser
@@ -202,6 +210,9 @@ public class AlertDao {
         saveTaskTimeoutAlert(alert, content, alertGroupId);
     }
 
+    /**
+     * 保存任务超时告警，设置告警组、签名等属性后写入数据库。
+     */
     private void saveTaskTimeoutAlert(Alert alert, String content, int alertGroupId) {
         alert.setAlertGroupId(alertGroupId);
         alert.setWarningType(WarningType.FAILURE);
@@ -214,7 +225,7 @@ public class AlertDao {
     }
 
     /**
-     * task timeout warn
+     * 发送任务实例超时告警，构建任务级别的告警内容后写入数据库。
      *
      * @param processInstance processInstanceId
      * @param taskInstance taskInstance
@@ -250,7 +261,7 @@ public class AlertDao {
     }
 
     /**
-     * List alerts that are pending for execution
+     * 查询所有等待执行的告警记录。
      */
     public List<Alert> listPendingAlerts() {
         LambdaQueryWrapper<Alert> wrapper = new QueryWrapper<>(new Alert()).lambda()
@@ -258,6 +269,9 @@ public class AlertDao {
         return alertMapper.selectList(wrapper);
     }
 
+    /**
+     * 根据流程实例 ID 查询关联的告警记录列表。
+     */
     public List<Alert> listAlerts(int processInstanceId) {
         LambdaQueryWrapper<Alert> wrapper = new QueryWrapper<>(new Alert()).lambda()
                 .eq(Alert::getProcessInstanceId, processInstanceId);
@@ -274,7 +288,7 @@ public class AlertDao {
     }
 
     /**
-     * list all alert plugin instance by alert group id
+     * 根据告警组 ID 查询该组下所有启用的告警插件实例列表。
      *
      * @param alertGroupId alert group id
      * @return AlertPluginInstance list

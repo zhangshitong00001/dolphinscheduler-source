@@ -52,7 +52,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * http utils
+ * HTTP请求工具类，提供基于Apache HttpClient的HTTP GET请求功能。
+ * 内置SSL支持、连接池管理和超时配置。
+ * 该类为工具类，不可实例化。
  */
 public class HttpUtils {
 
@@ -126,10 +128,10 @@ public class HttpUtils {
     }
 
     /**
-     * get http request content
+     * 发送HTTP GET请求并获取响应内容。
      *
-     * @param url url
-     * @return http get request response content
+     * @param url 请求URL
+     * @return HTTP响应的内容字符串
      */
     public static String get(String url) {
         CloseableHttpClient httpclient = HttpUtils.getInstance();
@@ -139,11 +141,11 @@ public class HttpUtils {
     }
 
     /**
-     * get http response content
+     * 执行HTTP GET请求并获取响应内容字符串。
      *
-     * @param httpget    httpget
-     * @param httpClient httpClient
-     * @return http get request response content
+     * @param httpget HTTP GET请求对象
+     * @param httpClient HTTP客户端
+     * @return HTTP响应内容字符串，如果参数为null或状态码非200则返回null
      */
     public static String getResponseContentString(HttpGet httpget, CloseableHttpClient httpClient) {
         if (Objects.isNull(httpget) || Objects.isNull(httpClient)) {

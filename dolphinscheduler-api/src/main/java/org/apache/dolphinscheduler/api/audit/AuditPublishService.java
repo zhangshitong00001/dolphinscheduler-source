@@ -30,6 +30,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 审计发布服务。负责审计消息的发布与分发，使用阻塞队列接收审计消息，通过守护线程异步分发给所有订阅者处理。
+ */
 @Component
 public class AuditPublishService {
 
@@ -57,9 +60,9 @@ public class AuditPublishService {
     }
 
     /**
-     * publish a new audit message
+     * 发布一条新的审计消息。
      *
-     * @param message audit message
+     * @param message 审计消息
      */
     public void publish(AuditMessage message) {
         if (auditConfiguration.getEnabled() && !auditMessageQueue.offer(message)) {

@@ -53,7 +53,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * cluster controller
+ * 集群控制器。提供集群配置的增删改查REST API，包括集群创建、更新、查询详情、分页列表、删除和名称校验操作。
  */
 @Api(tags = "CLUSTER_TAG")
 @RestController
@@ -64,13 +64,13 @@ public class ClusterController extends BaseController {
     private ClusterService clusterService;
 
     /**
-     * create cluster
+     * 创建集群。新增集群配置信息。
      *
-     * @param loginUser   login user
-     * @param name        cluster name
-     * @param config      config
-     * @param description description
-     * @return returns an error if it exists
+     * @param loginUser 当前登录用户
+     * @param name 集群名称
+     * @param config 集群配置
+     * @param description 集群描述
+     * @return 创建结果（若已存在则返回错误）
      */
     @ApiOperation(value = "createCluster", notes = "CREATE_CLUSTER_NOTES")
     @ApiImplicitParams({
@@ -92,14 +92,14 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * update cluster
+     * 更新集群配置。根据集群编码修改集群的配置信息。
      *
-     * @param loginUser   login user
-     * @param code        cluster code
-     * @param name        cluster name
-     * @param config      cluster config
-     * @param description description
-     * @return update result code
+     * @param loginUser 当前登录用户
+     * @param code 集群编码
+     * @param name 集群名称
+     * @param config 集群配置
+     * @param description 集群描述
+     * @return 更新结果状态码
      */
     @ApiOperation(value = "updateCluster", notes = "UPDATE_CLUSTER_NOTES")
     @ApiImplicitParams({
@@ -122,10 +122,10 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * query cluster details by code
+     * 根据编码查询集群详情。
      *
-     * @param clusterCode cluster code
-     * @return cluster detail information
+     * @param clusterCode 集群编码
+     * @return 集群详细信息
      */
     @ApiOperation(value = "queryClusterByCode", notes = "QUERY_CLUSTER_BY_CODE_NOTES")
     @ApiImplicitParams({
@@ -143,12 +143,12 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * query cluster list paging
+     * 分页查询集群列表。
      *
-     * @param searchVal search value
-     * @param pageSize  page size
-     * @param pageNo    page number
-     * @return cluster list which the login user have permission to see
+     * @param searchVal 搜索值
+     * @param pageSize 每页大小
+     * @param pageNo 页码
+     * @return 集群分页列表
      */
     @ApiOperation(value = "queryClusterListPaging", notes = "QUERY_CLUSTER_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -175,11 +175,11 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * delete cluster by code
+     * 根据编码删除集群。
      *
-     * @param loginUser   login user
-     * @param clusterCode cluster code
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param clusterCode 集群编码
+     * @return 删除结果状态码
      */
     @ApiOperation(value = "deleteClusterByCode", notes = "DELETE_CLUSTER_BY_CODE_NOTES")
     @ApiImplicitParams({
@@ -197,10 +197,10 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * query all cluster list
+     * 查询所有集群列表。
      *
-     * @param loginUser login user
-     * @return all cluster list
+     * @param loginUser 当前登录用户
+     * @return 全部集群列表
      */
     @ApiOperation(value = "queryAllClusterList", notes = "QUERY_ALL_CLUSTER_LIST_NOTES")
     @GetMapping(value = "/query-cluster-list")
@@ -213,11 +213,11 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * verify cluster and cluster name
+     * 校验集群名称是否已存在。
      *
-     * @param loginUser   login user
-     * @param clusterName cluster name
-     * @return true if the cluster name not exists, otherwise return false
+     * @param loginUser 当前登录用户
+     * @param clusterName 集群名称
+     * @return 校验结果，名称不存在返回true，否则返回false
      */
     @ApiOperation(value = "verifyCluster", notes = "VERIFY_CLUSTER_NOTES")
     @ApiImplicitParams({

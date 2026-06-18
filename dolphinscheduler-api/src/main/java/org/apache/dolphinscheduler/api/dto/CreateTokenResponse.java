@@ -20,6 +20,9 @@ package org.apache.dolphinscheduler.api.dto;
 import org.apache.dolphinscheduler.api.utils.Result;
 import org.apache.dolphinscheduler.dao.entity.AccessToken;
 
+/**
+ * 创建 Token 响应 DTO，封装 AccessToken 数据的 API 返回结果。
+ */
 public class CreateTokenResponse extends Result {
     private AccessToken data;
 

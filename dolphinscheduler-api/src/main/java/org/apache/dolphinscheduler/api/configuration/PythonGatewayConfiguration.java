@@ -22,6 +22,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Python网关配置。读取以"python-gateway"为前缀的配置属性，管理Python Gateway服务的连接地址、端口和认证令牌等参数。
+ */
 @Data
 @Configuration
 @ConfigurationProperties(value = "python-gateway")

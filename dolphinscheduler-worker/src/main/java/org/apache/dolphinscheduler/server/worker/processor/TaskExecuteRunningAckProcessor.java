@@ -34,7 +34,9 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 
 /**
- * task execute running ack processor
+ * 任务执行运行中确认处理器。处理Master返回的任务运行状态确认消息。
+ * 当Master成功接收Worker发送的任务运行中状态后，Worker收到此确认，
+ * 从重试队列中移除对应的运行状态消息，避免重复发送。
  */
 @Component
 public class TaskExecuteRunningAckProcessor implements NettyRequestProcessor {
@@ -44,6 +46,13 @@ public class TaskExecuteRunningAckProcessor implements NettyRequestProcessor {
     @Autowired
     private MessageRetryRunner messageRetryRunner;
 
+    /**
+     * 处理任务执行运行中确认命令。解析Master返回的确认消息，如果确认成功则从重试队列中
+     * 移除对应的TASK_EXECUTE_RUNNING消息。
+     *
+     * @param channel Netty通道
+     * @param command 任务执行运行中确认命令
+     */
     @Override
     public void process(Channel channel, Command command) {
         Preconditions.checkArgument(CommandType.TASK_EXECUTE_RUNNING_ACK == command.getType(),

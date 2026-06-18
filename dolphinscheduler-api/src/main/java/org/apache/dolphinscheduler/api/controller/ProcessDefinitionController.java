@@ -89,7 +89,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * process definition controller
+ * 流程定义控制器，提供工作流定义的创建、更新、删除、发布、导入导出等 REST API。
  */
 @Api(tags = "PROCESS_DEFINITION_TAG")
 @RestController
@@ -102,20 +102,20 @@ public class ProcessDefinitionController extends BaseController {
     private ProcessDefinitionService processDefinitionService;
 
     /**
-     * create process definition
+     * 创建流程定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param name process definition name
-     * @param description description
-     * @param globalParams globalParams
-     * @param locations locations for nodes
-     * @param timeout timeout
-     * @param tenantCode tenantCode
-     * @param taskRelationJson relation json for nodes
-     * @param taskDefinitionJson taskDefinitionJson
-     * @param otherParamsJson otherParamsJson handle other params
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param name 流程定义名称
+     * @param description 描述
+     * @param globalParams 全局参数
+     * @param locations 节点位置信息
+     * @param timeout 超时时间
+     * @param tenantCode 租户编码
+     * @param taskRelationJson 节点关系 JSON
+     * @param taskDefinitionJson 任务定义 JSON
+     * @param otherParamsJson 其他参数 JSON
+     * @return 创建结果
      */
     @ApiOperation(value = "createProcessDefinition", notes = "CREATE_PROCESS_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -147,13 +147,13 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * copy process definition
+     * 批量复制流程定义到目标项目。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param codes process definition codes
-     * @param targetProjectCode target project code
-     * @return copy result code
+     * @param loginUser 登录用户
+     * @param projectCode 源项目编码
+     * @param codes 流程定义编码列表
+     * @param targetProjectCode 目标项目编码
+     * @return 复制结果
      */
     @ApiOperation(value = "batchCopyByCodes", notes = "COPY_PROCESS_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -173,13 +173,13 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * move process definition
+     * 批量移动流程定义到目标项目。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param codes process definition codes
-     * @param targetProjectCode target project code
-     * @return move result code
+     * @param loginUser 登录用户
+     * @param projectCode 源项目编码
+     * @param codes 流程定义编码列表
+     * @param targetProjectCode 目标项目编码
+     * @return 移动结果
      */
     @ApiOperation(value = "batchMoveByCodes", notes = "MOVE_PROCESS_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -199,12 +199,12 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * verify process definition name unique
+     * 验证流程定义名称是否唯一。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param name name
-     * @return true if process definition name not exists, otherwise false
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param name 流程定义名称
+     * @return 名称不存在则返回 true，否则返回 false
      */
     @ApiOperation(value = "verify-name", notes = "VERIFY_PROCESS_DEFINITION_NAME_NOTES")
     @ApiImplicitParams({
@@ -225,21 +225,21 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * update process definition, with whole process definition object including task definition, task relation and location.
+     * 更新流程定义，包含任务定义、任务关系和节点位置等完整信息。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param name process definition name
-     * @param code process definition code
-     * @param description description
-     * @param globalParams globalParams
-     * @param locations locations for nodes
-     * @param timeout timeout
-     * @param tenantCode tenantCode
-     * @param taskRelationJson relation json for nodes
-     * @param taskDefinitionJson taskDefinitionJson
-     * @param otherParamsJson otherParamsJson handle other params
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param name 流程定义名称
+     * @param code 流程定义编码
+     * @param description 描述
+     * @param globalParams 全局参数
+     * @param locations 节点位置信息
+     * @param timeout 超时时间
+     * @param tenantCode 租户编码
+     * @param taskRelationJson 节点关系 JSON
+     * @param taskDefinitionJson 任务定义 JSON
+     * @param otherParamsJson 其他参数 JSON
+     * @return 更新结果
      */
     @ApiOperation(value = "update", notes = "UPDATE_PROCESS_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -285,14 +285,14 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * query process definition version paging list info
+     * 查询流程定义版本分页列表。
      *
-     * @param loginUser login user info
-     * @param projectCode project code
-     * @param pageNo the process definition version list current page number
-     * @param pageSize the process definition version list page size
-     * @param code the process definition code
-     * @return the process definition version list
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param pageNo 当前页码
+     * @param pageSize 每页大小
+     * @param code 流程定义编码
+     * @return 流程定义版本列表
      */
     @ApiOperation(value = "queryVersions", notes = "QUERY_PROCESS_DEFINITION_VERSIONS_NOTES")
     @ApiImplicitParams({
@@ -321,13 +321,13 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * switch certain process definition version
+     * 切换流程图到指定版本。
      *
-     * @param loginUser login user info
-     * @param projectCode project code
-     * @param code the process definition code
-     * @param version the version user want to switch
-     * @return switch version result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 流程定义编码
+     * @param version 要切换到的版本号
+     * @return 切换结果
      */
     @ApiOperation(value = "switchVersion", notes = "SWITCH_PROCESS_DEFINITION_VERSION_NOTES")
     @ApiImplicitParams({
@@ -348,13 +348,13 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * delete the certain process definition version by version and process definition code
+     * 删除指定流程定义的某个版本。
      *
-     * @param loginUser login user info
-     * @param projectCode project code
-     * @param code the process definition code
-     * @param version the process definition version user want to delete
-     * @return delete version result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 流程定义编码
+     * @param version 要删除的版本号
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteVersion", notes = "DELETE_PROCESS_DEFINITION_VERSION_NOTES")
     @ApiImplicitParams({
@@ -375,13 +375,13 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * release process definition
+     * 发布（上线/下线）流程定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code process definition code
-     * @param releaseState release state
-     * @return release result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 流程定义编码
+     * @param releaseState 发布状态
+     * @return 发布结果
      */
     @ApiOperation(value = "release", notes = "RELEASE_PROCESS_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -403,12 +403,12 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * query detail of process definition by code
+     * 根据编码查询流程定义详情。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code process definition code
-     * @return process definition detail
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 流程定义编码
+     * @return 流程定义详情
      */
     @ApiOperation(value = "queryProcessDefinitionByCode", notes = "QUERY_PROCESS_DEFINITION_BY_CODE_NOTES")
     @ApiImplicitParams({
@@ -427,12 +427,12 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * query detail of process definition by name
+     * 根据名称查询流程定义详情。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param name process definition name
-     * @return process definition detail
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param name 流程定义名称
+     * @return 流程定义详情
      */
     @ApiOperation(value = "queryProcessDefinitionByName", notes = "QUERY_PROCESS_DEFINITION_BY_NAME_NOTES")
     @ApiImplicitParams({
@@ -451,11 +451,11 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * query Process definition list
+     * 查询流程定义列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @return process definition list
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @return 流程定义列表
      */
     @ApiOperation(value = "queryList", notes = "QUERY_PROCESS_DEFINITION_LIST_NOTES")
     @GetMapping(value = "/list")
@@ -469,11 +469,11 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * query Process definition simple list
+     * 查询流程定义简单列表（不含任务详情）。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @return process definition list
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @return 流程定义简单列表
      */
     @ApiOperation(value = "querySimpleList", notes = "QUERY_PROCESS_DEFINITION_SIMPLE_LIST_NOTES")
     @GetMapping(value = "/simple-list")
@@ -487,16 +487,16 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * query process definition list paging
+     * 查询流程定义分页列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param searchVal search value
-     * @param otherParamsJson otherParamsJson handle other params
-     * @param pageNo page number
-     * @param pageSize page size
-     * @param userId user id
-     * @return process definition page
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param searchVal 搜索关键词
+     * @param otherParamsJson 其他参数 JSON
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @param userId 用户 ID
+     * @return 流程定义分页数据
      */
     @ApiOperation(value = "queryListPaging", notes = "QUERY_PROCESS_DEFINITION_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -532,13 +532,13 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * encapsulation tree view structure
+     * 封装树形视图结构，用于前端 DAG 展示。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code process definition code
-     * @param limit limit
-     * @return tree view json data
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 流程定义编码
+     * @param limit 节点数量上限
+     * @return 树形视图 JSON 数据
      */
     @ApiOperation(value = "viewTree", notes = "VIEW_TREE_NOTES")
     @ApiImplicitParams({
@@ -558,12 +558,12 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * get tasks list by process definition code
+     * 根据流程定义编码获取任务节点列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code process definition code
-     * @return task list
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 流程定义编码
+     * @return 任务列表
      */
     @ApiOperation(value = "getTasksByDefinitionCode", notes = "GET_TASK_LIST_BY_DEFINITION_CODE_NOTES")
     @ApiImplicitParams({
@@ -581,12 +581,12 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * get tasks list map by process definition multiple code
+     * 根据多个流程定义编码批量获取任务节点列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param codes process definition codes
-     * @return node list data
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param codes 流程定义编码列表
+     * @return 任务节点列表数据
      */
     @ApiOperation(value = "getTaskListByDefinitionCodes", notes = "GET_TASK_LIST_BY_DEFINITION_CODE_NOTES")
     @ApiImplicitParams({
@@ -604,11 +604,11 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * get process definition list map by project code
+     * 根据项目编码获取流程定义列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @return process definition list data
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @return 流程定义列表数据
      */
     @ApiOperation(value = "getProcessListByProjectCode", notes = "GET_PROCESS_LIST_BY_PROCESS_CODE_NOTES")
     @ApiImplicitParams({
@@ -624,11 +624,11 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * get task definition list by process definition code
+     * 根据流程定义编码获取任务定义列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @return process definition list data
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @return 流程定义列表数据
      */
     @ApiOperation(value = "getTaskListByProcessDefinitionCode", notes = "GET_TASK_LIST_BY_PROCESS_CODE_NOTES")
     @ApiImplicitParams({
@@ -647,12 +647,12 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * delete process definition by code
+     * 根据编码删除流程定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code process definition code
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 流程定义编码
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteByCode", notes = "DELETE_PROCESS_DEFINITION_BY_ID_NOTES")
     @ApiImplicitParams({
@@ -671,12 +671,12 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * batch delete process definition by codes
+     * 批量删除流程定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param codes process definition code list
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param codes 流程定义编码列表
+     * @return 删除结果
      */
     @ApiOperation(value = "batchDeleteByCodes", notes = "BATCH_DELETE_PROCESS_DEFINITION_BY_IDS_NOTES")
     @ApiImplicitParams({
@@ -718,12 +718,12 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * batch export process definition by codes
+     * 批量导出流程定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param codes process definition codes
-     * @param response response
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param codes 流程定义编码列表
+     * @param response HTTP 响应
      */
     @ApiOperation(value = "batchExportByCodes", notes = "BATCH_EXPORT_PROCESS_DEFINITION_BY_CODES_NOTES")
     @ApiImplicitParams({
@@ -744,11 +744,11 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * query all process definition by project code
+     * 查询项目下所有流程定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @return process definition list
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @return 流程定义列表
      */
     @ApiOperation(value = "queryAllByProjectCode", notes = "QUERY_PROCESS_DEFINITION_All_BY_PROJECT_CODE_NOTES")
     @GetMapping(value = "/all")
@@ -763,12 +763,12 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * import process definition
+     * 导入流程定义。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param file resource file
-     * @return import result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param file 上传的资源文件
+     * @return 导入结果
      */
     @ApiOperation(value = "importProcessDefinition", notes = "IMPORT_PROCESS_DEFINITION_NOTES")
     @ApiImplicitParams({
@@ -790,17 +790,17 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * create empty process definition
+     * 创建空的流程定义（不含任务节点）。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param name process definition name
-     * @param description description
-     * @param globalParams globalParams
-     * @param timeout timeout
-     * @param tenantCode tenantCode
-     * @param scheduleJson scheduleJson
-     * @return process definition code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param name 流程定义名称
+     * @param description 描述
+     * @param globalParams 全局参数
+     * @param timeout 超时时间
+     * @param tenantCode 租户编码
+     * @param scheduleJson 调度配置 JSON
+     * @return 流程定义编码
      */
     @ApiOperation(value = "createEmptyProcessDefinition", notes = "CREATE_EMPTY_PROCESS_NOTES")
     @ApiImplicitParams({
@@ -827,21 +827,21 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * update process definition basic info, not including task definition, task relation and location.
+     * 更新流程定义基本信息（不包含任务定义、任务关系和位置）。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param name process definition name
-     * @param code process definition code
-     * @param description description
-     * @param globalParams globalParams
-     * @param timeout timeout
-     * @param tenantCode tenantCode
-     * @param scheduleJson scheduleJson
-     * @param executionType executionType
-     * @param releaseState releaseState
-     * @param otherParamsJson otherParamsJson handle other params
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param name 流程定义名称
+     * @param code 流程定义编码
+     * @param description 描述
+     * @param globalParams 全局参数
+     * @param timeout 超时时间
+     * @param tenantCode 租户编码
+     * @param scheduleJson 调度配置 JSON
+     * @param executionType 执行类型
+     * @param releaseState 发布状态
+     * @param otherParamsJson 其他参数 JSON
+     * @return 更新结果
      */
     @ApiOperation(value = "updateBasicInfo", notes = "UPDATE_PROCESS_DEFINITION_BASIC_INFO_NOTES")
     @ApiImplicitParams({
@@ -883,13 +883,13 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * release process definition and schedule
+     * 同时发布流程定义和调度配置。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param code process definition code
-     * @param releaseState releaseState
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param code 流程定义编码
+     * @param releaseState 发布状态
+     * @return 更新结果
      */
     @ApiOperation(value = "releaseWorkflowAndSchedule", notes = "RELEASE_WORKFLOW_SCHEDULE_NOTES")
     @ApiImplicitParams({
@@ -910,11 +910,11 @@ public class ProcessDefinitionController extends BaseController {
     }
 
     /**
-     * query process definition global variables and local variables
+     * 查询流程定义的全局变量和局部变量。
      *
-     * @param loginUser login user
-     * @param code process definition code
-     * @return variables data
+     * @param loginUser 登录用户
+     * @param code 流程定义编码
+     * @return 变量数据
      */
     @Operation(summary = "viewVariables", description = "QUERY_PROCESS_DEFINITION_GLOBAL_VARIABLES_AND_LOCAL_VARIABLES_NOTES")
     @Parameters({

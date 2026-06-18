@@ -17,6 +17,15 @@
 
 package org.apache.dolphinscheduler.common.enums;
 
+/**
+ * 节点类型枚举。
+ * 定义DolphinScheduler集群中各服务器节点的角色类型。
+ */
 public enum NodeType {
-    MASTER, WORKER, DEAD_SERVER
+    /** 主节点 */
+    MASTER,
+    /** 工作节点 */
+    WORKER,
+    /** 已宕机节点 */
+    DEAD_SERVER
 }

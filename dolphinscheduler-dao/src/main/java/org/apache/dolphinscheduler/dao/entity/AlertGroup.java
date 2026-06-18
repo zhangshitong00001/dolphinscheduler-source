@@ -26,43 +26,36 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 告警组实体，映射到 t_ds_alertgroup 表，表示一个告警通知分组。
+ * 告警组将多个告警插件实例组合在一起，当工作流或任务触发告警时，会向告警组中的所有插件实例发送通知。
+ */
 @Data
 @TableName("t_ds_alertgroup")
 public class AlertGroup {
 
-    /**
-     * primary key
-     */
+    /** 告警组主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    /**
-     * group_name
-     */
+    /** 告警组名称 */
     @TableField(value = "group_name")
     private String groupName;
 
+    /** 关联的告警插件实例 ID 列表，以逗号分隔，如 "1,2,3" */
     @TableField(value = "alert_instance_ids")
     private String alertInstanceIds;
 
-    /**
-     * description
-     */
+    /** 告警组描述信息 */
     @TableField(value = "description")
     private String description;
-    /**
-     * create_time
-     */
+    /** 创建时间 */
     @TableField(value = "create_time")
     private Date createTime;
-    /**
-     * update_time
-     */
+    /** 最后更新时间 */
     @TableField(value = "update_time")
     private Date updateTime;
 
-    /**
-     * create_user_id
-     */
+    /** 创建者用户 ID，对应 t_ds_user 表的 id */
     @TableField(value = "create_user_id")
     private int createUserId;
 

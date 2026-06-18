@@ -21,23 +21,27 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * udf user realtion mapper interface
+ * UDF 用户关联 Mapper 接口，封装对 t_ds_udf_user 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供 UDF 函数与用户授权关系的解绑等能力。
  */
 public interface UDFUserMapper extends BaseMapper<UDFUser> {
 
     /**
-     * delete udf user realtion by userId
-     * @param userId userId
-     * @return delete result
+     * 根据用户ID删除该用户的所有 UDF 函数授权关联。
+     * DELETE FROM t_ds_udf_user WHERE user_id = #{userId}
+     *
+     * @param userId 用户ID
+     * @return 删除的行数
      */
     int deleteByUserId(@Param("userId") int userId);
 
     /**
-     * delete udf user realtion by function id
-     * @param udfFuncId udfFuncId
-     * @return delete result
+     * 根据 UDF 函数ID删除该函数的所有用户授权关联。
+     * DELETE FROM t_ds_udf_user WHERE udf_func_id = #{udfFuncId}
+     *
+     * @param udfFuncId UDF 函数ID
+     * @return 删除的行数
      */
     int deleteByUdfFuncId(@Param("udfFuncId") int udfFuncId);
 
 }
-

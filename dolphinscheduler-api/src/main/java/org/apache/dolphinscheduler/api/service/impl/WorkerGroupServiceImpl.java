@@ -54,6 +54,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +66,7 @@ import com.facebook.presto.jdbc.internal.guava.base.Strings;
  * worker group service impl
  */
 @Service
+@CacheConfig(cacheNames = "workerGroup")
 public class WorkerGroupServiceImpl extends BaseServiceImpl implements WorkerGroupService {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerGroupServiceImpl.class);
@@ -127,6 +131,14 @@ public class WorkerGroupServiceImpl extends BaseServiceImpl implements WorkerGro
         handleDefaultWorkGroup(workerGroupMapper, workerGroup, loginUser, otherParamsJson);
         putMsg(result, Status.SUCCESS);
         return result;
+    }
+
+    /**
+     * Evict worker group cache after save.
+     */
+    @CacheEvict(cacheNames = "workerGroup", allEntries = true)
+    public void evictWorkerGroupCache() {
+        // Cache eviction triggered by annotation
     }
 
     protected void handleDefaultWorkGroup(WorkerGroupMapper workerGroupMapper, WorkerGroup workerGroup, User loginUser,
@@ -248,6 +260,7 @@ public class WorkerGroupServiceImpl extends BaseServiceImpl implements WorkerGro
      * @return all worker group list
      */
     @Override
+    @Cacheable(key = "'allGroups_' + #loginUser.id")
     public Map<String, Object> queryAllGroup(User loginUser) {
         Map<String, Object> result = new HashMap<>();
         List<WorkerGroup> workerGroups;

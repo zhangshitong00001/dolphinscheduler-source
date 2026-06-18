@@ -24,11 +24,12 @@ import org.apache.dolphinscheduler.dao.entity.Project;
 import lombok.Data;
 
 /**
- * project List paging response
+ * 项目分页列表响应DTO。继承自Result，用于封装分页查询项目列表的返回结果。
  */
 @Data
 public class ProjectListPagingResponse extends Result {
 
+    /** 项目分页数据 */
     private PageInfo<Project> data;
 
     public ProjectListPagingResponse(Result result) {

@@ -44,7 +44,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * kerberos http client
+ * Kerberos认证HTTP客户端，支持通过Kerberos/SPNEGO协议进行安全认证的HTTP请求。
+ * 使用keytab文件和principal进行Kerberos登录认证后发起HTTP请求。
  */
 public class KerberosHttpClient {
     public static final Logger logger = LoggerFactory.getLogger(KerberosHttpClient.class);
@@ -131,10 +132,10 @@ public class KerberosHttpClient {
     }
 
     /**
-     * get http request content by kerberosClient
+     * 使用Kerberos认证发起HTTP GET请求，从配置中读取principal和keytab信息。
      *
-     * @param url url
-     * @return http get request response content
+     * @param url 请求URL
+     * @return HTTP响应内容字符串
      */
     public static String get(String url) {
 

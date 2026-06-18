@@ -17,6 +17,9 @@
 
 package org.apache.dolphinscheduler.service.exceptions;
 
+/**
+ * Cron表达式解析异常，当Cron表达式格式无效时抛出。
+ */
 public class CronParseException extends Exception {
 
     public CronParseException(String message) {

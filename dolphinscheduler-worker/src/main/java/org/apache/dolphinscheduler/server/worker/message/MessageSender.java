@@ -22,22 +22,33 @@ import org.apache.dolphinscheduler.remote.command.BaseCommand;
 import org.apache.dolphinscheduler.remote.command.CommandType;
 import org.apache.dolphinscheduler.remote.exceptions.RemotingException;
 
+/**
+ * 消息发送器接口。定义Worker向Master发送各类消息的统一契约，支持消息的构建与发送。
+ * 不同类型的消息（如任务执行结果、执行状态、拒绝通知等）由各自实现类处理。
+ */
 public interface MessageSender<T extends BaseCommand> {
 
     /**
-     * Send the message
+     * 发送消息。将构建好的消息通过Netty通道发送给目标Master节点。
      *
-     * @throws RemotingException Cannot connect to the target host.
+     * @param message 待发送的消息命令
+     * @throws RemotingException 无法连接到目标主机时抛出
      */
     void sendMessage(T message) throws RemotingException;
 
     /**
-     * Build the message from task context and message received address.
+     * 根据任务上下文和消息接收方地址构建消息对象。将任务执行上下文中的关键信息封装为可传输的消息命令。
+     *
+     * @param taskExecutionContext 任务执行上下文，包含任务状态、日志路径、应用ID等信息
+     * @param messageReceiverAddress 消息接收方（Master）的地址
+     * @return 构建好的消息命令对象
      */
     T buildMessage(TaskExecutionContext taskExecutionContext, String messageReceiverAddress);
 
     /**
-     * The message type can be sent by this sender.
+     * 获取此发送器支持的消息类型。每种MessageSender实现对应一种CommandType。
+     *
+     * @return 该发送器对应的命令类型
      */
     CommandType getMessageType();
 }

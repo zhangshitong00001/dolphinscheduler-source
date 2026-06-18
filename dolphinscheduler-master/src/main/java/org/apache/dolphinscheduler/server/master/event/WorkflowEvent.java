@@ -20,6 +20,9 @@ package org.apache.dolphinscheduler.server.master.event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * 工作流事件。封装工作流级别的事件信息，包含事件类型和目标工作流实例 ID，通过 WorkflowEventQueue 队列传递并消费。
+ */
 @Data
 @AllArgsConstructor
 public class WorkflowEvent {

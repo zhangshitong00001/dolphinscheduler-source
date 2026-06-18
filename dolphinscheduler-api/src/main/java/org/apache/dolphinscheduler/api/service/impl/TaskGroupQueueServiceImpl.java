@@ -42,7 +42,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
- * task group queue service
+ * 任务组队列服务实现类。负责任务组队列的查询、删除和强制启动管理，用于任务组并发控制的排队等待。
  */
 @Service
 public class TaskGroupQueueServiceImpl extends BaseServiceImpl implements TaskGroupQueueService {

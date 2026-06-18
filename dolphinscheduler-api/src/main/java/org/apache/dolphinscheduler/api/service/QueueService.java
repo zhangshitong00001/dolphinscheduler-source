@@ -24,7 +24,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * queue service
+ * 队列服务接口。提供队列的创建、查询、更新、验证功能，用于管理任务执行队列。
  */
 public interface QueueService {
 

@@ -20,6 +20,9 @@ package org.apache.dolphinscheduler.common.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * OSS（对象存储服务）连接配置模型，包含访问密钥和端点信息。
+ */
 @Data
 @AllArgsConstructor
 public class OssConnection {

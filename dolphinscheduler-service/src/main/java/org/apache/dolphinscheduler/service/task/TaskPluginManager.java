@@ -32,6 +32,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * 任务插件管理器，通过SPI机制加载和管理所有任务插件。负责从classpath加载 TaskChannelFactory 实现，
+ * 维护任务通道的注册表，并提供任务参数校验和解析功能。
+ */
 @Component
 public class TaskPluginManager {
     private static final Logger logger = LoggerFactory.getLogger(TaskPluginManager.class);
@@ -64,23 +68,51 @@ public class TaskPluginManager {
 
     }
 
+    /**
+     * 获取所有已注册的任务通道映射表（只读）。
+     *
+     * @return unmodifiable map of task channel
+     */
     public Map<String, TaskChannel> getTaskChannelMap() {
         return Collections.unmodifiableMap(taskChannelMap);
     }
 
+    /**
+     * 获取所有已注册的任务通道工厂映射表（只读）。
+     *
+     * @return unmodifiable map of task channel factories
+     */
     public Map<String, TaskChannelFactory> getTaskChannelFactoryMap() {
         return Collections.unmodifiableMap(taskChannelFactoryMap);
     }
 
+    /**
+     * 根据任务类型获取对应的任务通道。
+     *
+     * @param type the task type name
+     * @return the task channel for the given type, or null if not found
+     */
     public TaskChannel getTaskChannel(String type) {
         return this.getTaskChannelMap().get(type);
     }
 
+    /**
+     * 校验任务参数的有效性。
+     *
+     * @param parametersNode the parameters node to check
+     * @return true if parameters are valid
+     */
     public boolean checkTaskParameters(ParametersNode parametersNode) {
         AbstractParameters abstractParameters = this.getParameters(parametersNode);
         return abstractParameters != null && abstractParameters.checkParameters();
     }
 
+    /**
+     * 解析任务参数节点为具体的参数对象。
+     *
+     * @param parametersNode the parameters node to parse
+     * @return the parsed AbstractParameters object, or null if parsing fails
+     */
     public AbstractParameters getParameters(ParametersNode parametersNode) {
         String taskType = parametersNode.getTaskType();
         if (Objects.isNull(taskType)) {

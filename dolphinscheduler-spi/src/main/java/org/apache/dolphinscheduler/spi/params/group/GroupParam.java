@@ -25,7 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Text param
+ * 前端分组组件参数类，继承自 {@link PluginParams}。
+ * <p>
+ * 用于在前端动态表单中渲染分组（group）布局组件，可将多个子表单控件
+ * 组织在一个分组中，通过 {@link GroupParamsProps#rules} 定义子控件列表。
  */
 public class GroupParam extends PluginParams {
 

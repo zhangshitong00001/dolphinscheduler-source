@@ -50,7 +50,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * logger controller
+ * 日志控制器，提供任务日志的查询与下载 REST API。
  */
 @Api(tags = "LOGGER_TAG")
 @RestController
@@ -61,13 +61,13 @@ public class LoggerController extends BaseController {
     private LoggerService loggerService;
 
     /**
-     * query task log
+     * 查询任务实例日志内容。
      *
-     * @param loginUser login user
-     * @param taskInstanceId task instance id
-     * @param skipNum skip number
-     * @param limit limit
-     * @return task log content
+     * @param loginUser 登录用户
+     * @param taskInstanceId 任务实例 ID
+     * @param skipNum 跳过的行数
+     * @param limit 返回行数上限
+     * @return 任务日志内容
      */
     @ApiOperation(value = "queryLog", notes = "QUERY_TASK_INSTANCE_LOG_NOTES")
     @ApiImplicitParams({
@@ -87,11 +87,11 @@ public class LoggerController extends BaseController {
     }
 
     /**
-     * download log file
+     * 下载任务实例日志文件。
      *
-     * @param loginUser login user
-     * @param taskInstanceId task instance id
-     * @return log file content
+     * @param loginUser 登录用户
+     * @param taskInstanceId 任务实例 ID
+     * @return 日志文件内容
      */
     @ApiOperation(value = "downloadTaskLog", notes = "DOWNLOAD_TASK_INSTANCE_LOG_NOTES")
     @ApiImplicitParams({
@@ -112,14 +112,14 @@ public class LoggerController extends BaseController {
     }
 
     /**
-     * query task log in specified project
+     * 在指定项目中查询任务实例日志内容。
      *
-     * @param loginUser      login user
-     * @param projectCode project code
-     * @param taskInstanceId task instance id
-     * @param skipNum        skip number
-     * @param limit          limit
-     * @return task log content
+     * @param loginUser      登录用户
+     * @param projectCode 项目编码
+     * @param taskInstanceId 任务实例 ID
+     * @param skipNum        跳过的行数
+     * @param limit          返回行数上限
+     * @return 任务日志内容
      */
     @ApiOperation(value = "queryLogInSpecifiedProject", notes = "QUERY_TASK_INSTANCE_LOG_IN_SPECIFIED_PROJECT_NOTES")
     @ApiImplicitParams({
@@ -141,12 +141,12 @@ public class LoggerController extends BaseController {
     }
 
     /**
-     * download log file
+     * 在指定项目中下载任务实例日志文件。
      *
-     * @param loginUser      login user
-     * @param projectCode    project code
-     * @param taskInstanceId task instance id
-     * @return log file content
+     * @param loginUser      登录用户
+     * @param projectCode    项目编码
+     * @param taskInstanceId 任务实例 ID
+     * @return 日志文件内容
      */
     @ApiOperation(value = "downloadTaskLogInSpecifiedProject", notes = "DOWNLOAD_TASK_INSTANCE_LOG_IN_SPECIFIED_PROJECT_NOTES")
     @ApiImplicitParams({

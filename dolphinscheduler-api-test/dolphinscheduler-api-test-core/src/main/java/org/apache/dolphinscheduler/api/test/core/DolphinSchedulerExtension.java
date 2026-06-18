@@ -35,14 +35,27 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * DolphinScheduler API测试的JUnit 5扩展。在本地模式下直接运行测试，在Docker模式下通过Docker Compose启动服务容器，
+ * 并在测试完成后自动清理容器资源。
+ */
 @Slf4j
 final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCallback {
+    /** 是否为本地模式，由系统属性 "local" 控制 */
     private final boolean localMode = Objects.equals(System.getProperty("local"), "true");
 
+    /** Docker Compose中DolphinScheduler服务的名称 */
     private final String serviceName = "dolphinscheduler_1";
 
+    /** Docker Compose容器实例 */
     private DockerComposeContainer<?> compose;
 
+    /**
+     * 在测试类执行前初始化测试环境。
+     * 非本地模式下，根据注解配置创建并启动Docker Compose容器。
+     *
+     * @param context JUnit扩展上下文
+     */
     @Override
     public void beforeAll(ExtensionContext context) {
         if (!localMode) {
@@ -51,6 +64,12 @@ final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCall
         }
     }
 
+    /**
+     * 在测试类执行后清理测试环境。
+     * 停止并销毁Docker Compose容器（如果已创建）。
+     *
+     * @param context JUnit扩展上下文
+     */
     @Override
     public void afterAll(ExtensionContext context) {
         if (compose != null) {
@@ -58,6 +77,12 @@ final class DolphinSchedulerExtension implements BeforeAllCallback, AfterAllCall
         }
     }
 
+    /**
+     * 根据测试类上的 @DolphinScheduler 注解配置，创建对应的Docker Compose容器实例。
+     *
+     * @param context JUnit扩展上下文，用于获取测试类和注解信息
+     * @return 配置好的DockerComposeContainer实例
+     */
     private DockerComposeContainer<?> createDockerCompose(ExtensionContext context) {
         final Class<?> clazz = context.getRequiredTestClass();
         final DolphinScheduler annotation = clazz.getAnnotation(DolphinScheduler.class);

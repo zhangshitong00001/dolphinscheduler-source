@@ -18,7 +18,8 @@
 package org.apache.dolphinscheduler.common.exception;
 
 /**
- * Base Exception class for DolphinScheduler
+ * DolphinScheduler基础异常类，所有自定义异常的父类。
+ * 支持消息、原因、抑制和栈追踪等标准异常构造方式。
  */
 public class BaseException extends Exception {
 

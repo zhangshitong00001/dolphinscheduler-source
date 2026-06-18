@@ -23,6 +23,10 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Component;
 
+/**
+ * Spring应用上下文持有者，提供静态方法获取容器中的Bean。
+ * <p>实现{@link ApplicationContextAware}和{@link AutoCloseable}接口，支持上下文感知和资源释放。</p>
+ */
 @Component
 public class SpringApplicationContext implements ApplicationContextAware, AutoCloseable {
 

@@ -40,6 +40,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Worker注册中心客户端，负责将Worker节点注册到注册中心并维护心跳。
+ * 通过注册中心与Master进行服务发现，同时管理Worker连接状态的监听。
+ */
 @Slf4j
 @Service
 public class WorkerRegistryClient implements AutoCloseable {
@@ -58,6 +62,9 @@ public class WorkerRegistryClient implements AutoCloseable {
 
     private WorkerHeartBeatTask workerHeartBeatTask;
 
+    /**
+     * 初始化Worker心跳任务，在Spring容器启动后自动调用。
+     */
     @PostConstruct
     public void initWorkRegistry() {
         this.workerHeartBeatTask = new WorkerHeartBeatTask(
@@ -66,6 +73,11 @@ public class WorkerRegistryClient implements AutoCloseable {
                 () -> workerManagerThread.getWaitSubmitQueueSize());
     }
 
+    /**
+     * 启动Worker注册客户端，将Worker注册到注册中心并添加连接状态监听器。
+     *
+     * @throws RegistryException 如果注册过程中发生异常
+     */
     public void start() {
         try {
             registry();
@@ -77,7 +89,7 @@ public class WorkerRegistryClient implements AutoCloseable {
     }
 
     /**
-     * registry
+     * 将Worker节点注册到注册中心，并等待注册生效后启动心跳任务。
      */
     private void registry() {
         WorkerHeartBeat workerHeartBeat = workerHeartBeatTask.getHeartBeat();
@@ -98,6 +110,11 @@ public class WorkerRegistryClient implements AutoCloseable {
         log.info("Worker node: {} registry finished", workerConfig.getWorkerAddress());
     }
 
+    /**
+     * 设置注册中心的可停止接口，用于在连接断开时停止Worker。
+     *
+     * @param stoppable 可停止接口的实现
+     */
     public void setRegistryStoppable(IStoppable stoppable) {
         registryClient.setStoppable(stoppable);
     }

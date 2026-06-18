@@ -35,7 +35,7 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 
 /**
- * task execute running processor
+ * 任务运行中状态处理器。接收Worker返回的任务运行中状态命令，将其转换为运行中事件并添加到任务事件服务中。
  */
 @Component
 public class TaskExecuteRunningProcessor implements NettyRequestProcessor {
@@ -46,10 +46,10 @@ public class TaskExecuteRunningProcessor implements NettyRequestProcessor {
     private TaskEventService taskEventService;
 
     /**
-     * task ack process
+     * 处理任务运行中状态命令。解析命令并创建运行中事件，添加到任务事件队列。
      *
-     * @param channel channel channel
-     * @param command command TaskExecuteAckCommand
+     * @param channel Netty通道
+     * @param command 任务执行运行中命令
      */
     @Override
     public void process(Channel channel, Command command) {

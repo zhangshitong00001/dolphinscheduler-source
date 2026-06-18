@@ -28,6 +28,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Master 故障转移执行线程，负责定期检查并执行 Master 故障转移。
+ * 在 Master 启动后等待 10 秒准备就绪，然后按配置的间隔周期性地检查是否有需要故障转移的 Master 节点。
+ */
 @Service
 public class FailoverExecuteThread extends BaseDaemonThread {
 
@@ -36,9 +40,6 @@ public class FailoverExecuteThread extends BaseDaemonThread {
     @Autowired
     private MasterConfig masterConfig;
 
-    /**
-     * failover service
-     */
     @Autowired
     private MasterFailoverService masterFailoverService;
 

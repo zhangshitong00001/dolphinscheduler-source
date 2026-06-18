@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Master优先级队列实现，基于 PriorityBlockingQueue 管理 Master 服务器节点。按服务器创建时间降序排列，用于实现Master节点的负载均衡和故障转移调度。
+ */
 public class MasterPriorityQueue implements TaskPriorityQueue<Server> {
 
     /**
@@ -62,6 +65,11 @@ public class MasterPriorityQueue implements TaskPriorityQueue<Server> {
         return queue.size();
     }
 
+    /**
+     * 批量将服务器列表放入优先级队列。
+     *
+     * @param serverList the list of servers to add
+     */
     public void putList(List<Server> serverList) {
         for (Server server : serverList) {
             this.queue.put(server);
@@ -69,10 +77,18 @@ public class MasterPriorityQueue implements TaskPriorityQueue<Server> {
         refreshMasterList();
     }
 
+    /**
+     * 从优先级队列中移除指定的服务器。
+     *
+     * @param server the server to remove
+     */
     public void remove(Server server) {
         this.queue.remove(server);
     }
 
+    /**
+     * 清空优先级队列。
+     */
     public void clear() {
         queue.clear();
         refreshMasterList();
@@ -91,6 +107,12 @@ public class MasterPriorityQueue implements TaskPriorityQueue<Server> {
 
     }
 
+    /**
+     * 根据服务器地址获取其在队列中的索引位置。
+     *
+     * @param addr the server address (host:port)
+     * @return the index, or -1 if not found
+     */
     public int getIndex(String addr) {
         if (!hostIndexMap.containsKey(addr)) {
             return -1;

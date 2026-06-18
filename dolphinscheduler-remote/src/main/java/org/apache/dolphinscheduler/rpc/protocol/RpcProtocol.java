@@ -17,10 +17,18 @@
 
 package org.apache.dolphinscheduler.rpc.protocol;
 
+/**
+ * RPC 协议消息体。泛型封装 DolphinScheduler RPC 协议的消息头和消息体。
+ * T 为消息体的类型，可以是 RpcRequest、RpcResponse 或其他序列化对象。
+ *
+ * @param <T> 消息体的泛型类型
+ */
 public class RpcProtocol<T> {
 
+    /** 消息头，包含协议元数据 */
     private MessageHeader msgHeader;
 
+    /** 消息体，泛型类型 */
     private T body;
 
     public MessageHeader getMsgHeader() {

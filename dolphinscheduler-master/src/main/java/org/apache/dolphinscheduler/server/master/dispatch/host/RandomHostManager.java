@@ -23,22 +23,25 @@ import org.apache.dolphinscheduler.server.master.dispatch.host.assign.RandomSele
 import java.util.Collection;
 
 /**
- *  random host manager
+ * 随机主机管理器。根据主机权重按比例随机选择一个 Worker 节点。
  */
 public class RandomHostManager extends CommonHostManager {
 
     /**
-     * selector
+     * 随机选择器。
      */
     private final RandomSelector selector;
 
-    /**
-     * set round robin
-     */
     public RandomHostManager() {
         this.selector = new RandomSelector();
     }
 
+    /**
+     * 从候选节点中随机选择一个 HostWorker。
+     *
+     * @param nodes 候选节点集合
+     * @return 选中的 HostWorker
+     */
     @Override
     public HostWorker select(Collection<HostWorker> nodes) {
         return selector.select(nodes);

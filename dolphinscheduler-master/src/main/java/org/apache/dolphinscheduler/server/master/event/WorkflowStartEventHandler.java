@@ -34,6 +34,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 工作流启动事件处理器。处理 START_WORKFLOW 事件，负责异步启动工作流实例的执行，提交成功后注册超时检查，提交失败时发送 PROCESS_SUBMIT_FAILED 状态事件。
+ */
 @Component
 public class WorkflowStartEventHandler implements WorkflowEventHandler {
 

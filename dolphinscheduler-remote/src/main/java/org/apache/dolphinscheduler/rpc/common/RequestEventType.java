@@ -17,14 +17,21 @@
 
 package org.apache.dolphinscheduler.rpc.common;
 
+/**
+ * RPC 请求事件类型枚举。定义 RPC 请求消息的分类，包括心跳和业务请求两种类型。
+ */
 public enum RequestEventType {
 
+    /** 心跳请求 */
     HEARTBEAT((byte)1,"heartbeat"),
+    /** 业务请求 */
     BUSINESS((byte)2,"business request");
 
 
+    /** 事件类型字节码 */
     private Byte type;
 
+    /** 事件类型描述 */
     private String description;
 
     RequestEventType(Byte type, String description) {

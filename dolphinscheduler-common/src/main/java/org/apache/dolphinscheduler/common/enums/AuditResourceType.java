@@ -20,11 +20,14 @@ package org.apache.dolphinscheduler.common.enums;
 import java.util.HashMap;
 
 /**
- * Audit Module type
+ * 审计资源类型枚举。
+ * 定义系统中需要进行审计操作的资源模块类型。
  */
 public enum AuditResourceType {
     // TODO: add other audit resource enums
+    /** 用户模块 */
     USER_MODULE(0, "USER"),
+    /** 项目模块 */
     PROJECT_MODULE(1, "PROJECT");
 
     private final int code;

@@ -21,34 +21,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TreeView
+ * 树形视图DTO。用于展示工作流的树形结构，包含节点名称、类型、编码、实例列表和子节点信息。
  */
 public class TreeViewDto {
 
-    /**
-     * name
-     */
+    /** 节点名称 */
     private String name;
 
-    /**
-     * type
-     */
+    /** 节点类型 */
     private String type;
 
-    /**
-     * code
-     */
+    /** 节点编码 */
     private long code;
 
-    /**
-     * instances list
-     */
-
+    /** 实例列表 */
     private List<Instance> instances = new ArrayList<>();
 
-    /**
-     * children
-     */
+    /** 子节点列表 */
     private List<TreeViewDto> children = new ArrayList<>();
 
     public String getName() {

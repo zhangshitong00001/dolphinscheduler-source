@@ -23,13 +23,18 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * 告警发送响应结果。表示单个告警通道的发送结果，包含是否成功以及对应的响应消息。
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlertSendResponseResult implements Serializable {
 
+    /** 该告警通道是否发送成功 */
     private boolean success;
 
+    /** 该告警通道的响应消息 */
     private String message;
 
 }

@@ -54,7 +54,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * task instance controller
+ * 任务实例控制器，提供任务实例的查询、强制成功、停止及 savepoint 操作 REST API。
  */
 @Api(tags = "TASK_INSTANCE_TAG")
 @RestController
@@ -65,21 +65,24 @@ public class TaskInstanceController extends BaseController {
     private TaskInstanceService taskInstanceService;
 
     /**
-     * query task list paging
+     * 查询任务实例分页列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processInstanceId process instance id
-     * @param searchVal search value
-     * @param taskName task name
-     * @param stateType state type
-     * @param host host
-     * @param startTime start time
-     * @param endTime end time
-     * @param pageNo page number
-     * @param pageSize page size
-     * @param taskExecuteType task execute type
-     * @return task list page
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param processInstanceId 流程实例 ID
+     * @param processInstanceName 流程实例名称
+     * @param processDefinitionName 流程定义名称
+     * @param searchVal 搜索关键词
+     * @param taskName 任务名称
+     * @param executorName 执行者名称
+     * @param stateType 状态类型
+     * @param host 主机
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param taskExecuteType 任务执行类型
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 任务实例分页数据
      */
     @ApiOperation(value = "queryTaskListPaging", notes = "QUERY_TASK_INSTANCE_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -128,12 +131,12 @@ public class TaskInstanceController extends BaseController {
     }
 
     /**
-     * change one task instance's state from FAILURE to FORCED_SUCCESS
+     * 将任务实例状态从 FAILURE 强制切换为 FORCED_SUCCESS。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param id task instance id
-     * @return the result code and msg
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param id 任务实例 ID
+     * @return 操作结果
      */
     @ApiOperation(value = "force-success", notes = "FORCE_TASK_SUCCESS")
     @ApiImplicitParams({
@@ -151,12 +154,12 @@ public class TaskInstanceController extends BaseController {
     }
 
     /**
-     * task savepoint, for stream task
+     * 任务 savepoint 操作，用于流式任务。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param id task instance id
-     * @return the result code and msg
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param id 任务实例 ID
+     * @return 操作结果
      */
     @ApiOperation(value = "savepoint", notes = "TASK_SAVEPOINT")
     @ApiImplicitParams({
@@ -173,12 +176,12 @@ public class TaskInstanceController extends BaseController {
     }
 
     /**
-     * task stop, for stream task
+     * 停止任务，用于流式任务。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param id task instance id
-     * @return the result code and msg
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param id 任务实例 ID
+     * @return 操作结果
      */
     @ApiOperation(value = "stop", notes = "TASK_INSTANCE_STOP")
     @ApiImplicitParams({

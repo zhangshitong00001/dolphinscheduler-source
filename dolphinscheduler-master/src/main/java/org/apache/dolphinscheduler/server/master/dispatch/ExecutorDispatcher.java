@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * executor dispatcher
+ * 执行器分发器。负责选择主机并通过对应的 ExecutorManager 执行任务分发。
  */
 @Service
 public class ExecutorDispatcher implements InitializingBean {
@@ -44,35 +44,32 @@ public class ExecutorDispatcher implements InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(ExecutorDispatcher.class);
 
     /**
-     * netty executor manager
+     * Netty 执行器管理器。
      */
     @Autowired
     private NettyExecutorManager nettyExecutorManager;
 
     /**
-     * round robin host manager
+     * 主机管理器，负责主机选择。
      */
     @Autowired
     private HostManager hostManager;
 
     /**
-     * executor manager
+     * 执行器管理器映射，按 ExecutorType 路由到对应的 ExecutorManager。
      */
     private final ConcurrentHashMap<ExecutorType, ExecutorManager<Boolean>> executorManagers;
 
-    /**
-     * constructor
-     */
     public ExecutorDispatcher() {
         this.executorManagers = new ConcurrentHashMap<>();
     }
 
     /**
-     * task dispatch
+     * 任务分发。先选择目标主机，再通过对应的 ExecutorManager 执行任务。
      *
-     * @param context context
-     * @return result
-     * @throws ExecuteException if error throws ExecuteException
+     * @param context 执行上下文
+     * @return 分发结果
+     * @throws ExecuteException 若执行异常则抛出
      */
     public Boolean dispatch(final ExecutionContext context) throws ExecuteException {
         // get executor manager
@@ -99,8 +96,8 @@ public class ExecutorDispatcher implements InitializingBean {
     }
 
     /**
-     * register init
-     * @throws Exception if error throws Exception
+     * Bean 初始化后注册各类型对应的 ExecutorManager。
+     * @throws Exception 若初始化异常则抛出
      */
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -109,9 +106,9 @@ public class ExecutorDispatcher implements InitializingBean {
     }
 
     /**
-     *  register
-     * @param type executor type
-     * @param executorManager executorManager
+     * 注册执行器类型与 ExecutorManager 的映射关系。
+     * @param type 执行器类型
+     * @param executorManager 执行器管理器
      */
     public void register(ExecutorType type, ExecutorManager executorManager) {
         executorManagers.put(type, executorManager);

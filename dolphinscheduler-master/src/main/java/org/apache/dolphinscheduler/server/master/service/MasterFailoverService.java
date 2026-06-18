@@ -60,6 +60,12 @@ import org.springframework.stereotype.Service;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 
+/**
+ * Master 故障转移服务，负责在 Master 节点宕机后接管其工作流实例和任务实例。
+ * 包括：识别需要故障转移的 Master、深检查工作流实例是否需要转移、
+ * 对任务实例进行故障转移（终止 Yarn 任务、发送 Kill 命令、设置 NEED_FAULT_TOLERANCE 状态），
+ * 以及清理原 Master 的注册信息。
+ */
 @Service
 public class MasterFailoverService {
 
@@ -92,7 +98,7 @@ public class MasterFailoverService {
     }
 
     /**
-     * check master failover
+     * 检查是否有 Master 需要故障转移，筛选出已宕机或属于本机的待转移 Master 列表。
      */
     @Counted(value = "ds.master.scheduler.failover.check.count")
     @Timed(value = "ds.master.scheduler.failover.check.time", percentiles = {0.5, 0.75, 0.95, 0.99}, histogram = true)
@@ -113,6 +119,11 @@ public class MasterFailoverService {
         }
     }
 
+    /**
+     * 执行指定 Master 的故障转移，获取分布式锁后调用 doFailoverMaster。
+     *
+     * @param masterHost 故障 Master 的主机地址
+     */
     public void failoverMaster(String masterHost) {
         String failoverPath = Constants.REGISTRY_DOLPHINSCHEDULER_LOCK_FAILOVER_MASTERS + "/" + masterHost;
         try {
@@ -126,11 +137,10 @@ public class MasterFailoverService {
     }
 
     /**
-     * Failover master, will failover process instance and associated task instance.
-     * <p>When the process instance belongs to the given masterHost and the restartTime is before the current server start up time,
-     * then the process instance will be failovered.
+     * 执行 Master 故障转移的核心逻辑，遍历并故障转移属于该 Master 的工作流及其关联任务。
+     * 只有在启用了 Master 启动时间校验的情况下，才会判断 processInstance 的重启时间是否在 Master 启动时间之后。
      *
-     * @param masterHost master host
+     * @param masterHost 故障 Master 的主机地址
      */
     private void doFailoverMaster(@NonNull String masterHost) {
         StopWatch failoverTimeCost = StopWatch.createStarted();
@@ -212,14 +222,13 @@ public class MasterFailoverService {
     }
 
     /**
-     * failover task instance
-     * <p>
-     * 1. kill yarn job if run on worker and there are yarn jobs in tasks.
-     * 2. change task state from running to need failover.
-     * 3. try to notify local master
+     * 执行单个任务实例的故障转移：
+     * 1. 如果非 Master 本地任务且在 Worker 上运行，终止相关 Yarn 任务
+     * 2. 将任务状态改为 NEED_FAULT_TOLERANCE
+     * 3. 向 Worker 发送 Kill 命令
      *
-     * @param processInstance
-     * @param taskInstance
+     * @param processInstance 工作流实例
+     * @param taskInstance    任务实例
      */
     private void failoverTaskInstance(@NonNull ProcessInstance processInstance, @NonNull TaskInstance taskInstance) {
         TaskMetrics.incTaskInstanceByState("failover");

@@ -1,0 +1,168 @@
+<%- aslJava %>
+package org.apache.dolphinscheduler.api.controller;
+
+import static org.apache.dolphinscheduler.api.enums.Status.CREATE_<%= naming.snake %>_ERROR;
+import static org.apache.dolphinscheduler.api.enums.Status.QUERY_<%= naming.snake %>_LIST_ERROR;
+import static org.apache.dolphinscheduler.api.enums.Status.UPDATE_<%= naming.snake %>_ERROR;
+import static org.apache.dolphinscheduler.api.enums.Status.VERIFY_<%= naming.snake %>_ERROR;
+import static org.apache.dolphinscheduler.api.enums.Status.DELETE_<%= naming.snake %>_ERROR;
+
+import org.apache.dolphinscheduler.api.aspect.AccessLogAnnotation;
+import org.apache.dolphinscheduler.api.exceptions.ApiException;
+import org.apache.dolphinscheduler.api.service.<%= naming.pascal %>Service;
+import org.apache.dolphinscheduler.api.utils.Result;
+import org.apache.dolphinscheduler.common.constants.Constants;
+import org.apache.dolphinscheduler.dao.entity.User;
+import org.apache.dolphinscheduler.plugin.task.api.utils.ParameterUtils;
+
+import springfox.documentation.annotations.ApiIgnore;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
+/**
+ * <%= naming.kebab %> controller
+ */
+@Api(tags = "<%= apiTag %>")
+@RestController
+@RequestMapping("<%= baseUrl %>")
+public class <%= naming.pascal %>Controller extends BaseController {
+
+    @Autowired
+    private <%= naming.pascal %>Service <%= naming.camel %>Service;
+
+    /**
+     * query <%= naming.kebab %> list
+     *
+     * @param loginUser login user
+     * @return <%= naming.kebab %> list
+     */
+    @ApiOperation(value = "queryList", notes = "QUERY_<%= naming.snake %>_LIST_NOTES")
+    @GetMapping(value = "/list")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiException(QUERY_<%= naming.snake %>_LIST_ERROR)
+    @AccessLogAnnotation(ignoreRequestArgs = "loginUser")
+    public Result queryList(@ApiIgnore @RequestAttribute(value = Constants.SESSION_USER) User loginUser) {
+        return <%= naming.camel %>Service.queryList(loginUser);
+    }
+
+    /**
+     * query <%= naming.kebab %> list paging
+     *
+     * @param loginUser login user
+     * @param pageNo page number
+     * @param searchVal search value
+     * @param pageSize page size
+     * @return <%= naming.kebab %> list
+     */
+    @ApiOperation(value = "query<%= naming.pascal %>ListPaging", notes = "QUERY_<%= naming.snake %>_LIST_PAGING_NOTES")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "searchVal", value = "SEARCH_VAL", dataTypeClass = String.class),
+        @ApiImplicitParam(name = "pageNo", value = "PAGE_NO", required = true, dataTypeClass = int.class, example = "1"),
+        @ApiImplicitParam(name = "pageSize", value = "PAGE_SIZE", required = true, dataTypeClass = int.class, example = "20")
+    })
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    @ApiException(QUERY_<%= naming.snake %>_LIST_ERROR)
+    @AccessLogAnnotation(ignoreRequestArgs = "loginUser")
+    public Result query<%= naming.pascal %>ListPaging(@ApiIgnore @RequestAttribute(value = Constants.SESSION_USER) User loginUser,
+                                              @RequestParam("pageNo") Integer pageNo,
+                                              @RequestParam(value = "searchVal", required = false) String searchVal,
+                                              @RequestParam("pageSize") Integer pageSize) {
+        Result result = checkPageParams(pageNo, pageSize);
+        if (!result.checkResult()) {
+            return result;
+        }
+        searchVal = ParameterUtils.handleEscapes(searchVal);
+        result = <%= naming.camel %>Service.queryList(loginUser, searchVal, pageNo, pageSize);
+        return result;
+    }
+
+    /**
+     * create <%= naming.kebab %>
+     *
+     * @param loginUser login user
+     * @return create result
+     */
+    @ApiOperation(value = "create<%= naming.pascal %>", notes = "CREATE_<%= naming.snake %>_NOTES")
+<% fields.forEach(function(field) { -%>
+<% if (field.required) { -%>
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "<%= field.name %>", value = "<%= naming.snake %>_<%= field.name.toUpperCase() %>", required = true, dataTypeClass = <%= boxedType(field.type) %>.class)
+    })
+<% } -%>
+<% }); -%>
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiException(CREATE_<%= naming.snake %>_ERROR)
+    @AccessLogAnnotation(ignoreRequestArgs = "loginUser")
+    public Result create<%= naming.pascal %>(@ApiIgnore @RequestAttribute(value = Constants.SESSION_USER) User loginUser
+<% fields.forEach(function(field) { -%>
+                                         , @RequestParam(value = "<%= field.name %>") <%= boxedType(field.type) %> <%= field.name %>
+<% }); -%>
+                                         ) {
+        return <%= naming.camel %>Service.create<%= naming.pascal %>(loginUser<% fields.forEach(function(field) { %>, <%= field.name %><% }); %>);
+    }
+
+    /**
+     * update <%= naming.kebab %>
+     *
+     * @param loginUser login user
+     * @param id <%= naming.kebab %> id
+     * @return update result
+     */
+    @ApiOperation(value = "update<%= naming.pascal %>", notes = "UPDATE_<%= naming.snake %>_NOTES")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "id", value = "<%= naming.snake %>_ID", required = true, dataTypeClass = int.class, example = "100")
+<% fields.forEach(function(field) { -%>
+      , @ApiImplicitParam(name = "<%= field.name %>", value = "<%= naming.snake %>_<%= field.name.toUpperCase() %>", required = true, dataTypeClass = <%= boxedType(field.type) %>.class)
+<% }); -%>
+    })
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiException(UPDATE_<%= naming.snake %>_ERROR)
+    @AccessLogAnnotation(ignoreRequestArgs = "loginUser")
+    public Result update<%= naming.pascal %>(@ApiIgnore @RequestAttribute(value = Constants.SESSION_USER) User loginUser,
+                                         @PathVariable(value = "id") int id
+<% fields.forEach(function(field) { -%>
+                                       , @RequestParam(value = "<%= field.name %>") <%= boxedType(field.type) %> <%= field.name %>
+<% }); -%>
+                                         ) {
+        return <%= naming.camel %>Service.update<%= naming.pascal %>(loginUser, id<% fields.forEach(function(field) { %>, <%= field.name %><% }); %>);
+    }
+
+    /**
+     * delete <%= naming.kebab %> by id
+     *
+     * @param loginUser login user
+     * @param id <%= naming.kebab %> id
+     * @return delete result
+     */
+    @ApiOperation(value = "delete<%= naming.pascal %>", notes = "DELETE_<%= naming.snake %>_NOTES")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "id", value = "<%= naming.snake %>_ID", required = true, dataTypeClass = int.class, example = "100")
+    })
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiException(DELETE_<%= naming.snake %>_ERROR)
+    @AccessLogAnnotation(ignoreRequestArgs = "loginUser")
+    public Result delete<%= naming.pascal %>(@ApiIgnore @RequestAttribute(value = Constants.SESSION_USER) User loginUser,
+                                         @PathVariable(value = "id") int id) {
+        return <%= naming.camel %>Service.delete<%= naming.pascal %>(loginUser, id);
+    }
+}

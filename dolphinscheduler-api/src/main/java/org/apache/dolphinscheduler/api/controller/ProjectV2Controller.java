@@ -67,7 +67,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * project controller
+ * 项目 V2 控制器，提供基于 JSON 请求体的项目创建、更新、删除、查询及授权管理等 REST API。
  */
 @Api(tags = "PROJECT_TAG")
 @RestController
@@ -78,11 +78,11 @@ public class ProjectV2Controller extends BaseController {
     private ProjectService projectService;
 
     /**
-     * create project
+     * 创建项目（V2 版本，JSON 请求体）。
      *
-     * @param loginUser            login user
-     * @param projectCreateRequest projectCreateRequest
-     * @return ProjectResponse ProjectResponse
+     * @param loginUser            登录用户
+     * @param projectCreateRequest 项目创建请求
+     * @return 项目创建响应
      */
     @ApiOperation(value = "create", notes = "CREATE_PROJECT_NOTES")
     @PostMapping(consumes = {"application/json"})
@@ -97,12 +97,12 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * update project
+     * 更新项目（V2 版本，JSON 请求体）。
      *
-     * @param loginUser        login user
-     * @param code             project code
-     * @param projectUpdateReq projectUpdateRequest
-     * @return result Result
+     * @param loginUser        登录用户
+     * @param code             项目编码
+     * @param projectUpdateReq 项目更新请求
+     * @return 项目更新响应
      */
     @ApiOperation(value = "update", notes = "UPDATE_PROJECT_NOTES")
     @PutMapping(value = "/{code}", consumes = {"application/json"})
@@ -118,11 +118,11 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * query project details by project code
+     * 根据项目编码查询项目详情（V2 版本）。
      *
-     * @param loginUser login user
-     * @param code      project code
-     * @return project detail information
+     * @param loginUser 登录用户
+     * @param code      项目编码
+     * @return 项目详情
      */
     @ApiOperation(value = "queryProjectByCode", notes = "QUERY_PROJECT_BY_ID_NOTES")
     @ApiImplicitParams({
@@ -139,11 +139,11 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * query project list paging
+     * 查询项目分页列表（V2 版本）。
      *
-     * @param loginUser       login user
-     * @param projectQueryReq projectQueryReq
-     * @return project list which the login user have permission to see
+     * @param loginUser       登录用户
+     * @param projectQueryReq 项目查询请求
+     * @return 用户有权限访问的项目分页列表
      */
     @ApiOperation(value = "queryProjectListPaging", notes = "QUERY_PROJECT_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -168,11 +168,11 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * delete project by code
+     * 根据编码删除项目（V2 版本）。
      *
-     * @param loginUser login user
-     * @param code      project code
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param code      项目编码
+     * @return 删除结果
      */
     @ApiOperation(value = "delete", notes = "DELETE_PROJECT_BY_ID_NOTES")
     @ApiImplicitParams({
@@ -189,11 +189,11 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * query unauthorized project
+     * 查询未授权给指定用户的项目（V2 版本）。
      *
-     * @param loginUser login user
-     * @param userId    user id
-     * @return the projects which user have not permission to see
+     * @param loginUser 登录用户
+     * @param userId    用户 ID
+     * @return 用户没有权限访问的项目列表
      */
     @ApiOperation(value = "queryUnauthorizedProject", notes = "QUERY_UNAUTHORIZED_PROJECT_NOTES")
     @ApiImplicitParams({
@@ -210,11 +210,11 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * query authorized project
+     * 查询已授权给指定用户的项目（V2 版本）。
      *
-     * @param loginUser login user
-     * @param userId    user id
-     * @return projects which the user have permission to see, Except for items created by this user
+     * @param loginUser 登录用户
+     * @param userId    用户 ID
+     * @return 用户有权限访问的项目列表
      */
     @ApiOperation(value = "queryAuthorizedProject", notes = "QUERY_AUTHORIZED_PROJECT_NOTES")
     @ApiImplicitParams({
@@ -231,11 +231,11 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * query authorized user
+     * 查询对指定项目有权限的用户（V2 版本）。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @return users        who have permission for the specified project
+     * @param loginUser   登录用户
+     * @param projectCode 项目编码
+     * @return 有权限的用户列表
      */
     @ApiOperation(value = "queryAuthorizedUser", notes = "QUERY_AUTHORIZED_USER_NOTES")
     @ApiImplicitParams({
@@ -252,10 +252,10 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * query authorized and user created project
+     * 查询当前用户创建的和已授权的项目（V2 版本）。
      *
-     * @param loginUser login user
-     * @return projects which the user create and authorized
+     * @param loginUser 登录用户
+     * @return 用户创建的和已授权的项目列表
      */
     @ApiOperation(value = "queryProjectCreatedAndAuthorizedByUser", notes = "QUERY_AUTHORIZED_AND_USER_CREATED_PROJECT_NOTES")
     @ApiImplicitParams({
@@ -271,10 +271,10 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * query all project list
+     * 查询所有项目列表（V2 版本）。
      *
-     * @param loginUser login user
-     * @return all project list
+     * @param loginUser 登录用户
+     * @return 所有项目列表
      */
     @ApiOperation(value = "queryAllProjectList", notes = "QUERY_ALL_PROJECT_LIST_NOTES")
     @ApiImplicitParams({
@@ -290,10 +290,10 @@ public class ProjectV2Controller extends BaseController {
     }
 
     /**
-     * query all project list for dependent
+     * 查询所有项目列表（供依赖选择使用，V2 版本）。
      *
-     * @param loginUser login user
-     * @return all project list
+     * @param loginUser 登录用户
+     * @return 所有项目列表
      */
     @ApiOperation(value = "queryAllProjectListForDependent", notes = "QUERY_ALL_PROJECT_LIST_FOR_DEPENDENT_NOTES")
     @GetMapping(value = "/list-dependent")

@@ -22,9 +22,18 @@ import org.apache.dolphinscheduler.service.alert.AlertClientService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Bean配置类。用于定义和注册Worker服务所需的Spring Bean实例。
+ */
 @Configuration
 public class BeanConfig {
 
+    /**
+     * 创建告警客户端服务Bean。根据Worker配置中的告警服务地址和端口初始化告警客户端。
+     *
+     * @param workerConfig Worker配置信息
+     * @return 告警客户端服务实例
+     */
     @Bean
     public AlertClientService alertClientService(WorkerConfig workerConfig) {
         return new AlertClientService(

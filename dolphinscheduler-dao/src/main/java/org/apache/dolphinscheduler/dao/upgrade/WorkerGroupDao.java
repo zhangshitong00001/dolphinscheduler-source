@@ -28,12 +28,16 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 升级用 Worker 分组数据访问对象，负责在版本升级时查询旧版 Worker 分组数据。
+ */
 public class WorkerGroupDao {
 
     public static final Logger logger = LoggerFactory.getLogger(WorkerGroupDao.class);
 
     /**
-     * query all old worker group
+     * 查询所有旧版 Worker 分组，返回分组 ID 到名称的映射。
+     *
      * @param conn jdbc connection
      * @return old worker group Map
      */

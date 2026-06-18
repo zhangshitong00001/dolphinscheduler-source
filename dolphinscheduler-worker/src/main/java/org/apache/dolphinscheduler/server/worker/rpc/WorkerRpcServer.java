@@ -37,6 +37,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Worker RPC服务端，基于Netty接收Master发送的任务调度、终止、状态查询等请求。
+ * 注册了任务分发、终止、SavePoint、日志查询等多种命令处理器。
+ */
 @Service
 public class WorkerRpcServer implements Closeable {
 
@@ -71,6 +75,9 @@ public class WorkerRpcServer implements Closeable {
 
     private NettyRemotingServer nettyRemotingServer;
 
+    /**
+     * 启动Worker RPC服务端，配置Netty服务端并注册所有命令处理器。
+     */
     public void start() {
         LOGGER.info("Worker rpc server starting");
         NettyServerConfig serverConfig = new NettyServerConfig();

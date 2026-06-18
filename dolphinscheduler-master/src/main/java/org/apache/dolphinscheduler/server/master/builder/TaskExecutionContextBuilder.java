@@ -35,7 +35,7 @@ import org.apache.dolphinscheduler.plugin.task.api.parameters.resource.ResourceP
 import java.util.Map;
 
 /**
- *  TaskExecutionContext builder
+ * 任务执行上下文构建器。通过链式调用组装 TaskExecutionContext 所需的各类信息。
  */
 public class TaskExecutionContextBuilder {
 
@@ -46,9 +46,9 @@ public class TaskExecutionContextBuilder {
     private TaskExecutionContext taskExecutionContext = new TaskExecutionContext();
 
     /**
-     * build taskInstance related info
+     * 构建任务实例相关信息。
      *
-     * @param taskInstance taskInstance
+     * @param taskInstance 任务实例
      * @return TaskExecutionContextBuilder
      */
     public TaskExecutionContextBuilder buildTaskInstanceRelatedInfo(TaskInstance taskInstance) {
@@ -72,6 +72,12 @@ public class TaskExecutionContextBuilder {
         return this;
     }
 
+    /**
+     * 构建任务定义相关信息，包括超时配置和任务参数。
+     *
+     * @param taskDefinition 任务定义
+     * @return TaskExecutionContextBuilder
+     */
     public TaskExecutionContextBuilder buildTaskDefinitionRelatedInfo(TaskDefinition taskDefinition) {
         taskExecutionContext.setTaskTimeout(Integer.MAX_VALUE);
         if (taskDefinition.getTimeoutFlag() == TimeoutFlag.OPEN) {
@@ -87,9 +93,9 @@ public class TaskExecutionContextBuilder {
     }
 
     /**
-     * build processInstance related info
+     * 构建流程实例相关信息。
      *
-     * @param processInstance processInstance
+     * @param processInstance 流程实例
      * @return TaskExecutionContextBuilder
      */
     public TaskExecutionContextBuilder buildProcessInstanceRelatedInfo(ProcessInstance processInstance) {
@@ -104,9 +110,9 @@ public class TaskExecutionContextBuilder {
     }
 
     /**
-     * build processDefinition related info
+     * 构建流程定义相关信息。
      *
-     * @param processDefinition processDefinition
+     * @param processDefinition 流程定义
      * @return TaskExecutionContextBuilder
      */
     public TaskExecutionContextBuilder buildProcessDefinitionRelatedInfo(ProcessDefinition processDefinition) {
@@ -116,19 +122,31 @@ public class TaskExecutionContextBuilder {
         return this;
     }
 
+    /**
+     * 构建数据质量任务执行上下文。
+     *
+     * @param dataQualityTaskExecutionContext 数据质量任务执行上下文
+     * @return TaskExecutionContextBuilder
+     */
     public TaskExecutionContextBuilder buildDataQualityTaskExecutionContext(DataQualityTaskExecutionContext dataQualityTaskExecutionContext) {
         taskExecutionContext.setDataQualityTaskExecutionContext(dataQualityTaskExecutionContext);
         return this;
     }
 
+    /**
+     * 构建资源参数信息。
+     *
+     * @param parametersHelper 资源参数辅助对象
+     * @return TaskExecutionContextBuilder
+     */
     public TaskExecutionContextBuilder buildResourceParametersInfo(ResourceParametersHelper parametersHelper) {
         taskExecutionContext.setResourceParametersHelper(parametersHelper);
         return this;
     }
     /**
-     * build k8sTask related info
+     * 构建 K8s 任务相关信息。
      *
-     * @param k8sTaskExecutionContext sqoopTaskExecutionContext
+     * @param k8sTaskExecutionContext K8s 任务执行上下文
      * @return TaskExecutionContextBuilder
      */
 
@@ -138,9 +156,9 @@ public class TaskExecutionContextBuilder {
     }
 
     /**
-     * build global and local params
-     * @param propertyMap
-     * @return
+     * 构建全局和局部参数。
+     * @param propertyMap 属性映射
+     * @return TaskExecutionContextBuilder
      */
     public TaskExecutionContextBuilder buildParamInfo(Map<String, Property> propertyMap) {
         taskExecutionContext.setPrepareParamsMap(propertyMap);
@@ -148,9 +166,9 @@ public class TaskExecutionContextBuilder {
     }
 
     /**
-     * build business params
-     * @param businessParamsMap
-     * @return
+     * 构建业务参数。
+     * @param businessParamsMap 业务参数映射
+     * @return TaskExecutionContextBuilder
      */
     public TaskExecutionContextBuilder buildBusinessParamsMap(Map<String, Property> businessParamsMap) {
         taskExecutionContext.setParamsMap(businessParamsMap);
@@ -158,9 +176,9 @@ public class TaskExecutionContextBuilder {
     }
 
     /**
-     * create
+     * 创建并返回组装完成的 TaskExecutionContext 对象。
      *
-     * @return taskExecutionContext
+     * @return 组装完成的 taskExecutionContext
      */
 
     public TaskExecutionContext create() {

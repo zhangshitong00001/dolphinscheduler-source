@@ -23,7 +23,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * worker group service
+ * Worker分组服务接口。提供Worker分组的创建/更新、分页查询、删除以及Worker地址列表查询功能。
  */
 public interface WorkerGroupService {
 

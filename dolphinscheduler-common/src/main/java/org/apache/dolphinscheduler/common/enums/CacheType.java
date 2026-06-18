@@ -25,7 +25,14 @@ public enum CacheType {
     PROCESS_TASK_RELATION("processTaskRelation"),
     TASK_DEFINITION("taskDefinition"),
     WORKER_GROUP("workerGroup"),
-    SCHEDULE("schedule");
+    SCHEDULE("schedule"),
+    PROJECT("project"),
+    ENVIRONMENT("environment"),
+    DATASOURCE("datasource"),
+    CLUSTER("cluster"),
+    K8S_NAMESPACE("k8sNamespace"),
+    ALERT_PLUGIN_INSTANCE("alertPluginInstance"),
+    DATA_QUALITY("dataQuality");
 
     CacheType(String cacheName) {
         this.cacheName = cacheName;

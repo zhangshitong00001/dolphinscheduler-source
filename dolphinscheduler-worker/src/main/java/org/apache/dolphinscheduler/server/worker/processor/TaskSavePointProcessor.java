@@ -40,24 +40,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * task save point processor
+ * 任务保存点处理器。处理Master发送的流式任务保存点请求。
+ * 负责查找正在执行的流式任务并调用其savePoint方法创建检查点，
+ * 完成后向Master返回保存点响应。
  */
 @Component
 public class TaskSavePointProcessor implements NettyRequestProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(TaskSavePointProcessor.class);
 
-    /**
-     * task execute manager
-     */
     @Autowired
     private WorkerManagerThread workerManager;
 
     /**
-     * task save point process
+     * 处理任务保存点请求。解析Master发送的保存点命令，查找对应的流式任务实例，
+     * 调用其savePoint方法执行检查点操作，并将结果通过响应命令返回给Master。
      *
-     * @param channel channel channel
-     * @param command command command
+     * @param channel Netty通道，用于向Master返回保存点响应
+     * @param command 任务保存点请求命令
      */
     @Override
     public void process(Channel channel, Command command) {

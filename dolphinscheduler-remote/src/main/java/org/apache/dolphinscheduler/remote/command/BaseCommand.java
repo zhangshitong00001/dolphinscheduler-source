@@ -23,13 +23,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * This is the base class for rpc message.
- * <p>
- * Since we use async mode, the client send a message and will wait the target server
- * send ack for the message, the client will retry during a while if he doesn't receive an ack.
- * <p>
- * When there is a network error, the server cannot send ack to the client by the origin channel,
- * since the client has closed the channel, so the server need to know the command source.
+ * RPC消息基类。采用异步通信模式，客户端发送消息后等待目标服务器的确认（ack），若超时未收到确认则进行重试。当发生网络错误导致客户端关闭通道时，服务器需要通过消息发送者地址回传确认信息，因此需要记录消息的源地址和目标地址。
  */
 @Data
 @NoArgsConstructor
@@ -38,15 +32,16 @@ public abstract class BaseCommand implements Serializable {
     private static final long serialVersionUID = -1L;
 
     /**
-     * If the message receiver want to send ack to the sender, need to use this address.
+     * 消息发送者的地址。当消息接收方需要向发送方回复确认（ack）时使用。
      */
     protected String messageSenderAddress;
 
     /**
-     * The message receiver address.
+     * 消息接收者的地址。
      */
     protected String messageReceiverAddress;
 
+    /** 消息发送时间戳 */
     protected long messageSendTime;
 
     protected BaseCommand(String messageSenderAddress, String messageReceiverAddress, long messageSendTime) {

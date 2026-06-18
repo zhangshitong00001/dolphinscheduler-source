@@ -23,16 +23,25 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * 分页查询结果通用封装类，包含当前页数据列表、总记录数、页码和每页大小。
+ *
+ * @param <T> 分页数据的类型
+ */
 @Data
 @Builder
 @AllArgsConstructor
 public class PageListingResult<T> {
 
+    /** 当前页数据记录列表 */
     private List<T> records;
 
+    /** 总记录数 */
     private long totalCount;
 
+    /** 当前页码 */
     private int currentPage;
 
+    /** 每页数据量 */
     private int pageSize;
 }

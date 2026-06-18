@@ -60,7 +60,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 
 /**
- * process task relation service impl
+ * 流程任务关系服务实现类。负责流程DAG图中任务节点之间上下游关系的增删改查，包括边的创建、删除和管理。
  */
 @Service
 public class ProcessTaskRelationServiceImpl extends BaseServiceImpl implements ProcessTaskRelationService {
@@ -87,14 +87,14 @@ public class ProcessTaskRelationServiceImpl extends BaseServiceImpl implements P
     private ProcessService processService;
 
     /**
-     * create process task relation
+     * 创建流程任务关系（DAG边）。添加preTask到postTask的上游依赖，支持自动处理空上游节点。
      *
-     * @param loginUser             login user
-     * @param projectCode           project code
-     * @param processDefinitionCode processDefinitionCode
-     * @param preTaskCode           preTaskCode
-     * @param postTaskCode          postTaskCode
-     * @return create result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param preTaskCode 上游任务编码（0表示无上游）
+     * @param postTaskCode 下游任务编码
+     * @return 包含创建结果的结果Map
      */
     @Transactional
     @Override
@@ -185,13 +185,13 @@ public class ProcessTaskRelationServiceImpl extends BaseServiceImpl implements P
     }
 
     /**
-     * delete process task relation
+     * 删除任务节点及其所有关系。移除指定任务及其上下游连线，条件/依赖/子流程类型任务同时删除任务定义。
      *
-     * @param loginUser             login user
-     * @param projectCode           project code
-     * @param processDefinitionCode process definition code
-     * @param taskCode              the post task code
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param taskCode 要删除的任务编码
+     * @return 包含删除结果的结果Map
      */
     @Transactional
     @Override
@@ -269,13 +269,13 @@ public class ProcessTaskRelationServiceImpl extends BaseServiceImpl implements P
     }
 
     /**
-     * delete task upstream relation
+     * 删除任务的上游关系。批量断开指定前置任务节点与当前任务的连线，保留最后一个上游时设为空上游节点。
      *
-     * @param loginUser    login user
-     * @param projectCode  project code
-     * @param preTaskCodes the pre task codes, sep ','
-     * @param taskCode     the post task code
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param projectCode 项目编码
+     * @param preTaskCodes 上游任务编码（逗号分隔）
+     * @param taskCode 当前任务编码（作为下游节点）
+     * @return 包含删除结果的结果Map
      */
     @Transactional
     @Override

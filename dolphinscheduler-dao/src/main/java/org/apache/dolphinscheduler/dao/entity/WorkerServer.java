@@ -21,41 +21,30 @@ import java.util.Date;
 
 import lombok.Data;
 
+/**
+ * Worker 服务器信息，表示一台 Worker 节点的运行时状态。
+ */
 @Data
 public class WorkerServer {
 
-    /**
-     * id
-     */
+    /** Worker 服务器 ID */
     private int id;
 
-    /**
-     * host
-     */
+    /** Worker 主机地址 */
     private String host;
 
-    /**
-     * port
-     */
+    /** Worker 端口 */
     private int port;
 
-    /**
-     * zookeeper directory
-     */
+    /** ZooKeeper 目录 */
     private String zkDirectory;
 
-    /**
-     * resource info
-     */
+    /** 资源信息 */
     private String resInfo;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * last heart beat time
-     */
+    /** 最后心跳时间 */
     private Date lastHeartbeatTime;
 }

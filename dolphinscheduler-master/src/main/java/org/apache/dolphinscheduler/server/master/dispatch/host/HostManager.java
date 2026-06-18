@@ -21,14 +21,14 @@ import org.apache.dolphinscheduler.remote.utils.Host;
 import org.apache.dolphinscheduler.server.master.dispatch.context.ExecutionContext;
 
 /**
- *  host manager
+ * 主机管理器接口。定义根据执行上下文选择目标主机的策略。
  */
 public interface HostManager {
 
     /**
-     *  select host
-     * @param context context
-     * @return host
+     * 根据执行上下文选择目标主机。
+     * @param context 执行上下文，包含 Worker 分组和执行器类型等信息
+     * @return 选中的主机
      */
     Host select(ExecutionContext context);
 

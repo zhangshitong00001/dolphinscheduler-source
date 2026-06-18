@@ -34,6 +34,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.Maps;
 
+/**
+ * Switch 任务工具类，提供条件表达式的参数替换和 JavaScript 求值功能。
+ * 用于 Switch 任务处理器中将条件表达式中的占位符替换为实际的全局参数和变量参数，
+ * 然后通过 JavaScript 脚本引擎对表达式求值以获得布尔结果。
+ */
 @Slf4j
 public class SwitchTaskUtils {
 
@@ -46,11 +51,28 @@ public class SwitchTaskUtils {
         engine = manager.getEngineByName("js");
     }
 
+    /**
+     * 使用 JavaScript 脚本引擎对表达式进行求值。
+     *
+     * @param expression 条件表达式
+     * @return 求值结果（布尔值）
+     * @throws ScriptException 脚本执行异常
+     */
     public static boolean evaluate(String expression) throws ScriptException {
         Object result = engine.eval(expression);
         return (Boolean) result;
     }
 
+    /**
+     * 将条件表达式中的 ${paramName} 占位符替换为实际的参数值，
+     * 支持全局参数和变量参数，自动处理数值/布尔类型和字符串类型的引用格式。
+     *
+     * @param condition    原始条件表达式
+     * @param globalParams 全局参数映射
+     * @param varParams    变量参数映射
+     * @return 替换参数后的条件表达式
+     * @throws IllegalArgumentException 当参数为空或没有替换任何参数时抛出
+     */
     public static String generateContentWithTaskParams(String condition, Map<String, Property> globalParams,
                                                        Map<String, Property> varParams) {
         String content = condition.replaceAll("'", "\"");

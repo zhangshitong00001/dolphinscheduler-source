@@ -31,8 +31,20 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.util.WebUtils;
 
+/**
+ * 语言环境切换拦截器。从请求Cookie或Header中读取语言设置，并设置到当前线程的LocaleContext中，
+ * 用于支持多语言国际化切换。
+ */
 public class LocaleChangeInterceptor extends HandlerInterceptorAdapter {
 
+    /**
+     * 在请求处理前拦截，从Cookie或请求头中获取语言设置并应用到当前上下文。
+     *
+     * @param request  当前HTTP请求
+     * @param response 当前HTTP响应
+     * @param handler  处理器对象
+     * @return 始终返回true，放行请求
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         Cookie cookie = WebUtils.getCookie(request, Constants.LOCALE_LANGUAGE);
@@ -48,6 +60,12 @@ public class LocaleChangeInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
+    /**
+     * 解析语言标识字符串为Locale对象。
+     *
+     * @param localeValue 语言标识字符串，如 "en_US"、"zh_CN"
+     * @return 解析后的Locale对象，解析失败时为null
+     */
     @Nullable
     protected Locale parseLocaleValue(String localeValue) {
         return StringUtils.parseLocale(localeValue);

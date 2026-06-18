@@ -26,10 +26,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * controller exception annotation
+ * API异常注解。用于标记Controller方法，当方法抛出异常时，指定返回的错误状态码。配合ApiExceptionHandler使用。
  */
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface ApiException {
+    /** 对应的状态码枚举值 */
     Status value();
 }

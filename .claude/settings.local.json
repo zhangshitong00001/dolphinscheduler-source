@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Bash(curl *)",
+      "Bash(PGPASSWORD=Qq981997@ psql *)",
+      "Bash(DB_PASSWORD=Qq981997@ DATABASE_URL=\"postgresql+psycopg2://zhangshitong:Qq981997%40@127.0.0.1:5432/logistics_db\" nohup python3 *)",
+      "Bash(echo *)",
+      "Bash(pkill *)",
+      "Bash(kill 994112 *)",
+      "Bash(python3 *)",
+      "Bash(pip list *)",
+      "Bash(pip3 list *)",
+      "Bash(xargs -I{} basename {} .py)",
+      "Bash(xargs cat)",
+      "Bash(kill 532469)",
+      "Bash(/root/Hermes-Agent/.venv/bin/python3 -c \"import openpyxl; print\\('openpyxl available'\\)\")",
+      "Bash(npx vite *)",
+      "Write(**/*)",
+      "Edit(**/*)",
+      "Read(**/*)",
+      "Bash(cd /)",
+      "Bash(PYTHONPATH=/ python3 -c ' *)",
+      "Workflow(deep-research)",
+      "WebSearch",
+      "WebFetch(domain:www.whaleops.com)",
+      "WebFetch(domain:www.fivetran.com)",
+      "WebFetch(domain:sixthsense.rakuten.com)",
+      "WebFetch(domain:flink.apache.org)",
+      "WebFetch(domain:taskscape.com)",
+      "Skill(hookify:help)",
+      "Bash(mkdir -p /root/.claude/hooks)",
+      "Bash(cp /home/claude/bigdata_work_flow/dolphinscheduler-source/.claude/hooks/log-command.py /root/.claude/hooks/log-command.py)",
+      "Skill(hookify:configure)"
+    ]
+  }
+}

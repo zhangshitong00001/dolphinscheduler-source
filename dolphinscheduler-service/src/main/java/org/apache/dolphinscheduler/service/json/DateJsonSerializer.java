@@ -28,6 +28,10 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
+/**
+ * 日期JSON序列化器，将{@link Date}类型序列化为标准日期字符串。
+ * <p>通过{@link JsonComponent}注解自动注册到Jackson序列化配置中。</p>
+ */
 @JsonComponent
 public class DateJsonSerializer extends JsonSerializer<Date> {
     @Override

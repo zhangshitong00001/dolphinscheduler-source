@@ -56,7 +56,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * access token controller
+ * 访问令牌控制器。提供访问令牌的增删改查REST API，包括令牌创建、查询、更新和删除操作。
  */
 @Api(tags = "ACCESS_TOKEN_TAG")
 @RestController
@@ -67,13 +67,13 @@ public class AccessTokenController extends BaseController {
     private AccessTokenService accessTokenService;
 
     /**
-     * create token
+     * 创建访问令牌。为指定用户生成访问令牌，支持自定义过期时间和令牌字符串（不提供则自动生成）。
      *
-     * @param loginUser login user
-     * @param userId token for user id
-     * @param expireTime expire time for the token
-     * @param token token string (if it is absent, it will be automatically generated)
-     * @return create result state code
+     * @param loginUser 当前登录用户
+     * @param userId 目标用户ID
+     * @param expireTime 令牌过期时间
+     * @param token 令牌字符串（可选，不提供则自动生成）
+     * @return 创建结果状态码
      */
     @ApiOperation(value = "createToken", notes = "CREATE_TOKEN_NOTES")
     @ApiImplicitParams({
@@ -94,12 +94,12 @@ public class AccessTokenController extends BaseController {
     }
 
     /**
-     * generate token string
+     * 生成令牌字符串。为指定用户生成访问令牌并返回令牌字符串。
      *
-     * @param loginUser login user
-     * @param userId token for user
-     * @param expireTime expire time
-     * @return token string
+     * @param loginUser 当前登录用户
+     * @param userId 目标用户ID
+     * @param expireTime 令牌过期时间
+     * @return 生成的令牌字符串
      */
     @ApiIgnore
     @PostMapping(value = "/generate")
@@ -114,13 +114,13 @@ public class AccessTokenController extends BaseController {
     }
 
     /**
-     * query access token list paging
+     * 分页查询访问令牌列表。
      *
-     * @param loginUser login user
-     * @param pageNo page number
-     * @param searchVal search value
-     * @param pageSize page size
-     * @return token list of page number and page size
+     * @param loginUser 当前登录用户
+     * @param pageNo 页码
+     * @param searchVal 搜索值
+     * @param pageSize 每页大小
+     * @return 指定页码和大小的令牌列表
      */
     @ApiOperation(value = "queryAccessTokenList", notes = "QUERY_ACCESS_TOKEN_LIST_NOTES")
     @ApiImplicitParams({
@@ -147,11 +147,11 @@ public class AccessTokenController extends BaseController {
     }
 
     /**
-     * query access token for specified user
+     * 查询指定用户的访问令牌。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @return token list for specified user
+     * @param loginUser 当前登录用户
+     * @param userId 目标用户ID
+     * @return 指定用户的令牌列表
      */
     @ApiOperation(value = "queryAccessTokenByUser", notes = "QUERY_ACCESS_TOKEN_BY_USER_NOTES")
     @ApiImplicitParams({
@@ -168,11 +168,11 @@ public class AccessTokenController extends BaseController {
     }
 
     /**
-     * delete access token by id
+     * 根据ID删除访问令牌。
      *
-     * @param loginUser login user
-     * @param id token id
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param id 令牌ID
+     * @return 删除结果状态码
      */
     @ApiIgnore
     @DeleteMapping(value = "/{id}")
@@ -186,14 +186,14 @@ public class AccessTokenController extends BaseController {
     }
 
     /**
-     * update token
+     * 更新访问令牌。修改令牌的所属用户、过期时间和令牌字符串。
      *
-     * @param loginUser login user
-     * @param id token id
-     * @param userId token for user
-     * @param expireTime token expire time
-     * @param token token string (if it is absent, it will be automatically generated)
-     * @return updated access token entity
+     * @param loginUser 当前登录用户
+     * @param id 令牌ID
+     * @param userId 目标用户ID
+     * @param expireTime 令牌过期时间
+     * @param token 令牌字符串（可选，不提供则自动生成）
+     * @return 更新后的访问令牌实体
      */
     @ApiOperation(value = "updateToken", notes = "UPDATE_TOKEN_NOTES")
     @ApiImplicitParams({

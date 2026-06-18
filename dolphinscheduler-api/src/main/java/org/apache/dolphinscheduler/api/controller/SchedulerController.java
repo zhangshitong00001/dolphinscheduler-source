@@ -61,7 +61,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * scheduler controller
+ * 调度控制器，提供工作流定时调度的创建、更新、上线、下线、删除、预览等 REST API。
  */
 @Api(tags = "SCHEDULER_TAG")
 @RestController
@@ -77,18 +77,18 @@ public class SchedulerController extends BaseController {
     private SchedulerService schedulerService;
 
     /**
-     * create schedule
+     * 创建调度。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processDefinitionCode process definition code
-     * @param schedule scheduler
-     * @param warningType warning type
-     * @param warningGroupId warning group id
-     * @param failureStrategy failure strategy
-     * @param processInstancePriority process instance priority
-     * @param workerGroup worker group
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param schedule 调度配置
+     * @param warningType 告警类型
+     * @param warningGroupId 告警组 ID
+     * @param failureStrategy 失败策略
+     * @param processInstancePriority 流程实例优先级
+     * @param workerGroup Worker 分组
+     * @return 创建结果
      */
     @ApiOperation(value = "createSchedule", notes = "CREATE_SCHEDULE_NOTES")
     @ApiImplicitParams({
@@ -131,18 +131,18 @@ public class SchedulerController extends BaseController {
     }
 
     /**
-     * updateProcessInstance schedule
+     * 更新调度配置。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param id scheduler id
-     * @param schedule scheduler
-     * @param warningType warning type
-     * @param warningGroupId warning group id
-     * @param failureStrategy failure strategy
-     * @param workerGroup worker group
-     * @param processInstancePriority process instance priority
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param id 调度 ID
+     * @param schedule 调度配置
+     * @param warningType 告警类型
+     * @param warningGroupId 告警组 ID
+     * @param failureStrategy 失败策略
+     * @param workerGroup Worker 分组
+     * @param processInstancePriority 流程实例优先级
+     * @return 更新结果
      */
     @ApiOperation(value = "updateSchedule", notes = "UPDATE_SCHEDULE_NOTES")
     @ApiImplicitParams({
@@ -176,12 +176,12 @@ public class SchedulerController extends BaseController {
     }
 
     /**
-     * publish schedule setScheduleState
+     * 上线调度。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param id scheduler id
-     * @return publish result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param id 调度 ID
+     * @return 上线结果
      */
     @ApiOperation(value = "online", notes = "ONLINE_SCHEDULE_NOTES")
     @ApiImplicitParams({
@@ -198,12 +198,12 @@ public class SchedulerController extends BaseController {
     }
 
     /**
-     * offline schedule
+     * 下线调度。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param id schedule id
-     * @return operation result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param id 调度 ID
+     * @return 操作结果
      */
     @ApiOperation(value = "offline", notes = "OFFLINE_SCHEDULE_NOTES")
     @ApiImplicitParams({
@@ -220,15 +220,15 @@ public class SchedulerController extends BaseController {
     }
 
     /**
-     * query schedule list paging
+     * 查询调度分页列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processDefinitionCode process definition code
-     * @param pageNo page number
-     * @param pageSize page size
-     * @param searchVal search value
-     * @return schedule list page
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @param searchVal 搜索关键词
+     * @return 调度分页列表
      */
     @ApiOperation(value = "queryScheduleListPaging", notes = "QUERY_SCHEDULE_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -258,12 +258,12 @@ public class SchedulerController extends BaseController {
     }
 
     /**
-     * delete schedule by id
+     * 根据 ID 删除调度。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param id scheule id
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param id 调度 ID
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteScheduleById", notes = "OFFLINE_SCHEDULE_NOTES")
     @ApiImplicitParams({
@@ -281,11 +281,11 @@ public class SchedulerController extends BaseController {
     }
 
     /**
-     * query schedule list
+     * 查询调度列表。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @return schedule list
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @return 调度列表
      */
     @ApiOperation(value = "queryScheduleList", notes = "QUERY_SCHEDULE_LIST_NOTES")
     @PostMapping("/list")
@@ -298,11 +298,11 @@ public class SchedulerController extends BaseController {
     }
 
     /**
-     * preview schedule
+     * 预览调度，返回未来五次触发时间。
      *
-     * @param loginUser login user
-     * @param schedule schedule expression
-     * @return the next five fire time
+     * @param loginUser 登录用户
+     * @param schedule 调度表达式
+     * @return 未来五次触发时间
      */
     @ApiOperation(value = "previewSchedule", notes = "PREVIEW_SCHEDULE_NOTES")
     @ApiImplicitParams({
@@ -319,18 +319,18 @@ public class SchedulerController extends BaseController {
     }
 
     /**
-     * update process definition schedule
+     * 根据流程定义编码更新调度配置。
      *
-     * @param loginUser login user
-     * @param projectCode project code
-     * @param processDefinitionCode process definition code
-     * @param schedule scheduler
-     * @param warningType warning type
-     * @param warningGroupId warning group id
-     * @param failureStrategy failure strategy
-     * @param workerGroup worker group
-     * @param processInstancePriority process instance priority
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param schedule 调度配置
+     * @param warningType 告警类型
+     * @param warningGroupId 告警组 ID
+     * @param failureStrategy 失败策略
+     * @param workerGroup Worker 分组
+     * @param processInstancePriority 流程实例优先级
+     * @return 更新结果
      */
     @ApiOperation(value = "updateScheduleByProcessDefinitionCode", notes = "UPDATE_SCHEDULE_BY_PROCESS_DEFINITION_CODE_NOTES")
     @ApiImplicitParams({

@@ -24,6 +24,9 @@ import com.google.auto.service.AutoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 任务等待任务组状态事件处理器。处理 WAKE_UP_TASK_GROUP 状态事件，负责在任务组资源释放后唤醒等待中的任务实例，检查是否可强制启动并抢占任务组资源。
+ */
 @AutoService(StateEventHandler.class)
 public class TaskWaitTaskGroupStateHandler implements StateEventHandler {
 

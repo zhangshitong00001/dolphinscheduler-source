@@ -29,7 +29,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import org.apache.dolphinscheduler.plugin.task.api.enums.DependResult;
 
 /**
- * process instance service
+ * 流程实例服务接口。提供流程实例的查询、更新、删除、变量视图、甘特图以及子流程管理等功能。
  */
 
 public interface ProcessInstanceService {

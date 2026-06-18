@@ -22,14 +22,22 @@ import org.apache.dolphinscheduler.dao.model.PageListingResult;
 
 import javax.annotation.Nullable;
 
+/**
+ * 流程定义数据访问接口，定义流程定义的分页查询规范。
+ */
 public interface ProcessDefinitionDao {
 
     /**
-     * Listing the process definition belongs to the given userId and projectCode.
-     * If the searchValue is not null, will used at processDefinitionName or processDefinitionDescription.
+     * 分页查询指定用户和项目下的流程定义。如果 searchVal 不为空，则用于模糊匹配流程定义名称或描述。
+     * todo: 当前方法使用模糊查询 searchVal，当目标用户/项目下存在大量流程定义时性能可能很差。
+     *
+     * @param pageNumber page number
+     * @param pageSize page size
+     * @param searchVal search value, nullable
+     * @param userId user id
+     * @param projectCode project code
+     * @return page listing result of ProcessDefinition
      */
-    // todo: Right now this method will use fuzzy query at searchVal, this will be very slow if there are exist a lot of
-    // processDefinition belongs to the target user/project.
     PageListingResult<ProcessDefinition> listingProcessDefinition(
                                                                   int pageNumber,
                                                                   int pageSize,

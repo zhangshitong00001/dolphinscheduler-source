@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 /**
- * choose the impl of storage by RESOURCE_STORAGE_TYPE
+ * 存储实现选择配置类，根据配置项 RESOURCE_STORAGE_TYPE 自动选择合适的存储实现（HDFS/OSS/S3）。通过Spring的 @Bean 注解注册对应的 StorageOperate 实例。
  */
 
 @Component

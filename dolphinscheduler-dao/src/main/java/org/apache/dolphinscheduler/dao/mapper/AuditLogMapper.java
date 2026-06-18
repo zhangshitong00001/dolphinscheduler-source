@@ -27,9 +27,24 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
- * auditlog mapper interface
+ * 审计日志 Mapper 接口，封装对 t_ds_audit_log 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供审计日志的多条件分页查询及资源名称查询能力。
  */
 public interface AuditLogMapper extends BaseMapper<AuditLog> {
+    /**
+     * 多条件分页查询审计日志。
+     * 支持按资源类型数组、操作类型数组、用户名（LIKE 模糊匹配）及日期范围过滤。
+     * SELECT * FROM t_ds_audit_log WHERE resource_type IN (...) AND operation_type IN (...)
+     * AND user_name LIKE CONCAT('%', #{userName}, '%') AND time BETWEEN #{startDate} AND #{endDate}
+     *
+     * @param page 分页对象
+     * @param resourceArray 资源类型数组，用于 IN 条件过滤
+     * @param operationType 操作类型数组，用于 IN 条件过滤
+     * @param userName 用户名，用于模糊匹配
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 审计日志分页结果
+     */
     IPage<AuditLog> queryAuditLog(IPage<AuditLog> page,
                                   @Param("resourceType") int[] resourceArray,
                                   @Param("operationType") int[] operationType,
@@ -37,6 +52,14 @@ public interface AuditLogMapper extends BaseMapper<AuditLog> {
                                   @Param("startDate") Date startDate,
                                   @Param("endDate") Date endDate);
 
+    /**
+     * 根据资源类型和资源ID查询对应的资源名称。
+     * 用于将审计日志中的 resource_type + resource_id 转换为可读的资源名称。
+     *
+     * @param resourceType 资源类型标识
+     * @param resourceId 资源ID
+     * @return 该资源对应的名称，若不存在则返回 null
+     */
     String queryResourceNameByType(@Param("resourceType") String resourceType,
                                    @Param("resourceId") Integer resourceId);
 }

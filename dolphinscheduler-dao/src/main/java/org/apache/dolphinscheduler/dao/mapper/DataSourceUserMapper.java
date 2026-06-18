@@ -24,22 +24,27 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * datasource user realtion mapper interface
+ * 数据源-用户关联 Mapper 接口，封装对 t_ds_datasource_user 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，管理数据源与用户之间的授权关联关系。
  */
 public interface DataSourceUserMapper extends BaseMapper<DatasourceUser> {
 
 
     /**
-     * delete datasource by userId
-     * @param userId userId
-     * @return delete result
+     * 根据用户ID删除该用户的所有数据源授权关联记录。
+     * DELETE FROM t_ds_datasource_user WHERE user_id = #{userId}
+     *
+     * @param userId 用户ID
+     * @return 删除的记录数
      */
     int deleteByUserId(@Param("userId") int userId);
 
     /**
-     * delete datasource by id
-     * @param datasourceId datasourceId
-     * @return delete result
+     * 根据数据源ID删除该数据源的所有用户授权关联记录。
+     * DELETE FROM t_ds_datasource_user WHERE datasource_id = #{datasourceId}
+     *
+     * @param datasourceId 数据源ID
+     * @return 删除的记录数
      */
     int deleteByDatasourceId(@Param("datasourceId") int datasourceId);
 

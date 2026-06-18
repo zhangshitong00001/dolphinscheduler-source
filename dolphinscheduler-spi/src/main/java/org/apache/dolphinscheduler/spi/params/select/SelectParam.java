@@ -30,10 +30,15 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * front-end select component
+ * 前端下拉选择框组件参数类，继承自 {@link PluginParams}。
+ * <p>
+ * 用于在前端动态表单中渲染下拉选择框（select）组件，
+ * 支持单选和多选，通过 {@link ParamsOptions} 定义可选项列表，
+ * 支持搜索过滤、创建新条目、占位符等丰富配置。
  */
 public class SelectParam extends PluginParams {
 
+    /** 下拉选择框可选项列表 */
     @JsonProperty(STRING_PLUGIN_PARAM_OPTIONS)
     private final List<ParamsOptions> options;
 

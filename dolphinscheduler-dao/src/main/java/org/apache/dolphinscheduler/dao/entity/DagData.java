@@ -20,23 +20,18 @@ package org.apache.dolphinscheduler.dao.entity;
 import java.util.List;
 
 /**
- * DagData
+ * DAG 数据聚合实体，非数据库表映射，用于封装工作流图（DAG）的完整数据结构。
+ * 包含工作流定义、任务关系列表和任务定义列表，是构建和展示工作流 DAG 图的核心数据容器。
  */
 public class DagData {
 
-    /**
-     * processDefinition
-     */
+    /** 工作流定义 */
     private ProcessDefinition processDefinition;
 
-    /**
-     * processTaskRelationList
-     */
+    /** 任务关系列表，描述 DAG 中任务节点之间的连线依赖关系 */
     private List<ProcessTaskRelation> processTaskRelationList;
 
-    /**
-     * processTaskRelationList
-     */
+    /** 任务定义列表，描述 DAG 中所有任务节点的详细信息 */
     private List<TaskDefinition> taskDefinitionList;
 
     public DagData(ProcessDefinition processDefinition, List<ProcessTaskRelation> processTaskRelationList, List<TaskDefinition> taskDefinitionList) {

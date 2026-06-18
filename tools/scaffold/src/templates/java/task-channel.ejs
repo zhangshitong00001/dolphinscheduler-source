@@ -1,0 +1,32 @@
+<%- aslJava %>
+package org.apache.dolphinscheduler.plugin.task.<%= naming.lower %>;
+
+import org.apache.dolphinscheduler.plugin.task.api.AbstractTask;
+import org.apache.dolphinscheduler.plugin.task.api.TaskChannel;
+import org.apache.dolphinscheduler.plugin.task.api.TaskExecutionContext;
+import org.apache.dolphinscheduler.plugin.task.api.parameters.AbstractParameters;
+import org.apache.dolphinscheduler.plugin.task.api.parameters.ParametersNode;
+import org.apache.dolphinscheduler.plugin.task.api.parameters.resource.ResourceParametersHelper;
+
+public class <%= naming.pascal %>TaskChannel implements TaskChannel {
+
+    @Override
+    public void cancelApplication(boolean status) {
+        // no-op by default; override if your task supports cancellation
+    }
+
+    @Override
+    public AbstractTask createTask(TaskExecutionContext taskRequest) {
+        return new <%= naming.pascal %>Task(taskRequest);
+    }
+
+    @Override
+    public AbstractParameters parseParameters(ParametersNode parametersNode) {
+        return new <%= naming.pascal %>Parameters();
+    }
+
+    @Override
+    public ResourceParametersHelper getResources(String parameters) {
+        return null;
+    }
+}

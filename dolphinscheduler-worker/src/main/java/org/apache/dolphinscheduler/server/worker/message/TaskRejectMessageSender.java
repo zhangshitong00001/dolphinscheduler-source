@@ -28,6 +28,10 @@ import org.apache.dolphinscheduler.server.worker.rpc.WorkerRpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 任务拒绝消息发送器。当Worker线程池已满无法接收新任务时，负责构建任务拒绝消息并发送给Master，
+ * 通知Master该任务需要重新调度到其他Worker执行。
+ */
 @Component
 public class TaskRejectMessageSender implements MessageSender<TaskRejectCommand> {
 
@@ -37,11 +41,25 @@ public class TaskRejectMessageSender implements MessageSender<TaskRejectCommand>
     @Autowired
     private WorkerConfig workerConfig;
 
+    /**
+     * 发送任务拒绝消息。通过RPC客户端将消息发送到指定的Master地址。
+     *
+     * @param message 任务拒绝消息
+     * @throws RemotingException 无法连接到目标主机时抛出
+     */
     @Override
     public void sendMessage(TaskRejectCommand message) throws RemotingException {
         workerRpcClient.send(Host.of(message.getMessageReceiverAddress()), message.convert2Command());
     }
 
+    /**
+     * 构建任务拒绝消息。从任务执行上下文中提取任务实例ID、流程实例ID和主机信息，
+     * 封装为任务拒绝消息命令发送给Master。
+     *
+     * @param taskExecutionContext 任务执行上下文
+     * @param masterAddress Master节点地址
+     * @return 任务拒绝消息命令
+     */
     public TaskRejectCommand buildMessage(TaskExecutionContext taskExecutionContext, String masterAddress) {
         TaskRejectCommand taskRejectMessage = new TaskRejectCommand(workerConfig.getWorkerAddress(),
                                                                     masterAddress,
@@ -52,6 +70,11 @@ public class TaskRejectMessageSender implements MessageSender<TaskRejectCommand>
         return taskRejectMessage;
     }
 
+    /**
+     * 获取此发送器对应的命令类型。
+     *
+     * @return TASK_REJECT 命令类型
+     */
     @Override
     public CommandType getMessageType() {
         return CommandType.TASK_REJECT;

@@ -20,28 +20,22 @@ package org.apache.dolphinscheduler.spi.params.checkbox;
 import org.apache.dolphinscheduler.spi.params.base.ParamsProps;
 
 /**
- * front-end checkbox component props attributes
+ * 前端复选框组件的属性配置类，继承自 {@link ParamsProps}。
+ * <p>
+ * 定义复选框组件特有的属性：最少/最多可选数量、激活态文本颜色和填充色等。
  */
 public class CheckboxParamProps extends ParamsProps {
 
-    /**
-     * the minimum number of checkboxes that can be checked
-     */
+    /** 最少可选中复选框的数量 */
     private Integer min;
 
-    /**
-     * the maximum number of checkboxes that can be checked
-     */
+    /** 最多可选中复选框的数量 */
     private Integer max;
 
-    /**
-     * the color of the text when the Checkbox in the form of a button is activated
-     */
+    /** 按钮形式复选框激活时的文本颜色 */
     private String textColor;
 
-    /**
-     * the fill color and border color of the Checkbox in the form of a button when activated
-     */
+    /** 按钮形式复选框激活时的填充色和边框颜色 */
     private String fill;
 
     public Integer getMin() {

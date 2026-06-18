@@ -83,7 +83,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
- * users service impl
+ * 用户服务实现类。提供用户管理相关的所有业务逻辑，包括用户创建、查询、更新、删除、
+ * 授权项目/资源/数据源/命名空间/UDF函数，以及用户注册与激活等功能。
  */
 @Service
 public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
@@ -130,17 +131,18 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     private K8sNamespaceUserMapper k8sNamespaceUserMapper;
 
     /**
-     * create user, only system admin have permission
+     * 创建用户。仅系统管理员有权限执行此操作。
      *
-     * @param loginUser    login user
-     * @param userName     user name
-     * @param userPassword user password
-     * @param email        email
-     * @param tenantId     tenant id
-     * @param phone        phone
-     * @param queue        queue
-     * @return create result code
-     * @throws Exception exception
+     * @param loginUser    登录用户
+     * @param userName     用户名
+     * @param userPassword 用户密码
+     * @param email        邮箱
+     * @param tenantId     租户ID
+     * @param phone        电话
+     * @param queue        队列
+     * @param state        状态
+     * @return 包含创建结果的Map
+     * @throws Exception 异常
      */
     @Override
     @Transactional
@@ -223,7 +225,7 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /***
-     * create User for ldap login
+     * 为LDAP登录创建用户。根据给定的用户类型和邮箱创建新用户。
      */
     @Override
     @Transactional
@@ -246,10 +248,10 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * get user by user name
+     * 根据用户名获取用户信息。
      *
-     * @param userName user name
-     * @return exist user or null
+     * @param userName 用户名
+     * @return 存在的用户对象，不存在则返回null
      */
     @Override
     public User getUserByUserName(String userName) {
@@ -257,10 +259,10 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * query user by id
+     * 根据用户ID查询用户。
      *
-     * @param id id
-     * @return user info
+     * @param id 用户ID
+     * @return 用户信息
      */
     @Override
     public User queryUser(int id) {
@@ -276,10 +278,10 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * query user
+     * 根据用户名查询用户信息。
      *
-     * @param name name
-     * @return user info
+     * @param name 用户名
+     * @return 用户信息
      */
     @Override
     public User queryUser(String name) {
@@ -287,11 +289,11 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * query user
+     * 根据用户名和密码查询用户。
      *
-     * @param name     name
-     * @param password password
-     * @return user info
+     * @param name     用户名
+     * @param password 密码
+     * @return 用户信息
      */
     @Override
     public User queryUser(String name, String password) {
@@ -300,10 +302,10 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * get user id by user name
+     * 根据用户名获取用户ID。用户名为空返回0，用户不存在返回-1，存在则返回用户ID。
      *
-     * @param name user name
-     * @return if name empty 0, user not exists -1, user exist user id
+     * @param name 用户名
+     * @return 用户名对应ID，空返回0，不存在返回-1
      */
     @Override
     public int getUserIdByName(String name) {
@@ -322,13 +324,13 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * query user list
+     * 分页查询用户列表。
      *
-     * @param loginUser login user
-     * @param pageNo    page number
-     * @param searchVal search value
-     * @param pageSize  page size
-     * @return user list page
+     * @param loginUser 登录用户
+     * @param pageNo    页码
+     * @param searchVal 搜索值
+     * @param pageSize  每页数量
+     * @return 用户分页列表
      */
     @Override
     public Result<Object> queryUserList(User loginUser, String searchVal, Integer pageNo, Integer pageSize) {
@@ -356,19 +358,20 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * updateProcessInstance user
+     * 更新用户信息。仅系统管理员和用户本人可操作，非管理员不能修改租户ID和队列。
      *
-     * @param userId       user id
-     * @param userName     user name
-     * @param userPassword user password
-     * @param email        email
-     * @param tenantId     tenant id
-     * @param phone        phone
-     * @param queue        queue
-     * @param state        state
-     * @param timeZone     timeZone
-     * @return update result code
-     * @throws Exception exception
+     * @param loginUser    登录用户
+     * @param userId       用户ID
+     * @param userName     用户名
+     * @param userPassword 用户密码
+     * @param email        邮箱
+     * @param tenantId     租户ID
+     * @param phone        电话
+     * @param queue        队列
+     * @param state        状态
+     * @param timeZone     时区
+     * @return 更新结果Map
+     * @throws Exception 异常
      */
     @Override
     public Map<String, Object> updateUser(User loginUser, int userId,
@@ -468,12 +471,12 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * delete user
+     * 删除用户。仅管理员可操作，如果需要删除的用户是项目创建者则不允许删除。
      *
-     * @param loginUser login user
-     * @param id        user id
-     * @return delete result code
-     * @throws Exception exception when operate hdfs
+     * @param loginUser 登录用户
+     * @param id        用户ID
+     * @return 删除结果Map
+     * @throws IOException IO异常
      */
     @Override
     @Transactional
@@ -514,12 +517,12 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * grant project
+     * 向用户授予项目权限。
      *
-     * @param loginUser  login user
-     * @param userId     user id
-     * @param projectIds project id array
-     * @return grant result code
+     * @param loginUser  登录用户
+     * @param userId     用户ID
+     * @param projectIds 项目ID数组（逗号分隔）
+     * @return 授权结果Map
      */
     @Override
     @Transactional
@@ -559,12 +562,12 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * grant project by code
+     * 通过项目Code向用户授予项目权限。仅项目负责人可执行此操作。
      *
-     * @param loginUser   login user
-     * @param userId      user id
-     * @param projectCode project code
-     * @return grant result code
+     * @param loginUser   登录用户
+     * @param userId      用户ID
+     * @param projectCode 项目Code
+     * @return 授权结果Map
      */
     @Override
     public Map<String, Object> grantProjectByCode(final User loginUser, final int userId, final long projectCode) {
@@ -614,12 +617,12 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * revoke the project permission for specified user.
+     * 撤销指定用户的project权限。仅管理员可执行此操作。
      *
-     * @param loginUser   Login user
-     * @param userId      User id
-     * @param projectCode Project Code
-     * @return
+     * @param loginUser   登录用户
+     * @param userId      用户ID
+     * @param projectCode 项目Code
+     * @return 撤销结果Map
      */
     @Override
     public Map<String, Object> revokeProject(User loginUser, int userId, long projectCode) {
@@ -656,12 +659,12 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * grant resource
+     * 向用户授予资源权限。文件夹资源授予只读权限，文件资源授予读写权限。
      *
-     * @param loginUser   login user
-     * @param userId      user id
-     * @param resourceIds resource id array
-     * @return grant result code
+     * @param loginUser   登录用户
+     * @param userId      用户ID
+     * @param resourceIds 资源ID数组（逗号分隔）
+     * @return 授权结果Map
      */
     @Override
     @Transactional
@@ -758,12 +761,12 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * grant udf function
+     * 向用户授予UDF函数权限。
      *
-     * @param loginUser login user
-     * @param userId    user id
-     * @param udfIds    udf id array
-     * @return grant result code
+     * @param loginUser 登录用户
+     * @param userId    用户ID
+     * @param udfIds    UDF ID数组（逗号分隔）
+     * @return 授权结果Map
      */
     @Override
     @Transactional
@@ -805,12 +808,12 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * grant namespace
+     * 向用户授予K8s命名空间权限。仅管理员可执行此操作。
      *
-     * @param loginUser    login user
-     * @param userId       user id
-     * @param namespaceIds namespace id array
-     * @return grant result code
+     * @param loginUser    登录用户
+     * @param userId       用户ID
+     * @param namespaceIds 命名空间ID数组（逗号分隔）
+     * @return 授权结果Map
      */
     @Override
     @Transactional
@@ -854,12 +857,12 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * grant datasource
+     * 向用户授予数据源权限。
      *
-     * @param loginUser     login user
-     * @param userId        user id
-     * @param datasourceIds data source id array
-     * @return grant result code
+     * @param loginUser     登录用户
+     * @param userId        用户ID
+     * @param datasourceIds 数据源ID数组（逗号分隔）
+     * @return 授权结果Map
      */
     @Override
     @Transactional
@@ -903,10 +906,10 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * query user info
+     * 查询当前登录用户的详细信息。普通用户还会返回所属告警组信息。
      *
-     * @param loginUser login user
-     * @return user info
+     * @param loginUser 登录用户
+     * @return 用户详细信息Map
      */
     @Override
     public Map<String, Object> getUserInfo(User loginUser) {
@@ -948,10 +951,10 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * query user list
+     * 查询所有普通用户列表。仅管理员可操作。
      *
-     * @param loginUser login user
-     * @return user list
+     * @param loginUser 登录用户
+     * @return 用户列表Map
      */
     @Override
     public Map<String, Object> queryAllGeneralUsers(User loginUser) {
@@ -973,10 +976,10 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * query user list
+     * 查询已启用的用户列表。仅具有用户管理权限的人员可操作。
      *
-     * @param loginUser login user
-     * @return user list
+     * @param loginUser 登录用户
+     * @return 用户列表Map
      */
     @Override
     public Map<String, Object> queryUserList(User loginUser) {
@@ -994,10 +997,10 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * verify user name exists
+     * 验证用户名是否已存在。已存在返回失败状态，不存在返回成功。
      *
-     * @param userName user name
-     * @return true if user name not exists, otherwise return false
+     * @param userName 用户名
+     * @return 验证结果，存在返回错误状态
      */
     @Override
     public Result<Object> verifyUserName(String userName) {
@@ -1014,11 +1017,11 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * unauthorized user
+     * 查询未被授权到指定告警组的用户列表。仅管理员可操作。
      *
-     * @param loginUser    login user
-     * @param alertgroupId alert group id
-     * @return unauthorize result code
+     * @param loginUser    登录用户
+     * @param alertgroupId 告警组ID
+     * @return 未授权用户列表Map
      */
     @Override
     public Map<String, Object> unauthorizedUser(User loginUser, Integer alertgroupId) {
@@ -1055,11 +1058,11 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * authorized user
+     * 查询已被授权到指定告警组的用户列表。仅管理员可操作。
      *
-     * @param loginUser    login user
-     * @param alertGroupId alert group id
-     * @return authorized result code
+     * @param loginUser    登录用户
+     * @param alertGroupId 告警组ID
+     * @return 已授权用户列表Map
      */
     @Override
     public Map<String, Object> authorizedUser(User loginUser, Integer alertGroupId) {
@@ -1159,14 +1162,14 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * registry user, default state is 0, default tenant_id is 1, no phone, no queue
+     * 用户注册。默认状态为0，默认租户ID为1，无电话和队列信息。
      *
-     * @param userName       user name
-     * @param userPassword   user password
-     * @param repeatPassword repeat password
-     * @param email          email
-     * @return registry result code
-     * @throws Exception exception
+     * @param userName       用户名
+     * @param userPassword   用户密码
+     * @param repeatPassword 重复密码
+     * @param email          邮箱
+     * @return 注册结果Map
+     * @throws Exception 异常
      */
     @Override
     @Transactional
@@ -1195,11 +1198,11 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * activate user, only system admin have permission, change user state code 0 to 1
+     * 激活用户。仅系统管理员有权限，将用户状态从0改为1。
      *
-     * @param loginUser login user
-     * @param userName  user name
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param userName  用户名
+     * @return 激活结果Map
      */
     @Override
     public Map<String, Object> activateUser(User loginUser, String userName) {
@@ -1243,11 +1246,11 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * activate user, only system admin have permission, change users state code 0 to 1
+     * 批量激活用户。仅系统管理员有权限，将多个用户状态从0改为1，返回成功和失败的汇总结果。
      *
-     * @param loginUser login user
-     * @param userNames user name
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param userNames 用户名列表
+     * @return 批量激活结果Map（包含成功和失败的统计信息）
      */
     @Override
     public Map<String, Object> batchActivateUser(User loginUser, List<String> userNames) {
@@ -1296,18 +1299,17 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     /**
-     * Make sure user with given name exists, and create the user if not exists
-     * <p>
-     * ONLY for python gateway server, and should not use this in web ui function
+     * 确保用户存在，如果不存在则创建。仅用于Python网关服务，不应在Web UI功能中使用。
      *
-     * @param userName     user name
-     * @param userPassword user password
-     * @param email        user email
-     * @param phone        user phone
-     * @param tenantCode   tenant code
-     * @param queue        queue
-     * @param state        state
-     * @return create result code
+     * @param userName     用户名
+     * @param userPassword 用户密码
+     * @param email        用户邮箱
+     * @param phone        用户电话
+     * @param tenantCode   租户编码
+     * @param queue        队列
+     * @param state        状态
+     * @return 已存在或新创建的用户对象
+     * @throws IOException IO异常
      */
     @Override
     @Transactional

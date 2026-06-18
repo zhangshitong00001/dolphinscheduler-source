@@ -21,110 +21,75 @@ import org.apache.dolphinscheduler.spi.params.base.ParamsProps;
 import org.apache.dolphinscheduler.spi.params.base.ResizeType;
 
 /**
- * front-end input component props attributes
+ * 前端输入框组件的属性配置类，继承自 {@link ParamsProps}。
+ * <p>
+ * 定义输入框组件的所有可配置属性，包括输入类型、最大/最小长度、
+ * 是否可清除、图标、行数、自适应高度、自动完成、只读模式、
+ * 数字范围、缩放方式、自动聚焦等。
  */
 public class InputParamProps extends ParamsProps {
 
-    /**
-     * input type
-     */
+    /** 输入框类型（text、password、textarea等） */
     private String type;
 
-    /**
-     * maximum input length
-     */
+    /** 最大输入长度 */
     private Integer maxlength;
 
-    /**
-     * minimum input length
-     */
+    /** 最小输入长度 */
     private Integer minlength;
 
-    /**
-     * whether it can be cleared, the default value is false
-     */
+    /** 是否可清空，默认false */
     private Boolean clearable;
 
-    /**
-     * input box head icon
-     */
+    /** 输入框头部图标 */
     private String prefixIcon;
 
-    /**
-     * input box end icon
-     */
+    /** 输入框尾部图标 */
     private String suffixIcon;
 
-    /**
-     * number of lines in the input box, only valid for type="textarea"
-     */
+    /** 输入框文本行数，仅在type="textarea"时有效 */
     private Integer rows;
 
-    /**
-     * adaptive content height, only valid for type="textarea", objects can be passed in, such as {minRows: 2, maxRows: 6}
-     */
+    /** 自适应内容高度，仅在type="textarea"时有效，可传入{minRows: 2, maxRows: 6}等对象 */
     private Object autosize;
 
-    /**
-     * autocomplete attribute:on, off
-     */
+    /** 自动完成属性：on/off */
     private String autocomplete;
 
-    /**
-     * name attribute
-     */
+    /** name属性 */
     private String name;
 
-    /**
-     * whether it is read-only, the default value is false
-     */
+    /** 是否只读，默认false */
     private Boolean readonly;
 
-    /**
-     * set maximum
-     */
+    /** 最大值 */
     private Integer max;
 
-    /**
-     * set minimum
-     */
+    /** 最小值 */
     private Integer min;
 
-    /**
-     * set the legal number interval of the input field
-     */
+    /** 设置输入字段的合法数字间隔步长 */
     private Integer step;
 
-    /**
-     * control whether it can be zoomed by the user, the value is none, both, horizontal, vertical
-     */
+    /** 控制是否可由用户缩放，值为none、both、horizontal、vertical */
     private ResizeType resize;
 
-    /**
-     * get focus automatically, the default value is false
-     */
+    /** 是否自动获取焦点，默认false */
     private Boolean autofocus;
 
+    /** 表单标识 */
     private String form;
 
-    /**
-     * the label text associated with the input box
-     */
+    /** 与输入框关联的label文本 */
     private String label;
 
-    /**
-     * tabindex of the input box
-     */
+    /** 输入框的tabindex */
     private String tabindex;
 
-    /**
-     * whether to trigger the verification of the form during input, the default value is true
-     */
+    /** 输入时是否触发表单校验，默认true */
     private Boolean validateEvent;
 
-    /**
-     * whether to display the switch password icon
-     */
+    /** 是否显示密码切换图标 */
     private Boolean showPassword;
 
     public String getType() {

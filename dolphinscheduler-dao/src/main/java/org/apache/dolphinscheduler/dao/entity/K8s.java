@@ -26,34 +26,28 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * Kubernetes 集群配置实体，映射到 t_ds_k8s 表，表示一个 Kubernetes 集群的连接配置。
+ * 存储 K8s 客户端配置文件（kubeconfig），用于创建和管理 K8s 命名空间、Pod 等资源。
+ */
 @Data
 @TableName("t_ds_k8s")
 public class K8s {
 
-    /**
-     * id
-     */
+    /** K8s 集群配置主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    /**
-     * k8s name
-     */
+    /** K8s 集群名称，用户自定义的标识名 */
     @TableField(value = "k8s_name")
     private String k8sName;
-    /**
-     * k8s client config(yaml or json)
-     */
+    /** K8s 客户端配置内容，YAML 或 JSON 格式的 kubeconfig */
     @TableField(value = "k8s_config")
     private String k8sConfig;
 
-    /**
-     * create_time
-     */
+    /** 创建时间 */
     @TableField("create_time")
     private Date createTime;
-    /**
-     * update_time
-     */
+    /** 最后更新时间 */
     @TableField("update_time")
     private Date updateTime;
 }

@@ -26,6 +26,10 @@ import org.apache.dolphinscheduler.service.registry.RegistryClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Worker连接状态监听器。监听Worker与注册中心之间的连接状态变化，
+ * 根据不同的连接状态（已连接、暂停、重连、断开）执行相应的注册策略。
+ */
 public class WorkerConnectionStateListener implements ConnectionListener {
 
     private final Logger logger = LoggerFactory.getLogger(WorkerConnectionStateListener.class);
@@ -41,6 +45,12 @@ public class WorkerConnectionStateListener implements ConnectionListener {
         this.workerConnectStrategy = workerConnectStrategy;
     }
 
+    /**
+     * 处理注册中心连接状态变更事件。根据不同的连接状态触发对应的处理逻辑：
+     * RECONNECTED时调用重连策略，DISCONNECTED时调用断开连接策略。
+     *
+     * @param state 注册中心连接状态
+     */
     @Override
     public void onUpdate(ConnectionState state) {
         logger.info("Worker received a {} event from registry, the current server state is {}", state,

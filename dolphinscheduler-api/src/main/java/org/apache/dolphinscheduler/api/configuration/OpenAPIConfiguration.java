@@ -40,15 +40,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 
 /**
- *
- * swager2 config class
- *
+ * OpenAPI文档配置。基于Swagger3/OpenAPI 3.0生成API文档，提供v1和v2两个分组，
+ * 并通过BeanPostProcessor修复Springfox与Spring Boot的兼容性问题。
  */
 @Configuration
 @ConditionalOnWebApplication
 @PropertySource("classpath:swagger.properties")
 public class OpenAPIConfiguration implements WebMvcConfigurer {
 
+    /**
+     * 创建V1版本API文档Docket。当前版本API，路径排除/v2/前缀。
+     *
+     * @return V1 Docket实例
+     */
     @Bean
     public Docket createV1RestApi() {
         return new Docket(DocumentationType.OAS_30)
@@ -68,6 +72,11 @@ public class OpenAPIConfiguration implements WebMvcConfigurer {
                 .build();
     }
 
+    /**
+     * 创建V2版本API文档Docket。仅包含/v2/前缀路径的API。
+     *
+     * @return V2 Docket实例
+     */
     @Bean
     public Docket createV2RestApi() {
         return new Docket(DocumentationType.OAS_30)
@@ -87,6 +96,12 @@ public class OpenAPIConfiguration implements WebMvcConfigurer {
                 .build();
     }
 
+    /**
+     * 创建Springfox处理器提供者后处理器。修复Springfox与Spring Boot版本兼容性问题，
+     * 过滤掉使用PathPatternParser的HandlerMapping以避免启动异常。
+     *
+     * @return BeanPostProcessor实例
+     */
     @Bean
     public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
         return new BeanPostProcessor() {

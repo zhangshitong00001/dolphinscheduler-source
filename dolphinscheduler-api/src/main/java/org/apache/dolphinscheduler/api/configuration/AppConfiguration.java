@@ -38,7 +38,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 
 /**
- * application configuration
+ * 应用Web配置。提供CORS过滤器、登录拦截器、国际化支持、限流拦截器、静态资源和视图控制器等配置，
+ * 是DolphinScheduler API模块的核心Web MVC配置类。
  */
 @Configuration
 public class AppConfiguration implements WebMvcConfigurer {
@@ -52,6 +53,11 @@ public class AppConfiguration implements WebMvcConfigurer {
     @Autowired
     private TrafficConfiguration trafficConfiguration;
 
+    /**
+     * 配置CORS跨域过滤器，允许所有来源、方法和请求头。
+     *
+     * @return CORS过滤器实例
+     */
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
@@ -63,14 +69,20 @@ public class AppConfiguration implements WebMvcConfigurer {
         return new CorsFilter(configSource);
     }
 
+    /**
+     * 创建登录拦截器Bean。
+     *
+     * @return 登录拦截器实例
+     */
     @Bean
     public LoginHandlerInterceptor loginInterceptor() {
         return new LoginHandlerInterceptor();
     }
 
     /**
-     * Cookie
-     * @return local resolver
+     * 配置Cookie国际化解析器，默认语言为英语。
+     *
+     * @return CookieLocaleResolver本地化解析器
      */
     @Bean(name = "localeResolver")
     public LocaleResolver localeResolver() {
@@ -83,11 +95,21 @@ public class AppConfiguration implements WebMvcConfigurer {
         return localeResolver;
     }
 
+    /**
+     * 创建国际化切换拦截器Bean。
+     *
+     * @return LangChangeInterceptor实例
+     */
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
         return new LocaleChangeInterceptor();
     }
 
+    /**
+     * 创建流量限制拦截器Bean。
+     *
+     * @return RateLimitInterceptor实例
+     */
     @Bean
     public RateLimitInterceptor createRateLimitInterceptor() {
         return new RateLimitInterceptor(trafficConfiguration);
@@ -122,9 +144,9 @@ public class AppConfiguration implements WebMvcConfigurer {
     }
 
     /**
-     * Turn off suffix-based content negotiation
+     * 关闭基于后缀的内容协商。
      *
-     * @param configurer configurer
+     * @param configurer 内容协商配置器
      */
     @Override
     public void configureContentNegotiation(final ContentNegotiationConfigurer configurer) {

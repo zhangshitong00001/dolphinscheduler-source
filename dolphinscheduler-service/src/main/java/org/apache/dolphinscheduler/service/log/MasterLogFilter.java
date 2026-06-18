@@ -22,19 +22,18 @@ import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 
 /**
- * master log filter
+ * Master日志过滤器，仅接受线程名以"Master-"开头的日志事件。
  */
 public class MasterLogFilter extends Filter<ILoggingEvent> {
 
-    /**
-     * log level
-     */
+    /** 日志级别 */
     Level level;
 
     /**
-     * Accept or reject based on thread name
-     * @param event event
-     * @return FilterReply
+     * 根据线程名判断是否接受该日志事件。
+     *
+     * @param event 日志事件
+     * @return 线程名以"Master-"开头则接受，否则拒绝
      */
     @Override
     public FilterReply decide(ILoggingEvent event) {

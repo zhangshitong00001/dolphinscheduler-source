@@ -27,43 +27,35 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 告警插件实例实体，映射到 t_ds_alert_plugin_instance 表，表示一个告警通道的具体配置实例。
+ * 例如一个邮件告警实例会包含 SMTP 服务器地址、邮箱账号等配置参数。告警插件实例被告警组引用，用于实际发送告警通知。
+ */
 @Data
 @TableName("t_ds_alert_plugin_instance")
 public class AlertPluginInstance {
 
-    /**
-     * id
-     */
+    /** 告警插件实例主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * plugin_define_id
-     */
+    /** 关联的插件定义 ID，对应 t_ds_plugin_define 表的 id，标识使用哪个告警插件类型（如邮件、短信、钉钉等），更新策略为 NEVER（不允许修改） */
     @TableField(value = "plugin_define_id", updateStrategy = FieldStrategy.NEVER)
     private int pluginDefineId;
 
-    /**
-     * alert plugin instance name
-     */
+    /** 告警插件实例名称，用户自定义，如 "生产环境邮件告警" */
     @TableField("instance_name")
     private String instanceName;
 
-    /**
-     * plugin_instance_params
-     */
+    /** 插件实例参数字符串，JSON 格式，存储该告警实例的具体配置参数 */
     @TableField("plugin_instance_params")
     private String pluginInstanceParams;
 
-    /**
-     * create_time
-     */
+    /** 创建时间 */
     @TableField("create_time")
     private Date createTime;
 
-    /**
-     * update_time
-     */
+    /** 最后更新时间 */
     @TableField("update_time")
     private Date updateTime;
 

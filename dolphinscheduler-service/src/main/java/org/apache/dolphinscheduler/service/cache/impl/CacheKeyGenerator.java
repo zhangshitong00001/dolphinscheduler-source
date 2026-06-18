@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * custom cache key generator
+ * 自定义缓存键生成器，使用下划线连接方法参数生成缓存键。
  */
 @Component
 public class CacheKeyGenerator implements KeyGenerator {

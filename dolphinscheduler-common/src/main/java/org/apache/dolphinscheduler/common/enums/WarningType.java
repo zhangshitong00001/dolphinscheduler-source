@@ -26,18 +26,17 @@ import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.google.common.base.Functions;
 
 /**
- * types for whether to send warning when process ends;
+ * 告警类型枚举。
+ * 定义流程结束时发送告警的策略。
  */
 public enum WarningType {
-    /**
-     * 0 do not send warning;
-     * 1 send if process success;
-     * 2 send if process failed;
-     * 3 send if process ends, whatever the result;
-     */
+    /** 不发送告警 */
     NONE(0, "none"),
+    /** 成功时发送告警 */
     SUCCESS(1, "success"),
+    /** 失败时发送告警 */
     FAILURE(2, "failure"),
+    /** 无论成功或失败都发送告警 */
     ALL(3, "all");
 
     WarningType(int code, String descp) {

@@ -19,15 +19,27 @@ package org.apache.dolphinscheduler.common.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
+/**
+ * 状态事件类型枚举。
+ * 定义工作流和任务状态流转中触发的事件类型。
+ */
 public enum StateEventType {
 
+    /** 流程状态变更 */
     PROCESS_STATE_CHANGE(0, "process state change"),
+    /** 任务状态变更 */
     TASK_STATE_CHANGE(1, "task state change"),
+    /** 流程超时 */
     PROCESS_TIMEOUT(2, "process timeout"),
+    /** 任务超时 */
     TASK_TIMEOUT(3, "task timeout"),
+    /** 唤醒任务组 */
     WAKE_UP_TASK_GROUP(4, "wait task group"),
+    /** 任务重试 */
     TASK_RETRY(5, "task retry"),
+    /** 流程阻塞 */
     PROCESS_BLOCKED(6, "process blocked"),
+    /** 流程提交失败 */
     PROCESS_SUBMIT_FAILED(7, "process submit failed");
 
     StateEventType(int code, String descp) {

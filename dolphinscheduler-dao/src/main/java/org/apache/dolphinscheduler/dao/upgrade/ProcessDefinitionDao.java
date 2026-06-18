@@ -35,13 +35,16 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 升级用流程定义数据访问对象，用于在版本升级时读取旧版流程定义 JSON 数据并更新为新的编码结构。
+ */
 public class ProcessDefinitionDao {
 
 
     public static final Logger logger = LoggerFactory.getLogger(ProcessDefinitionDao.class);
 
     /**
-     * queryAllProcessDefinition
+     * 查询所有流程定义的原始 JSON 数据，返回 ID 到 JSON 字符串的映射。
      *
      * @param conn jdbc connection
      * @return ProcessDefinition Json List
@@ -74,7 +77,7 @@ public class ProcessDefinitionDao {
     }
 
     /**
-     * updateProcessDefinitionJson
+     * 批量更新流程定义的 JSON 数据，将处理后的 JSON 回写到数据库。
      *
      * @param conn jdbc connection
      * @param processDefinitionJsonMap processDefinitionJsonMap
@@ -97,6 +100,9 @@ public class ProcessDefinitionDao {
         }
     }
 
+    /**
+     * 查询流程定义实体列表，包含旧版 ID 到新编码 code 的转换逻辑。
+     */
     public List<ProcessDefinition> queryProcessDefinition(Connection conn) {
         List<ProcessDefinition> processDefinitions = new ArrayList<>();
         String sql = "SELECT id,code,project_code,user_id,locations,name,description,release_state,flag,create_time FROM t_ds_process_definition";
@@ -134,7 +140,7 @@ public class ProcessDefinitionDao {
     }
 
     /**
-     * updateProcessDefinitionCode
+     * 更新流程定义的编码（code），将旧版 ID 替换为新编码，同时映射旧项目 ID 到新项目编码。
      *
      * @param conn jdbc connection
      * @param processDefinitions processDefinitions

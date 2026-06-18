@@ -22,27 +22,27 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * gantt DTO
+ * 甘特图 DTO，封装甘特图展示所需的全部数据，包含高度、任务列表、任务名称和状态映射。
  */
 public class GanttDto {
 
     /**
-     * height
+     * 甘特图高度
      */
     private int height;
 
     /**
-     * tasks list
+     * 任务列表
      */
     private List<Task> tasks = new ArrayList<>();
 
     /**
-     * task name list
+     * 任务名称列表
      */
     private List<String> taskNames;
 
     /**
-     * task status map
+     * 任务状态映射
      */
     private Map<String,String> taskStatus;
 

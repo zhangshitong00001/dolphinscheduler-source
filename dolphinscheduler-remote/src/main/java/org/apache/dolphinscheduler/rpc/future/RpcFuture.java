@@ -25,16 +25,21 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- * RpcFuture
+ * RPC 异步调用 Future。基于 CountDownLatch 实现的 Future 模式，
+ * 调用方通过 get() 方法阻塞等待 RPC 响应，当响应到达时由 Netty 回调线程调用 done() 唤醒等待。
  */
 public class RpcFuture implements Future<Object> {
 
+    /** 同步锁存器，初始计数为1 */
     private CountDownLatch latch = new CountDownLatch(1);
 
+    /** RPC 响应结果 */
     private RpcResponse response;
 
+    /** 对应的 RPC 请求 */
     private RpcRequest request;
 
+    /** 请求ID */
     private long requestId;
 
     public RpcFuture(RpcRequest rpcRequest, long requestId) {
@@ -57,6 +62,13 @@ public class RpcFuture implements Future<Object> {
         return false;
     }
 
+    /**
+     * 阻塞等待 RPC 响应，默认超时时间为5秒。
+     *
+     * @return RPC 响应对象
+     * @throws InterruptedException 等待被中断时抛出
+     * @throws RuntimeException 等待超时时抛出
+     */
     @Override
     public RpcResponse get() throws InterruptedException {
         // the timeout period should be defined by the business party
@@ -69,6 +81,15 @@ public class RpcFuture implements Future<Object> {
         return response;
     }
 
+    /**
+     * 阻塞等待 RPC 响应，可指定超时时间和时间单位。
+     *
+     * @param timeout 超时时间值
+     * @param unit 时间单位
+     * @return RPC 响应对象
+     * @throws InterruptedException 等待被中断时抛出
+     * @throws RuntimeException 等待超时时抛出
+     */
     @Override
     public RpcResponse get(long timeout, TimeUnit unit) throws InterruptedException {
         boolean success = latch.await(timeout, unit);
@@ -80,6 +101,11 @@ public class RpcFuture implements Future<Object> {
         return response;
     }
 
+    /**
+     * 设置 RPC 响应并释放等待线程。由 Netty 回调线程在响应到达时调用。
+     *
+     * @param response RPC 响应对象
+     */
     public void done(RpcResponse response) {
         this.response = response;
         latch.countDown();

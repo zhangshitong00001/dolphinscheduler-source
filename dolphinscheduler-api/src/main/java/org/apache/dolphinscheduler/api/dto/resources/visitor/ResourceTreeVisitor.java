@@ -26,29 +26,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * resource tree visitor
+ * 资源树访问者。实现Visitor接口，将扁平的资源列表构建为树形结构，递归处理父子节点关系。
  */
 public class ResourceTreeVisitor implements Visitor{
 
-    /**
-     * resource list
-     */
+    /** 资源列表 */
     private List<Resource> resourceList;
 
     public ResourceTreeVisitor() {
     }
 
     /**
-     * constructor
-     * @param resourceList resource list
+     * 构造资源树访问者
+     * @param resourceList 资源列表
      */
     public ResourceTreeVisitor(List<Resource> resourceList) {
         this.resourceList = resourceList;
     }
 
     /**
-     * visit
-     * @return resoruce component
+     * 访问并构建资源树
+     * @return 根资源组件（包含完整树形结构）
      */
     @Override
     public ResourceComponent visit() {
@@ -65,10 +63,10 @@ public class ResourceTreeVisitor implements Visitor{
     }
 
     /**
-     * set children
-     * @param id    id
-     * @param list  resource list
-     * @return resource component list
+     * 递归设置子节点
+     * @param id    父节点ID
+     * @param list  资源列表
+     * @return 子资源组件列表
      */
     public static List<ResourceComponent> setChildren(int id, List<Resource> list ){
         List<ResourceComponent> childList = new ArrayList<>();
@@ -88,9 +86,9 @@ public class ResourceTreeVisitor implements Visitor{
     }
 
     /**
-     * Determine whether it is the root node
-     * @param resource resource
-     * @return true if it is the root node
+     * 判断是否为根节点
+     * @param resource 资源
+     * @return 如果是根节点则返回true
      */
     public boolean rootNode(Resource resource) {
 
@@ -107,9 +105,9 @@ public class ResourceTreeVisitor implements Visitor{
     }
 
     /**
-     * get resource component by resource
-     * @param resource resource
-     * @return resource component
+     * 根据资源实体获取对应的资源组件
+     * @param resource 资源实体
+     * @return 资源组件（目录或文件叶子节点）
      */
     private static ResourceComponent getResourceComponent(Resource resource) {
         ResourceComponent tempResourceComponent;
@@ -118,7 +116,7 @@ public class ResourceTreeVisitor implements Visitor{
         }else{
             tempResourceComponent = new FileLeaf();
         }
-        
+
         tempResourceComponent.setName(resource.getAlias());
         tempResourceComponent.setFullName(resource.getFullName().replaceFirst("/",""));
         tempResourceComponent.setId(resource.getId());

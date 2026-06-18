@@ -15,42 +15,26 @@
  * limitations under the License.
  */
 
-interface ListReq {
-  pageNo: number
-  pageSize: number
-  searchVal?: string
-}
+package org.apache.dolphinscheduler.plugin.datasource.doris;
 
-interface GroupNameReq {
-  groupName: string
-}
+import org.apache.dolphinscheduler.spi.datasource.DataSourceChannel;
 
-interface IdReq {
-  id: number
-}
+import org.junit.Assert;
+import org.junit.Test;
 
-interface GroupReq extends GroupNameReq {
-  alertInstanceIds: string
-  description?: string
-}
+public class DorisDataSourceChannelFactoryTest {
 
-interface AlarmGroupItem {
-  id: number
-  groupName: string
-  alertInstanceIds: string
-  description: string
-  createTime: string
-  updateTime: string
-  createUserId: number
-}
+    @Test
+    public void testGetName() {
+        DorisDataSourceChannelFactory factory = new DorisDataSourceChannelFactory();
+        Assert.assertEquals("doris", factory.getName());
+    }
 
-interface AlarmGroupRes {
-  totalList: AlarmGroupItem[]
-  total: number
-  totalPage: number
-  pageSize: number
-  currentPage: number
-  start: number
+    @Test
+    public void testCreate() {
+        DorisDataSourceChannelFactory factory = new DorisDataSourceChannelFactory();
+        DataSourceChannel channel = factory.create();
+        Assert.assertNotNull(channel);
+        Assert.assertTrue(channel instanceof DorisDataSourceChannel);
+    }
 }
-
-export { ListReq, GroupNameReq, IdReq, GroupReq, AlarmGroupItem, AlarmGroupRes }

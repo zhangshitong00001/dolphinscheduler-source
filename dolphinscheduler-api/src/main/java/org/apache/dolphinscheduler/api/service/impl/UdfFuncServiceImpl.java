@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * udf func service impl
+ * UDF函数服务实现类。负责UDF函数的增删改查和权限管理，关联资源文件并校验资源上传状态。
  */
 @Service
 public class UdfFuncServiceImpl extends BaseServiceImpl implements UdfFuncService {
@@ -64,17 +64,17 @@ public class UdfFuncServiceImpl extends BaseServiceImpl implements UdfFuncServic
     private UDFUserMapper udfUserMapper;
 
     /**
-     * create udf function
+     * 创建UDF函数。校验权限、资源上传状态和函数名唯一性，关联资源文件后持久化。
      *
-     * @param loginUser login user
-     * @param type udf type
-     * @param funcName function name
-     * @param argTypes argument types
-     * @param database database
-     * @param desc description
-     * @param resourceId resource id
-     * @param className class name
-     * @return create result code
+     * @param loginUser 当前登录用户
+     * @param funcName 函数名称
+     * @param className 类名
+     * @param argTypes 参数类型
+     * @param database 数据库名
+     * @param desc 描述信息
+     * @param type UDF类型
+     * @param resourceId 关联资源ID
+     * @return 包含创建结果的结果对象
      */
     @Override
     @Transactional
@@ -148,16 +148,23 @@ public class UdfFuncServiceImpl extends BaseServiceImpl implements UdfFuncServic
      * @param name name
      * @return check result code
      */
+    /**
+     * 检查UDF函数名称是否已存在。
+     *
+     * @param name 函数名称
+     * @return true表示已存在，false表示不存在
+     */
     private boolean checkUdfFuncNameExists(String name) {
         List<UdfFunc> resource = udfFuncMapper.queryUdfByIdStr(null, name);
         return resource != null && !resource.isEmpty();
     }
 
     /**
-     * query udf function
+     * 根据ID查询UDF函数详情，需要UDF查看权限。
      *
-     * @param id  udf function id
-     * @return udf function detail
+     * @param loginUser 当前登录用户
+     * @param id UDF函数ID
+     * @return 包含UDF函数详情的结果对象
      */
     @Override
     public Result<Object> queryUdfFuncDetail(User loginUser, int id) {
@@ -178,17 +185,18 @@ public class UdfFuncServiceImpl extends BaseServiceImpl implements UdfFuncServic
     }
 
     /**
-     * updateProcessInstance udf function
+     * 更新UDF函数信息。校验权限和名称唯一性，更新关联资源文件。
      *
-     * @param udfFuncId udf function id
-     * @param type  resource type
-     * @param funcName function name
-     * @param argTypes argument types
-     * @param database data base
-     * @param desc description
-     * @param resourceId resource id
-     * @param className class name
-     * @return update result code
+     * @param loginUser 当前登录用户
+     * @param udfFuncId UDF函数ID
+     * @param funcName 新的函数名称
+     * @param className 新的类名
+     * @param argTypes 新的参数类型
+     * @param database 新的数据库名
+     * @param desc 新的描述信息
+     * @param type 新的UDF类型
+     * @param resourceId 新的资源ID
+     * @return 包含更新结果的结果对象
      */
     @Override
     public Result<Object> updateUdfFunc(User loginUser,
@@ -264,13 +272,13 @@ public class UdfFuncServiceImpl extends BaseServiceImpl implements UdfFuncServic
     }
 
     /**
-     * query udf function list paging
+     * 分页查询UDF函数列表，根据用户权限过滤。
      *
-     * @param loginUser login user
-     * @param pageNo page number
-     * @param pageSize page size
-     * @param searchVal search value
-     * @return udf function list page
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索关键字
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页UDF函数列表的结果对象
      */
     @Override
     public Result<Object> queryUdfFuncListPaging(User loginUser, String searchVal, Integer pageNo, Integer pageSize) {
@@ -290,13 +298,13 @@ public class UdfFuncServiceImpl extends BaseServiceImpl implements UdfFuncServic
     }
 
     /**
-     * get udf functions
+     * 根据用户权限获取分页的UDF函数列表。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageSize page size
-     * @param pageNo page number
-     * @return udf function list page
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索关键字
+     * @param pageSize 每页大小
+     * @param pageNo 页码
+     * @return UDF函数分页结果
      */
     private IPage<UdfFunc> getUdfFuncsPage(User loginUser, String searchVal, Integer pageSize, int pageNo) {
         Set<Integer> udfFuncIds = resourcePermissionCheckService.userOwnedResourceIdsAcquisition(AuthorizationType.UDF, loginUser.getId(), logger);
@@ -308,11 +316,11 @@ public class UdfFuncServiceImpl extends BaseServiceImpl implements UdfFuncServic
     }
 
     /**
-     * query udf list
+     * 按类型查询用户有权限的UDF函数列表。
      *
-     * @param loginUser login user
-     * @param type  udf type
-     * @return udf func list
+     * @param loginUser 当前登录用户
+     * @param type UDF类型（可为null表示全部）
+     * @return 包含UDF函数列表的结果对象
      */
     @Override
     public Result<Object> queryUdfFuncList(User loginUser, Integer type) {
@@ -337,10 +345,11 @@ public class UdfFuncServiceImpl extends BaseServiceImpl implements UdfFuncServic
     }
 
     /**
-     * delete udf function
+     * 删除UDF函数，同步删除UDF用户关联记录。
      *
-     * @param id udf function id
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param id UDF函数ID
+     * @return 包含删除结果的结果对象
      */
     @Override
     @Transactional
@@ -359,10 +368,11 @@ public class UdfFuncServiceImpl extends BaseServiceImpl implements UdfFuncServic
     }
 
     /**
-     * verify udf function by name
+     * 验证UDF函数名称是否可用（未重复）。
      *
-     * @param name name
-     * @return true if the name can user, otherwise return false
+     * @param loginUser 当前登录用户
+     * @param name 函数名称
+     * @return 包含验证结果的结果对象
      */
     @Override
     public Result<Object> verifyUdfFuncByName(User loginUser, String name) {

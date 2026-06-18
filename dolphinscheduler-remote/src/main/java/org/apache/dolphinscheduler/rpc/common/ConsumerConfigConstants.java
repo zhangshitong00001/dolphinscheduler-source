@@ -18,7 +18,7 @@
 package org.apache.dolphinscheduler.rpc.common;
 
 /**
- * ConsumerConfigConstants
+ * RPC 消费者配置常量。定义 RPC 客户端调用的默认参数，如同步模式、重试次数和回调开关。
  */
 public class ConsumerConfigConstants {
 
@@ -26,9 +26,12 @@ public class ConsumerConfigConstants {
         throw new IllegalStateException("Utility class");
     }
 
+    /** 默认同步模式：异步 */
     public static final Boolean DEFAULT_SYNC = false;
 
+    /** 默认重试次数：3次 */
     public static final Integer DEFAULT_RETRIES = 3;
 
+    /** 默认回调开关：关闭 */
     public static final Boolean DEFAULT_CALL_BACK = false;
 }

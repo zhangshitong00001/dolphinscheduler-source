@@ -39,45 +39,44 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * dependent item execute
+ * 依赖执行器，负责评估依赖任务列表中的各个依赖项是否满足条件。
+ * 支持按日期范围查询依赖的工作流实例和任务状态，根据依赖关系（AND/OR）计算最终的依赖结果。
+ * 被 DependentTaskProcessor 使用，是依赖任务判断的核心组件。
  */
 public class DependentExecute {
 
     /**
-     * process service
+     * 流程服务。
      */
     private final ProcessService processService = SpringApplicationContext.getBean(ProcessService.class);
 
     /**
-     * depend item list
+     * 依赖项列表。
      */
     private List<DependentItem> dependItemList;
 
     /**
-     * dependent relation
+     * 依赖关系（AND 或 OR）。
      */
     private DependentRelation relation;
 
     /**
-     * depend result
+     * 模型的依赖结果。
      */
     private DependResult modelDependResult = DependResult.WAITING;
 
     /**
-     * depend result map
+     * 依赖结果缓存。
      */
     private Map<String, DependResult> dependResultMap = new HashMap<>();
 
-    /**
-     * logger
-     */
     private Logger logger = LoggerFactory.getLogger(DependentExecute.class);
 
     /**
-     * constructor
+     * 构造依赖执行器。
      *
-     * @param itemList item list
-     * @param relation relation
+     * @param itemList 依赖项列表
+     * @param relation 依赖关系
      */
     public DependentExecute(List<DependentItem> itemList, DependentRelation relation) {
         this.dependItemList = itemList;
@@ -85,11 +84,11 @@ public class DependentExecute {
     }
 
     /**
-     * get dependent item for one dependent item
+     * 计算单个依赖项的依赖结果，根据时间范围查询对应的任务实例状态。
      *
-     * @param dependentItem dependent item
-     * @param currentTime   current time
-     * @return DependResult
+     * @param dependentItem 依赖项
+     * @param currentTime   当前时间
+     * @return 依赖结果
      */
     private DependResult getDependentResultForItem(DependentItem dependentItem, Date currentTime) {
         List<DateInterval> dateIntervals =
@@ -98,11 +97,11 @@ public class DependentExecute {
     }
 
     /**
-     * calculate dependent result for one dependent item.
+     * 按时间间隔列表计算单个依赖项的依赖结果。
      *
-     * @param dependentItem dependent item
-     * @param dateIntervals date intervals
-     * @return dateIntervals
+     * @param dependentItem 依赖项
+     * @param dateIntervals 日期间隔列表
+     * @return 依赖结果
      */
     private DependResult calculateResultForTasks(DependentItem dependentItem,
                                                  List<DateInterval> dateIntervals) {
@@ -128,9 +127,10 @@ public class DependentExecute {
     }
 
     /**
-     * depend type = depend_all
+     * 依赖类型为 DEPENDENT_ALL 时，根据工作流实例的状态判断依赖结果。
      *
-     * @return
+     * @param processInstance 工作流实例
+     * @return 依赖结果
      */
     private DependResult dependResultByProcessInstance(ProcessInstance processInstance) {
         if (!processInstance.getState().isFinished()) {
@@ -143,11 +143,11 @@ public class DependentExecute {
     }
 
     /**
-     * get depend task result
+     * 根据任务编码获取依赖任务的执行结果。
      *
-     * @param taskCode
-     * @param processInstance
-     * @return
+     * @param taskCode         任务编码
+     * @param processInstance  工作流实例
+     * @return 依赖结果
      */
     private DependResult getDependTaskResult(long taskCode, ProcessInstance processInstance) {
         DependResult result;
@@ -177,13 +177,13 @@ public class DependentExecute {
     }
 
     /**
-     * find the last one process instance that :
-     * 1. manual run and finish between the interval
-     * 2. schedule run and schedule time between the interval
+     * 查找在指定时间范围内最近的工作流实例（包括调度运行和手动运行）。
+     * 1. 手动运行且在时间区间内完成
+     * 2. 调度运行且调度时间在时间区间内
      *
-     * @param definitionCode definition code
-     * @param dateInterval   date interval
-     * @return ProcessInstance
+     * @param definitionCode 工作流定义编码
+     * @param dateInterval   日期区间
+     * @return 最近的工作流实例
      */
     private ProcessInstance findLastProcessInterval(Long definitionCode, DateInterval dateInterval) {
 
@@ -204,10 +204,10 @@ public class DependentExecute {
     }
 
     /**
-     * get dependent result by task/process instance state
+     * 根据任务/工作流实例的运行状态获取依赖结果。
      *
-     * @param state state
-     * @return DependResult
+     * @param state 任务执行状态
+     * @return 依赖结果
      */
     private DependResult getDependResultByState(TaskExecutionStatus state) {
 
@@ -221,10 +221,10 @@ public class DependentExecute {
     }
 
     /**
-     * judge depend item finished
+     * 判断所有依赖项是否已完成评估。
      *
-     * @param currentTime current time
-     * @return boolean
+     * @param currentTime 当前时间
+     * @return 是否已完成
      */
     public boolean finish(Date currentTime) {
         if (modelDependResult == DependResult.WAITING) {
@@ -235,10 +235,10 @@ public class DependentExecute {
     }
 
     /**
-     * get model depend result
+     * 计算所有依赖项的综合依赖结果。
      *
-     * @param currentTime current time
-     * @return DependResult
+     * @param currentTime 当前时间
+     * @return 综合依赖结果
      */
     public DependResult getModelDependResult(Date currentTime) {
 
@@ -256,11 +256,11 @@ public class DependentExecute {
     }
 
     /**
-     * get dependent item result
+     * 获取单个依赖项的依赖结果（优先从缓存中获取）。
      *
-     * @param item        item
-     * @param currentTime current time
-     * @return DependResult
+     * @param item        依赖项
+     * @param currentTime 当前时间
+     * @return 依赖结果
      */
     private DependResult getDependResultForItem(DependentItem item, Date currentTime) {
         String key = item.getKey();

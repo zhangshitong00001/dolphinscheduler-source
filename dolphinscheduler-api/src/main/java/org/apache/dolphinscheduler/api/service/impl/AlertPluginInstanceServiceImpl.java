@@ -58,7 +58,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import static org.apache.dolphinscheduler.api.constants.ApiFuncIdentificationConstant.*;
 
 /**
- * alert plugin instance service impl
+ * 告警插件实例服务实现类。负责告警插件实例的增删改查、参数解析和关联检查，支持将插件参数在前端UI格式与后端存储格式之间转换。
  */
 @Service
 @Lazy
@@ -76,12 +76,13 @@ public class AlertPluginInstanceServiceImpl extends BaseServiceImpl implements A
     private AlertGroupMapper alertGroupMapper;
 
     /**
-     * creat alert plugin instance
+     * 创建告警插件实例。校验权限和实例名称唯一性，将插件参数转换为存储格式后持久化。
      *
-     * @param loginUser login user
-     * @param pluginDefineId plugin define id
-     * @param instanceName instance name
-     * @param pluginInstanceParams plugin instance params
+     * @param loginUser 当前登录用户
+     * @param pluginDefineId 插件定义ID
+     * @param instanceName 实例名称
+     * @param pluginInstanceParams 插件实例参数（UI格式）
+     * @return 包含创建结果的结果Map
      */
     @Override
     public Map<String, Object> create(User loginUser, int pluginDefineId, String instanceName, String pluginInstanceParams) {
@@ -114,12 +115,13 @@ public class AlertPluginInstanceServiceImpl extends BaseServiceImpl implements A
     }
 
     /**
-     * update alert plugin instance
+     * 更新告警插件实例。校验权限后将更新的参数转换并保存。
      *
-     * @param loginUser login user
-     * @param pluginInstanceId plugin instance id
-     * @param instanceName instance name
-     * @param pluginInstanceParams plugin instance params
+     * @param loginUser 当前登录用户
+     * @param pluginInstanceId 插件实例ID
+     * @param instanceName 新的实例名称
+     * @param pluginInstanceParams 新的插件实例参数（UI格式）
+     * @return 包含更新结果的结果Map
      */
     @Override
     public Map<String, Object> update(User loginUser, int pluginInstanceId, String instanceName, String pluginInstanceParams) {
@@ -144,11 +146,11 @@ public class AlertPluginInstanceServiceImpl extends BaseServiceImpl implements A
     }
 
     /**
-     * delete alert plugin instance
+     * 删除告警插件实例。删除前检查是否有关联的告警组，有关联时不允许删除。
      *
-     * @param loginUser login user
-     * @param id id
-     * @return result
+     * @param loginUser 当前登录用户
+     * @param id 插件实例ID
+     * @return 包含删除结果的结果Map
      */
     @Override
     public Map<String, Object> delete(User loginUser, int id) {
@@ -173,11 +175,11 @@ public class AlertPluginInstanceServiceImpl extends BaseServiceImpl implements A
     }
 
     /**
-     * get alert plugin instance
+     * 根据ID获取告警插件实例详情。
      *
-     * @param loginUser login user
-     * @param id get id
-     * @return alert plugin
+     * @param loginUser 当前登录用户
+     * @param id 插件实例ID
+     * @return 包含插件实例详情的结果Map
      */
     @Override
     public Map<String, Object> get(User loginUser, int id) {
@@ -196,6 +198,11 @@ public class AlertPluginInstanceServiceImpl extends BaseServiceImpl implements A
         return result;
     }
 
+    /**
+     * 查询所有告警插件实例列表，返回包含插件名称和解析后参数的VO列表。
+     *
+     * @return 包含告警插件实例VO列表的结果Map
+     */
     @Override
     public Map<String, Object> queryAll() {
         Map<String, Object> result = new HashMap<>();
@@ -208,11 +215,26 @@ public class AlertPluginInstanceServiceImpl extends BaseServiceImpl implements A
         return result;
     }
 
+    /**
+     * 检查插件实例名称是否已存在。
+     *
+     * @param pluginInstanceName 插件实例名称
+     * @return true表示已存在，false表示不存在
+     */
     @Override
     public boolean checkExistPluginInstanceName(String pluginInstanceName) {
         return alertPluginInstanceMapper.existInstanceName(pluginInstanceName) == Boolean.TRUE;
     }
 
+    /**
+     * 分页查询告警插件实例列表，返回包含插件名称和解析后参数的VO分页数据。
+     *
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索关键字
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页VO列表的结果对象
+     */
     @Override
     public Result listPaging(User loginUser, String searchVal, int pageNo, int pageSize) {
 
@@ -264,10 +286,10 @@ public class AlertPluginInstanceServiceImpl extends BaseServiceImpl implements A
     }
 
     /**
-     * Get the parameters actually needed by the plugin
+     * 将前端UI格式的完整插件参数解析为后端存储的键值对JSON格式。
      *
-     * @param pluginParams Complete parameters(include ui)
-     * @return k, v(json string)
+     * @param pluginParams 完整参数（含UI配置）
+     * @return 键值对格式的JSON字符串
      */
     private String parsePluginParamsMap(String pluginParams) {
         Map<String, String> paramsMap = PluginParamsTransfer.getPluginParamsMap(pluginParams);
@@ -275,11 +297,11 @@ public class AlertPluginInstanceServiceImpl extends BaseServiceImpl implements A
     }
 
     /**
-     * parse To Plugin Ui Params
+     * 将后端存储的键值对参数与插件UI定义合并，生成前端UI格式的完整参数列表。
      *
-     * @param pluginParamsMapString k-v data
-     * @param pluginUiParams Complete parameters(include ui)
-     * @return Complete parameters list(include ui)
+     * @param pluginParamsMapString 后端键值对格式的JSON字符串
+     * @param pluginUiParams 插件UI参数定义（含UI配置）
+     * @return 前端UI格式的完整参数列表JSON字符串
      */
     private String parseToPluginUiParams(String pluginParamsMapString, String pluginUiParams) {
         List<Map<String, Object>> pluginParamsList = PluginParamsTransfer.generatePluginParams(pluginParamsMapString, pluginUiParams);

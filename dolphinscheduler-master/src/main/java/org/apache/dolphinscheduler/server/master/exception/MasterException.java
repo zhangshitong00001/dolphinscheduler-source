@@ -17,6 +17,9 @@
 
 package org.apache.dolphinscheduler.server.master.exception;
 
+/**
+ * Master服务器异常类。用于封装Master服务器运行过程中发生的各类业务异常，支持异常消息和异常链传递。
+ */
 public class MasterException extends Exception {
 
     public MasterException(String message) {

@@ -50,7 +50,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 /**
- * access token service impl
+ * 访问令牌服务实现类。负责访问令牌的增删改查和权限校验，支持令牌的自动生成和过期管理。
  */
 @Service
 public class AccessTokenServiceImpl extends BaseServiceImpl implements AccessTokenService {
@@ -61,13 +61,13 @@ public class AccessTokenServiceImpl extends BaseServiceImpl implements AccessTok
     private AccessTokenMapper accessTokenMapper;
 
     /**
-     * query access token list
+     * 分页查询访问令牌列表。管理员可查看所有令牌，普通用户仅查看自己的令牌。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return token list for page number and page size
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索关键字
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页令牌列表的结果对象
      */
     @Override
     public Result queryAccessTokenList(User loginUser, String searchVal, Integer pageNo, Integer pageSize) {
@@ -87,11 +87,11 @@ public class AccessTokenServiceImpl extends BaseServiceImpl implements AccessTok
     }
 
     /**
-     * query access token for specified user
+     * 查询指定用户的访问令牌列表。普通用户只能查询自己的令牌。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @return token list for specified user
+     * @param loginUser 当前登录用户
+     * @param userId 目标用户ID
+     * @return 包含令牌列表的结果Map
      */
     @Override
     public Map<String, Object> queryAccessTokenByUser(User loginUser, Integer userId) {
@@ -111,13 +111,13 @@ public class AccessTokenServiceImpl extends BaseServiceImpl implements AccessTok
     }
 
     /**
-     * create token
+     * 创建访问令牌。如果未提供token则自动生成，同时校验权限和用户有效性。
      *
-     * @param loginUser loginUser
-     * @param userId token for user
-     * @param expireTime token expire time
-     * @param token token string (if it is absent, it will be automatically generated)
-     * @return create result code
+     * @param loginUser 当前登录用户
+     * @param userId 令牌所属用户ID
+     * @param expireTime 令牌过期时间
+     * @param token 令牌字符串（为空时自动生成）
+     * @return 包含创建结果的结果对象
      */
     @SuppressWarnings("checkstyle:WhitespaceAround")
     @Override
@@ -164,12 +164,12 @@ public class AccessTokenServiceImpl extends BaseServiceImpl implements AccessTok
     }
 
     /**
-     * generate token
+     * 生成令牌字符串。基于用户ID、过期时间和当前时间戳生成MD5令牌。
      *
-     * @param loginUser
-     * @param userId token for user
-     * @param expireTime token expire time
-     * @return token string
+     * @param loginUser 当前登录用户
+     * @param userId 目标用户ID
+     * @param expireTime 令牌过期时间
+     * @return 包含生成的令牌字符串的结果Map
      */
     @Override
     public Map<String, Object> generateToken(User loginUser, int userId, String expireTime) {
@@ -181,11 +181,11 @@ public class AccessTokenServiceImpl extends BaseServiceImpl implements AccessTok
     }
 
     /**
-     * delete access token
+     * 根据ID删除访问令牌。管理员可删除任意令牌，普通用户只能删除自己的令牌。
      *
-     * @param loginUser login user
-     * @param id token id
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param id 令牌ID
+     * @return 包含删除结果的结果Map
      */
     @Override
     public Map<String, Object> delAccessTokenById(User loginUser, int id) {
@@ -213,13 +213,14 @@ public class AccessTokenServiceImpl extends BaseServiceImpl implements AccessTok
     }
 
     /**
-     * update token by id
+     * 根据ID更新访问令牌。校验权限后更新令牌的用户、过期时间和令牌字符串。
      *
-     * @param id token id
-     * @param userId token for user
-     * @param expireTime token expire time
-     * @param token token string (if it is absent, it will be automatically generated)
-     * @return updated access token entity
+     * @param loginUser 当前登录用户
+     * @param id 令牌ID
+     * @param userId 新的用户ID
+     * @param expireTime 新的过期时间
+     * @param token 新的令牌字符串（为空时自动生成）
+     * @return 包含更新后的令牌实体的结果Map
      */
     @Override
     public Map<String, Object> updateToken(User loginUser, int id, int userId, String expireTime, String token) {

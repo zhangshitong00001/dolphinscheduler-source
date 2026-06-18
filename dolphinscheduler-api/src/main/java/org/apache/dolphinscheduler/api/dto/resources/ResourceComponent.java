@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * resource component
+ * 资源组件抽象类。作为资源树节点的基类，包含资源的通用属性，支持子节点管理。可被目录（Directory）或文件（FileLeaf）继承。
  */
 @Data
 @NoArgsConstructor
@@ -46,55 +46,40 @@ public abstract class ResourceComponent {
         this.idValue = String.format("%s_%s", id, directoryFlag);
     }
 
-    /**
-     * id
-     */
+    /** 资源ID */
     protected int id;
-    /**
-     * parent id
-     */
+    /** 父级资源ID */
     protected int pid;
-    /**
-     * name
-     */
+    /** 资源名称 */
     protected String name;
-    /**
-     * current directory
-     */
+    /** 当前目录 */
     protected String currentDir;
-    /**
-     * full name
-     */
+    /** 资源全名 */
     protected String fullName;
-    /**
-     * description
-     */
+    /** 资源描述 */
     protected String description;
-    /**
-     * is directory
-     */
+    /** 是否为目录 */
     protected boolean isDirctory;
-    /**
-     * id value
-     */
+    /** ID值（格式：id_是否目录标记） */
     protected String idValue;
-    /**
-     * resoruce type
-     */
+    /** 资源类型 */
     protected ResourceType type;
-    /**
-     * children
-     */
+    /** 子资源组件列表 */
     protected List<ResourceComponent> children = new ArrayList<>();
 
     /**
-     * add resource component
-     * @param resourceComponent resource component
+     * 添加子资源组件
+     * @param resourceComponent 资源组件
      */
     public void add(ResourceComponent resourceComponent) {
         children.add(resourceComponent);
     }
 
+    /**
+     * 设置ID值
+     * @param id         资源ID
+     * @param isDirctory 是否为目录
+     */
     public void setIdValue(int id, boolean isDirctory) {
         int directoryFlag = isDirctory ? 1 : 0;
         this.idValue = String.format("%s_%s", id, directoryFlag);

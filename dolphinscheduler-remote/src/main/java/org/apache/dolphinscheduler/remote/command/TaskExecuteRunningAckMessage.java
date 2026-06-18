@@ -26,8 +26,7 @@ import org.apache.dolphinscheduler.common.utils.JSONUtils;
 import java.io.Serializable;
 
 /**
- * task execute running ack command
- * from master to worker
+ * 任务运行状态确认消息，由Master发送给Worker，用于确认已收到任务正在运行的通知。
  */
 @Data
 @Builder
@@ -35,13 +34,15 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class TaskExecuteRunningAckMessage implements Serializable {
 
+    /** 是否成功 */
     private boolean success;
+    /** 任务实例ID */
     private int taskInstanceId;
 
     /**
-     * package response command
+     * 将当前消息对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

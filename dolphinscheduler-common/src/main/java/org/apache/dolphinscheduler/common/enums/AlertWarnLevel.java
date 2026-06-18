@@ -17,7 +17,14 @@
 
 package org.apache.dolphinscheduler.common.enums;
 
+/**
+ * 告警警告级别枚举。
+ * 定义告警的严重程度。
+ */
 public enum AlertWarnLevel {
 
-    MIDDLE,SERIOUS
+    /** 中等告警级别 */
+    MIDDLE,
+    /** 严重告警级别 */
+    SERIOUS
 }

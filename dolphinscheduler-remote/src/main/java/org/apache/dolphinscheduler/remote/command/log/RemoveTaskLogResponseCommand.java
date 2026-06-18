@@ -27,15 +27,15 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 import java.io.Serializable;
 
 /**
- *  remove task log request command
+ * 删除任务日志响应命令。封装删除任务日志操作的处理结果状态。
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RemoveTaskLogResponseCommand implements Serializable {
 
-    /*
-     * TaskPriorityQueueConsumer.* log path
+    /**
+     * 删除操作的处理状态
      */
     private Boolean status;
 

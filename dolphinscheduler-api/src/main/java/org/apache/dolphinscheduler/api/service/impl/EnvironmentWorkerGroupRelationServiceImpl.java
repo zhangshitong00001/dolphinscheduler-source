@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * task definition service impl
+ * 环境与工作组关联服务实现类。负责查询环境与工作组之间的关联关系。
  */
 @Service
 public class EnvironmentWorkerGroupRelationServiceImpl extends BaseServiceImpl implements
@@ -45,9 +45,10 @@ public class EnvironmentWorkerGroupRelationServiceImpl extends BaseServiceImpl i
     private EnvironmentWorkerGroupRelationMapper environmentWorkerGroupRelationMapper;
 
     /**
-     * query environment worker group relation
+     * 查询指定环境编码关联的工作组列表。
      *
-     * @param environmentCode environment code
+     * @param environmentCode 环境编码
+     * @return 包含关联关系列表的结果Map
      */
     @Override
     public Map<String, Object> queryEnvironmentWorkerGroupRelation(Long environmentCode) {
@@ -59,9 +60,9 @@ public class EnvironmentWorkerGroupRelationServiceImpl extends BaseServiceImpl i
     }
 
     /**
-     * query all environment worker group relation
+     * 查询所有环境与工作组的关联关系列表。
      *
-     * @return all relation list
+     * @return 包含所有关联关系列表的结果Map
      */
     @Override
     public Map<String, Object> queryAllEnvironmentWorkerGroupRelationList() {

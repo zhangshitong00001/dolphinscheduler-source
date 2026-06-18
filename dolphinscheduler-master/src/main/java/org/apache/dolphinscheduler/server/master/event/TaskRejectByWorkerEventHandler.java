@@ -28,6 +28,9 @@ import org.apache.dolphinscheduler.server.master.runner.WorkflowExecuteRunnable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Worker 拒接任务事件处理器。当 Worker 因资源不足或其他原因拒绝执行任务时触发，处理 Worker 拒绝的任务重新提交逻辑，将任务重新放回待调度队列。
+ */
 @Component
 public class TaskRejectByWorkerEventHandler implements TaskEventHandler {
 

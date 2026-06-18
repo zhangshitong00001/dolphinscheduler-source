@@ -33,15 +33,17 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * file utils
+ * 文件工具类。提供文件复制、文件与Resource对象转换、MultipartFile转字符串等功能。
+ * 该类为工具类。
  */
 public class FileUtils {
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
     /**
-     * copy source InputStream to target file
-     * @param file
-     * @param destFilename
+     * 将上传文件的输入流复制到目标文件。
+     *
+     * @param file         上传的MultipartFile文件
+     * @param destFilename 目标文件路径
      */
     public static void copyInputStreamToFile(MultipartFile file, String destFilename) {
         try {
@@ -52,11 +54,11 @@ public class FileUtils {
     }
 
     /**
-     * file to resource
+     * 将文件名转换为Spring Resource对象。如果文件不可读则返回null。
      *
-     * @param filename file name
-     * @return resource
-     * @throws MalformedURLException io exceptions
+     * @param filename 文件路径名称
+     * @return Resource对象，文件不可读时返回null
+     * @throws MalformedURLException 文件路径格式异常
      */
     public static Resource file2Resource(String filename) throws MalformedURLException {
         Path file = Paths.get(filename);
@@ -72,9 +74,10 @@ public class FileUtils {
     }
 
     /**
-     * file convert String
-     * @param file MultipartFile file
-     * @return file content string
+     * 将MultipartFile文件内容转换为UTF-8格式的字符串。
+     *
+     * @param file MultipartFile文件
+     * @return 文件内容的字符串表示，转换失败返回空字符串
      */
     public static String file2String(MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {

@@ -22,19 +22,16 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
- * process definition log
+ * 流程定义日志实体，映射到 t_ds_process_definition_log 表，继承自 ProcessDefinition。
+ * 用于记录每次流程定义变更的操作历史和操作人信息。
  */
 @TableName("t_ds_process_definition_log")
 public class ProcessDefinitionLog extends ProcessDefinition {
 
-    /**
-     * operator
-     */
+    /** 操作人用户 ID */
     private int operator;
 
-    /**
-     * operateTime
-     */
+    /** 操作时间 */
     private Date operateTime;
 
     public ProcessDefinitionLog() {

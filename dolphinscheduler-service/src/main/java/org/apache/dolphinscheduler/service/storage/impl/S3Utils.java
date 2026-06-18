@@ -69,6 +69,10 @@ import com.amazonaws.services.s3.transfer.MultipleFileDownload;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 
+/**
+ * AWS S3存储操作实现类，单例模式。封装了对Amazon S3对象存储的常用操作，支持自定义Endpoint（MinIO等）。
+ * 提供资源的增删改查、目录管理、文件上传下载、文件内容查看等功能。
+ */
 public class S3Utils implements Closeable, StorageOperate {
 
     private static final Logger logger = LoggerFactory.getLogger(S3Utils.class);

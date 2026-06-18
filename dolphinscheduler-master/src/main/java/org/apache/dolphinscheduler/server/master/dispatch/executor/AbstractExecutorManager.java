@@ -21,24 +21,26 @@ import org.apache.dolphinscheduler.server.master.dispatch.context.ExecutionConte
 import org.apache.dolphinscheduler.server.master.dispatch.exceptions.ExecuteException;
 
 /**
- *  abstract executor manager
+ * 抽象执行器管理器。提供 beforeExecute 和 afterExecute 的默认空实现，子类可按需覆写。
+ *
+ * @param <T> 执行结果类型
  */
 public abstract class AbstractExecutorManager<T> implements ExecutorManager<T> {
 
     /**
-     * before execute , add time monitor ， timeout
+     * 执行前的回调，可在此添加时间监控和超时控制。
      *
-     * @param context context
-     * @throws ExecuteException if error throws ExecuteException
+     * @param context 执行上下文
+     * @throws ExecuteException 若执行异常则抛出
      */
     @Override
     public void beforeExecute(ExecutionContext context) throws ExecuteException {
     }
 
     /**
-     * after execute , add dispatch monitor
-     * @param context context
-     * @throws ExecuteException if error throws ExecuteException
+     * 执行后的回调，可在此添加分发监控。
+     * @param context 执行上下文
+     * @throws ExecuteException 若执行异常则抛出
      */
     @Override
     public void afterExecute(ExecutionContext context) throws ExecuteException {

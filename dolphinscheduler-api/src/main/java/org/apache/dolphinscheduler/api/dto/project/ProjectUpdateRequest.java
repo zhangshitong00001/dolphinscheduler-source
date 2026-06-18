@@ -24,19 +24,22 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * project update request
+ * 项目更新请求DTO。用于接收更新项目信息时的请求参数，包含用户名、项目名称和描述信息。
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class ProjectUpdateRequest {
 
+    /** 用户名 */
     @ApiModelProperty(example = "admin", required = true)
     private String userName;
 
+    /** 项目名称 */
     @ApiModelProperty(example = "pro123", required = true)
     private String projectName;
 
+    /** 项目描述 */
     @ApiModelProperty(example = "this is a project")
     private String description;
 }

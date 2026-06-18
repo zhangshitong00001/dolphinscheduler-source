@@ -28,6 +28,10 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Metrics;
 import lombok.experimental.UtilityClass;
 
+/**
+ * 任务指标工具类。提供按任务类型统计执行次数的计数功能，通过Micrometer指标注册到全局监控系统。
+ * 支持所有通过SPI加载的任务类型以及未知类型的自动注册。
+ */
 @UtilityClass
 public class TaskMetrics {
 
@@ -50,6 +54,11 @@ public class TaskMetrics {
         }
     }
 
+    /**
+     * 增加指定任务类型的执行计数。如果任务类型未注册，则使用未知类型计数器进行统计。
+     *
+     * @param taskType 任务类型名称
+     */
     public void incrTaskTypeExecuteCount(String taskType) {
         taskTypeExecutionCounter.getOrDefault(taskType, taskUnknownTypeExecutionCounter).increment();
     }

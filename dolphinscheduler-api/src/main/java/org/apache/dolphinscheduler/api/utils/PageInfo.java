@@ -21,34 +21,34 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * page info
+ * 分页信息封装类。用于封装分页查询的结果数据，包括总条数、总页数、当前页和分页数据列表。
  *
- * @param <T> model
+ * @param <T> 数据模型类型
  */
 public class PageInfo<T> {
 
     /**
-     * totalList
+     * 当前页的数据列表
      */
     private List<T> totalList = Collections.emptyList();
     /**
-     * total
+     * 数据总条数
      */
     private Integer total = 0;
     /**
-     * total Page
+     * 总页数
      */
     private Integer totalPage;
     /**
-     * page size
+     * 每页显示条数
      */
     private Integer pageSize = 20;
     /**
-     * current page
+     * 当前页码
      */
     private Integer currentPage = 0;
     /**
-     * pageNo
+     * 分页起始偏移量
      */
     private Integer pageNo;
 

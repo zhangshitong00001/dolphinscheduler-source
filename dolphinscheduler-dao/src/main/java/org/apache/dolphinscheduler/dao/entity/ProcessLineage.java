@@ -18,43 +18,30 @@
 package org.apache.dolphinscheduler.dao.entity;
 
 /**
- * Process lineage
+ * 流程血缘关系 DTO，表示工作流中上游任务与下游任务之间的依赖关系。
+ * 用于追踪数据在任务节点之间的流转路径。
  */
 public class ProcessLineage {
 
-    /**
-     * project code
-     */
+    /** 项目编码 */
     private long projectCode;
 
-    /**
-     * post task code
-     */
+    /** 下游任务编码 */
     private long postTaskCode;
 
-    /**
-     * post task version
-     */
+    /** 下游任务版本号 */
     private int postTaskVersion;
 
-    /**
-     * pre task code
-     */
+    /** 上游任务编码 */
     private long preTaskCode;
 
-    /**
-     * pre task version
-     */
+    /** 上游任务版本号 */
     private int preTaskVersion;
 
-    /**
-     * process definition code
-     */
+    /** 流程定义编码 */
     private long processDefinitionCode;
 
-    /**
-     * process definition version
-     */
+    /** 流程定义版本号 */
     private int processDefinitionVersion;
 
     public long getProjectCode() {

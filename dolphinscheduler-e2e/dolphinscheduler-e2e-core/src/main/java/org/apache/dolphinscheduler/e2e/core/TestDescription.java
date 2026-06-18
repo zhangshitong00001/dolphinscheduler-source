@@ -30,17 +30,33 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 端到端测试描述信息。将JUnit的 {@link ExtensionContext} 适配为Testcontainers所需的 {@code TestDescription} 接口，
+ * 为浏览器录制文件提供测试标识和文件系统友好的名称。
+ */
 @RequiredArgsConstructor
 final class TestDescription implements org.testcontainers.lifecycle.TestDescription {
+    /** 未知测试名称常量 */
     private static final String UNKNOWN_NAME = "unknown";
 
+    /** JUnit扩展上下文 */
     private final ExtensionContext context;
 
+    /**
+     * 获取测试的唯一标识符。
+     *
+     * @return JUnit测试的唯一ID
+     */
     @Override
     public String getTestId() {
         return context.getUniqueId();
     }
 
+    /**
+     * 获取文件系统友好的测试名称。对测试ID进行URL编码以避免特殊字符问题。
+     *
+     * @return 经过URL编码的测试ID，编码失败时返回 "unknown"
+     */
     @Override
     public String getFilesystemFriendlyName() {
         final String contextId = context.getUniqueId();

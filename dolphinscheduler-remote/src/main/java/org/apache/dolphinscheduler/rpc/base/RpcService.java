@@ -22,8 +22,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * RPC服务注解。用于标记RPC服务接口，通过value属性指定服务名称。
+ */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RpcService {
+
+    /**
+     * 服务名称
+     */
     String value() default "";
 }

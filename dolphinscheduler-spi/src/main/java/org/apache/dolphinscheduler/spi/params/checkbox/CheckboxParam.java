@@ -26,7 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * front-end checkbox component
+ * 前端复选框组件参数类，继承自 {@link PluginParams}。
+ * <p>
+ * 用于在前端动态表单中渲染复选框（checkbox）组件。通过Builder模式构建，
+ * 支持设置复选框特有属性（如最少/最多可选数量、颜色样式等）。
  */
 public class CheckboxParam extends PluginParams {
 
@@ -34,6 +37,7 @@ public class CheckboxParam extends PluginParams {
         super(builder);
     }
 
+    /** 复选框组件专属属性 */
     private CheckboxParamProps props;
 
     public static Builder newBuilder(String name, String title) {

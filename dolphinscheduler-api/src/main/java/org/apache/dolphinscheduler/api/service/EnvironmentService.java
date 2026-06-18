@@ -23,79 +23,86 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * environment service
+ * 环境服务接口。提供环境配置的完整生命周期管理，包括环境的创建、查询、更新、删除和名称校验。
+ * 环境用于管理不同的执行环境配置，可关联特定的Worker分组。
  */
 public interface EnvironmentService {
 
     /**
-     * create environment
+     * 创建环境配置。
      *
-     * @param loginUser login user
-     * @param name environment name
-     * @param config environment config
-     * @param desc environment desc
-     * @param workerGroups worker groups
+     * @param loginUser    登录用户
+     * @param name         环境名称
+     * @param config       环境配置
+     * @param desc         环境描述
+     * @param workerGroups Worker分组
+     * @return 创建结果
      */
     Map<String, Object> createEnvironment(User loginUser, String name, String config, String desc, String workerGroups);
 
     /**
-     * query environment
+     * 根据环境名称查询环境信息。
      *
-     * @param name environment name
+     * @param name 环境名称
+     * @return 环境信息
      */
     Map<String, Object> queryEnvironmentByName(String name);
 
     /**
-     * query environment
+     * 根据环境编码查询环境信息。
      *
-     * @param code environment code
+     * @param code 环境编码
+     * @return 环境信息
      */
     Map<String, Object> queryEnvironmentByCode(Long code);
 
 
     /**
-     * delete environment
+     * 根据环境编码删除环境。
      *
-     * @param loginUser login user
-     * @param code environment code
+     * @param loginUser 登录用户
+     * @param code      环境编码
+     * @return 删除结果
      */
     Map<String, Object> deleteEnvironmentByCode(User loginUser, Long code);
 
     /**
-     * update environment
+     * 更新环境配置。
      *
-     * @param loginUser login user
-     * @param code environment code
-     * @param name environment name
-     * @param config environment config
-     * @param desc environment desc
-     * @param workerGroups worker groups
+     * @param loginUser    登录用户
+     * @param code         环境编码
+     * @param name         新环境名称
+     * @param config       新环境配置
+     * @param desc         新环境描述
+     * @param workerGroups Worker分组
+     * @return 更新结果
      */
     Map<String, Object> updateEnvironmentByCode(User loginUser, Long code, String name, String config, String desc, String workerGroups);
 
     /**
-     * query environment paging
+     * 分页查询环境列表。
      *
-     * @param pageNo page number
-     * @param searchVal search value
-     * @param pageSize page size
-     * @return environment list page
+     * @param loginUser 登录用户
+     * @param pageNo    页码
+     * @param pageSize  每页大小
+     * @param searchVal 搜索关键字
+     * @return 分页查询结果
      */
     Result queryEnvironmentListPaging(User loginUser, Integer pageNo, Integer pageSize, String searchVal);
 
     /**
-     * query all environment
+     * 查询所有环境列表。
      *
-     * @param loginUser
-     * @return all environment list
+     * @param loginUser 登录用户
+     * @return 所有环境列表
      */
     Map<String, Object> queryAllEnvironmentList(User loginUser);
 
     /**
-     * verify environment name
+     * 校验环境名称是否可用。
      *
-     * @param environmentName environment name
-     * @return true if the environment name not exists, otherwise return false
+     * @param environmentName 环境名称
+     * @return 校验结果
      */
     Map<String, Object> verifyEnvironment(String environmentName);
 

@@ -30,6 +30,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.auto.service.AutoService;
 
+/**
+ * 工作流阻塞状态事件处理器。处理 PROCESS_BLOCKED 状态事件，当工作流中的阻塞任务触发阻塞条件时，根据阻塞参数决定是否发送阻塞告警通知。
+ */
 @AutoService(StateEventHandler.class)
 public class WorkflowBlockStateEventHandler implements StateEventHandler {
 

@@ -25,7 +25,7 @@ import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
 import java.util.Map;
 
 /**
- * task instance service
+ * 任务实例服务接口。提供任务实例的分页查询、强制成功、保存点和停止任务等功能。
  */
 public interface TaskInstanceService {
 

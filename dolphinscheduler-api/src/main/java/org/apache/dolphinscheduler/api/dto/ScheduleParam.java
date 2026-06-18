@@ -20,13 +20,17 @@ package org.apache.dolphinscheduler.api.dto;
 import java.util.Date;
 
 /**
- * schedule parameters
+ * 调度参数DTO。用于封装工作流调度配置的启动时间、结束时间、Cron表达式和时区信息。
  */
 public class ScheduleParam {
 
+    /** 调度开始时间 */
     private Date startTime;
+    /** 调度结束时间 */
     private Date endTime;
+    /** Cron定时表达式 */
     private String crontab;
+    /** 时区ID */
     private String timezoneId;
 
     public ScheduleParam() {

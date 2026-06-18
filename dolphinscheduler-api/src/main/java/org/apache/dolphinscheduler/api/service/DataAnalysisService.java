@@ -26,68 +26,67 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * data analysis service
+ * 数据分析服务接口。提供任务实例、流程实例、命令状态等多维度的统计分析功能。
+ * 用于首页仪表盘的数据展示，包括按项目统计任务状态分布、流程实例状态分布、命令状态和队列状态等。
  */
 public interface DataAnalysisService {
 
     /**
-     * statistical task instance status data
+     * 按项目统计任务实例的状态分布。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @param startDate   start date
-     * @param endDate     end date
-     * @return task state count data
+     * @param loginUser   登录用户
+     * @param projectCode 项目编码
+     * @param startDate   开始日期
+     * @param endDate     结束日期
+     * @return 任务状态统计结果
      */
     Map<String, Object> countTaskStateByProject(User loginUser, long projectCode, String startDate, String endDate);
 
     /**
-     * statistical process instance status data
+     * 按项目统计流程实例的状态分布。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @param startDate   start date
-     * @param endDate     end date
-     * @return process instance state count data
+     * @param loginUser   登录用户
+     * @param projectCode 项目编码
+     * @param startDate   开始日期
+     * @param endDate     结束日期
+     * @return 流程状态统计结果
      */
     Map<String, Object> countProcessInstanceStateByProject(User loginUser, long projectCode, String startDate, String endDate);
 
     /**
-     * statistics the process definition quantities of a certain person
-     * <p>
-     * We only need projects which users have permission to see to determine whether the definition belongs to the user or not.
+     * 统计用户的工作流定义数量。
+     * 仅在用户有权限查看的项目范围内判断工作流定义归属。
      *
-     * @param loginUser   login user
-     * @param projectCode project code
-     * @return definition count data
+     * @param loginUser   登录用户
+     * @param projectCode 项目编码
+     * @return 定义数量统计结果
      */
     Map<String, Object> countDefinitionByUser(User loginUser, long projectCode);
 
     /**
-     * statistical command status data
+     * 统计各命令状态的数量分布。
      *
-     * @param loginUser login user
-     * @return command state count data
+     * @param loginUser 登录用户
+     * @return 命令状态统计结果
      */
     Map<String, Object> countCommandState(User loginUser);
 
     /**
-     * count queue state
+     * 统计各队列状态的数量分布。
      *
-     * @param loginUser login user
-     * @return queue state count data
+     * @param loginUser 登录用户
+     * @return 队列状态统计结果
      */
     Map<String, Object> countQueueState(User loginUser);
 
     /**
-     * Statistics task instance group by given project codes list
-     * <p>
-     * We only need project codes to determine whether the task instance belongs to the user or not.
+     * 按项目编码列表统计所有状态的任务实例数量。
+     * 通过项目编码列表来判断任务实例是否属于用户可访问的范围。
      *
-     * @param startTime    Statistics start time
-     * @param endTime      Statistics end time
-     * @param projectCodes Project codes list to filter
-     * @return List of ExecuteStatusCount
+     * @param startTime    统计开始时间
+     * @param endTime      统计结束时间
+     * @param projectCodes 项目编码列表，用于过滤
+     * @return 各状态的任务实例统计列表
      */
     List<ExecuteStatusCount> countTaskInstanceAllStatesByProjectCodes(@Param("startTime") Date startTime,
                                                                       @Param("endTime") Date endTime,

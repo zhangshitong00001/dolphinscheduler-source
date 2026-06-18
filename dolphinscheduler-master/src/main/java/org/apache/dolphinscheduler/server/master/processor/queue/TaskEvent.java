@@ -29,73 +29,81 @@ import lombok.Data;
 import io.netty.channel.Channel;
 
 /**
- * task event
+ * 任务事件实体类。封装任务执行过程中各类事件的数据，包括分发、运行中、结果和召回等事件类型。
  */
 @Data
 public class TaskEvent {
 
     /**
-     * taskInstanceId
+     * 任务实例ID
      */
     private int taskInstanceId;
 
     /**
-     * worker address
+     * Worker节点地址
      */
     private String workerAddress;
 
     /**
-     * state
+     * 任务执行状态
      */
     private TaskExecutionStatus state;
 
     /**
-     * start time
+     * 任务开始时间
      */
     private Date startTime;
 
     /**
-     * end time
+     * 任务结束时间
      */
     private Date endTime;
 
     /**
-     * execute path
+     * 任务执行路径
      */
     private String executePath;
 
     /**
-     * log path
+     * 任务日志路径
      */
     private String logPath;
 
     /**
-     * processId
+     * 进程ID
      */
     private int processId;
 
     /**
-     * appIds
+     * 应用ID列表
      */
     private String appIds;
 
     /**
-     * ack / response
+     * 任务事件类型（DISPATCH/RUNNING/RESULT/WORKER_REJECT）
      */
     private TaskEventType event;
 
     /**
-     * varPool
+     * 变量池JSON字符串
      */
     private String varPool;
 
     /**
-     * channel
+     * Netty通道
      */
     private Channel channel;
 
     private int processInstanceId;
 
+    /**
+     * 创建任务分发事件。
+     *
+     * @param processInstanceId 工作流实例ID
+     * @param taskInstanceId 任务实例ID
+     * @param workerAddress 目标Worker地址
+     * @return 分发类型的任务事件
+     */
     public static TaskEvent newDispatchEvent(int processInstanceId, int taskInstanceId, String workerAddress) {
         TaskEvent event = new TaskEvent();
         event.setProcessInstanceId(processInstanceId);
@@ -105,6 +113,14 @@ public class TaskEvent {
         return event;
     }
 
+    /**
+     * 创建任务运行中事件。
+     *
+     * @param command 任务执行运行命令
+     * @param channel Netty通道
+     * @param workerAddress Worker节点地址
+     * @return 运行中类型的任务事件
+     */
     public static TaskEvent newRunningEvent(TaskExecuteRunningCommand command, Channel channel, String workerAddress) {
         TaskEvent event = new TaskEvent();
         event.setProcessInstanceId(command.getProcessInstanceId());
@@ -120,6 +136,14 @@ public class TaskEvent {
         return event;
     }
 
+    /**
+     * 创建任务结果事件。
+     *
+     * @param command 任务执行结果命令
+     * @param channel Netty通道
+     * @param workerAddress Worker节点地址
+     * @return 结果类型的任务事件
+     */
     public static TaskEvent newResultEvent(TaskExecuteResultCommand command, Channel channel, String workerAddress) {
         TaskEvent event = new TaskEvent();
         event.setProcessInstanceId(command.getProcessInstanceId());
@@ -138,6 +162,13 @@ public class TaskEvent {
         return event;
     }
 
+    /**
+     * 创建任务召回/拒绝事件。
+     *
+     * @param command 任务拒绝命令
+     * @param channel Netty通道
+     * @return Worker拒绝类型的任务事件
+     */
     public static TaskEvent newRecallEvent(TaskRejectCommand command, Channel channel) {
         TaskEvent event = new TaskEvent();
         event.setTaskInstanceId(command.getTaskInstanceId());

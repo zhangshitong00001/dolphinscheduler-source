@@ -45,236 +45,149 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.google.common.base.Strings;
 
 /**
- * process instance
+ * 流程实例实体，映射到 t_ds_process_instance 表，表示工作流的一次具体执行。
+ * 记录流程的运行状态、开始结束时间、执行主机、命令参数、全局参数、告警配置等运行上下文信息。
  */
 @NoArgsConstructor
 @Data
 @TableName("t_ds_process_instance")
 public class ProcessInstance {
 
-    /**
-     * id
-     */
+    /** 流程实例主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * process definition code
-     */
+    /** 流程定义编码 */
     private Long processDefinitionCode;
 
-    /**
-     * process definition version
-     */
+    /** 流程定义版本号 */
     private int processDefinitionVersion;
 
-    /**
-     * process state
-     */
+    /** 流程执行状态 */
     private WorkflowExecutionStatus state;
 
-    /**
-     * state history
-     */
+    /** 状态变更历史（JSON 格式） */
     private String stateHistory;
 
-    /**
-     * state desc list from state history
-     */
+    /** 非数据库字段：从状态历史解析出的状态描述列表 */
     @TableField(exist = false)
     private List<StateDesc> stateDescList;
 
-    /**
-     * recovery flag for failover
-     */
+    /** 容错标识，用于故障转移恢复 */
     private Flag recovery;
-    /**
-     * start time
-     */
+    /** 开始时间 */
     private Date startTime;
 
-    /**
-     * end time
-     */
+    /** 结束时间 */
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Date endTime;
 
-    /**
-     * run time
-     */
+    /** 已运行次数 */
     private int runTimes;
 
-    /**
-     * name
-     */
+    /** 流程实例名称 */
     private String name;
 
-    /**
-     * host
-     */
+    /** 执行主机 */
     private String host;
 
-    /**
-     * process definition structure
-     */
+    /** 非数据库字段：关联的流程定义结构 */
     @TableField(exist = false)
     private ProcessDefinition processDefinition;
-    /**
-     * process command type
-     */
+    /** 流程命令类型 */
     private CommandType commandType;
 
-    /**
-     * command parameters
-     */
+    /** 命令参数（JSON 格式） */
     private String commandParam;
 
-    /**
-     * node depend type
-     */
+    /** 节点依赖类型 */
     private TaskDependType taskDependType;
 
-    /**
-     * task max try times
-     */
+    /** 任务最大重试次数 */
     private int maxTryTimes;
 
-    /**
-     * failure strategy when task failed.
-     */
+    /** 任务失败时的失败策略 */
     private FailureStrategy failureStrategy;
 
-    /**
-     * warning type
-     */
+    /** 告警类型 */
     private WarningType warningType;
 
-    /**
-     * warning group
-     */
+    /** 告警组 ID */
     private Integer warningGroupId;
 
-    /**
-     * schedule time
-     */
+    /** 调度时间 */
     private Date scheduleTime;
 
-    /**
-     * command start time
-     */
+    /** 命令开始时间 */
     private Date commandStartTime;
 
-    /**
-     * user define parameters string
-     */
+    /** 用户自定义全局参数字符串（JSON 格式） */
     private String globalParams;
 
-    /**
-     * dagData
-     */
+    /** 非数据库字段：DAG 数据 */
     @TableField(exist = false)
     private DagData dagData;
 
-    /**
-     * executor id
-     */
+    /** 执行者用户 ID */
     private int executorId;
 
-    /**
-     * executor name
-     */
+    /** 非数据库字段：执行者用户名 */
     @TableField(exist = false)
     private String executorName;
 
-    /**
-     * tenant code
-     */
+    /** 非数据库字段：租户编码 */
     @TableField(exist = false)
     private String tenantCode;
 
-    /**
-     * queue
-     */
+    /** 非数据库字段：队列名称 */
     @TableField(exist = false)
     private String queue;
 
-    /**
-     * process is sub process
-     */
+    /** 是否为子流程 */
     private Flag isSubProcess;
 
-    /**
-     * task locations for web
-     */
+    /** 非数据库字段：任务节点位置信息（JSON 格式，用于前端展示） */
     @TableField(exist = false)
     private String locations;
 
-    /**
-     * history command
-     */
+    /** 历史命令记录 */
     private String historyCmd;
 
-    /**
-     * depend processes schedule time
-     */
+    /** 非数据库字段：依赖流程的调度时间 */
     @TableField(exist = false)
     private String dependenceScheduleTimes;
 
-    /**
-     * process duration
-     *
-     * @return
-     */
+    /** 非数据库字段：流程运行时长 */
     @TableField(exist = false)
     private String duration;
 
-    /**
-     * process instance priority
-     */
+    /** 流程实例优先级 */
     private Priority processInstancePriority;
 
-    /**
-     * worker group
-     */
+    /** Worker 分组 */
     private String workerGroup;
 
-    /**
-     * environment code
-     */
+    /** 环境编码 */
     private Long environmentCode;
 
-    /**
-     * process timeout for warning
-     */
+    /** 流程超时告警时间，单位：分钟 */
     private int timeout;
 
-    /**
-     * tenant id
-     */
+    /** 租户 ID */
     private int tenantId;
 
-    /**
-     * varPool string
-     */
+    /** 变量池（JSON 格式） */
     private String varPool;
-    /**
-     * serial queue next processInstanceId
-     */
+    /** 串行队列中的下一个流程实例 ID */
     private int nextProcessInstanceId;
 
-    /**
-     * dry run flag
-     */
+    /** 空跑标识 */
     private int dryRun;
 
-    /**
-     * re-start time
-     */
+    /** 重启时间 */
     private Date restartTime;
 
-    /**
-     * workflow block flag
-     */
+    /** 非数据库字段：流程是否被阻塞 */
     @TableField(exist = false)
     private boolean isBlocked;
 

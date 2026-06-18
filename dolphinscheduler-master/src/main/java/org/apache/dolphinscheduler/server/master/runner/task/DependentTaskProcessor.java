@@ -52,7 +52,9 @@ import java.util.stream.Collectors;
 import com.google.auto.service.AutoService;
 
 /**
- * dependent task processor
+ * 依赖任务处理器，用于在工作流中等待其他项目或工作流中的任务完成后才继续执行。
+ * 支持跨项目、跨工作流的依赖配置，通过定期轮询依赖任务的状态来判断是否满足条件。
+ * 依赖任务在 Master 本地执行，无需分发到 Worker。
  */
 @AutoService(ITaskProcessor.class)
 public class DependentTaskProcessor extends BaseTaskProcessor {
@@ -68,13 +70,12 @@ public class DependentTaskProcessor extends BaseTaskProcessor {
     private final ProjectMapper projectMapper = SpringApplicationContext.getBean(ProjectMapper.class);
 
     /**
-     * dependent task list
+     * 依赖任务列表。
      */
     private List<DependentExecute> dependentTaskList = new ArrayList<>();
 
     /**
-     * depend item result map
-     * save the result to log file
+     * 依赖项结果缓存，用于将结果记录到日志文件中。
      */
     private Map<String, DependResult> dependResultMap = new HashMap<>();
 
@@ -83,7 +84,7 @@ public class DependentTaskProcessor extends BaseTaskProcessor {
     private Map<Long, TaskDefinition> taskDefinitionMap = new HashMap<>();
 
     /**
-     * dependent date
+     * 依赖日期。
      */
     private Date dependentDate;
 
@@ -157,7 +158,7 @@ public class DependentTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     * init dependent parameters
+     * 初始化依赖参数，包括解析依赖配置、加载关联的项目/工作流/任务定义、创建 DependentExecute 对象。
      */
     private void initDependParameters() {
         this.dependentParameters = taskInstance.getDependency();
@@ -239,9 +240,9 @@ public class DependentTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     * judge all dependent tasks finish
+     * 判断所有依赖任务是否已完成。
      *
-     * @return whether all dependent tasks finish
+     * @return 是否所有依赖任务都已完成
      */
     private boolean allDependentTaskFinish() {
         boolean finish = true;
@@ -262,9 +263,9 @@ public class DependentTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     * get dependent result
+     * 获取依赖任务的最终结果。
      *
-     * @return DependResult
+     * @return 依赖结果
      */
     private DependResult getTaskDependResult() {
         List<DependResult> dependResultList = new ArrayList<>();
@@ -278,7 +279,7 @@ public class DependentTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     *
+     * 结束依赖任务，根据依赖结果设置任务状态。
      */
     private void endTask() {
         TaskExecutionStatus status;

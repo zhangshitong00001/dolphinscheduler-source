@@ -26,40 +26,33 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 访问令牌实体，映射到 t_ds_access_token 表，表示用户的 API 访问令牌。
+ * 用户可以通过创建访问令牌来使用 REST API 进行认证和授权，令牌有过期时间限制。
+ */
 @Data
 @TableName("t_ds_access_token")
 public class AccessToken {
 
-    /**
-     * primary key
-     */
+    /** 访问令牌主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    /**
-     * user_id
-     */
+    /** 关联的用户 ID，对应 t_ds_user 表的 id */
     @TableField(value = "user_id")
     private int userId;
-    /**
-     * token
-     */
+    /** 访问令牌字符串，用于 API 认证 */
     @TableField(value = "token")
     private String token;
-    /**
-     * expire_time
-     */
+    /** 令牌过期时间，过期后将无法用于认证 */
     @TableField(value = "expire_time")
     private Date expireTime;
-    /**
-     * create_time
-     */
+    /** 创建时间 */
     @TableField(value = "create_time")
     private Date createTime;
-    /**
-     * update_time
-     */
+    /** 最后更新时间 */
     @TableField(value = "update_time")
     private Date updateTime;
+    /** 非数据库字段：关联的用户名，通过 userId 关联 t_ds_user 表查询填充 */
     @TableField(exist = false)
     private String userName;
 

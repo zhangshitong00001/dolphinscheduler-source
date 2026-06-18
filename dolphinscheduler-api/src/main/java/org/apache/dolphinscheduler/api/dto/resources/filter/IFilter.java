@@ -21,8 +21,13 @@ import org.apache.dolphinscheduler.dao.entity.Resource;
 import java.util.List;
 
 /**
- * interface filter
+ * 资源过滤器接口。定义资源过滤的标准接口，实现对资源列表的筛选操作。
  */
 public interface IFilter {
+
+    /**
+     * 执行资源过滤
+     * @return 过滤后的资源列表
+     */
     List<Resource> filter();
 }

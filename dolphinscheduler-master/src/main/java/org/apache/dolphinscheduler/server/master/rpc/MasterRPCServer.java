@@ -38,7 +38,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Master RPC Server, used to send/receive request to other system.
+ * Master RPC 服务器，用于与其他系统进行通信。
+ * 负责启动 Netty 远程服务并注册各类命令处理器，处理 Worker 和其他 Master 发送的 RPC 请求。
  */
 @Service
 public class MasterRPCServer implements AutoCloseable {
@@ -80,6 +81,9 @@ public class MasterRPCServer implements AutoCloseable {
     @Autowired
     private TaskExecuteStartProcessor taskExecuteStartProcessor;
 
+    /**
+     * 启动 Master RPC 服务器，初始化 Netty 服务端并注册所有命令处理器。
+     */
     public void start() {
         logger.info("Starting Master RPC Server...");
         // init remoting server

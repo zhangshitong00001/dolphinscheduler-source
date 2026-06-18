@@ -18,23 +18,18 @@
 package org.apache.dolphinscheduler.dao.entity;
 
 /**
- * dependent node simplify definition
+ * 依赖节点简化定义实体，非数据库表映射，用于前端依赖节点选择器中展示被依赖的工作流定义摘要信息。
+ * 只包含工作流定义的编码、名称和版本三个核心字段，便于在依赖配置界面快速查找和选择上游工作流。
  */
 public class DependentSimplifyDefinition {
 
-    /**
-     * definition code
-     */
+    /** 工作流定义编码，全局唯一标识 */
     private Long code;
 
-    /**
-     * definition name
-     */
+    /** 工作流定义名称 */
     private String name;
 
-    /**
-     * definition version
-     */
+    /** 工作流定义版本号 */
     private Integer version;
 
     public Long getCode() {

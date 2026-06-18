@@ -25,75 +25,50 @@ import java.util.Map;
 import lombok.Data;
 
 /**
- * task main info
+ * 任务主要信息，用于任务列表展示和上下游依赖查询。
  */
 @Data
 public class TaskMainInfo {
 
+    /** 任务定义主键 ID */
     private long id;
 
-    /**
-     * task name
-     */
+    /** 任务名称 */
     private String taskName;
 
-    /**
-     * task code
-     */
+    /** 任务编码 */
     private long taskCode;
 
-    /**
-     * task version
-     */
+    /** 任务版本号 */
     private int taskVersion;
 
-    /**
-     * task type
-     */
+    /** 任务类型 */
     private String taskType;
 
-    /**
-     * create time
-     */
+    /** 任务创建时间 */
     private Date taskCreateTime;
 
-    /**
-     * update time
-     */
+    /** 任务更新时间 */
     private Date taskUpdateTime;
 
-    /**
-     * processDefinitionCode
-     */
+    /** 流程定义编码 */
     private long processDefinitionCode;
 
-    /**
-     * processDefinitionVersion
-     */
+    /** 流程定义版本号 */
     private int processDefinitionVersion;
 
-    /**
-     * processDefinitionName
-     */
+    /** 流程定义名称 */
     private String processDefinitionName;
 
-    /**
-     * processReleaseState
-     */
+    /** 流程发布状态 */
     private ReleaseState processReleaseState;
 
-    /**
-     * upstreamTaskMap(k:code,v:name)
-     */
+    /** 上游任务映射表（key: 编码，value: 名称） */
     private Map<Long, String> upstreamTaskMap;
 
-    /**
-     * upstreamTaskCode
-     */
+    /** 上游任务编码 */
     private long upstreamTaskCode;
 
-    /**
-     * upstreamTaskName
-     */
+    /** 上游任务名称 */
     private String upstreamTaskName;
 }

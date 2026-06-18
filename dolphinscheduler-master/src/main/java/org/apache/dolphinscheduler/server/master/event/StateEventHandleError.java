@@ -18,8 +18,7 @@
 package org.apache.dolphinscheduler.server.master.event;
 
 /**
- * This exception represent the exception can not recover, this happens when the event is broken.
- * And when we get this exception, we will drop the event.
+ * 状态事件处理错误异常。表示不可恢复的异常，通常发生在事件数据损坏时。当捕获此异常时，系统将丢弃该事件，不再重试。
  */
 public class StateEventHandleError extends Exception {
 

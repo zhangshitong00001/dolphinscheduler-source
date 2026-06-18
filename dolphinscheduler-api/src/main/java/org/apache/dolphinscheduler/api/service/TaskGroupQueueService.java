@@ -22,7 +22,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * task group queue service
+ * 任务组队列服务接口。提供任务组队列中的任务查询、删除、强制启动和优先级调整功能。
  */
 public interface TaskGroupQueueService {
 

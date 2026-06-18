@@ -28,7 +28,7 @@ import lombok.ToString;
 import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
 
 /**
- * Task running message, means the task is running in worker.
+ * 任务运行状态命令，表示任务正在Worker节点上运行，由Worker发送给Master。
  */
 @Data
 @NoArgsConstructor
@@ -36,49 +36,31 @@ import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
 @EqualsAndHashCode(callSuper = true)
 public class TaskExecuteRunningCommand extends BaseCommand {
 
-    /**
-     * taskInstanceId
-     */
+    /** 任务实例ID */
     private int taskInstanceId;
 
-    /**
-     * process instance id
-     */
+    /** 流程实例ID */
     private int processInstanceId;
 
-    /**
-     * startTime
-     */
+    /** 开始时间 */
     private Date startTime;
 
-    /**
-     * host
-     */
+    /** 执行主机 */
     private String host;
 
-    /**
-     * status
-     */
+    /** 任务执行状态 */
     private TaskExecutionStatus status;
 
-    /**
-     * logPath
-     */
+    /** 日志路径 */
     private String logPath;
 
-    /**
-     * executePath
-     */
+    /** 执行路径 */
     private String executePath;
 
-    /**
-     * processId
-     */
+    /** 进程ID */
     private int processId;
 
-    /**
-     * appIds
-     */
+    /** 应用ID列表 */
     private String appIds;
 
     public TaskExecuteRunningCommand(String messageSenderAddress, String messageReceiverAddress, long messageSendTime) {
@@ -86,9 +68,9 @@ public class TaskExecuteRunningCommand extends BaseCommand {
     }
 
     /**
-     * package request command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

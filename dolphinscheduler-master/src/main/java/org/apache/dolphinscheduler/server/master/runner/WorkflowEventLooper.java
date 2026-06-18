@@ -38,6 +38,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 工作流事件循环器，负责从工作流事件队列中消费事件并分发给对应的处理器。
+ * 管理所有 WorkflowEventHandler 实现，根据事件类型路由到对应的处理器。
+ * 处理失败的事件会重新入队重试，处理错误的事件会被丢弃。
+ */
 @Component
 public class WorkflowEventLooper extends BaseDaemonThread {
 
@@ -69,6 +74,9 @@ public class WorkflowEventLooper extends BaseDaemonThread {
         logger.info("WorkflowEventLooper thread started");
     }
 
+    /**
+     * 事件循环主逻辑，从事件队列中持续获取工作流事件并分发处理。
+     */
     public void run() {
         WorkflowEvent workflowEvent = null;
         while (!ServerLifeCycleManager.isStopped()) {

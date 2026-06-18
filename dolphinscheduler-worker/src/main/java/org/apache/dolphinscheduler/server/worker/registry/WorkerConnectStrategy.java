@@ -19,6 +19,10 @@ package org.apache.dolphinscheduler.server.worker.registry;
 
 import org.apache.dolphinscheduler.registry.api.ConnectStrategy;
 
+/**
+ * Worker注册连接策略接口。定义Worker与注册中心之间的连接和断开连接策略，
+ * 继承自通用的ConnectStrategy接口，由具体实现类完成注册和注销逻辑。
+ */
 public interface WorkerConnectStrategy extends ConnectStrategy {
 
 }

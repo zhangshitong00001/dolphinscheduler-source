@@ -20,18 +20,26 @@ package org.apache.dolphinscheduler.common.enums;
 import java.util.HashMap;
 
 /**
- * Audit Operation type
+ * 审计操作类型枚举。
+ * 定义审计日志记录的操作类型（增/读/改/删）。
  */
 public enum AuditOperationType {
 
+    /** 创建操作 */
     CREATE(0, "CREATE"),
+    /** 读取操作 */
     READ(1, "READ"),
+    /** 更新操作 */
     UPDATE(2, "UPDATE"),
+    /** 删除操作 */
     DELETE(3, "DELETE");
 
+    /** 操作类型编码 */
     private final int code;
+    /** 操作类型英文消息 */
     private final String enMsg;
 
+    /** 编码到枚举实例的映射缓存 */
     private static HashMap<Integer, AuditOperationType> AUDIT_OPERATION_MAP = new HashMap<>();
 
     static {
@@ -45,6 +53,12 @@ public enum AuditOperationType {
         this.enMsg = enMsg;
     }
 
+    /**
+     * 根据编码获取对应的审计操作类型。
+     * @param status 操作类型编码
+     * @return 对应的审计操作类型枚举
+     * @throws IllegalArgumentException 如果编码无效
+     */
     public static AuditOperationType of(int status) {
         if (AUDIT_OPERATION_MAP.containsKey(status)) {
             return AUDIT_OPERATION_MAP.get(status);

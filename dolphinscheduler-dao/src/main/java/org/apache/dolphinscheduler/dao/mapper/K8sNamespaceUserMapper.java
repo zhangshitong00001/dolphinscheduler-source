@@ -24,26 +24,29 @@ import org.apache.ibatis.annotations.Param;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * namespace user mapper interface
+ * K8s 命名空间-用户关联 Mapper 接口，封装对 t_ds_relation_namespace_user 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，管理 K8s 命名空间与用户之间的授权关联关系。
  */
 public interface K8sNamespaceUserMapper extends BaseMapper<K8sNamespaceUser> {
 
     /**
-     * delete namespace user relation
+     * 删除指定命名空间与用户的关联授权记录。
+     * DELETE FROM t_ds_relation_namespace_user WHERE namespace_id = #{namespaceId} AND user_id = #{userId}
      *
-     * @param namespaceId namespaceId
-     * @param userId      userId
-     * @return delete result
+     * @param namespaceId K8s 命名空间ID
+     * @param userId 用户ID
+     * @return 删除的记录数
      */
     int deleteNamespaceRelation(@Param("namespaceId") int namespaceId,
                                 @Param("userId") int userId);
 
     /**
-     * query namespace relation
+     * 查询指定命名空间与用户的关联授权记录。
+     * SELECT * FROM t_ds_relation_namespace_user WHERE namespace_id = #{namespaceId} AND user_id = #{userId}
      *
-     * @param namespaceId namespaceId
-     * @param userId      userId
-     * @return namespace user relation
+     * @param namespaceId K8s 命名空间ID
+     * @param userId 用户ID
+     * @return 命名空间-用户关联实体，若不存在则返回 null
      */
     K8sNamespaceUser queryNamespaceRelation(@Param("namespaceId") int namespaceId,
                                             @Param("userId") int userId);

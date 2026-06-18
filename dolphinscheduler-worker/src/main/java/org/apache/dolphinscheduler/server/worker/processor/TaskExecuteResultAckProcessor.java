@@ -32,7 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * task execute running ack, from master to worker
+ * 任务执行结果确认处理器。处理Master返回的任务执行结果确认消息。
+ * 当Master成功接收并处理任务执行结果后，Worker收到此确认，从重试队列中移除对应消息，
+ * 避免不必要的重试。如果确认状态为失败，则保留消息等待后续重试。
  */
 @Component
 public class TaskExecuteResultAckProcessor implements NettyRequestProcessor {
@@ -42,6 +44,13 @@ public class TaskExecuteResultAckProcessor implements NettyRequestProcessor {
     @Autowired
     private MessageRetryRunner messageRetryRunner;
 
+    /**
+     * 处理任务执行结果确认命令。解析Master返回的确认消息，如果确认成功则移除重试消息，
+     * 否则保留消息以便后续重试发送。
+     *
+     * @param channel Netty通道
+     * @param command 任务执行结果确认命令
+     */
     @Override
     public void process(Channel channel, Command command) {
         Preconditions.checkArgument(CommandType.TASK_EXECUTE_RESULT_ACK == command.getType(),

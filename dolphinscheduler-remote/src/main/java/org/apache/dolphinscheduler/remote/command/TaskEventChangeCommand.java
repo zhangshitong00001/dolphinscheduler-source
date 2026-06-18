@@ -24,16 +24,19 @@ import org.apache.dolphinscheduler.common.utils.JSONUtils;
 import java.io.Serializable;
 
 /**
- * db task final result response command
+ * 任务事件变更命令，用于通知任务实例状态发生变化的事件。
  */
 @Data
 @NoArgsConstructor
 public class TaskEventChangeCommand implements Serializable {
 
+    /** 事件键 */
     private String key;
 
+    /** 流程实例ID */
     private int processInstanceId;
 
+    /** 任务实例ID */
     private int taskInstanceId;
 
     public TaskEventChangeCommand(
@@ -48,9 +51,10 @@ public class TaskEventChangeCommand implements Serializable {
     }
 
     /**
-     * package response command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @param commandType 命令类型
+     * @return command 打包后的命令对象
      */
     public Command convert2Command(CommandType commandType) {
         Command command = new Command();

@@ -57,8 +57,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * // todo: this utils is heavy, it rely on quartz and corn-utils.
- * cron utils
+ * Cron表达式工具类，提供Cron解析、校验以及基于Cron调度时间计算等功能。
+ * <p>依赖Quartz和cron-utils库进行Cron解析，支持获取指定时间范围内的触发时间列表。</p>
  */
 public class CronUtils {
 
@@ -72,10 +72,11 @@ public class CronUtils {
             new CronParser(CronDefinitionBuilder.instanceDefinitionFor(QUARTZ));
 
     /**
-     * parse to cron
+     * 将Cron表达式字符串解析为Cron对象。
      *
-     * @param cronExpression cron expression, never null
-     * @return Cron instance, corresponding to cron expression received
+     * @param cronExpression Cron表达式字符串，不能为null
+     * @return 与输入表达式对应的Cron实例
+     * @throws CronParseException 当Cron表达式格式无效时抛出
      */
     public static Cron parse2Cron(String cronExpression) throws CronParseException {
         try {
@@ -86,12 +87,10 @@ public class CronUtils {
     }
 
     /**
-     * Indicates whether the specified cron expression can be parsed into a
-     * valid cron expression
+     * 判断指定的Cron表达式是否有效，能否被成功解析。
      *
-     * @param cronExpression the expression to evaluate
-     * @return a boolean indicating whether the given expression is a valid cron
-     *         expression
+     * @param cronExpression 待校验的Cron表达式字符串
+     * @return 若表达式有效返回true，否则返回false
      */
     public static boolean isValidExpression(String cronExpression) {
         try {
@@ -104,10 +103,10 @@ public class CronUtils {
     }
 
     /**
-     * get max cycle
+     * 获取Cron表达式的最大调度周期。
      *
-     * @param cron cron
-     * @return CycleEnum
+     * @param cron Cron对象
+     * @return 最大调度周期枚举值
      */
     public static CycleEnum getMaxCycle(Cron cron) {
         return min(cron).addCycle(hour(cron)).addCycle(day(cron)).addCycle(week(cron)).addCycle(month(cron))
@@ -115,10 +114,10 @@ public class CronUtils {
     }
 
     /**
-     * get min cycle
+     * 获取Cron表达式的最小调度周期。
      *
-     * @param cron cron
-     * @return CycleEnum
+     * @param cron Cron对象
+     * @return 最小调度周期枚举值
      */
     public static CycleEnum getMiniCycle(Cron cron) {
         return min(cron).addCycle(hour(cron))
@@ -130,10 +129,10 @@ public class CronUtils {
     }
 
     /**
-     * get max cycle
+     * 根据Crontab字符串获取最大调度周期。
      *
-     * @param crontab crontab
-     * @return CycleEnum
+     * @param crontab Crontab表达式字符串
+     * @return 最大调度周期枚举值
      */
     public static CycleEnum getMaxCycle(String crontab) {
         try {
@@ -150,12 +149,12 @@ public class CronUtils {
     }
 
     /**
-     * gets all scheduled times for a period of time based on not self dependency
+     * 获取指定时间范围内所有不基于自依赖的调度触发时间。
      *
-     * @param startTime startTime
-     * @param endTime   endTime
-     * @param cron      cron
-     * @return date list
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param cron Cron对象
+     * @return 调度触发时间列表
      */
     public static List<ZonedDateTime> getFireDateList(@NonNull ZonedDateTime startTime,
                                                       @NonNull ZonedDateTime endTime,
@@ -179,13 +178,13 @@ public class CronUtils {
     }
 
     /**
-     * Gets expect scheduled times for a period of time based on self dependency
+     * 获取指定时间范围内基于自依赖的期望调度触发时间，限制触发次数。
      *
-     * @param startTime startTime
-     * @param endTime   endTime
-     * @param cron      cron
-     * @param fireTimes fireTimes
-     * @return nextTime execution list
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param cron Cron对象
+     * @param fireTimes 最大触发次数
+     * @return 调度触发时间列表
      */
     public static List<ZonedDateTime> getSelfFireDateList(@NonNull ZonedDateTime startTime,
                                                           @NonNull ZonedDateTime endTime, @NonNull Cron cron,
@@ -219,8 +218,14 @@ public class CronUtils {
     }
 
     /**
-     * gets all scheduled times for a period of time based on self dependency
-     * if schedulers is empty then default scheduler = 1 day
+     * 获取指定时间范围内基于自依赖的调度触发时间列表，支持多个调度配置。
+     * <p>如果调度列表为空，则默认使用每天一次的调度。</p>
+     *
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param schedules 调度配置列表
+     * @return 调度触发时间列表
+     * @throws CronParseException 当Cron表达式解析失败时抛出
      */
     public static List<ZonedDateTime> getSelfFireDateList(@NonNull final ZonedDateTime startTime,
                                                           @NonNull final ZonedDateTime endTime,
@@ -249,11 +254,11 @@ public class CronUtils {
     }
 
     /**
-     * get expiration time
+     * 获取过期时间点，根据开始时间和周期类型计算依赖任务的最晚可接受时间。
      *
-     * @param startTime startTime
-     * @param cycleEnum cycleEnum
-     * @return date
+     * @param startTime 开始时间
+     * @param cycleEnum 调度周期类型
+     * @return 过期时间点
      */
     public static Date getExpirationTime(Date startTime, CycleEnum cycleEnum) {
         Date maxExpirationTime = null;
@@ -303,10 +308,10 @@ public class CronUtils {
     }
 
     /**
-     * get Schedule Date
+     * 获取补数调度日期列表，从命令参数中解析补数日期集合。
      *
-     * @param param
-     * @return date list
+     * @param param 命令参数字典
+     * @return 补数日期列表，如果没有配置补数日期则返回null
      */
     public static List<Date> getSelfScheduleDateList(Map<String, String> param) {
         List<Date> result = new ArrayList<>();

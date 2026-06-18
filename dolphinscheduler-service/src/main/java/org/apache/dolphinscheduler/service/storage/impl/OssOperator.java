@@ -60,6 +60,10 @@ import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectRequest;
 
+/**
+ * 阿里云OSS存储操作实现类，封装了对OSS对象存储的常用操作。支持资源的增删改查、目录管理、
+ * 文件上传下载、文件内容查看等功能。通过 StorageOperate 接口实现多存储后端的统一调用。
+ */
 @Data
 public class OssOperator implements Closeable, StorageOperate {
 

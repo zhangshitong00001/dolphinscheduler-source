@@ -36,21 +36,25 @@ import org.springframework.stereotype.Service;
 import io.netty.channel.Channel;
 
 /**
- * task callback service
+ * 状态事件回调服务。管理远程通道缓存，提供同步/异步的结果发送和状态回调功能。
  */
 @Service
 public class StateEventCallbackService {
 
     private final Logger logger = LoggerFactory.getLogger(StateEventCallbackService.class);
+
+    /**
+     * 重试退避策略数组
+     */
     private static final int[] RETRY_BACKOFF = {1, 2, 3, 5, 10, 20, 40, 100, 100, 100, 100, 200, 200, 200};
 
     /**
-     * remote channels
+     * 远程通道缓存，按主机地址映射
      */
     private static final ConcurrentHashMap<String, NettyRemoteChannel> REMOTE_CHANNELS = new ConcurrentHashMap<>();
 
     /**
-     * netty remoting client
+     * Netty远程通信客户端
      */
     private final NettyRemotingClient nettyRemotingClient;
 
@@ -60,8 +64,9 @@ public class StateEventCallbackService {
     }
 
     /**
-     * add callback channel
+     * 添加远程通道到缓存中。
      *
+     * @param host host
      * @param channel channel
      */
     public void addRemoteChannel(String host, NettyRemoteChannel channel) {
@@ -69,9 +74,9 @@ public class StateEventCallbackService {
     }
 
     /**
-     * get callback channel
+     * 获取或创建到指定主机的远程通道。优先从缓存获取，不存在或已关闭则创建新连接。
      *
-     * @param host
+     * @param host host
      * @return callback channel
      */
     private Optional<NettyRemoteChannel> newRemoteChannel(Host host) {
@@ -89,6 +94,12 @@ public class StateEventCallbackService {
         return Optional.empty();
     }
 
+    /**
+     * 根据重试次数计算退避暂停时间。
+     *
+     * @param ntries 重试次数
+     * @return 暂停时间（毫秒）
+     */
     public long pause(int ntries) {
         return SLEEP_TIME_MILLIS * RETRY_BACKOFF[ntries % RETRY_BACKOFF.length];
     }
@@ -106,14 +117,16 @@ public class StateEventCallbackService {
     }
 
     /**
-     * remove callback channels
+     * 移除指定主机的远程通道。
+     *
+     * @param host host
      */
     public void remove(String host) {
         REMOTE_CHANNELS.remove(host);
     }
 
     /**
-     * Send the command to target host, this method doesn't guarantee the command send success.
+     * 发送结果命令到目标主机。此方法不保证发送成功，为异步发送。
      *
      * @param host    target host
      * @param command command need to send
@@ -126,12 +139,11 @@ public class StateEventCallbackService {
     }
 
     /**
-     * send sync and return response command
-     * @param host
-     * @param requestCommand
-     * @return
-     * @throws RemotingException
-     * @throws InterruptedException
+     * 同步发送命令并返回响应。发送完成后关闭连接通道。
+     *
+     * @param host host
+     * @param requestCommand requestCommand
+     * @return 响应命令，失败返回null
      */
     public Command sendSync(Host host, Command requestCommand) {
         try {

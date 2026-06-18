@@ -26,50 +26,37 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 租户实体，映射到 t_ds_tenant 表，存储租户配置信息。
+ */
 @Data
 @TableName("t_ds_tenant")
 public class Tenant {
 
-    /**
-     * id
-     */
+    /** 租户主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * tenant code
-     */
+    /** 租户编码 */
     private String tenantCode;
 
-    /**
-     * description
-     */
+    /** 租户描述 */
     private String description;
 
-    /**
-     * queue id
-     */
+    /** 队列 ID */
     private int queueId;
 
-    /**
-     * queue name
-     */
+    /** 非数据库字段：队列名称 */
     @TableField(exist = false)
     private String queueName;
 
-    /**
-     * queue
-     */
+    /** 非数据库字段：队列标识 */
     @TableField(exist = false)
     private String queue;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 
     public Tenant() {

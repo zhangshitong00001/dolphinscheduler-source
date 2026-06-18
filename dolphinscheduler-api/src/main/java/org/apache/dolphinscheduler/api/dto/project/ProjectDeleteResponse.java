@@ -22,11 +22,12 @@ import org.apache.dolphinscheduler.api.utils.Result;
 import lombok.Data;
 
 /**
- * project delete response
+ * 项目删除响应DTO。继承自Result，用于封装删除项目操作的返回结果。
  */
 @Data
 public class ProjectDeleteResponse extends Result {
 
+    /** 删除操作结果 */
     private Boolean data;
 
     public ProjectDeleteResponse(Result result) {

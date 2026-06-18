@@ -45,27 +45,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * process alert manager
+ * 流程告警管理器，负责根据流程实例和任务实例的状态生成并发送各类告警。
+ * <p>支持以下告警类型：
+ * <ul>
+ *   <li>流程实例成功/失败告警</li>
+ *   <li>Worker容错告警</li>
+ *   <li>流程超时告警</li>
+ *   <li>流程阻塞告警</li>
+ *   <li>数据质量任务结果告警</li>
+ *   <li>任务执行失败告警</li>
+ *   <li>任务超时告警</li>
+ * </ul></p>
  */
 @Component
 public class ProcessAlertManager {
 
-    /**
-     * logger of AlertManager
-     */
     private static final Logger logger = LoggerFactory.getLogger(ProcessAlertManager.class);
 
-    /**
-     * alert dao
-     */
+    /** 告警数据访问对象 */
     @Autowired
     private AlertDao alertDao;
 
     /**
-     * command type convert chinese
+     * 将命令类型转换为中文名称。
      *
-     * @param commandType command type
-     * @return command name
+     * @param commandType 命令类型
+     * @return 命令类型对应的中文名称
      */
     private String getCommandCnName(CommandType commandType) {
         switch (commandType) {
@@ -95,11 +100,12 @@ public class ProcessAlertManager {
     }
 
     /**
-     * get process instance content
+     * 获取流程实例的告警内容，根据流程状态生成成功或失败的任务列表JSON。
      *
-     * @param processInstance process instance
-     * @param taskInstances task instance list
-     * @return process instance format content
+     * @param processInstance 流程实例
+     * @param taskInstances 任务实例列表
+     * @param projectUser 项目用户信息
+     * @return 流程实例告警内容JSON字符串
      */
     public String getContentProcessInstance(ProcessInstance processInstance,
                                             List<TaskInstance> taskInstances,
@@ -183,10 +189,10 @@ public class ProcessAlertManager {
     }
 
     /**
-     * send worker alert fault tolerance
+     * 发送Worker容错告警，当Worker故障时记录需要容错处理的任务列表。
      *
-     * @param processInstance process instance
-     * @param toleranceTaskList tolerance task list
+     * @param processInstance 流程实例
+     * @param toleranceTaskList 需要容错处理的任务实例列表
      */
     public void sendAlertWorkerToleranceFault(ProcessInstance processInstance, List<TaskInstance> toleranceTaskList) {
         try {
@@ -209,10 +215,11 @@ public class ProcessAlertManager {
     }
 
     /**
-     * send process instance alert
+     * 发送流程实例告警，根据流程执行结果（成功/失败）发送相应的告警通知。
      *
-     * @param processInstance process instance
-     * @param taskInstances task instance list
+     * @param processInstance 流程实例
+     * @param taskInstances 任务实例列表
+     * @param projectUser 项目用户信息
      */
     public void sendAlertProcessInstance(ProcessInstance processInstance,
                                          List<TaskInstance> taskInstances,
@@ -242,10 +249,10 @@ public class ProcessAlertManager {
     }
 
     /**
-     * check if need to be send warning
+     * 判断是否需要发送告警，根据流程实例的告警类型和状态决定。
      *
-     * @param processInstance
-     * @return
+     * @param processInstance 流程实例
+     * @return 需要发送告警返回true，否则返回false
      */
     public boolean isNeedToSendWarning(ProcessInstance processInstance) {
         if (Flag.YES == processInstance.getIsSubProcess()) {
@@ -275,9 +282,9 @@ public class ProcessAlertManager {
     }
 
     /**
-     * Send a close alert event, if the processInstance has sent alert before, then will insert a closed event.
+     * 发送关闭告警事件。如果该流程实例之前已发送过告警，则插入一条关闭事件记录。
      *
-     * @param processInstance success process instance
+     * @param processInstance 已成功的流程实例
      */
     public void closeAlert(ProcessInstance processInstance) {
         List<Alert> alerts = alertDao.listAlerts(processInstance.getId());
@@ -298,17 +305,20 @@ public class ProcessAlertManager {
     }
 
     /**
-     * send process timeout alert
+     * 发送流程超时告警。
      *
-     * @param processInstance process instance
-     * @param projectUser     projectUser
+     * @param processInstance 流程实例
+     * @param projectUser 项目用户信息
      */
     public void sendProcessTimeoutAlert(ProcessInstance processInstance, ProjectUser projectUser) {
         alertDao.sendProcessTimeoutAlert(processInstance, projectUser);
     }
 
     /**
-     * send data quality task alert
+     * 发送数据质量任务执行结果告警。
+     *
+     * @param result 数据质量执行结果
+     * @param processInstance 流程实例
      */
     public void sendDataQualityTaskExecuteResultAlert(DqExecuteResult result, ProcessInstance processInstance) {
         Alert alert = new Alert();
@@ -329,7 +339,10 @@ public class ProcessAlertManager {
     }
 
     /**
-     * send data quality task error alert
+     * 发送任务执行失败告警。
+     *
+     * @param taskInstance 任务实例
+     * @param processInstance 流程实例
      */
     public void sendTaskErrorAlert(TaskInstance taskInstance, ProcessInstance processInstance) {
         Alert alert = new Alert();
@@ -346,9 +359,10 @@ public class ProcessAlertManager {
     }
 
     /**
-     * getDataQualityAlterContent
-     * @param result DqExecuteResult
-     * @return String String
+     * 获取数据质量告警的内容JSON字符串。
+     *
+     * @param result 数据质量执行结果
+     * @return 数据质量告警内容JSON字符串
      */
     public String getDataQualityAlterContent(DqExecuteResult result) {
 
@@ -377,9 +391,10 @@ public class ProcessAlertManager {
     }
 
     /**
-     * getTaskAlterContent
-     * @param taskInstance TaskInstance
-     * @return String String
+     * 获取任务告警的内容JSON字符串。
+     *
+     * @param taskInstance 任务实例
+     * @return 任务告警内容JSON字符串
      */
     public String getTaskAlterContent(TaskInstance taskInstance) {
 
@@ -405,11 +420,10 @@ public class ProcessAlertManager {
     }
 
     /**
+     * 检查节点类型和流程阻塞标志，将阻塞记录插入数据库。
      *
-     * check node type and process blocking flag, then insert a block record into db
-     *
-     * @param processInstance process instance
-     * @param projectUser the project owner
+     * @param processInstance 流程实例
+     * @param projectUser 项目所属用户
      */
     public void sendProcessBlockingAlert(ProcessInstance processInstance,
                                          ProjectUser projectUser) {

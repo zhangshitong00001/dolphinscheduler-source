@@ -18,7 +18,8 @@
 package org.apache.dolphinscheduler.server.master.runner.task;
 
 /**
- * task action
+ * 任务动作枚举，定义任务处理器在生命周期中可执行的操作类型。
+ * 包括暂停、停止、超时、提交、运行、分发和重新提交。
  */
 public enum TaskAction {
     PAUSE,

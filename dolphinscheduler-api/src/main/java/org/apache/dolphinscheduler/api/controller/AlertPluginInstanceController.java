@@ -57,7 +57,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * alert plugin instance controller
+ * 告警插件实例控制器。提供告警插件实例的增删改查REST API，包括实例创建、更新、删除、详情查询和分页列表查询。
  */
 @Api(tags = "ALERT_PLUGIN_INSTANCE_TAG")
 @RestController
@@ -70,13 +70,13 @@ public class AlertPluginInstanceController extends BaseController {
     private AlertPluginInstanceService alertPluginInstanceService;
 
     /**
-     * create alert plugin instance
+     * 创建告警插件实例。
      *
-     * @param loginUser login user
-     * @param pluginDefineId alert plugin define id
-     * @param instanceName instance name
-     * @param pluginInstanceParams instance params
-     * @return result
+     * @param loginUser 当前登录用户
+     * @param pluginDefineId 告警插件定义ID
+     * @param instanceName 实例名称
+     * @param pluginInstanceParams 实例参数
+     * @return 创建结果
      */
     @ApiOperation(value = "createAlertPluginInstance", notes = "CREATE_ALERT_PLUGIN_INSTANCE_NOTES")
     @ApiImplicitParams({
@@ -98,13 +98,13 @@ public class AlertPluginInstanceController extends BaseController {
     }
 
     /**
-     * updateAlertPluginInstance
+     * 更新告警插件实例。
      *
-     * @param loginUser login user
-     * @param id alert plugin instance id
-     * @param instanceName instance name
-     * @param pluginInstanceParams instance params
-     * @return result
+     * @param loginUser 当前登录用户
+     * @param id 告警插件实例ID
+     * @param instanceName 实例名称
+     * @param pluginInstanceParams 实例参数
+     * @return 更新结果
      */
     @ApiOperation(value = "updateAlertPluginInstance", notes = "UPDATE_ALERT_PLUGIN_INSTANCE_NOTES")
     @ApiImplicitParams({
@@ -126,11 +126,11 @@ public class AlertPluginInstanceController extends BaseController {
     }
 
     /**
-     * deleteAlertPluginInstance
+     * 删除告警插件实例。
      *
-     * @param loginUser login user
-     * @param id id
-     * @return result
+     * @param loginUser 当前登录用户
+     * @param id 告警插件实例ID
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteAlertPluginInstance", notes = "DELETE_ALERT_PLUGIN_INSTANCE_NOTES")
     @ApiImplicitParams({
@@ -148,11 +148,11 @@ public class AlertPluginInstanceController extends BaseController {
     }
 
     /**
-     * getAlertPluginInstance
+     * 根据ID获取告警插件实例详情。
      *
-     * @param loginUser login user
-     * @param id alert plugin instance id
-     * @return result
+     * @param loginUser 当前登录用户
+     * @param id 告警插件实例ID
+     * @return 实例详情
      */
     @ApiOperation(value = "getAlertPluginInstance", notes = "GET_ALERT_PLUGIN_INSTANCE_NOTES")
     @GetMapping(value = "/{id}")
@@ -166,10 +166,10 @@ public class AlertPluginInstanceController extends BaseController {
     }
 
     /**
-     * getAlertPluginInstance
+     * 查询所有告警插件实例列表。
      *
-     * @param loginUser login user
-     * @return result
+     * @param loginUser 当前登录用户
+     * @return 实例列表
      */
     @ApiOperation(value = "queryAlertPluginInstanceList", notes = "QUERY_ALL_ALERT_PLUGIN_INSTANCE_NOTES")
     @GetMapping(value = "/list")
@@ -182,11 +182,11 @@ public class AlertPluginInstanceController extends BaseController {
     }
 
     /**
-     * check alert group exist
+     * 检查告警插件实例名称是否已存在。
      *
-     * @param loginUser login user
-     * @param alertInstanceName alert instance name
-     * @return check result code
+     * @param loginUser 当前登录用户
+     * @param alertInstanceName 告警实例名称
+     * @return 校验结果状态码
      */
     @ApiOperation(value = "verifyAlertInstanceName", notes = "VERIFY_ALERT_INSTANCE_NAME_NOTES")
     @ApiImplicitParams({
@@ -208,13 +208,13 @@ public class AlertPluginInstanceController extends BaseController {
     }
 
     /**
-     * paging query alert plugin instance group list
+     * 分页查询告警插件实例列表。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return alert plugin instance list page
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索值
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 告警插件实例分页列表
      */
     @ApiOperation(value = "queryAlertPluginInstanceListPaging", notes = "QUERY_ALERT_PLUGIN_INSTANCE_LIST_PAGING_NOTES")
     @ApiImplicitParams({

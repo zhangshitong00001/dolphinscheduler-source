@@ -29,6 +29,11 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 
+/**
+ * 重试工具类，基于Guava-Retryer提供可配置的重试机制。
+ * 支持异常重试和结果检查重试两种模式，默认重试3次，每次间隔1秒。
+ * 该类为工具类，不可实例化。
+ */
 public class RetryerUtils {
     private static Retryer<Boolean> defaultRetryerResultCheck;
     private static Retryer<Boolean> defaultRetryerResultNoCheck;
@@ -50,24 +55,22 @@ public class RetryerUtils {
     }
 
     /**
-     * Gets default retryer.
-     * the retryer will retry 3 times if exceptions throw
-     * and wait 1 second between each retry
+     * 获取默认的重试器。
+     * 如果checkResult为true，重试器会在返回false时重试（最多3次，间隔1秒）；
+     * 如果为false，重试器仅在抛出异常时重试。
      *
-     * @param checkResult true means the callable must return true before retrying
-     *                    false means that retry callable only throw exceptions
-     * @return the default retryer
+     * @param checkResult true表示需要检查返回结果为true才停止重试，false表示仅在异常时重试
+     * @return 默认配置的重试器
      */
     public static Retryer<Boolean> getDefaultRetryer(boolean checkResult) {
         return checkResult ? getDefaultRetryer() : getDefaultRetryerResultNoCheck();
     }
 
     /**
-     * Gets default retryer.
-     * the retryer will retry 3 times if exceptions throw
-     * and wait 1 second between each retry
+     * 获取默认的重试器（带结果检查）。
+     * 重试器在返回false或抛出异常时进行重试，最多3次，每次间隔1秒。
      *
-     * @return the default retryer
+     * @return 默认配置的重试器
      */
     public static Retryer<Boolean> getDefaultRetryer() {
         if (defaultRetryerResultCheck == null) {
@@ -83,26 +86,25 @@ public class RetryerUtils {
     }
 
     /**
-     * Use RETRYER to invoke the Callable
+     * 使用重试器执行Callable任务，支持自定义是否检查返回结果。
      *
-     * @param callable    the callable
-     * @param checkResult true means that retry callable before returning true
-     *                    false means that retry callable only throw exceptions
-     * @return the final result of callable
-     * @throws ExecutionException the execution exception
-     * @throws RetryException     the retry exception
+     * @param callable 要执行的任务
+     * @param checkResult true表示检查返回结果（结果为false时重试），false表示仅在异常时重试
+     * @return 任务的最终执行结果
+     * @throws ExecutionException 执行异常
+     * @throws RetryException 重试异常
      */
     public static Boolean retryCall(final Callable<Boolean> callable, boolean checkResult) throws ExecutionException, RetryException {
         return getDefaultRetryer(checkResult).call(callable);
     }
 
     /**
-     * Use RETRYER to invoke the Callable before returning true
+     * 使用带结果检查的重试器执行Callable任务，直到返回true为止。
      *
-     * @param callable the callable
-     * @return the boolean
-     * @throws ExecutionException the execution exception
-     * @throws RetryException     the retry exception
+     * @param callable 要执行的任务
+     * @return 任务执行结果
+     * @throws ExecutionException 执行异常
+     * @throws RetryException 重试异常
      */
     public static Boolean retryCall(final Callable<Boolean> callable) throws ExecutionException, RetryException {
         return retryCall(callable, true);

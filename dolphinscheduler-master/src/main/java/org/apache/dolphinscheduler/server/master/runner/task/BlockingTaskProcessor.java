@@ -43,29 +43,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.google.auto.service.AutoService;
 
 /**
- * blocking task processor
+ * 阻塞任务处理器，用于在工作流中实现阻塞等待功能。
+ * 根据依赖任务的状态和阻塞条件（成功/失败时阻塞），判断是否需要阻塞工作流的继续执行。
+ * 当满足阻塞条件时，将工作流状态设为 READY_BLOCK。
  */
 @AutoService(ITaskProcessor.class)
 public class BlockingTaskProcessor extends BaseTaskProcessor {
 
-    /**
-     * dependent parameters
-     */
     private DependentParameters dependentParameters;
 
-    /**
-     * condition result
-     */
     private DependResult conditionResult = DependResult.WAITING;
 
-    /**
-     * blocking parameters
-     */
     private BlockingParameters blockingParam;
 
-    /**
-     * complete task map
-     */
     private Map<Long, TaskExecutionStatus> completeTaskList = new ConcurrentHashMap<>();
 
     private void initTaskParameters() {
@@ -84,7 +74,6 @@ public class BlockingTaskProcessor extends BaseTaskProcessor {
 
     @Override
     protected boolean pauseTask() {
-        // todo: task cannot be pause
         taskInstance.setState(TaskExecutionStatus.PAUSE);
         taskInstance.setEndTime(new Date());
         processService.saveTaskInstance(taskInstance);
@@ -148,7 +137,10 @@ public class BlockingTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     * depend result for depend item
+     * 计算单个依赖项的依赖结果。
+     *
+     * @param item 依赖项
+     * @return 依赖结果
      */
     private DependResult getDependResultForItem(DependentItem item) {
 

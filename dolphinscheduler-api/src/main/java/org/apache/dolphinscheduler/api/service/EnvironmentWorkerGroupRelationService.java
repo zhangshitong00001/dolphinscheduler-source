@@ -20,21 +20,23 @@ package org.apache.dolphinscheduler.api.service;
 import java.util.Map;
 
 /**
- * environment worker group relation service
+ * 环境与Worker分组关联服务接口。管理环境与Worker分组之间的绑定关系。
+ * 通过关联关系，可将特定的执行环境绑定到指定的Worker分组上。
  */
 public interface EnvironmentWorkerGroupRelationService {
 
     /**
-     * query environment worker group relation
+     * 根据环境编码查询环境与Worker分组的关联关系。
      *
-     * @param environmentCode environment code
+     * @param environmentCode 环境编码
+     * @return 关联关系信息
      */
     Map<String, Object> queryEnvironmentWorkerGroupRelation(Long environmentCode);
 
     /**
-     * query all environment worker group relation
+     * 查询所有环境与Worker分组的关联关系。
      *
-     * @return all relation list
+     * @return 所有关联关系列表
      */
     Map<String, Object> queryAllEnvironmentWorkerGroupRelationList();
 }

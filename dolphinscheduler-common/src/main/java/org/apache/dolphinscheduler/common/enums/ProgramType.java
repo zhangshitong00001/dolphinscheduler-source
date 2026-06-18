@@ -18,14 +18,16 @@
 package org.apache.dolphinscheduler.common.enums;
 
 /**
- * support program types
+ * 程序类型枚举。
+ * 定义DolphinScheduler任务支持的编程语言/程序类型。
  */
 public enum ProgramType {
-    /**
-     * 0 JAVA,1 SCALA,2 PYTHON,3 SQL
-     */
+    /** Java程序 */
     JAVA,
+    /** Scala程序 */
     SCALA,
+    /** Python程序 */
     PYTHON,
+    /** SQL脚本 */
     SQL
 }

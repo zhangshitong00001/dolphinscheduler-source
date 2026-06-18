@@ -39,19 +39,34 @@ import net.bytebuddy.implementation.bind.annotation.Origin;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 
 /**
- * ConsumerInterceptor
+ * 消费者拦截器。使用ByteBuddy拦截RPC接口方法调用，将本地调用转换为远程RPC请求，支持重试和异步回调。
  */
 public class ConsumerInterceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(ConsumerInterceptor.class);
+
+    /**
+     * 目标主机
+     */
     private Host host;
 
+    /**
+     * Netty客户端实例
+     */
     private NettyClient nettyClient = NettyClient.getInstance();
 
     ConsumerInterceptor(Host host) {
         this.host = host;
     }
 
+    /**
+     * 拦截方法调用，构建RPC请求并通过Netty发送到远程服务端。
+     *
+     * @param args 方法参数
+     * @param method 被拦截的方法
+     * @return 远程调用结果
+     * @throws RemotingException RemotingException
+     */
     @RuntimeType
     public Object intercept(@AllArguments Object[] args, @Origin Method method) throws RemotingException {
         RpcRequest request = buildReq(args, method);

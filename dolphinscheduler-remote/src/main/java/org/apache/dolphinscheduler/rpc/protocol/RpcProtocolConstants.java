@@ -17,14 +17,20 @@
 
 package org.apache.dolphinscheduler.rpc.protocol;
 
+/**
+ * RPC 协议常量定义。定义协议头部的固定长度和协议魔数。
+ * 头部格式：magic(2字节) + eventType(1) + version(1) + serialization(1) + requestId(8) + dataLength(4) = 17字节。
+ */
 public class RpcProtocolConstants {
 
     public RpcProtocolConstants() {
         throw new IllegalStateException("Utility class");
     }
 
+    /** 协议头部固定长度：17字节 */
     public static final int HEADER_LENGTH = 17;
 
+    /** 协议魔数：0xbabe，用于快速校验数据包格式 */
     public static final short MAGIC = (short) 0xbabe;
 
 }

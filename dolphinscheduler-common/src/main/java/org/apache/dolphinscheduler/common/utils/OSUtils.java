@@ -49,7 +49,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * os utils
+ * 操作系统工具类，提供系统资源监控、用户管理和命令执行功能。
+ * 支持CPU使用率、内存使用率、磁盘空间、系统负载等指标获取，
+ * 以及跨平台（Linux/Mac/Windows）的用户创建和管理操作。
+ * 该类为工具类，不可实例化。
  */
 public class OSUtils {
 
@@ -74,16 +77,14 @@ public class OSUtils {
     }
 
     /**
-     * Initialization regularization, solve the problem of pre-compilation performance,
-     * avoid the thread safety problem of multi-thread operation
+     * 空白字符匹配正则，预编译以提高性能并避免多线程安全问题
      */
     private static final Pattern PATTERN = Pattern.compile("\\s+");
 
     /**
-     * get memory usage
-     * Keep 2 decimal
+     * 获取内存使用率，保留两位小数。
      *
-     * @return percent %
+     * @return 内存使用率百分比（0.0 ~ 1.0）
      */
     public static double memoryUsage() {
         GlobalMemory memory = hal.getMemory();
@@ -95,10 +96,9 @@ public class OSUtils {
     }
 
     /**
-     * get disk usage
-     * Keep 2 decimal
+     * 获取磁盘可用空间，保留两位小数。
      *
-     * @return disk free size, unit: GB
+     * @return 可用磁盘空间，单位：GB
      */
     public static double diskAvailable() {
         File file = new File(".");
@@ -112,11 +112,9 @@ public class OSUtils {
     }
 
     /**
-     * get available physical memory size
-     * <p>
-     * Keep 2 decimal
+     * 获取可用物理内存大小，保留两位小数。
      *
-     * @return available Physical Memory Size, unit: G
+     * @return 可用物理内存大小，单位：GB
      */
     public static double availablePhysicalMemorySize() {
         GlobalMemory memory = hal.getMemory();
@@ -128,9 +126,9 @@ public class OSUtils {
     }
 
     /**
-     * load average
+     * 获取系统负载平均值，保留两位小数。
      *
-     * @return load average
+     * @return 系统负载平均值，获取失败返回-1
      */
     public static double loadAverage() {
         double loadAverage;
@@ -150,9 +148,9 @@ public class OSUtils {
     }
 
     /**
-     * get cpu usage
+     * 获取CPU使用率，保留两位小数。
      *
-     * @return cpu usage
+     * @return CPU使用率（0.0 ~ 1.0），获取失败返回-1
      */
     public static double cpuUsage() {
         CentralProcessor processor = hal.getProcessor();
@@ -270,9 +268,10 @@ public class OSUtils {
     }
 
     /**
-     * whether the user exists in linux
+     * 检查Linux系统中是否存在指定用户。
      *
-     * @return boolean
+     * @param tenantCode 用户编码
+     * @return 如果用户存在返回true
      */
     public static boolean existTenantCodeInLinux(String tenantCode) {
         try {
@@ -289,9 +288,9 @@ public class OSUtils {
     }
 
     /**
-     * create user
+     * 如果用户不存在则创建用户。
      *
-     * @param userName user name
+     * @param userName 用户名
      */
     public static void createUserIfAbsent(String userName) {
         // if not exists this user, then create
@@ -302,10 +301,10 @@ public class OSUtils {
     }
 
     /**
-     * create user
+     * 跨平台创建操作系统用户。
      *
-     * @param userName user name
-     * @return true if creation was successful, otherwise false
+     * @param userName 用户名
+     * @return 创建成功返回true，否则返回false
      */
     public static boolean createUser(String userName) {
         try {
@@ -383,10 +382,10 @@ public class OSUtils {
     }
 
     /**
-     * get system group information
+     * 获取当前用户所属的系统用户组信息。
      *
-     * @return system group info
-     * @throws IOException errors
+     * @return 用户组名称
+     * @throws IOException IO异常
      */
     public static String getGroup() throws IOException {
         if (SystemUtils.IS_OS_WINDOWS) {
@@ -411,11 +410,11 @@ public class OSUtils {
     }
 
     /**
-     * get sudo command
+     * 生成带sudo前缀的命令，以指定用户身份执行。
      *
-     * @param tenantCode tenantCode
-     * @param command command
-     * @return result of sudo execute command
+     * @param tenantCode 租户编码（用户名）
+     * @param command 原始命令
+     * @return 带sudo前缀的命令字符串
      */
     public static String getSudoCmd(String tenantCode, String command) {
         if (!isSudoEnable() || StringUtils.isEmpty(tenantCode)) {
@@ -429,11 +428,11 @@ public class OSUtils {
     }
 
     /**
-     * Execute the corresponding command of Linux or Windows
+     * 执行操作系统命令（支持Linux和Windows）。
      *
-     * @param command command
-     * @return result of execute command
-     * @throws IOException errors
+     * @param command 要执行的命令
+     * @return 命令执行结果
+     * @throws IOException IO异常
      */
     public static String exeCmd(String command) throws IOException {
         StringTokenizer st = new StringTokenizer(command);
@@ -445,20 +444,20 @@ public class OSUtils {
     }
 
     /**
-     * Execute the shell
+     * 执行Shell命令。
      *
-     * @param command command
-     * @return result of execute the shell
-     * @throws IOException errors
+     * @param command 命令数组
+     * @return 命令执行结果
+     * @throws IOException IO异常
      */
     public static String exeShell(String[] command) throws IOException {
         return ShellExecutor.execCommand(command);
     }
 
     /**
-     * get process id
+     * 获取当前Java进程的进程ID。
      *
-     * @return process id
+     * @return 进程ID
      */
     public static int getProcessID() {
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
@@ -466,11 +465,11 @@ public class OSUtils {
     }
 
     /**
-     * Check memory and cpu usage is overload the given thredshod.
+     * 检查系统负载或内存是否超过预设阈值。
      *
-     * @param maxCpuLoadAvg  maxCpuLoadAvg
-     * @param reservedMemory reservedMemory
-     * @return True, if the cpu or memory exceed the given thredshod.
+     * @param maxCpuLoadAvg 最大CPU负载平均值
+     * @param reservedMemory 预留内存大小（GB）
+     * @return 如果CPU负载超过阈值或可用内存低于预留值则返回true
      */
     public static Boolean isOverload(double maxCpuLoadAvg, double reservedMemory) {
         // system load average

@@ -24,7 +24,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * project service
+ * 项目服务接口。提供项目的创建、查询、更新、删除以及项目授权管理功能。
  **/
 public interface ProjectService {
 

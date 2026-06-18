@@ -26,6 +26,9 @@ import org.apache.dolphinscheduler.service.registry.RegistryClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Master连接状态监听器。监听Master与注册中心的连接状态变化，根据不同的连接状态触发对应的连接策略（重连或断开）。
+ */
 public class MasterConnectionStateListener implements ConnectionListener {
 
     private static final Logger logger = LoggerFactory.getLogger(MasterConnectionStateListener.class);
@@ -42,6 +45,11 @@ public class MasterConnectionStateListener implements ConnectionListener {
         this.masterConnectStrategy = masterConnectStrategy;
     }
 
+    /**
+     * 处理注册中心连接状态更新事件。根据状态变化调用对应的连接策略方法。
+     *
+     * @param state 新的连接状态（CONNECTED/SUSPENDED/RECONNECTED/DISCONNECTED）
+     */
     @Override
     public void onUpdate(ConnectionState state) {
         logger.info("Master received a {} event from registry, the current server state is {}", state,

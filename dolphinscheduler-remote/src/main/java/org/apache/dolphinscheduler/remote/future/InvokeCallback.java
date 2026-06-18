@@ -17,14 +17,14 @@
 package org.apache.dolphinscheduler.remote.future;
 
 /**
- * invoke callback
+ * 远程调用回调接口，用于在远程请求完成时接收结果通知。
  */
 public interface InvokeCallback {
 
     /**
-     *  operation
+     * 远程操作完成时的回调方法。
      *
-     * @param responseFuture responseFuture
+     * @param responseFuture 响应Future对象，包含请求的完整响应数据
      */
     void operationComplete(final ResponseFuture responseFuture);
 

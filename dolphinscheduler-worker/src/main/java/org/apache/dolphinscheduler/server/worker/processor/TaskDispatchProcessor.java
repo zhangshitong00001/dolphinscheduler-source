@@ -49,7 +49,9 @@ import io.micrometer.core.annotation.Timed;
 import io.netty.channel.Channel;
 
 /**
- * Used to handle {@link CommandType#TASK_DISPATCH_REQUEST}
+ * 任务派发处理器。处理Master发送的任务派发请求，负责接收任务执行上下文、
+ * 缓存任务信息、处理延迟任务逻辑，并将任务提交到Worker的执行队列中。
+ * 当执行队列已满时，根据配置的策略拒绝或继续等待。
  */
 @Component
 public class TaskDispatchProcessor implements NettyRequestProcessor {
@@ -59,30 +61,29 @@ public class TaskDispatchProcessor implements NettyRequestProcessor {
     @Autowired
     private WorkerConfig workerConfig;
 
-    /**
-     * task callback service
-     */
     @Autowired
     private WorkerMessageSender workerMessageSender;
 
-    /**
-     * alert client service
-     */
     @Autowired
     private AlertClientService alertClientService;
 
     @Autowired
     private TaskPluginManager taskPluginManager;
 
-    /**
-     * task execute manager
-     */
     @Autowired
     private WorkerManagerThread workerManager;
 
     @Autowired(required = false)
     private StorageOperate storageOperate;
 
+    /**
+     * 处理任务派发请求。解析Master发送的任务派发命令，缓存任务执行上下文，
+     * 判断是否为延迟执行任务，创建任务执行Runnable并提交到Worker管理线程队列中。
+     * 如果队列已满则发送任务拒绝消息给Master。
+     *
+     * @param channel Netty通道
+     * @param command 任务派发命令
+     */
     @Counted(value = "ds.task.execution.count", description = "task execute total count")
     @Timed(value = "ds.task.execution.duration", percentiles = {0.5, 0.75, 0.95, 0.99}, histogram = true)
     @Override

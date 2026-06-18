@@ -20,7 +20,8 @@ package org.apache.dolphinscheduler.api.security;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * ldap user not exist action type
+ * LDAP用户不存在时的处理动作枚举。定义当LDAP认证成功但系统中不存在对应用户时的处理策略。
+ * 支持自动创建用户（CREATE）和拒绝登录（DENY）两种策略。
  */
 public enum LdapUserNotExistActionType {
 

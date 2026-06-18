@@ -23,18 +23,14 @@ import org.apache.dolphinscheduler.dao.entity.DqRuleInputEntry;
 import java.util.List;
 
 /**
- * RuleDefinition
+ * 数据质量规则定义DTO。封装数据质量规则的输入参数和执行SQL信息。
  */
 public class RuleDefinition {
 
-    /**
-     * rule input entry list
-     */
+    /** 规则输入参数列表 */
     private List<DqRuleInputEntry> ruleInputEntryList;
 
-    /**
-     * rule execute sql list
-     */
+    /** 规则执行SQL列表 */
     private List<DqRuleExecuteSql> executeSqlList;
 
     public RuleDefinition() {

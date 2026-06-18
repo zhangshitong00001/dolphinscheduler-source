@@ -30,6 +30,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * 事件执行服务，负责轮询所有已缓存的工作流实例和流任务实例并触发其事件处理。
+ * 作为 Master 的事件驱动引擎，定期检查内存中的工作流和流任务，将事件分发给对应的线程池执行。
+ */
 @Service
 public class EventExecuteService extends BaseDaemonThread {
 
@@ -58,6 +62,10 @@ public class EventExecuteService extends BaseDaemonThread {
         logger.info("Master Event execute service started");
     }
 
+    /**
+     * 事件服务主循环，轮询处理工作流事件和流任务事件。
+     * 在服务未停止时持续运行，以短间隔休眠以降低 CPU 占用。
+     */
     @Override
     public void run() {
         while (!ServerLifeCycleManager.isStopped()) {

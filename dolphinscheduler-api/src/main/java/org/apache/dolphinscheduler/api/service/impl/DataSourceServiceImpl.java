@@ -61,6 +61,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +76,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * data source service impl
  */
 @Service
+@CacheConfig(cacheNames = "datasource")
 public class DataSourceServiceImpl extends BaseServiceImpl implements DataSourceService {
 
     private static final Logger logger = LoggerFactory.getLogger(DataSourceServiceImpl.class);
@@ -220,12 +224,13 @@ public class DataSourceServiceImpl extends BaseServiceImpl implements DataSource
     }
 
     /**
-     * updateProcessInstance datasource
+     * query datasource detail
      *
      * @param id datasource id
      * @return data source detail
      */
     @Override
+    @Cacheable(key = "#id")
     public Map<String, Object> queryDataSource(int id) {
 
         Map<String, Object> result = new HashMap<>();

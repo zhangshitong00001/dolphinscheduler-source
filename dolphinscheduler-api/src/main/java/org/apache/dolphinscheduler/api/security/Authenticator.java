@@ -24,20 +24,26 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 认证器接口。定义用户身份认证的统一规范，支持用户名密码验证和从HTTP请求中获取已认证用户。
+ * 所有认证方式（PASSWORD、LDAP等）均需实现此接口。
+ */
 public interface Authenticator {
     /**
-     * Verifying legality via username and password
-     * @param username user name
-     * @param password user password
-     * @param extra extra info
-     * @return result object
+     * 通过用户名和密码验证用户身份的合法性。
+     *
+     * @param username 用户名
+     * @param password 用户密码
+     * @param extra    额外信息（如客户端IP等）
+     * @return 认证结果，包含sessionId和安全配置类型
      */
     Result<Map<String, String>> authenticate(String username, String password, String extra);
 
     /**
-     * Get authenticated user
-     * @param request http servlet request
-     * @return user
+     * 从HTTP请求中获取已认证的用户信息。
+     *
+     * @param request HTTP请求对象
+     * @return 已认证的用户实体，未认证则返回null
      */
     User getAuthUser(HttpServletRequest request);
 }

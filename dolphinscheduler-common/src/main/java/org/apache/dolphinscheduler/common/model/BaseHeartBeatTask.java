@@ -21,6 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dolphinscheduler.common.lifecycle.ServerLifeCycleManager;
 import org.apache.dolphinscheduler.common.thread.BaseDaemonThread;
 
+/**
+ * 心跳任务基类，定义了心跳的抽象实现框架。
+ * 通过守护线程定期生成心跳信息并注册到注册中心，仅在服务处于RUNNING状态时执行。
+ * 子类需实现getHeartBeat()和writeHeartBeat()方法来定义具体的心跳逻辑。
+ *
+ * @param <T> 心跳数据类型
+ */
 @Slf4j
 public abstract class BaseHeartBeatTask<T> extends BaseDaemonThread {
 
@@ -75,7 +82,17 @@ public abstract class BaseHeartBeatTask<T> extends BaseDaemonThread {
         Thread.currentThread().interrupt();
     }
 
+    /**
+     * 生成当前心跳数据。子类需实现具体的心跳数据采集逻辑。
+     *
+     * @return 心跳数据
+     */
     public abstract T getHeartBeat();
 
+    /**
+     * 将心跳数据写入注册中心。子类需实现具体的写入逻辑。
+     *
+     * @param heartBeat 心跳数据
+     */
     public abstract void writeHeartBeat(T heartBeat);
 }

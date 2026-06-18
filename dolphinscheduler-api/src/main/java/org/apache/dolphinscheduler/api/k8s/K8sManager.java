@@ -35,7 +35,8 @@ import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 
 /**
- * use multiple environment feature
+ * K8s集群管理器。支持多集群环境，管理Kubernetes客户端连接的创建、缓存和生命周期。
+ * 通过集群编码索引并复用客户端实例，减少重复连接开销。
  */
 @Component
 public class K8sManager {
@@ -50,10 +51,11 @@ public class K8sManager {
     private ClusterMapper clusterMapper;
 
     /**
-     * get k8s client for api use
+     * 获取指定集群编码对应的K8s客户端，首次调用时从数据库读取配置并创建连接。
      *
-     * @param clusterCode
-     * @return
+     * @param clusterCode 集群编码
+     * @return KubernetesClient实例，clusterCode为null时返回null
+     * @throws RemotingException 与K8s通信异常时抛出
      */
     public synchronized KubernetesClient getK8sClient(Long clusterCode) throws RemotingException {
         if (null == clusterCode) {
@@ -64,8 +66,12 @@ public class K8sManager {
     }
 
     /**
-     * @param clusterCode
-     * @return new client if need updated
+     * 获取或更新K8s客户端。当update为true时，先删除现有客户端再重新创建。
+     *
+     * @param clusterCode 集群编码
+     * @param update      是否强制更新，true时删除现有客户端并重新创建
+     * @return KubernetesClient实例，clusterCode为null时返回null
+     * @throws RemotingException 与K8s通信异常时抛出
      */
     public synchronized KubernetesClient getAndUpdateK8sClient(Long clusterCode, boolean update) throws RemotingException {
         if (null == clusterCode) {
@@ -85,6 +91,11 @@ public class K8sManager {
     }
 
 
+    /**
+     * 关闭并移除缓存中的K8s客户端连接。
+     *
+     * @param clusterCode 集群编码
+     */
     private void deleteK8sClientInner(Long clusterCode) {
         if (clusterCode == null) {
             return;
@@ -99,6 +110,12 @@ public class K8sManager {
         }
     }
 
+    /**
+     * 从数据库读取集群配置，创建K8s客户端并放入缓存。
+     *
+     * @param clusterCode 集群编码
+     * @throws RemotingException 与K8s通信异常时抛出
+     */
     private void createK8sClientInner(Long clusterCode) throws RemotingException {
         Cluster cluster = clusterMapper.queryByClusterCode(clusterCode);
         if (cluster == null) {
@@ -118,6 +135,13 @@ public class K8sManager {
         }
     }
 
+    /**
+     * 根据K8s配置YAML字符串创建DefaultKubernetesClient实例。
+     *
+     * @param configYaml K8s配置的YAML字符串
+     * @return DefaultKubernetesClient实例
+     * @throws RemotingException 创建客户端失败时抛出
+     */
     private DefaultKubernetesClient getClient(String configYaml) throws RemotingException {
         try {
             Config config = Config.fromKubeconfig(configYaml);

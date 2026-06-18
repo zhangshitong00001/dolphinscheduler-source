@@ -25,30 +25,42 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Rpc
+ * RPC方法注解。用于标记需要远程调用的方法，配置重试次数、异步模式、回调等参数。
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Rpc {
 
     /**
-     * number of retries
+     * 失败重试次数
      */
     int retries() default 3;
 
+    /**
+     * 是否异步调用
+     */
     boolean async() default false;
 
+    /**
+     * 是否需要ACK确认
+     */
     boolean ack() default false;
 
+    /**
+     * 是否启用回调
+     */
     boolean callBack() default false;
 
     //todo It is better to set the timeout period for synchronous calls
 
     /**
-     * When it is asynchronous transmission, callback must be set
+     * 异步调用时的服务回调类
      */
     Class<? extends AbstractRpcCallBack> serviceCallback() default AbstractRpcCallBack.class;
 
+    /**
+     * ACK确认时的回调类
+     */
     Class<? extends AbstractRpcCallBack> ackCallback() default AbstractRpcCallBack.class;
 
 

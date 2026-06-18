@@ -18,7 +18,7 @@
 package org.apache.dolphinscheduler.service.exceptions;
 
 /**
- * Custom ZKServerException exception
+ * 服务层通用运行时异常，封装服务层业务异常信息。
  */
 public class ServiceException extends RuntimeException {
 

@@ -24,9 +24,18 @@ import lombok.experimental.UtilityClass;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 
+/**
+ * OSS客户端工厂类，用于创建阿里云OSS客户端实例。
+ */
 @UtilityClass
 public class OssClientFactory {
 
+    /**
+     * 根据OSS连接配置构建OSS客户端实例。
+     *
+     * @param ossConnection OSS连接配置
+     * @return OSS客户端实例
+     */
     public OSS buildOssClient(OssConnection ossConnection) {
         return new OSSClientBuilder().build(ossConnection.getEndPoint(),
                 ossConnection.getAccessKeyId(), ossConnection.getAccessKeySecret());

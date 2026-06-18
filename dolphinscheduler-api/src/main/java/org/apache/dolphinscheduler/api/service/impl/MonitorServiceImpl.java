@@ -42,7 +42,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.collect.Sets;
 
 /**
- * monitor service impl
+ * 监控服务实现类。负责查询数据库状态、Master/Worker服务器列表等系统监控信息，数据来源于数据库查询和服务注册中心。
  */
 @Service
 public class MonitorServiceImpl extends BaseServiceImpl implements MonitorService {
@@ -56,10 +56,10 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
     private RegistryClient registryClient;
 
     /**
-     * query database state
+     * 查询数据库监控状态信息。
      *
-     * @param loginUser login user
-     * @return data base state
+     * @param loginUser 当前登录用户
+     * @return 包含数据库监控记录列表的结果Map
      */
     @Override
     public Map<String, Object> queryDatabaseState(User loginUser) {
@@ -71,10 +71,10 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
     }
 
     /**
-     * query master list
+     * 查询Master服务器列表。
      *
-     * @param loginUser login user
-     * @return master information list
+     * @param loginUser 当前登录用户
+     * @return 包含Master服务器信息列表的结果Map
      */
     @Override
     public Map<String, Object> queryMaster(User loginUser) {
@@ -87,10 +87,10 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
     }
 
     /**
-     * query worker list
+     * 查询Worker服务器列表，按host:port去重并合并多个zk目录信息。
      *
-     * @param loginUser login user
-     * @return worker information list
+     * @param loginUser 当前登录用户
+     * @return 包含Worker服务器信息的结果Map
      */
     @Override
     public Map<String, Object> queryWorker(User loginUser) {

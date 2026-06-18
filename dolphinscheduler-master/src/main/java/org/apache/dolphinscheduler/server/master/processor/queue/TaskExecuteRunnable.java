@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * task execute thread
+ * 任务执行运行单元。负责串行处理同一工作流实例下的任务事件，支持事件的添加和顺序执行。
  */
 public class TaskExecuteRunnable implements Runnable {
 
@@ -46,6 +46,9 @@ public class TaskExecuteRunnable implements Runnable {
         this.taskEventHandlerMap = taskEventHandlerMap;
     }
 
+    /**
+     * 执行任务事件队列中的事件。按顺序逐个处理，遇到可恢复异常时保留事件等待重试，遇到严重错误则移除事件。
+     */
     @Override
     public void run() {
         while (!this.events.isEmpty()) {
@@ -91,6 +94,12 @@ public class TaskExecuteRunnable implements Runnable {
         return processInstanceId;
     }
 
+    /**
+     * 添加任务事件到事件队列。如果事件的processInstanceId与当前运行单元不匹配则拒绝添加。
+     *
+     * @param event 任务事件
+     * @return 添加成功返回true，否则返回false
+     */
     public boolean addEvent(TaskEvent event) {
         if (event.getProcessInstanceId() != this.processInstanceId) {
             logger.warn("event would be abounded, task instance id:{}, process instance id:{}, this.processInstanceId:{}",

@@ -48,7 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * netty executor manager
+ * 基于 Netty 的执行器管理器实现。通过 Netty 远程客户端将命令发送到目标主机，支持失败重试和故障转移。
  */
 @Service
 public class NettyExecutorManager extends AbstractExecutorManager<Boolean> {
@@ -56,7 +56,7 @@ public class NettyExecutorManager extends AbstractExecutorManager<Boolean> {
     private final Logger logger = LoggerFactory.getLogger(NettyExecutorManager.class);
 
     /**
-     * server node manager
+     * 服务节点管理器。
      */
     @Autowired
     private ServerNodeManager serverNodeManager;
@@ -68,13 +68,10 @@ public class NettyExecutorManager extends AbstractExecutorManager<Boolean> {
     private TaskRecallProcessor taskRecallProcessor;
 
     /**
-     * netty remote client
+     * Netty 远程通信客户端。
      */
     private final NettyRemotingClient nettyRemotingClient;
 
-    /**
-     * constructor
-     */
     public NettyExecutorManager() {
         final NettyClientConfig clientConfig = new NettyClientConfig();
         this.nettyRemotingClient = new NettyRemotingClient(clientConfig);
@@ -87,11 +84,11 @@ public class NettyExecutorManager extends AbstractExecutorManager<Boolean> {
     }
 
     /**
-     * execute logic
+     * 执行任务。遍历所有可用节点发送命令，失败时自动切换到下一个节点重试。
      *
-     * @param context context
-     * @return result
-     * @throws ExecuteException if error throws ExecuteException
+     * @param context 执行上下文
+     * @return 执行结果
+     * @throws ExecuteException 若所有节点均执行失败则抛出
      */
     @Override
     public Boolean execute(ExecutionContext context) throws ExecuteException {
@@ -141,11 +138,11 @@ public class NettyExecutorManager extends AbstractExecutorManager<Boolean> {
     }
 
     /**
-     * execute logic
+     * 执行命令发送逻辑，默认重试 3 次。
      *
-     * @param host host
-     * @param command command
-     * @throws ExecuteException if error throws ExecuteException
+     * @param host 目标主机
+     * @param command 待发送的命令
+     * @throws ExecuteException 若重试后仍发送失败则抛出
      */
     public void doExecute(final Host host, final Command command) throws ExecuteException {
         // retry count，default retry 3
@@ -168,10 +165,10 @@ public class NettyExecutorManager extends AbstractExecutorManager<Boolean> {
     }
 
     /**
-     * get all nodes
+     * 根据执行上下文获取所有可用节点。
      *
-     * @param context context
-     * @return nodes
+     * @param context 执行上下文
+     * @return 节点地址集合
      */
     private Set<String> getAllNodes(ExecutionContext context) {
         Set<String> nodes = Collections.emptySet();

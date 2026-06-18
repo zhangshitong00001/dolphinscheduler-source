@@ -47,6 +47,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * 日志客户端服务，通过Netty远程通信向Worker和Master节点请求日志数据。
+ * <p>支持以下日志操作：
+ * <ul>
+ *   <li>查看日志</li>
+ *   <li>滚动查看日志（指定行号范围）</li>
+ *   <li>获取日志字节内容</li>
+ *   <li>删除任务日志</li>
+ *   <li>获取AppId列表</li>
+ * </ul></p>
+ */
 @Service
 public class LogClient implements AutoCloseable {
 
@@ -65,14 +76,14 @@ public class LogClient implements AutoCloseable {
     }
 
     /**
-     * roll view log
+     * 滚动查看日志，跳过指定行数后读取限定行数的日志内容。
      *
-     * @param host host
-     * @param port port
-     * @param path path
-     * @param skipLineNum skip line number
-     * @param limit limit
-     * @return log content
+     * @param host 目标主机地址
+     * @param port 目标端口
+     * @param path 日志文件路径
+     * @param skipLineNum 跳过的行数
+     * @param limit 读取的最大行数
+     * @return 日志内容字符串
      */
     public String rollViewLog(String host, int port, String path, int skipLineNum, int limit) {
         logger.info("Roll view log from host : {}, port : {}, path {}, skipLineNum {} ,limit {}", host, port, path,
@@ -102,12 +113,12 @@ public class LogClient implements AutoCloseable {
     }
 
     /**
-     * view log
+     * 查看完整日志内容。
      *
-     * @param host host
-     * @param port port
-     * @param path path
-     * @return log content
+     * @param host 目标主机地址
+     * @param port 目标端口
+     * @param path 日志文件路径
+     * @return 日志内容字符串，若为本地主机则直接读取文件
      */
     public String viewLog(String host, int port, String path) {
         logger.info("View log from host: {}, port: {}, logPath: {}", host, port, path);
@@ -138,12 +149,12 @@ public class LogClient implements AutoCloseable {
     }
 
     /**
-     * get log size
+     * 获取日志文件的字节内容。
      *
-     * @param host host
-     * @param port port
-     * @param path log path
-     * @return log content bytes
+     * @param host 目标主机地址
+     * @param port 目标端口
+     * @param path 日志文件路径
+     * @return 日志文件内容的字节数组
      */
     public byte[] getLogBytes(String host, int port, String path) {
         logger.info("Get log bytes from host: {}, port: {}, logPath {}", host, port, path);
@@ -171,12 +182,12 @@ public class LogClient implements AutoCloseable {
     }
 
     /**
-     * remove task log
+     * 删除任务日志文件。
      *
-     * @param host host
-     * @param port port
-     * @param path path
-     * @return remove task status
+     * @param host 目标主机地址
+     * @param port 目标端口
+     * @param path 日志文件路径
+     * @return 删除成功返回true，否则返回false
      */
     public Boolean removeTaskLog(String host, int port, String path) {
         logger.info("Remove task log from host: {}, port: {}, logPath {}", host, port, path);

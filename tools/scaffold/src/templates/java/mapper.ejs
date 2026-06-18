@@ -1,0 +1,38 @@
+<%- aslJava %>
+package org.apache.dolphinscheduler.dao.mapper;
+
+import org.apache.dolphinscheduler.dao.entity.<%= naming.pascal %>;
+
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
+/**
+ * <%= naming.kebab %> mapper
+ */
+public interface <%= naming.pascal %>Mapper extends BaseMapper<<%= naming.pascal %>> {
+
+    /**
+     * Check if <%= naming.kebab %> exists by <%= naming.kebab %> value.
+     *
+     * @param <%= naming.camel %> <%= naming.kebab %> value
+     * @return true if exists
+     */
+    Boolean exist<%= naming.pascal %>(@Param("<%= naming.camel %>") String <%= naming.camel %>);
+
+    /**
+     * Query <%= naming.kebab %> paging with search.
+     *
+     * @param page page
+     * @param ids resource ids
+     * @param searchVal search value
+     * @return <%= naming.kebab %> IPage
+     */
+    IPage<<%= naming.pascal %>> query<%= naming.pascal %>Paging(Page<<%= naming.pascal %>> page,
+                                                  @Param("ids") List<Integer> ids,
+                                                  @Param("searchVal") String searchVal);
+}

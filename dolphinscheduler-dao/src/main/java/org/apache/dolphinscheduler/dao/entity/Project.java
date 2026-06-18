@@ -29,6 +29,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 项目实体，映射到 t_ds_project 表，表示 DolphinScheduler 中的项目管理单元。
+ * 一个项目下可包含多个流程定义，项目是权限管理的基本粒度。
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -36,64 +40,42 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @TableName("t_ds_project")
 public class Project {
 
-    /**
-     * id
-     */
+    /** 项目主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * user id
-     */
+    /** 创建用户 ID */
     @TableField("user_id")
     private Integer userId;
 
-    /**
-     * user name
-     */
+    /** 非数据库字段：用户名 */
     @TableField(exist = false)
     private String userName;
 
-    /**
-     * project code
-     */
+    /** 项目编码，全局唯一 */
     private long code;
 
-    /**
-     * project name
-     */
+    /** 项目名称 */
     private String name;
 
-    /**
-     * project description
-     */
+    /** 项目描述 */
     private String description;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 
-    /**
-     * permission
-     */
+    /** 非数据库字段：当前用户对该项目的权限值 */
     @TableField(exist = false)
     private int perm;
 
-    /**
-     * process define count
-     */
+    /** 非数据库字段：项目下的流程定义数量 */
     @TableField(exist = false)
     private int defCount;
 
-    /**
-     * process instance running count
-     */
+    /** 非数据库字段：项目下正在运行的流程实例数量 */
     @TableField(exist = false)
     private int instRunningCount;
 

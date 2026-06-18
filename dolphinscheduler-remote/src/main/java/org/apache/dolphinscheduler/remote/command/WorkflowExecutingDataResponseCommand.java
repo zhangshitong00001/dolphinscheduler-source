@@ -27,19 +27,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * workflow executing data response, from master to api
+ * 工作流执行数据响应命令，由Master返回给API服务，包含工作流实例的执行数据。
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class WorkflowExecutingDataResponseCommand implements Serializable {
 
+    /** 工作流执行DTO */
     private WorkflowExecuteDto workflowExecuteDto;
 
     /**
-     * package request command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @param opaque 请求标识
+     * @return command 打包后的命令对象
      */
     public Command convert2Command(long opaque) {
         Command command = new Command(opaque);

@@ -32,6 +32,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.auto.service.AutoService;
 
+/**
+ * 任务状态事件处理器。处理 TASK_STATE_CHANGE 状态事件，负责校验任务实例状态、驱动活跃任务处理器的 RUN 动作、判断任务完成状态并执行对应的完成逻辑（如任务组资源释放）。
+ */
 @AutoService(StateEventHandler.class)
 public class TaskStateEventHandler implements StateEventHandler {
 

@@ -7,7 +7,9 @@ import java.net.UnknownHostException;
 import java.util.Objects;
 
 /**
- *  Rewriting based on Twitter snowflake algorithm
+ * 基于Twitter雪花算法的分布式唯一ID生成工具类。
+ * 该类使用雪花算法（Snowflake）生成全局唯一的Long类型ID，支持高并发场景下的分布式ID生成。
+ * 该类为单例模式，不可直接实例化。
  */
 public class CodeGenerateUtils {
 
@@ -38,6 +40,12 @@ public class CodeGenerateUtils {
 
     private static CodeGenerateUtils instance = null;
 
+    /**
+     * 获取CodeGenerateUtils的单例实例。
+     *
+     * @return CodeGenerateUtils单例实例
+     * @throws CodeGenerateException 如果获取本地主机名失败
+     */
     public static synchronized CodeGenerateUtils getInstance() throws CodeGenerateException {
         if (instance == null) {
             instance = new CodeGenerateUtils();
@@ -45,6 +53,12 @@ public class CodeGenerateUtils {
         return instance;
     }
 
+    /**
+     * 生成一个全局唯一的分布式ID。
+     *
+     * @return 生成的唯一ID
+     * @throws CodeGenerateException 如果系统时钟回拨导致无法生成ID
+     */
     public synchronized long genCode() throws CodeGenerateException {
         long nowtMillisecond = systemMillisecond();
         if (nowtMillisecond < recordMillisecond) {
@@ -68,6 +82,9 @@ public class CodeGenerateUtils {
         return SYSTEM_TIMESTAMP + (System.nanoTime() - SYSTEM_NANOTIME) / 1000000;
     }
 
+    /**
+     * 雪花算法ID生成异常，当系统时钟回拨或网络不可达时抛出。
+     */
     public static class CodeGenerateException extends RuntimeException {
 
         public CodeGenerateException(String message) {

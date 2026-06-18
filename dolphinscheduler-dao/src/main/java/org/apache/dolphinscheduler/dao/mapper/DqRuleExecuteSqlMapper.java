@@ -26,14 +26,17 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * DqRuleExecuteSqlMapper
+ * 数据质量规则执行SQL Mapper 接口，封装对 t_ds_dq_rule_execute_sql 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供数据质量规则关联的执行SQL语句的查询能力。
  */
 public interface DqRuleExecuteSqlMapper extends BaseMapper<DqRuleExecuteSql> {
 
     /**
-     * get execute sql list by rule id
+     * 根据规则ID查询关联的执行SQL列表。
+     * SELECT * FROM t_ds_dq_rule_execute_sql WHERE rule_id = #{ruleId}
      *
-     * @param ruleId Integer
+     * @param ruleId 数据质量规则ID
+     * @return 执行SQL语句列表
      */
     List<DqRuleExecuteSql> getExecuteSqlList(@Param("ruleId") Integer ruleId);
 }

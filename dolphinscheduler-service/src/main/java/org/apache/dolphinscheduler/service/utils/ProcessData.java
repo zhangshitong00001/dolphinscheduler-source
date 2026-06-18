@@ -24,6 +24,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
+/**
+ * 流程数据模型，用于封装工作流定义中的任务节点列表和全局参数。支持流程定义的解析和管理。
+ */
 @Data
 @NoArgsConstructor
 public class ProcessData {

@@ -27,14 +27,19 @@ import java.util.Date;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * alert mapper interface
+ * 告警 Mapper 接口，封装对 t_ds_alert 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供告警记录的基本 CRUD 及服务崩溃告警插入能力。
  */
 @Mapper
 public interface AlertMapper extends BaseMapper<Alert> {
 
     /**
-     * Insert server crash alert
-     * <p>This method will ensure that there is at most one unsent alert which has the same content in the database.
+     * 插入服务崩溃告警记录。
+     * 该方法会确保数据库中最多只有一条相同内容且未发送的告警记录，
+     * 通过先删除同内容未发送的旧记录再插入新记录来实现告警抑制。
+     *
+     * @param alert 告警实体
+     * @param crashAlarmSuppressionStartTime 崩溃告警抑制开始时间，此时间之前的同内容告警将被抑制
      */
     void insertAlertWhenServerCrash(@Param("alert") Alert alert, @Param("crashAlarmSuppressionStartTime") Date crashAlarmSuppressionStartTime);
 

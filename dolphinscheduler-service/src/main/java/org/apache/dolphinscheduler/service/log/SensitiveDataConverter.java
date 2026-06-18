@@ -29,13 +29,12 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.google.common.base.Strings;
 
 /**
- * sensitive data log converter
+ * 敏感数据日志转换器，自动对日志中的密码等敏感信息进行脱敏处理。
+ * <p>使用正则表达式匹配数据源密码模式，将其替换为星号掩码。</p>
  */
 public class SensitiveDataConverter extends MessageConverter {
 
-    /**
-     * password pattern
-     */
+    /** 密码匹配正则模式 */
     private final Pattern pwdPattern = Pattern.compile(DataSourceConstants.DATASOURCE_PASSWORD_REGEX);
 
     @Override

@@ -1,0 +1,135 @@
+<%- aslTs %>
+import { defineComponent, onMounted, ref, toRefs, watch } from 'vue'
+import { NButton, NInput, NIcon, NDataTable, NPagination, NSpace, NModal } from 'naive-ui'
+import { SearchOutlined, PlusOutlined } from '@vicons/antd'
+import { useI18n } from 'vue-i18n'
+import { useColumns } from './use-columns'
+import { useTable } from './use-table'
+import { DefaultTableWidth } from '@/common/column-width-config'
+import Card from '@/components/card'
+import DetailModal from './components/<%= naming.kebab %>-modal'
+import type { TableColumns } from './types'
+
+const list = defineComponent({
+  name: '<%= naming.kebab %>-list',
+  setup() {
+    const { t } = useI18n()
+    const showDetailModal = ref(false)
+    const selectId = ref<number | null>(null)
+    const searchVal = ref('')
+
+    const { data, changePage, changePageSize, deleteRecord, updateList } = useTable()
+    const { columns } = useColumns(onEdit)
+
+    function onCreate() {
+      selectId.value = null
+      showDetailModal.value = true
+    }
+
+    function onEdit(id: number) {
+      selectId.value = id
+      showDetailModal.value = true
+    }
+
+    function onUpdatedList() {
+      updateList()
+    }
+
+    function onRefresh() {
+      changePage(1)
+    }
+
+    function trim(str: string) {
+      return str.trim()
+    }
+
+    onMounted(() => {
+      changePage(1)
+    })
+
+    watch(useI18n().locale, () => {
+      columns.value = useColumns(onEdit).columns.value
+    })
+
+    return {
+      t,
+      showDetailModal,
+      id: selectId,
+      columns,
+      ...toRefs(data),
+      searchVal,
+      changePage,
+      changePageSize,
+      onCreate,
+      onEdit,
+      onUpdatedList: updateList,
+      onRefresh,
+      trim,
+    }
+  },
+  render() {
+    const {
+      t, id, showDetailModal, columns, list, page, pageSize,
+      itemCount, loading, searchVal, changePage, changePageSize,
+      onCreate, onUpdatedList, onRefresh, trim
+    } = this
+
+    return (
+      <NSpace vertical>
+        <Card>
+          <NSpace justify="space-between">
+            <NButton type="primary" size="small" onClick={onCreate}>
+              <NIcon><PlusOutlined /></NIcon>
+              {t('<%= localePrefix %>.create')}
+            </NButton>
+            <NSpace>
+              <NInput
+                v-model={[searchVal, 'value']}
+                placeholder={t('resource.function_manage.search_placeholder')}
+                clearable
+                size="small"
+                style="width: 240px"
+              >
+                {{ suffix: () => <NIcon component={SearchOutlined} /> }}
+              </NInput>
+              <NButton size="small" onClick={onRefresh}>
+                {t('resource.function_manage.refresh')}
+              </NButton>
+            </NSpace>
+          </NSpace>
+        </Card>
+        <Card>
+          <NDataTable
+            columns={columns}
+            data={list}
+            loading={loading}
+            striped
+            size="small"
+          />
+          <div style="display: flex; justify-content: center; margin-top: 16px">
+            <NPagination
+              v-model={[page, 'value']}
+              page-size={pageSize}
+              item-count={itemCount}
+              show-quick-jumper
+              show-size-picker
+              page-sizes={[10, 20, 50]}
+              on-update:page={changePage}
+              on-update:page-size={changePageSize}
+            />
+          </div>
+        </Card>
+        {showDetailModal && (
+          <DetailModal
+            show={showDetailModal}
+            id={id}
+            onCancel={() => { showDetailModal = false }}
+            onUpdate={onUpdatedList}
+          />
+        )}
+      </NSpace>
+    )
+  }
+})
+
+export default list

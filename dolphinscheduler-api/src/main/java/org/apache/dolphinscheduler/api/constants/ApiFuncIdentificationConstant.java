@@ -21,6 +21,10 @@ import org.apache.dolphinscheduler.api.enums.ExecuteType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * API功能权限标识常量。定义DolphinScheduler各功能模块的权限标识符，
+ * 包括安全管理、项目管理、数据源管理、资源管理、监控中心和任务组等模块的操作权限编码。
+ */
 public class ApiFuncIdentificationConstant {
 
     public static final String ACCESS_TOKEN_MANAGE = "security:token:view";
@@ -156,6 +160,7 @@ public class ApiFuncIdentificationConstant {
 
     public static final String MONITOR_STATISTICS_VIEW = "monitor:statistics:view";
 
+    /** 执行类型与权限标识的映射表，将ExecuteType枚举映射到对应的API功能权限标识符。 */
     public final static Map<ExecuteType,String> map = new HashMap<ExecuteType,String>();
 
     static{

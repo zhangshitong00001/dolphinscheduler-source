@@ -23,22 +23,25 @@ import org.apache.dolphinscheduler.server.master.dispatch.host.assign.RoundRobin
 import java.util.Collection;
 
 /**
- *  round robin host manager
+ * 轮询主机管理器。使用平滑加权轮询算法选择 Worker 节点，确保负载均衡分配。
  */
 public class RoundRobinHostManager extends CommonHostManager {
 
     /**
-     * selector
+     * 平滑加权轮询选择器。
      */
     private final RoundRobinSelector selector;
 
-    /**
-     * set round robin
-     */
     public RoundRobinHostManager() {
         this.selector = new RoundRobinSelector();
     }
 
+    /**
+     * 从候选节点中使用平滑加权轮询算法选择 HostWorker。
+     *
+     * @param nodes 候选节点集合
+     * @return 选中的 HostWorker
+     */
     @Override
     public HostWorker select(Collection<HostWorker> nodes) {
         return selector.select(nodes);

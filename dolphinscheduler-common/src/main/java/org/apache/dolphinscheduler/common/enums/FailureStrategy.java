@@ -20,15 +20,13 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * failure policy when some task node failed.
+ * 失败策略枚举。
+ * 定义工作流中任务节点失败时的处理策略。
  */
 public enum FailureStrategy {
-
-    /**
-     * 0 ending process when some tasks failed.
-     * 1 continue running when some tasks failed.
-     **/
+    /** 失败即结束，当有任务失败时终止整个流程 */
     END(0, "end"),
+    /** 失败继续，当有任务失败时继续运行后续任务 */
     CONTINUE(1, "continue");
 
     FailureStrategy(int code, String descp) {

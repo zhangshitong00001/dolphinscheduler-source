@@ -27,35 +27,44 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
+/**
+ * 告警插件实例 Mapper 接口，封装对 t_ds_alert_plugin_instance 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供告警插件实例的查询、分页及存在性校验能力。
+ */
 public interface AlertPluginInstanceMapper extends BaseMapper<AlertPluginInstance> {
 
     /**
-     * query all alert plugin instance
+     * 查询所有告警插件实例列表。
+     * SELECT * FROM t_ds_alert_plugin_instance
      *
-     * @return AlertPluginInstance list
+     * @return 告警插件实例列表
      */
     List<AlertPluginInstance> queryAllAlertPluginInstanceList();
 
     /**
-     * query by alert group id
+     * 根据告警插件实例ID列表批量查询对应的告警插件实例。
+     * SELECT * FROM t_ds_alert_plugin_instance WHERE id IN (#{ids})
      *
-     * @param ids
-     * @return AlertPluginInstance list
+     * @param ids 告警插件实例ID列表
+     * @return 告警插件实例列表
      */
     List<AlertPluginInstance> queryByIds(@Param("ids") List<Integer> ids);
 
     /**
-     * Query alert plugin instance by given name
-     * @param page                page
-     * @param instanceName         Alert plugin name
-     * @return alertPluginInstance Ipage
+     * 根据实例名称分页查询告警插件实例，支持 LIKE 模糊匹配。
+     *
+     * @param page 分页对象
+     * @param instanceName 告警插件实例名称，用于模糊查询
+     * @return 告警插件实例分页结果
      */
     IPage<AlertPluginInstance> queryByInstanceNamePage(Page page, @Param("instanceName") String instanceName);
 
     /**
+     * 判断指定名称的告警插件实例是否已存在。
+     * SELECT COUNT(*) > 0 FROM t_ds_alert_plugin_instance WHERE instance_name = #{instanceName}
      *
-     * @param instanceName instanceName
-     * @return if exist return true else return null
+     * @param instanceName 实例名称
+     * @return 存在返回 true，否则返回 false
      */
     Boolean existInstanceName(@Param("instanceName") String instanceName);
 }

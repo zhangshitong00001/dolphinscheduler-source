@@ -40,9 +40,9 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.RateLimiter;
 
 /**
- * This interceptor is used to control the traffic, consists with global traffic control and tenant-leve traffic control.
- * If the current coming tenant reaches his tenant-level request quota, his request will be reject fast.
- * If the current system request number reaches the global request quota, all coming request will be reject fast.
+ * 流量控制拦截器。同时支持全局级别的流量控制和租户级别的流量控制。
+ * 当某个租户达到其请求配额时，该租户的请求将被快速拒绝；
+ * 当系统全局请求数达到配额时，所有请求将被快速拒绝。
  */
 public class RateLimitInterceptor implements HandlerInterceptor {
 
@@ -69,6 +69,16 @@ public class RateLimitInterceptor implements HandlerInterceptor {
                 }
             });
 
+    /**
+     * 在请求处理前进行流量控制，依次检查租户级别和全局级别的速率限制。
+     * 如果触发限流，直接设置HTTP 429状态码并拒绝请求。
+     *
+     * @param request  当前HTTP请求
+     * @param response 当前HTTP响应
+     * @param handler  处理器对象
+     * @return 是否放行，true表示未触发限流可以继续处理
+     * @throws ExecutionException 获取租户级别RateLimiter时异常
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ExecutionException {
         // tenant-level rate limit

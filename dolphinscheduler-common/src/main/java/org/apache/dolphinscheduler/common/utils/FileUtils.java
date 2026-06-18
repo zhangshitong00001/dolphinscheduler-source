@@ -38,7 +38,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * file utils
+ * 文件操作工具类，提供文件读写、目录管理、资源路径处理等常用文件操作。
+ * 支持执行目录管理、文件内容读写、目录遍历检测等功能。
+ * 该类为工具类，不可实例化。
  */
 public class FileUtils {
 
@@ -51,10 +53,10 @@ public class FileUtils {
     }
 
     /**
-     * get download file absolute path and name
+     * 获取下载文件的绝对路径和名称，自动创建父目录。
      *
-     * @param filename file name
-     * @return download file name
+     * @param filename 文件名称
+     * @return 带时间戳的下载文件路径
      */
     public static String getDownloadFilename(String filename) {
         String fileName = String.format("%s/download/%s/%s", DATA_BASEDIR, DateUtils.getCurrentTime(YYYYMMDDHHMMSS), filename);
@@ -68,11 +70,11 @@ public class FileUtils {
     }
 
     /**
-     * get upload file absolute path and name
+     * 获取上传文件的绝对路径和名称，根据租户编码分类存储。
      *
-     * @param tenantCode tenant code
-     * @param filename file name
-     * @return local file path
+     * @param tenantCode 租户编码
+     * @param filename 文件名称
+     * @return 上传文件的本地路径
      */
     public static String getUploadFilename(String tenantCode, String filename) {
         String fileName = String.format("%s/%s/resources/%s", DATA_BASEDIR, tenantCode, filename);
@@ -85,15 +87,15 @@ public class FileUtils {
     }
 
     /**
-     * directory of process execution
+     * 获取流程执行的工作目录路径，按照租户、项目、流程定义、实例、任务层级组织。
      *
-     * @param tenant               tenant
-     * @param projectCode          project code
-     * @param processDefineCode    process definition Code
-     * @param processDefineVersion process definition version
-     * @param processInstanceId    process instance id
-     * @param taskInstanceId       task instance id
-     * @return directory of process execution
+     * @param tenant 租户编码
+     * @param projectCode 项目编码
+     * @param processDefineCode 流程定义编码
+     * @param processDefineVersion 流程定义版本
+     * @param processInstanceId 流程实例ID
+     * @param taskInstanceId 任务实例ID
+     * @return 流程执行目录路径
      */
     public static String getProcessExecDir(String tenant,
                                            long projectCode,
@@ -113,17 +115,19 @@ public class FileUtils {
     }
 
     /**
-     * @return get suffixes for resource files that support online viewing
+     * 获取支持在线预览的资源文件后缀名列表。
+     *
+     * @return 资源文件后缀名字符串
      */
     public static String getResourceViewSuffixes() {
         return PropertyUtils.getString(RESOURCE_VIEW_SUFFIXES, RESOURCE_VIEW_SUFFIXES_DEFAULT_VALUE);
     }
 
     /**
-     * create directory if absent
+     * 创建工作目录，如果目录已存在则先删除再创建。
      *
-     * @param execLocalPath execute local path
-     * @throws IOException errors
+     * @param execLocalPath 执行目录的本地路径
+     * @throws IOException IO异常
      */
     public static void createWorkDirIfAbsent(String execLocalPath) throws IOException {
         //if work dir exists, first delete
@@ -148,11 +152,11 @@ public class FileUtils {
     }
 
     /**
-     * write content to file ,if parent path not exists, it will do one's utmost to mkdir
+     * 将内容写入文件，如果父目录不存在则自动创建。
      *
-     * @param content content
-     * @param filePath target file path
-     * @return true if write success
+     * @param content 要写入的文本内容
+     * @param filePath 目标文件路径
+     * @return 写入成功返回true，失败返回false
      */
     public static boolean writeContent2File(String content, String filePath) {
         FileOutputStream fos = null;
@@ -174,26 +178,21 @@ public class FileUtils {
     }
 
     /**
-     * Deletes a file. If file is a directory, delete it and all sub-directories.
-     * <p>
-     * The difference between File.delete() and this method are:
-     * <ul>
-     * <li>A directory to be deleted does not have to be empty.</li>
-     * <li>You get exceptions when a file or directory cannot be deleted.
-     *      (java.io.File methods returns a boolean)</li>
-     * </ul>
+     * 删除文件或目录。如果是目录，则删除该目录及其所有子目录。
+     * 与File.delete()的区别在于：目录不必为空即可删除，且删除失败时不会抛出异常。
      *
-     * @param filename file name
+     * @param filename 文件或目录的路径
      */
     public static void deleteFile(String filename) {
         org.apache.commons.io.FileUtils.deleteQuietly(new File(filename));
     }
 
     /**
-     * Gets all the parent subdirectories of the parentDir directory
+     * 获取指定目录下的所有子目录。
      *
-     * @param parentDir parent dir
-     * @return all dirs
+     * @param parentDir 父目录路径，不能为空
+     * @return 子目录数组
+     * @throws RuntimeException 如果parentDir为空或不是有效目录
      */
     public static File[] getAllDir(String parentDir) {
         if (parentDir == null || "".equals(parentDir)) {
@@ -209,10 +208,11 @@ public class FileUtils {
     }
 
     /**
-     * Get Content
+     * 从输入流中读取内容并转换为字符串。
      *
-     * @param inputStream input stream
-     * @return string of input stream
+     * @param inputStream 输入流
+     * @return 输入流内容的字符串
+     * @throws RuntimeException 读取失败时抛出
      */
     public static String readFile2Str(InputStream inputStream) {
 
@@ -231,11 +231,10 @@ public class FileUtils {
     }
 
     /**
-     * Check whether the given string type of path can be traversal or not, return true if path could
-     * traversal, and return false if it is not.
+     * 检测给定的路径字符串是否存在目录遍历风险。
      *
-     * @param filename String type of filename
-     * @return whether file path could be traversal or not
+     * @param filename 文件路径字符串
+     * @return 如果存在目录遍历风险返回true，否则返回false
      */
     public static boolean directoryTraversal(String filename){
         if (filename.contains(FOLDER_SEPARATOR)) {

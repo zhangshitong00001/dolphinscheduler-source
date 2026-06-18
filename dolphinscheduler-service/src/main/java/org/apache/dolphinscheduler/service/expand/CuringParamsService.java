@@ -29,57 +29,66 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 参数固化服务接口，定义全局参数和本地参数的固化、解析以及时间占位符处理方法。
+ */
 public interface CuringParamsService {
 
     /**
-     * time function need expand
-     * @param placeholderName
-     * @return
+     * 判断时间函数是否需要执行外部扩展。
+     *
+     * @param placeholderName 占位符名称
+     * @return 需要扩展返回true，否则返回false
      */
     boolean timeFunctionNeedExpand(String placeholderName);
 
     /**
-     * time function extension
-     * @param processInstanceId
-     * @param timezone
-     * @param placeholderName
-     * @return
+     * 执行时间函数的外部扩展计算。
+     *
+     * @param processInstanceId 流程实例ID
+     * @param timezone 时区
+     * @param placeholderName 占位符名称
+     * @return 扩展计算后的结果字符串
      */
     String timeFunctionExtension(Integer processInstanceId, String timezone, String placeholderName);
 
     /**
-     * convert parameter placeholders
-     * @param val
-     * @param allParamMap
-     * @return
+     * 转换参数中的占位符为实际值。
+     *
+     * @param val 包含占位符的原始值
+     * @param allParamMap 所有参数的映射表
+     * @return 替换占位符后的字符串
      */
     String convertParameterPlaceholders(String val, Map<String, String> allParamMap);
 
     /**
-     * curing global params
-     * @param processInstanceId
-     * @param globalParamMap
-     * @param globalParamList
-     * @param commandType
-     * @param scheduleTime
-     * @param timezone
-     * @return
+     * 固化全局参数，将时间函数和占位符替换为实际值。
+     *
+     * @param processInstanceId 流程实例ID
+     * @param globalParamMap 全局参数映射表
+     * @param globalParamList 全局参数列表
+     * @param commandType 命令类型
+     * @param scheduleTime 调度时间
+     * @param timezone 时区
+     * @return 固化后的全局参数JSON字符串
      */
     String curingGlobalParams(Integer processInstanceId, Map<String, String> globalParamMap, List<Property> globalParamList, CommandType commandType, Date scheduleTime, String timezone);
 
     /**
-     * param parsing preparation
-     * @param parameters
-     * @param taskInstance
-     * @param processInstance
-     * @return
+     * 参数解析准备，在Worker端合并全局参数和本地参数并完成占位符替换。
+     *
+     * @param taskInstance 任务实例
+     * @param parameters 任务参数
+     * @param processInstance 流程实例
+     * @return 合并后的参数映射表
      */
     Map<String, Property> paramParsingPreparation(@NonNull TaskInstance taskInstance, @NonNull AbstractParameters parameters, @NonNull ProcessInstance processInstance);
 
     /**
-     * preBuildBusinessParams
-     * @param processInstance
-     * @return
+     * 预构建业务参数，提取流程实例中的时间相关参数。
+     *
+     * @param processInstance 流程实例
+     * @return 业务参数映射表
      */
     Map<String, Property> preBuildBusinessParams(ProcessInstance processInstance);
 }

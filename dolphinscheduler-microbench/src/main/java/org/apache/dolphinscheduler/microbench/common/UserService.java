@@ -20,16 +20,28 @@ package org.apache.dolphinscheduler.microbench.common;
 import org.apache.dolphinscheduler.rpc.base.RpcService;
 
 /**
- * UserService
+ * RPC用户服务实现。提供 {@code say} 和 {@code hi} 两个测试方法，用于RPC性能基准测试。
  */
 @RpcService("IUserService")
 public class UserService implements IUserService {
 
+    /**
+     * 输出传入的字符串并返回true。
+     *
+     * @param s 输入的字符串
+     * @return 始终返回 {@code true}
+     */
     @Override
     public Boolean say(String s) {
         return true;
     }
 
+    /**
+     * 返回传入数值加1的结果。
+     *
+     * @param num 输入的整数
+     * @return 输入值加1
+     */
     @Override
     public Integer hi(int num) {
         return ++num;

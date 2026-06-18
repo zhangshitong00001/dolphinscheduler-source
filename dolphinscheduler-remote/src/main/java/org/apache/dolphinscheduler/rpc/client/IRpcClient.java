@@ -20,10 +20,19 @@ package org.apache.dolphinscheduler.rpc.client;
 import org.apache.dolphinscheduler.remote.utils.Host;
 
 /**
- * IRpcClient
+ * RPC客户端接口。定义创建RPC服务代理的标准方法。
  */
 public interface IRpcClient {
 
+    /**
+     * 创建指定接口的RPC代理实例，后续对该代理的方法调用将自动转换为远程调用。
+     *
+     * @param <T> 服务接口类型
+     * @param clazz 服务接口类
+     * @param host 目标主机
+     * @return RPC代理实例
+     * @throws Exception Exception
+     */
     <T> T create(Class<T> clazz, Host host) throws Exception;
 
 }

@@ -33,23 +33,18 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
+/**
+ * Worker任务执行服务，封装了ListeningExecutorService以支持任务提交和回调处理。
+ * 维护正在运行的任务映射表，并在任务完成或失败时自动从映射表中移除。
+ */
 public class WorkerExecService {
 
-    /**
-     * logger of WorkerExecService
-     */
     private static final Logger logger = LoggerFactory.getLogger(WorkerExecService.class);
 
     private final ListeningExecutorService listeningExecutorService;
 
-    /**
-     * thread executor service
-     */
     private final ExecutorService execService;
 
-    /**
-     * running task
-     */
     private final ConcurrentHashMap<Integer, WorkerTaskExecuteRunnable> taskExecuteThreadMap;
 
     public WorkerExecService(ExecutorService execService,
@@ -60,6 +55,11 @@ public class WorkerExecService {
         WorkerServerMetrics.registerWorkerRunningTaskGauge(taskExecuteThreadMap::size);
     }
 
+    /**
+     * 提交一个任务执行线程到线程池，并注册完成/失败回调以清理任务映射表。
+     *
+     * @param taskExecuteThread 要提交的任务执行Runnable
+     */
     public void submit(final WorkerTaskExecuteRunnable taskExecuteThread) {
         taskExecuteThreadMap.put(taskExecuteThread.getTaskExecutionContext().getTaskInstanceId(), taskExecuteThread);
         ListenableFuture future = this.listeningExecutorService.submit(taskExecuteThread);
@@ -83,7 +83,7 @@ public class WorkerExecService {
     }
 
     /**
-     * get thread pool queue size
+     * 获取线程池队列大小。
      *
      * @return queue size
      */

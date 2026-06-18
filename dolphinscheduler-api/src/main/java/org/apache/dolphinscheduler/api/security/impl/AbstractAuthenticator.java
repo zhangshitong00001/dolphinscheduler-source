@@ -37,6 +37,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * 抽象认证器。实现认证流程的核心逻辑：调用子类的login方法进行凭证验证，检查用户状态，
+ * 创建会话并返回认证结果。子类只需实现具体的登录逻辑（如密码验证、LDAP验证）。
+ *
+ * 认证流程：
+ * 1. 调用子类login()方法验证用户名密码
+ * 2. 检查用户状态是否启用
+ * 3. 创建Session会话
+ * 4. 返回包含sessionId和安全配置类型的认证结果
+ */
 public abstract class AbstractAuthenticator implements Authenticator {
     private static final Logger logger = LoggerFactory.getLogger(AbstractAuthenticator.class);
 
@@ -50,12 +60,12 @@ public abstract class AbstractAuthenticator implements Authenticator {
     private SecurityConfig securityConfig;
 
     /**
-     * user login and return user in db
+     * 子类实现具体的用户登录逻辑，通过用户名和密码在数据库或LDAP中验证用户。
      *
-     * @param userId user identity field
-     * @param password user login password
-     * @param extra extra user login field
-     * @return user object in databse
+     * @param userId   用户身份标识
+     * @param password 用户登录密码
+     * @param extra    额外登录信息
+     * @return 数据库中的用户对象，验证失败返回null
      */
     public abstract User login(String userId, String password, String extra);
 

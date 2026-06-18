@@ -29,104 +29,107 @@ import java.util.Date;
 
 import lombok.Data;
 
+/**
+ * 调度视图对象。用于返回调度配置的前端展示数据，包含流程定义信息、定时策略、告警配置等。
+ */
 @Data
 public class ScheduleVo {
 
     private int id;
 
     /**
-     * process definition code
+     * 流程定义Code
      */
     private long processDefinitionCode;
 
     /**
-     * process definition name
+     * 流程定义名称
      */
     private String processDefinitionName;
 
     /**
-     * project name
+     * 项目名称
      */
     private String projectName;
 
     /**
-     * schedule description
+     * 调度描述
      */
     private String definitionDescription;
 
     /**
-     * schedule start time
+     * 调度开始时间
      */
     private String startTime;
 
     /**
-     * schedule end time
+     * 调度结束时间
      */
     private String endTime;
 
     /**
-     * timezoneId
+     * 时区ID
      * <p>see {@link java.util.TimeZone#getTimeZone(String)}
      */
     private String timezoneId;
 
     /**
-     * crontab expression
+     * Crontab表达式
      */
     private String crontab;
 
     /**
-     * failure strategy
+     * 失败策略
      */
     private FailureStrategy failureStrategy;
 
     /**
-     * warning type
+     * 告警类型
      */
     private WarningType warningType;
 
     /**
-     * create time
+     * 创建时间
      */
     private Date createTime;
 
     /**
-     * update time
+     * 更新时间
      */
     private Date updateTime;
 
     /**
-     * created user id
+     * 创建用户ID
      */
     private int userId;
 
     /**
-     * created user name
+     * 创建用户名
      */
     private String userName;
 
     /**
-     * release state
+     * 发布状态
      */
     private ReleaseState releaseState;
 
     /**
-     * warning group id
+     * 告警组ID
      */
     private int warningGroupId;
 
     /**
-     * process instance priority
+     * 流程实例优先级
      */
     private Priority processInstancePriority;
 
     /**
-     *  worker group
+     * Worker分组
      */
     private String workerGroup;
 
     /**
-     * environment code
+     * 环境Code
      */
     private Long environmentCode;
 

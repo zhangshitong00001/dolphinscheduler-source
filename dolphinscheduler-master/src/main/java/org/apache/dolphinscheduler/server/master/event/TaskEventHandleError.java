@@ -17,6 +17,9 @@
 
 package org.apache.dolphinscheduler.server.master.event;
 
+/**
+ * 任务事件处理错误异常。表示任务事件处理过程中发生不可恢复的错误，当捕获此异常时，系统将丢弃该事件，不会重试。
+ */
 public class TaskEventHandleError extends Exception {
 
     public TaskEventHandleError(String message) {

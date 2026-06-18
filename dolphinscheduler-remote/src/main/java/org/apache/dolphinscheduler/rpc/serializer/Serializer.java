@@ -19,10 +19,31 @@ package org.apache.dolphinscheduler.rpc.serializer;
 
 import java.io.IOException;
 
+/**
+ * RPC 序列化器接口。定义 RPC 协议中对象的序列化与反序列化契约。
+ * 实现类需提供具体的二进制编解码方案（如 ProtoStuff、Kryo、Hessian 等）。
+ */
 public interface Serializer {
 
+    /**
+     * 将对象序列化为字节数组。
+     *
+     * @param obj 待序列化的对象
+     * @param <T> 对象类型
+     * @return 序列化后的字节数组
+     * @throws IOException 序列化过程中的 I/O 异常
+     */
     <T> byte[] serialize(T obj) throws IOException;
 
+    /**
+     * 将字节数组反序列化为指定类型的对象。
+     *
+     * @param data 待反序列化的字节数组
+     * @param clz 目标类型
+     * @param <T> 泛型类型
+     * @return 反序列化后的对象
+     * @throws IOException 反序列化过程中的 I/O 异常
+     */
     <T> T deserialize(byte[] data, Class<T> clz) throws IOException;
 
 }

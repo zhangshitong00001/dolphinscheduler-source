@@ -19,8 +19,13 @@ package org.apache.dolphinscheduler.dao.entity;
 
 import java.util.Objects;
 
+/**
+ * 工作流关系实体，描述两个工作流之间的上下游依赖关系。
+ */
 public class WorkFlowRelation {
+    /** 源工作流编码 */
     private long sourceWorkFlowCode;
+    /** 目标工作流编码 */
     private long targetWorkFlowCode;
 
     public long getSourceWorkFlowCode() {

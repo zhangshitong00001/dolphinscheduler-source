@@ -51,7 +51,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import static org.apache.dolphinscheduler.api.constants.ApiFuncIdentificationConstant.*;
 
 /**
- * alert group service impl
+ * 告警组服务实现类。负责告警组的增删改查和权限管理，告警组关联告警插件实例，用于任务告警通知的分组管理。
  */
 @Service
 public class AlertGroupServiceImpl extends BaseServiceImpl implements AlertGroupService {
@@ -62,10 +62,10 @@ public class AlertGroupServiceImpl extends BaseServiceImpl implements AlertGroup
     private AlertGroupMapper alertGroupMapper;
 
     /**
-     * query alert group list
+     * 查询告警组列表。管理员可查看所有告警组，普通用户仅查看有权限的告警组。
      *
-     * @param loginUser
-     * @return alert group list
+     * @param loginUser 当前登录用户
+     * @return 包含告警组列表的结果Map
      */
     @Override
     public Map<String, Object> queryAlertgroup(User loginUser) {
@@ -88,11 +88,11 @@ public class AlertGroupServiceImpl extends BaseServiceImpl implements AlertGroup
     }
 
     /**
-     * query alert group by id
+     * 根据ID查询告警组详情，需要告警组查看权限。
      *
-     * @param loginUser login user
-     * @param id alert group id
-     * @return one alert group
+     * @param loginUser 当前登录用户
+     * @param id 告警组ID
+     * @return 包含告警组详情的结果Map
      */
     @Override
     public Map<String, Object> queryAlertGroupById(User loginUser, Integer id) {
@@ -116,13 +116,13 @@ public class AlertGroupServiceImpl extends BaseServiceImpl implements AlertGroup
     }
 
     /**
-     * paging query alarm group list
+     * 分页查询告警组列表，支持搜索过滤和权限控制。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return alert group list page
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索关键字
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 包含分页告警组列表的结果对象
      */
     @Override
     public Result listPaging(User loginUser, String searchVal, Integer pageNo, Integer pageSize) {
@@ -151,13 +151,13 @@ public class AlertGroupServiceImpl extends BaseServiceImpl implements AlertGroup
     }
 
     /**
-     * create alert group
+     * 创建告警组。需要告警组创建权限，组名不能重复，创建后执行权限后置处理。
      *
-     * @param loginUser login user
-     * @param groupName group name
-     * @param desc description
-     * @param alertInstanceIds alertInstanceIds
-     * @return create result code
+     * @param loginUser 当前登录用户
+     * @param groupName 告警组名称
+     * @param desc 描述信息
+     * @param alertInstanceIds 告警插件实例ID列表（逗号分隔）
+     * @return 包含创建结果的结果Map
      */
     @Override
     @Transactional
@@ -201,14 +201,14 @@ public class AlertGroupServiceImpl extends BaseServiceImpl implements AlertGroup
     }
 
     /**
-     * updateProcessInstance alert group
+     * 更新告警组信息。需要告警组更新权限，更新时检查组名唯一性。
      *
-     * @param loginUser login user
-     * @param id alert group id
-     * @param groupName group name
-     * @param desc description
-     * @param alertInstanceIds alertInstanceIds
-     * @return update result code
+     * @param loginUser 当前登录用户
+     * @param id 告警组ID
+     * @param groupName 新的告警组名称
+     * @param desc 新的描述信息
+     * @param alertInstanceIds 新的告警插件实例ID列表
+     * @return 包含更新结果的结果Map
      */
     @Override
     public Map<String, Object> updateAlertgroup(User loginUser, int id, String groupName, String desc, String alertInstanceIds) {
@@ -250,11 +250,11 @@ public class AlertGroupServiceImpl extends BaseServiceImpl implements AlertGroup
     }
 
     /**
-     * delete alert group by id
+     * 根据ID删除告警组。需要告警组删除权限，不允许删除默认告警组（ID=1）。
      *
-     * @param loginUser login user
-     * @param id alert group id
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param id 告警组ID
+     * @return 包含删除结果的结果Map
      */
     @Override
     @Transactional
@@ -287,10 +287,10 @@ public class AlertGroupServiceImpl extends BaseServiceImpl implements AlertGroup
     }
 
     /**
-     * verify group name exists
+     * 检查告警组名称是否已存在。
      *
-     * @param groupName group name
-     * @return check result code
+     * @param groupName 告警组名称
+     * @return true表示已存在，false表示不存在
      */
     @Override
     public boolean existGroupName(String groupName) {

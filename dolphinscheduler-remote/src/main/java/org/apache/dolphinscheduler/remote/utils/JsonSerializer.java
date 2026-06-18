@@ -27,9 +27,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * json serialize or deserialize
+ * JSON序列化/反序列化工具类。基于Jackson实现对象与字节数组、字符串之间的转换。
  */
 public class JsonSerializer {
+    /**
+     * Jackson ObjectMapper实例
+     */
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(JsonSerializer.class);
 
@@ -38,7 +41,7 @@ public class JsonSerializer {
     }
 
     /**
-     * serialize to byte
+     * 将对象序列化为字节数组。
      *
      * @param obj object
      * @param <T> object type
@@ -56,7 +59,7 @@ public class JsonSerializer {
     }
 
     /**
-     * serialize to string
+     * 将对象序列化为JSON字符串。
      *
      * @param obj object
      * @param <T> object type
@@ -74,7 +77,7 @@ public class JsonSerializer {
     }
 
     /**
-     * deserialize
+     * 将字节数组反序列化为指定类型的对象。
      *
      * @param src byte array
      * @param clazz class

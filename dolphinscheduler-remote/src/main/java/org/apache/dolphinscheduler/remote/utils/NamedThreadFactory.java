@@ -20,19 +20,22 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- *  thread factory
+ * 命名线程工厂。创建具有规范命名格式的守护线程，支持设置线程总数以实现分组编号。
  */
 public class NamedThreadFactory implements ThreadFactory {
 
+    /**
+     * 线程编号递增计数器
+     */
     private final AtomicInteger increment = new AtomicInteger(1);
 
     /**
-     *  name
+     * 线程名称前缀
      */
     private final String name;
 
     /**
-     *  count
+     * 线程总数（用于分组编号，0表示不分组）
      */
     private final int count;
 
@@ -46,7 +49,8 @@ public class NamedThreadFactory implements ThreadFactory {
     }
 
     /**
-     *  create thread
+     * 创建具有命名格式的守护线程。格式为 name_N 或 name_count_N。
+     *
      * @param r runnable
      * @return thread
      */

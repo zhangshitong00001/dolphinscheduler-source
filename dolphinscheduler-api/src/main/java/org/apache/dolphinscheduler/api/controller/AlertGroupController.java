@@ -59,7 +59,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * alert group controller
+ * 告警组控制器。提供告警组的增删改查REST API，包括创建告警组、分页查询、详情查询、更新和删除操作。
  */
 @Api(tags = "ALERT_GROUP_TAG")
 @RestController
@@ -72,12 +72,12 @@ public class AlertGroupController extends BaseController {
     private AlertGroupService alertGroupService;
 
     /**
-     * create alert group
+     * 创建告警组。
      *
-     * @param loginUser login user
-     * @param groupName group name
-     * @param description description
-     * @return create result code
+     * @param loginUser 当前登录用户
+     * @param groupName 告警组名称
+     * @param description 告警组描述
+     * @return 创建结果状态码
      */
     @ApiOperation(value = "createAlertgroup", notes = "CREATE_ALERT_GROUP_NOTES")
     @ApiImplicitParams({
@@ -99,10 +99,10 @@ public class AlertGroupController extends BaseController {
     }
 
     /**
-     * alert group list
+     * 查询告警组列表。
      *
-     * @param loginUser login user
-     * @return alert group list
+     * @param loginUser 当前登录用户
+     * @return 告警组列表
      */
     @ApiOperation(value = "listAlertgroupById", notes = "QUERY_ALERT_GROUP_LIST_NOTES")
     @GetMapping(value = "/list")
@@ -116,13 +116,13 @@ public class AlertGroupController extends BaseController {
     }
 
     /**
-     * paging query alarm group list
+     * 分页查询告警组列表。
      *
-     * @param loginUser login user
-     * @param pageNo page number
-     * @param searchVal search value
-     * @param pageSize page size
-     * @return alert group list page
+     * @param loginUser 当前登录用户
+     * @param pageNo 页码
+     * @param searchVal 搜索值
+     * @param pageSize 每页大小
+     * @return 告警组分页列表
      */
     @ApiOperation(value = "queryAlertGroupListPaging", notes = "QUERY_ALERT_GROUP_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -146,11 +146,11 @@ public class AlertGroupController extends BaseController {
         return alertGroupService.listPaging(loginUser, searchVal, pageNo, pageSize);
     }
     /**
-     * check alarm group detail by Id
+     * 根据ID查询告警组详情。
      *
-     * @param loginUser login user
-     * @param id alert group id
-     * @return one alert group
+     * @param loginUser 当前登录用户
+     * @param id 告警组ID
+     * @return 告警组详情
      */
 
     @ApiOperation(value = "queryAlertGroupById", notes = "QUERY_ALERT_GROUP_BY_ID_NOTES")
@@ -169,13 +169,13 @@ public class AlertGroupController extends BaseController {
     }
 
     /**
-     * updateProcessInstance alert group
+     * 更新告警组信息。
      *
-     * @param loginUser login user
-     * @param id alert group id
-     * @param groupName group name
-     * @param description description
-     * @return update result code
+     * @param loginUser 当前登录用户
+     * @param id 告警组ID
+     * @param groupName 告警组名称
+     * @param description 告警组描述
+     * @return 更新结果状态码
      */
     @ApiOperation(value = "updateAlertgroup", notes = "UPDATE_ALERT_GROUP_NOTES")
     @ApiImplicitParams({
@@ -200,11 +200,11 @@ public class AlertGroupController extends BaseController {
     }
 
     /**
-     * delete alert group by id
+     * 根据ID删除告警组。
      *
-     * @param loginUser login user
-     * @param id alert group id
-     * @return delete result code
+     * @param loginUser 当前登录用户
+     * @param id 告警组ID
+     * @return 删除结果状态码
      */
     @ApiOperation(value = "delAlertgroupById", notes = "DELETE_ALERT_GROUP_BY_ID_NOTES")
     @ApiImplicitParams({
@@ -221,11 +221,11 @@ public class AlertGroupController extends BaseController {
     }
 
     /**
-     * check alert group exist
+     * 检查告警组名称是否存在。
      *
-     * @param loginUser login user
-     * @param groupName group name
-     * @return check result code
+     * @param loginUser 当前登录用户
+     * @param groupName 告警组名称
+     * @return 校验结果状态码
      */
     @ApiOperation(value = "verifyGroupName", notes = "VERIFY_ALERT_GROUP_NAME_NOTES")
     @ApiImplicitParams({

@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Service;
 
 /**
- * A singleton of a task queue implemented using PriorityBlockingQueue
+ * 任务优先级队列的单例实现，基于 PriorityBlockingQueue。该队列是无界的，当内存过高时Master会停止生成任务以避免内存溢出。
  */
 @Service
 public class TaskPriorityQueueImpl implements TaskPriorityQueue<TaskPriority> {

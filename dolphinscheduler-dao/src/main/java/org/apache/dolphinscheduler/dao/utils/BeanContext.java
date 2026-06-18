@@ -23,7 +23,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 /**
- *  bean context
+ * Spring Bean 上下文工具类，通过实现 ApplicationContextAware 接口持有全局 ApplicationContext 实例，
+ * 提供静态方法便捷获取 Spring 容器中的 Bean 对象。
  */
 @Component
 public class BeanContext implements ApplicationContextAware {
@@ -34,7 +35,8 @@ public class BeanContext implements ApplicationContextAware {
     }
 
     /**
-     * get bean
+     * 根据 Bean 名称从 Spring 容器中获取指定类型的 Bean。
+     *
      * @param name class name
      * @param <T> generic
      * @return target object
@@ -46,7 +48,8 @@ public class BeanContext implements ApplicationContextAware {
     }
 
     /**
-     * get bean
+     * 根据类类型从 Spring 容器中获取对应的 Bean。
+     *
      * @param clazz clazz
      * @param <T> generic
      * @return target object
@@ -58,7 +61,8 @@ public class BeanContext implements ApplicationContextAware {
 
 
     /**
-     * set applicationcontext
+     * 设置 Spring 应用上下文实例（由 Spring 容器自动调用）。
+     *
      * @param applicationContext applicationContext
      * @throws BeansException if error throws BeansException
      */

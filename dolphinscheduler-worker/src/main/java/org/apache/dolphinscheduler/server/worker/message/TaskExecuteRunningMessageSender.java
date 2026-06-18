@@ -30,6 +30,10 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 任务执行运行中消息发送器。负责在任务开始执行时，构建任务运行状态消息并发送给Master，
+ * 通知Master该任务已开始运行，包含任务实例ID、执行状态、日志路径、主机信息和应用ID等。
+ */
 @Component
 public class TaskExecuteRunningMessageSender implements MessageSender<TaskExecuteRunningCommand> {
 
@@ -39,11 +43,25 @@ public class TaskExecuteRunningMessageSender implements MessageSender<TaskExecut
     @Autowired
     private WorkerConfig workerConfig;
 
+    /**
+     * 发送任务执行运行中消息。通过RPC客户端将消息发送到指定的Master地址。
+     *
+     * @param message 任务执行运行中消息
+     * @throws RemotingException 无法连接到目标主机时抛出
+     */
     @Override
     public void sendMessage(TaskExecuteRunningCommand message) throws RemotingException {
         workerRpcClient.send(Host.of(message.getMessageReceiverAddress()), message.convert2Command());
     }
 
+    /**
+     * 构建任务执行运行中消息。从任务执行上下文中提取任务实例ID、流程实例ID、执行状态、
+     * 日志路径、主机地址、开始时间、执行路径和应用ID等信息，封装为运行状态消息命令。
+     *
+     * @param taskExecutionContext 任务执行上下文
+     * @param messageReceiverAddress 消息接收方（Master）的地址
+     * @return 任务执行运行中消息命令
+     */
     public TaskExecuteRunningCommand buildMessage(@NonNull TaskExecutionContext taskExecutionContext,
                                                   @NonNull String messageReceiverAddress) {
         TaskExecuteRunningCommand taskExecuteRunningMessage =
@@ -61,6 +79,11 @@ public class TaskExecuteRunningMessageSender implements MessageSender<TaskExecut
         return taskExecuteRunningMessage;
     }
 
+    /**
+     * 获取此发送器对应的命令类型。
+     *
+     * @return TASK_EXECUTE_RUNNING 命令类型
+     */
     @Override
     public CommandType getMessageType() {
         return CommandType.TASK_EXECUTE_RUNNING;

@@ -33,18 +33,17 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.KeyDeserializer;
 import com.google.common.base.Strings;
 
+/**
+ * UDF 函数实体，映射到 t_ds_udfs 表，存储用户自定义函数元数据。
+ */
 @Data
 @TableName("t_ds_udfs")
 public class UdfFunc {
 
-    /**
-     * id
-     */
+    /** UDF 函数主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
-    /**
-     * user id
-     */
+    /** 用户 ID */
     private int userId;
 
     public String getResourceType() {
@@ -55,61 +54,40 @@ public class UdfFunc {
         this.resourceType = "UDF";
     }
 
+    /** 非数据库字段：资源类型 */
     @TableField(exist = false)
     private String resourceType = "UDF";
-    /**
-     * udf function name
-     */
+    /** UDF 函数名称 */
     private String funcName;
 
-    /**
-     * udf class name
-     */
+    /** UDF 类全限定名 */
     private String className;
 
-    /**
-     * udf argument types
-     */
+    /** UDF 参数类型列表 */
     private String argTypes;
 
-    /**
-     * udf data base
-     */
+    /** UDF 数据库 */
     private String database;
 
-    /**
-     * udf description
-     */
+    /** UDF 函数描述 */
     private String description;
 
-    /**
-     * resource id
-     */
+    /** 资源 ID */
     private int resourceId;
 
-    /**
-     * resource name
-     */
+    /** 资源名称 */
     private String resourceName;
 
-    /**
-     * udf function type: hive / spark
-     */
+    /** UDF 函数类型：Hive 或 Spark */
     private UdfType type;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 
-    /**
-     * user name
-     */
+    /** 非数据库字段：用户名 */
     @TableField(exist = false)
     private String userName;
 

@@ -1,0 +1,33 @@
+<%- aslTs %>
+interface ListReq {
+  pageNo: number
+  pageSize: number
+  searchVal?: string
+}
+
+interface <%= naming.pascal %>Req {
+<% fields.filter(f => f.required).forEach(function(field, index) { -%>
+  <%= field.name %>?: <%= tsType(field.type) %>
+<% }); -%>
+}
+
+interface <%= naming.pascal %>Resp {
+  code: number
+  msg: string
+  data: {
+    total: number
+    totalPage: number
+    totalList: Array<{
+      id: number
+<% fields.forEach(function(field) { -%>
+      <%= field.name %>: <%= tsType(field.type) %>
+<% }); -%>
+      createTime: string
+      updateTime: string
+    }>
+  }
+}
+
+type IdReq = number
+
+export type { ListReq, <%= naming.pascal %>Req, <%= naming.pascal %>Resp, IdReq }

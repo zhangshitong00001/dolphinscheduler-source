@@ -32,7 +32,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * the factory to create task processor
+ * 任务处理器工厂类，通过 SPI 机制注册和创建各类任务处理器实例。
+ * 在类加载时扫描所有 ITaskProcessor 的实现，按类型存储构造器，
+ * 运行时根据任务类型反射创建对应的处理器实例。
+ * 若未找到匹配类型，则默认使用 CommonTaskProcessor。
  */
 @UtilityClass
 public final class TaskProcessorFactory {
@@ -56,6 +59,15 @@ public final class TaskProcessorFactory {
         }
     }
 
+    /**
+     * 根据任务类型获取对应的任务处理器实例。
+     *
+     * @param type 任务类型
+     * @return 任务处理器实例
+     * @throws InvocationTargetException 反射调用异常
+     * @throws InstantiationException    实例化异常
+     * @throws IllegalAccessException    访问权限异常
+     */
     public static ITaskProcessor getTaskProcessor(String type) throws InvocationTargetException, InstantiationException, IllegalAccessException {
         if (StringUtils.isEmpty(type)) {
             type = DEFAULT_PROCESSOR;
@@ -69,10 +81,10 @@ public final class TaskProcessorFactory {
     }
 
     /**
-     * if match master processor, then this task type is processed on the master
+     * 判断指定类型的任务是否为 Master 本地执行的任务。
      *
-     * @param type
-     * @return
+     * @param type 任务类型
+     * @return 如果已在 PROCESS_MAP 中注册则返回 true，表示是 Master 本地任务
      */
     public static boolean isMasterTask(String type) {
         return PROCESS_MAP.containsKey(type);

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * k8s namespace service impl
+ * K8s命名空间服务接口。提供K8s命名空间的CRUD操作、权限验证和授权管理功能。
  */
 public interface K8sNamespaceService {
 

@@ -18,12 +18,21 @@
 package org.apache.dolphinscheduler.common.enums;
 
 /**
- * cycle enums
+ * 周期枚举。
+ * 定义定时调度的周期单位。
  */
 public enum CycleEnum {
-    /**
-     * 0 minute; 1 hour; 2 day; 3 week; 4 month; 5 year;
-     */
-    MINUTE, HOUR, DAY, WEEK, MONTH, YEAR
+    /** 分钟 */
+    MINUTE,
+    /** 小时 */
+    HOUR,
+    /** 天 */
+    DAY,
+    /** 周 */
+    WEEK,
+    /** 月 */
+    MONTH,
+    /** 年 */
+    YEAR
 
 }

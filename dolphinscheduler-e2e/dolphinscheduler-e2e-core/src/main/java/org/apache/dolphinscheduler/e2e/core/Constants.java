@@ -24,18 +24,12 @@ import java.nio.file.Paths;
 
 @UtilityClass
 public final class Constants {
-    /**
-     * tmp directory path
-     */
+    /** 宿主机临时目录路径 */
     public static final Path HOST_TMP_PATH = Paths.get(System.getProperty("java.io.tmpdir"));
 
-    /**
-     * chrome download path in host
-     */
+    /** 宿主机上的Chrome下载目录路径 */
     public static final Path HOST_CHROME_DOWNLOAD_PATH = HOST_TMP_PATH.resolve("download");
 
-    /**
-     * chrome download path in selenium/standalone-chrome-debug container
-     */
+    /** Selenium容器内的Chrome下载目录路径 */
     public static final String SELENIUM_CONTAINER_CHROME_DOWNLOAD_PATH = "/home/seluser/Downloads";
 }

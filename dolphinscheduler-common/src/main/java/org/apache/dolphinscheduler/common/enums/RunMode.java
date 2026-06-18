@@ -20,14 +20,13 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * complement data run mode
+ * 补数运行模式枚举。
+ * 定义补数任务时的运行模式：串行或并行。
  */
 public enum  RunMode {
-    /**
-     * 0 serial run
-     * 1 parallel run
-     * */
+    /** 串行运行 */
     RUN_MODE_SERIAL(0, "serial run"),
+    /** 并行运行 */
     RUN_MODE_PARALLEL(1, "parallel run");
 
     RunMode(int code, String descp) {

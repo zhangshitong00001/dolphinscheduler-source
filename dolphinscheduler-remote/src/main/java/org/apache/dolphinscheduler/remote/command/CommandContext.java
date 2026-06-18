@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *  command context
+ * 命令上下文。用于在Netty RPC通信中携带键值对形式的附属信息，支持序列化为JSON字节数组进行传输。
  */
 public class CommandContext implements Serializable {
 

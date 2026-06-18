@@ -17,12 +17,18 @@
 
 package org.apache.dolphinscheduler.spi.params.base;
 
+/**
+ * 组件属性类型枚举，定义输入框的展现形式。
+ */
 public enum PropsType {
 
+    /** 普通文本输入 */
     INPUT("input"),
 
+    /** 密码输入（内容会被遮蔽） */
     PASSWORD("password"),
 
+    /** 多行文本输入 */
     TEXTAREA("textarea");
 
     private String propsType;

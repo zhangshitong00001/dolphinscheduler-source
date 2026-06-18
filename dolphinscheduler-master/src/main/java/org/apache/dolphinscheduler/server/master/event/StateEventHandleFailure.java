@@ -18,8 +18,7 @@
 package org.apache.dolphinscheduler.server.master.event;
 
 /**
- * This exception represent the exception can be recovered, when we get this exception,
- * we will move the event to the fail of the queue.
+ * 状态事件处理失败异常。表示可恢复的异常，当捕获此异常时，系统将该事件移动到失败队列中等待后续处理。
  */
 public class StateEventHandleFailure extends Exception {
 

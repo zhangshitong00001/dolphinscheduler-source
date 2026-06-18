@@ -32,33 +32,58 @@ import org.springframework.cache.annotation.Cacheable;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
- * worker group mapper interface
+ * Worker 分组 Mapper 接口，封装对 t_ds_worker_group 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供 Worker 分组的全量查询、按名称精确查询及缓存管理等能力。
+ * 查询结果使用 Spring Cache 缓存，缓存名称为 "workerGroup"。
  */
 @CacheConfig(cacheNames = "workerGroup", keyGenerator = "cacheKeyGenerator")
 public interface WorkerGroupMapper extends BaseMapper<WorkerGroup> {
 
     /**
-     * query all worker group
+     * 查询所有 Worker 分组列表，结果会被缓存以提高性能。
+     * SELECT * FROM t_ds_worker_group
      *
-     * @return worker group list
+     * @return 所有 Worker 分组列表
      */
     @Cacheable(sync = true, key = CACHE_KEY_VALUE_ALL)
     List<WorkerGroup> queryAllWorkerGroup();
 
+    /**
+     * 根据主键ID删除 Worker 分组，同时清除全部缓存。
+     * DELETE FROM t_ds_worker_group WHERE id = #{id}
+     *
+     * @param id Worker 分组ID
+     * @return 受影响的行数
+     */
     @CacheEvict(key = CACHE_KEY_VALUE_ALL)
     int deleteById(Integer id);
 
+    /**
+     * 新增 Worker 分组记录，同时清除全部缓存。
+     * INSERT INTO t_ds_worker_group (...) VALUES (...)
+     *
+     * @param entity Worker 分组实体
+     * @return 受影响的行数
+     */
     @CacheEvict(key = CACHE_KEY_VALUE_ALL)
     int insert(WorkerGroup entity);
 
+    /**
+     * 根据 Worker 分组实体更新信息，同时清除全部缓存。
+     * UPDATE t_ds_worker_group SET ... WHERE id = #{et.id}
+     *
+     * @param entity 包含更新信息的 Worker 分组实体
+     * @return 受影响的行数
+     */
     @CacheEvict(key = CACHE_KEY_VALUE_ALL)
     int updateById(@Param("et") WorkerGroup entity);
 
     /**
-     * query worer grouop by name
+     * 根据名称模糊查询 Worker 分组列表。
+     * SELECT * FROM t_ds_worker_group WHERE name LIKE CONCAT('%', #{name}, '%')
      *
-     * @param name name
-     * @return worker group list
+     * @param name Worker 分组名称
+     * @return 匹配的 Worker 分组列表
      */
     List<WorkerGroup> queryWorkerGroupByName(@Param("name") String name);
 

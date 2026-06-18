@@ -47,7 +47,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.auto.service.AutoService;
 
 /**
- * subtask processor
+ * 子流程任务处理器，负责管理嵌套工作流（子流程）的执行。
+ * 在 Master 本地管理子工作流实例的生命周期，包括创建子流程、监控其执行状态、
+ * 处理子流程的输出参数传递、暂停/终止子流程等。
+ * 子流程的最终状态会影响父任务的状态。
  */
 @AutoService(ITaskProcessor.class)
 public class SubTaskProcessor extends BaseTaskProcessor {
@@ -55,7 +58,7 @@ public class SubTaskProcessor extends BaseTaskProcessor {
     private ProcessInstance subProcessInstance = null;
 
     /**
-     * run lock
+     * 运行锁，保证运行状态的线程安全。
      */
     private final Lock runLock = new ReentrantLock();
 
@@ -146,14 +149,13 @@ public class SubTaskProcessor extends BaseTaskProcessor {
         } else if (state.isPause()) {
             return TaskExecutionStatus.PAUSE;
         } else {
-            // todo: should handle 'BLOCK' state?
             logger.error("Can't transform workflow state: {}", state);
             throw new IllegalArgumentException(String.format("Can't transform workflow state: %s", state.name()));
         }
     }
 
     /**
-     * get the params from subProcessInstance to this subProcessTask
+     * 处理子流程执行完成后的参数传递，将子流程的输出参数（OUT 类型）提取并传递给父任务。
      */
     private void dealFinish() {
         String thisTaskInstanceVarPool = taskInstance.getVarPool();

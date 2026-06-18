@@ -44,15 +44,23 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 
+/**
+ * Spring 数据源连接工厂配置类，负责配置 MyBatis-Plus 的 SqlSessionFactory、分页插件、
+ * 多数据库方言支持（MySQL、PostgreSQL、H2）及事务管理器等数据访问基础设施。
+ */
 @Configuration
 public class SpringConnectionFactory {
 
     /**
-     * Inject this field to make sure the database is initialized, this can solve the table not found issue #8432.
+     * 注入数据库初始化器，确保在数据库表结构初始化完成后再创建 MyBatis Session，
+     * 解决表不存在的问题（issue #8432）。
      */
     @Autowired(required = false)
     public DataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer;
 
+    /**
+     * 配置 MyBatis-Plus 分页拦截器，根据数据库类型启用分页功能。
+     */
     @Bean
     public MybatisPlusInterceptor paginationInterceptor(DbType dbType) {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
@@ -60,11 +68,18 @@ public class SpringConnectionFactory {
         return interceptor;
     }
 
+    /**
+     * 配置数据源事务管理器。
+     */
     @Bean
     public DataSourceTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
+    /**
+     * 配置 MyBatis-Plus 的 SqlSessionFactory，包括下划线转驼峰映射、Mapper XML 位置、
+     * 类型别名包和数据库厂商 ID 提供者等设置。
+     */
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource, GlobalConfig globalConfig,
                                                DbType dbType) throws Exception {
@@ -88,12 +103,18 @@ public class SpringConnectionFactory {
         return sqlSessionFactoryBean.getObject();
     }
 
+    /**
+     * 配置 MyBatis-Plus 全局配置，设置主键自增策略并关闭 Banner。
+     */
     @Bean
     public GlobalConfig globalConfig() {
         return new GlobalConfig().setDbConfig(new GlobalConfig.DbConfig()
                 .setIdType(IdType.AUTO)).setBanner(false);
     }
 
+    /**
+     * 配置 MyBatis 数据库厂商 ID 提供者，用于根据数据库类型（MySQL、PostgreSQL、H2）加载不同的 SQL 映射语句。
+     */
     @Bean
     public DatabaseIdProvider databaseIdProvider() {
         DatabaseIdProvider databaseIdProvider = new VendorDatabaseIdProvider();
@@ -105,6 +126,9 @@ public class SpringConnectionFactory {
         return databaseIdProvider;
     }
 
+    /**
+     * MySQL 数据库方言 Bean，当 Spring Profile 为 mysql 时作为主数据库类型。
+     */
     @Bean
     @Primary
     @Profile("mysql")
@@ -112,11 +136,17 @@ public class SpringConnectionFactory {
         return DbType.MYSQL;
     }
 
+    /**
+     * H2 数据库方言 Bean，默认启用。
+     */
     @Bean
     public DbType h2() {
         return DbType.H2;
     }
 
+    /**
+     * PostgreSQL 数据库方言 Bean，当 Spring Profile 为 postgresql 时作为主数据库类型。
+     */
     @Bean
     @Primary
     @Profile("postgresql")

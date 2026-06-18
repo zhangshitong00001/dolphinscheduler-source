@@ -62,6 +62,9 @@ import java.util.Optional;
 
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 流程服务接口，定义了工作流核心操作的所有方法。包括流程实例管理、任务提交、DAG构建、资源管理、数据质量检查、任务组管理等功能。
+ */
 public interface ProcessService {
 
     @Transactional

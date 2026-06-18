@@ -27,99 +27,102 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import org.slf4j.Logger;
 
 /**
- * base service
+ * 基础服务接口。提供所有服务实现类的公共方法，包括管理员判断、权限校验、消息封装、日期解析等工具方法。
+ * 各业务服务接口通过实现此接口获得统一的基础能力。
  */
 public interface BaseService {
 
     /**
-     * check admin
+     * 判断用户是否为管理员。
      *
-     * @param user input user
-     * @return ture if administrator, otherwise return false
+     * @param user 待判断的用户
+     * @return 是管理员返回true，否则返回false
      */
     boolean isAdmin(User user);
 
 
     /**
-     * isNotAdmin
+     * 判断用户是否为非管理员，并将错误信息写入result。
      *
-     * @param loginUser login user
-     * @param result result code
-     * @return true if not administrator, otherwise false
+     * @param loginUser 登录用户
+     * @param result    用于存放错误信息的结果Map
+     * @return 是非管理员返回true，否则返回false
      */
     boolean isNotAdmin(User loginUser, Map<String, Object> result);
 
     /**
-     * permissionPostHandle
-     * @param authorizationType
-     * @param userId
-     * @param ids
-     * @param logger
+     * 权限后置处理，资源创建后将当前用户与资源关联。
+     *
+     * @param authorizationType 授权类型
+     * @param userId            用户ID
+     * @param ids               资源ID列表
+     * @param logger            日志记录器
      */
     void permissionPostHandle(AuthorizationType authorizationType, Integer userId, List<Integer> ids, Logger logger);
 
     /**
-     * put message to map
+     * 向Map结果中填充状态消息。
      *
-     * @param result result code
-     * @param status status
-     * @param statusParams status message
+     * @param result      结果Map
+     * @param status      状态枚举
+     * @param statusParams 状态消息参数
      */
     void putMsg(Map<String, Object> result, Status status, Object... statusParams);
 
     /**
-     * put message to result object
+     * 向Result对象中填充状态消息。
      *
-     * @param result result code
-     * @param status status
-     * @param statusParams status message
+     * @param result      结果对象
+     * @param status      状态枚举
+     * @param statusParams 状态消息参数
      */
     void putMsg(Result<Object> result, Status status, Object... statusParams);
 
     /**
-     * check
+     * 检查条件并根据结果向Map写入错误信息。
      *
-     * @param result result
-     * @param bool bool
-     * @param userNoOperationPerm status
-     * @return check result
+     * @param result              结果Map
+     * @param bool                条件判断值
+     * @param userNoOperationPerm 无操作权限的状态码
+     * @return 检查结果，条件为true时返回true
      */
     boolean check(Map<String, Object> result, boolean bool, Status userNoOperationPerm);
 
 
     /**
-     * Verify that the operator has permissions
+     * 校验操作用户是否具备对资源的操作权限（基于创建者ID）。
      *
-     * @param operateUser operate user
-     * @param createUserId create user id
-     * @return check result
+     * @param operateUser  操作用户
+     * @param createUserId 资源创建者用户ID
+     * @return 有操作权限返回true，否则返回false
      */
     boolean canOperator(User operateUser, int createUserId);
 
     /**
-     * Verify that the operator has permissions
-     * @param user operate user
-     * @param ids Object[]
-     * @Param type authorizationType
-     * @Param perm String
-     * @return check result
+     * 校验操作用户是否具备对指定类型资源的操作权限。
+     *
+     * @param user 操作用户
+     * @param ids  资源ID数组
+     * @param type 授权类型
+     * @param perm 权限键
+     * @return 有操作权限返回true，否则返回false
      */
     boolean canOperatorPermissions(User user, Object[] ids, AuthorizationType type, String perm);
 
     /**
-     * check and parse date parameters
+     * 检查并解析日期参数，验证日期格式和起止日期逻辑。
      *
-     * @param startDateStr start date string
-     * @param endDateStr end date string
-     * @return map<status,startDate,endDate>
+     * @param startDateStr 开始日期字符串
+     * @param endDateStr   结束日期字符串
+     * @return 包含status、startDate和endDate的结果Map
      */
     Map<String, Object> checkAndParseDateParameters(String startDateStr, String endDateStr);
 
     /**
-     * check checkDescriptionLength
+     * 检查描述文本的长度是否在允许范围内。
      *
-     * @param description input String
-     * @return ture if Length acceptable, Length exceeds return false
+     * @param description 描述文本
+     * @return 长度合格返回true，否则返回false
      */
     boolean checkDescriptionLength(String description);
 

@@ -28,55 +28,41 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 数据源实体，映射到 t_ds_datasource 表，表示一个外部数据源连接配置（如 MySQL、Hive、PostgreSQL 等）。
+ * 数据源被任务插件引用，用于在任务执行过程中连接和操作外部数据库。
+ */
 @Data
 @TableName("t_ds_datasource")
 public class DataSource {
 
-    /**
-     * id
-     */
+    /** 数据源主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * user id
-     */
+    /** 数据源所属用户 ID，对应 t_ds_user 表的 id */
     private int userId;
 
-    /**
-     * user name
-     */
+    /** 非数据库字段：所属用户名，通过 userId 关联 t_ds_user 表查询填充 */
     @TableField(exist = false)
     private String userName;
 
-    /**
-     * data source name
-     */
+    /** 数据源名称，用户自定义的标识名 */
     private String name;
 
-    /**
-     * note
-     */
+    /** 备注说明 */
     private String note;
 
-    /**
-     * data source type
-     */
+    /** 数据源类型枚举，如 MYSQL、POSTGRESQL、HIVE、SPARK、CLICKHOUSE、ORACLE、SQLSERVER 等 */
     private DbType type;
 
-    /**
-     * connection parameters
-     */
+    /** 连接参数字符串，JSON 格式，存储 JDBC 连接地址、用户名、密码等敏感信息 */
     private String connectionParams;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 最后更新时间 */
     private Date updateTime;
 
     @Override

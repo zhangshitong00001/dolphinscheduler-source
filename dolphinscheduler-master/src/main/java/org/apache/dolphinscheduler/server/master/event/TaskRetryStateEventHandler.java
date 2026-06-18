@@ -27,6 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+/**
+ * 任务重试状态事件处理器。处理 TASK_RETRY 状态事件，将等待重试的任务实例加入待调度队列并提交执行，实现任务失败后的自动重试机制。
+ */
 @AutoService(StateEventHandler.class)
 public class TaskRetryStateEventHandler implements StateEventHandler {
 

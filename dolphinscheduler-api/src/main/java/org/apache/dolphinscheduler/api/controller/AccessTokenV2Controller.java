@@ -44,7 +44,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * access token controller
+ * 访问令牌V2控制器。提供V2版本访问令牌创建的REST API，使用JSON请求体方式传递参数。
  */
 @Api(tags = "ACCESS_TOKEN_TAG")
 @RestController
@@ -55,11 +55,11 @@ public class AccessTokenV2Controller extends BaseController {
     private AccessTokenService accessTokenService;
 
     /**
-     * create token
+     * 创建访问令牌（V2版本）。接收JSON请求体，为指定用户生成访问令牌并返回标准响应。
      *
-     * @param loginUser          login user
-     * @param createTokenRequest createTokenRequest
-     * @return CreateTokenResponse CreateTokenResponse
+     * @param loginUser 当前登录用户
+     * @param createTokenRequest 创建令牌请求体
+     * @return 创建令牌响应
      */
     @ApiOperation(value = "createTokenV2", notes = "CREATE_TOKEN_V2")
     @PostMapping(consumes = {"application/json"})

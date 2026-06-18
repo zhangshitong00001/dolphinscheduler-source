@@ -39,24 +39,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.google.auto.service.AutoService;
 
 /**
- * condition task processor
+ * 条件任务处理器，用于在工作流中根据上游依赖任务的状态决定下游分支的执行路径。
+ * 通过评估依赖任务列表的状态和条件关系，输出 SUCCESS 或 FAILURE 状态，
+ * 从而控制 DAG 中条件分支的走向。
  */
 @AutoService(ITaskProcessor.class)
 public class ConditionTaskProcessor extends BaseTaskProcessor {
 
-    /**
-     * dependent parameters
-     */
     private DependentParameters dependentParameters;
 
-    /**
-     * condition result
-     */
     private DependResult conditionResult = DependResult.WAITING;
 
-    /**
-     * complete task map
-     */
     private Map<Long, TaskExecutionStatus> completeTaskList = new ConcurrentHashMap<>();
 
     @Override
@@ -71,6 +64,11 @@ public class ConditionTaskProcessor extends BaseTaskProcessor {
         return true;
     }
 
+    /**
+     * 运行条件任务，初始化参数后评估依赖条件并结束任务。
+     *
+     * @return 始终返回 true
+     */
     @Override
     public boolean runTask() {
         initTaskParameters();
@@ -164,7 +162,10 @@ public class ConditionTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     * depend result for depend item
+     * 计算单个依赖项的依赖结果。
+     *
+     * @param item 依赖项
+     * @return 依赖结果
      */
     private DependResult getDependResultForItem(DependentItem item) {
 
@@ -186,7 +187,7 @@ public class ConditionTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     *
+     * 结束条件任务，根据评估结果设置任务状态。
      */
     private void endTask() {
         TaskExecutionStatus status =

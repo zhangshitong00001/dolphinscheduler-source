@@ -24,12 +24,14 @@ import org.apache.dolphinscheduler.common.enums.Flag;
 import org.apache.dolphinscheduler.common.thread.ThreadLocalContext;
 import org.apache.dolphinscheduler.dao.entity.User;
 import org.apache.dolphinscheduler.dao.mapper.UserMapper;
+import org.apache.dolphinscheduler.service.session.SessionManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 
 import java.util.Date;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,9 +40,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.WebUtils;
 
 /**
- * login interceptor, must log in first
+ * Login interceptor - validates user authentication on every request.
+ * <p>
+ * Features:
+ * <ul>
+ *   <li>Validates session token from request header or cookie</li>
+ *   <li>Refreshes Redis session TTL on each request (sliding expiration)</li>
+ *   <li>If session expired (10 min inactivity), returns 401 and frontend redirects to login</li>
+ *   <li>Checks user enabled/disabled state</li>
+ * </ul>
  */
 public class LoginHandlerInterceptor implements HandlerInterceptor {
 
@@ -52,42 +63,61 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
     @Autowired
     private Authenticator authenticator;
 
+    @Autowired
+    private SessionManager sessionManager;
+
     /**
-     * Intercept the execution of a handler. Called after HandlerMapping determined
-     *
-     * @param request current HTTP request
-     * @param response current HTTP response
-     * @param handler chosen handler to execute, for type and/or instance evaluation
-     * @return boolean true or false
+     * Intercepts every HTTP request to verify user authentication.
+     * <p>
+     * Steps:
+     * 1. Extract session ID from header or cookie
+     * 2. Refresh session TTL in Redis (sliding expiration)
+     * 3. If session invalid/expired, return 401 Unauthorized
+     * 4. Look up user and verify they are enabled
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        // get token
+        // Get session token from request
         String token = request.getHeader("token");
         User user;
+
         if (StringUtils.isEmpty(token)) {
+            // Authenticate via session cookie/header
             user = authenticator.getAuthUser(request);
-            // if user is null
             if (user == null) {
                 response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-                logger.info("user does not exist");
+                logger.info("User authentication failed - session invalid or expired");
                 return false;
             }
+            // Refresh Redis session TTL (sliding expiration)
+            // Check both header and cookie, matching SessionServiceImpl behavior
+            String sessionId = request.getHeader(Constants.SESSION_ID);
+            if (StringUtils.isEmpty(sessionId)) {
+                Cookie cookie = WebUtils.getCookie(request, Constants.SESSION_ID);
+                if (cookie != null) {
+                    sessionId = cookie.getValue();
+                }
+            }
+            if (StringUtils.isNotEmpty(sessionId)) {
+                sessionManager.refreshSession(sessionId);
+            }
         } else {
+            // Authenticate via token
             user = userMapper.queryUserByToken(token, new Date());
             if (user == null) {
                 response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-                logger.info("user token has expired");
+                logger.info("User token has expired");
                 return false;
             }
         }
 
-        // check user state
+        // Check if user account is enabled
         if (user.getState() == Flag.NO.ordinal()) {
             response.setStatus(HttpStatus.SC_UNAUTHORIZED);
             logger.info(Status.USER_DISABLED.getMsg());
             return false;
         }
+
         request.setAttribute(Constants.SESSION_USER, user);
         ThreadLocalContext.getTimezoneThreadLocal().set(user.getTimeZone());
         return true;

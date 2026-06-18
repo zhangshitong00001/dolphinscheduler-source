@@ -22,7 +22,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import java.util.Map;
 
 /**
- * task group service
+ * 任务组服务接口。提供任务组的管理功能，包括创建、更新、查询、启动/关闭任务组以及强制启动任务。
  */
 public interface TaskGroupService {
 

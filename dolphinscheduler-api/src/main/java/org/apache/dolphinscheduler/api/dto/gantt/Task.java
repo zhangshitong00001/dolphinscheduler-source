@@ -22,45 +22,45 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Task
+ * 甘特图任务 DTO，表示甘特图中的单个任务节点，包含任务名称、时间区间、状态和持续时间。
  */
 public class Task {
     /**
-     * task name
+     * 任务名称
      */
     private String taskName;
 
     /**
-     * task start date
+     * 任务开始日期列表
      */
     private List<Long> startDate = new LinkedList<>();
     /**
-     * task end date
+     * 任务结束日期列表
      */
     private List<Long> endDate = new LinkedList<>();
 
     /**
-     * task execution date
+     * 任务执行日期
      */
     private Date executionDate;
 
     /**
-     * task iso start
+     * 任务 ISO 格式开始时间
      */
     private Date isoStart;
 
     /**
-     * task iso end
+     * 任务 ISO 格式结束时间
      */
     private Date isoEnd;
 
     /**
-     * task status
+     * 任务状态
      */
     private String status;
 
     /**
-     * task duration
+     * 任务持续时间
      */
     private String duration;
 

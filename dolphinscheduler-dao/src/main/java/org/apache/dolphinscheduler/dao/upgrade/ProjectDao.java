@@ -29,12 +29,15 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 升级用项目数据访问对象，负责在版本升级时查询项目数据并将旧版 ID 映射为新编码 Code。
+ */
 public class ProjectDao {
 
     public static final Logger logger = LoggerFactory.getLogger(ProjectDao.class);
 
     /**
-     * queryAllProject
+     * 查询所有项目，返回旧版 ID 到新编码 Code 的映射。
      *
      * @param conn jdbc connection
      * @return Project List
@@ -65,7 +68,7 @@ public class ProjectDao {
     }
 
     /**
-     * updateProjectCode
+     * 批量更新项目的编码（Code），将旧版 ID 替换为新编码。
      *
      * @param conn jdbc connection
      * @param projectMap projectMap

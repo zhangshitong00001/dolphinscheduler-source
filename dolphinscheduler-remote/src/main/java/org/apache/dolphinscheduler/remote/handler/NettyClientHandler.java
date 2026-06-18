@@ -42,7 +42,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
 
 /**
- * netty client request handler
+ * Netty客户端处理器。负责处理客户端与远程服务端的通信，包括通道管理、请求响应分发和心跳维持。
  */
 @ChannelHandler.Sharable
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
@@ -50,24 +50,27 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     private final Logger logger = LoggerFactory.getLogger(NettyClientHandler.class);
 
     /**
-     * netty client
+     * Netty远程客户端实例
      */
     private final NettyRemotingClient nettyRemotingClient;
 
+    /**
+     * 心跳数据
+     */
     private static byte[] heartBeatData = "heart_beat".getBytes();
 
     /**
-     * callback thread executor
+     * 回调线程执行器
      */
     private final ExecutorService callbackExecutor;
 
     /**
-     * processors
+     * 处理器注册表，按命令类型映射到对应的处理器和执行器
      */
     private final ConcurrentHashMap<CommandType, Pair<NettyRequestProcessor, ExecutorService>> processors;
 
     /**
-     * default executor
+     * 默认线程执行器
      */
     private final ExecutorService defaultExecutor = Executors.newFixedThreadPool(Constants.CPUS);
 
@@ -78,8 +81,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * When the current channel is not active,
-     * the current channel has reached the end of its life cycle
+     * 通道变为非活跃状态时的回调。关闭当前通道并清理相关资源。
      *
      * @param ctx channel handler context
      */
@@ -90,7 +92,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * The current channel reads data from the remote
+     * 通道读取数据时的回调。将接收到的命令分发给对应的处理器。
      *
      * @param ctx channel handler context
      * @param msg message
@@ -101,7 +103,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * register processor
+     * 注册命令处理器，使用默认线程执行器。
      *
      * @param commandType command type
      * @param processor processor
@@ -111,7 +113,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * register processor
+     * 注册命令处理器，指定线程执行器。
      *
      * @param commandType command type
      * @param processor processor
@@ -126,8 +128,9 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * process received logic
+     * 处理接收到的命令。优先匹配已注册的Future回调，否则按命令类型分发处理。
      *
+     * @param channel channel
      * @param command command
      */
     private void processReceived(final Channel channel, final Command command) {
@@ -146,6 +149,12 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
+    /**
+     * 按命令类型分发处理。根据命令类型查找注册的处理器并在对应线程池中执行。
+     *
+     * @param channel channel
+     * @param command command
+     */
     public void processByCommandType(final Channel channel, final Command command) {
         final Pair<NettyRequestProcessor, ExecutorService> pair = processors.get(command.getType());
         if (pair != null) {
@@ -167,7 +176,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     /**
-     * caught exception
+     * 异常捕获处理。记录异常日志并关闭异常通道。
      *
      * @param ctx channel handler context
      * @param cause cause

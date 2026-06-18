@@ -21,6 +21,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * 审计配置类。读取application配置中以"audit"为前缀的属性，控制审计日志功能的启用与关闭。
+ */
 @Component
 @EnableConfigurationProperties
 @ConfigurationProperties(value = "audit", ignoreUnknownFields = false)

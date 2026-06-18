@@ -23,35 +23,33 @@ import java.util.Map;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * command types
+ * 命令类型枚举。
+ * 定义系统中各类流程操作命令的类型，用于驱动流程实例的状态转换。
  */
 public enum CommandType {
-
-    /**
-     * command types
-     * 0 start a new process
-     * 1 start a new process from current nodes
-     * 2 recover tolerance fault process
-     * 3 recover suspended process
-     * 4 start process from failure task nodes
-     * 5 complement data
-     * 6 start a new process from scheduler
-     * 7 repeat running a process
-     * 8 pause a process
-     * 9 stop a process
-     * 10 recover waiting thread
-     */
+    /** 启动新流程 */
     START_PROCESS(0, "start a new process"),
+    /** 从当前节点启动新流程 */
     START_CURRENT_TASK_PROCESS(1, "start a new process from current nodes"),
+    /** 恢复容错流程 */
     RECOVER_TOLERANCE_FAULT_PROCESS(2, "recover tolerance fault process"),
+    /** 恢复暂停的流程 */
     RECOVER_SUSPENDED_PROCESS(3, "recover suspended process"),
+    /** 从失败任务节点启动流程 */
     START_FAILURE_TASK_PROCESS(4, "start process from failure task nodes"),
+    /** 补数 */
     COMPLEMENT_DATA(5, "complement data"),
+    /** 调度器启动新流程 */
     SCHEDULER(6, "start a new process from scheduler"),
+    /** 重复运行流程 */
     REPEAT_RUNNING(7, "repeat running a process"),
+    /** 暂停流程 */
     PAUSE(8, "pause a process"),
+    /** 停止流程 */
     STOP(9, "stop a process"),
+    /** 恢复等待线程 */
     RECOVER_WAITING_THREAD(10, "recover waiting thread"),
+    /** 恢复串行等待 */
     RECOVER_SERIAL_WAIT(11, "recover serial wait"),
     ;
 

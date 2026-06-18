@@ -22,11 +22,28 @@ import org.apache.dolphinscheduler.dao.entity.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * LDAP认证器。通过LDAP服务器验证用户身份，认证成功后自动在系统中创建用户（如果配置允许）。
+ *
+ * 认证流程：
+ * 1. 调用LdapService.ldapLogin()在LDAP服务器上验证用户名密码
+ * 2. 验证成功后检查系统中是否存在该用户
+ * 3. 如果用户不存在且配置允许自动创建，则在系统中创建新用户
+ * 4. 返回系统中的用户对象
+ */
 public class LdapAuthenticator extends AbstractAuthenticator {
 
     @Autowired
     LdapService ldapService;
 
+    /**
+     * 通过LDAP服务器进行用户登录验证。
+     *
+     * @param userId   用户身份标识
+     * @param password 用户登录密码
+     * @param extra    额外登录信息
+     * @return 验证成功返回系统中的用户对象，失败返回null
+     */
     @Override
     public User login(String userId, String password, String extra) {
         User user = null;

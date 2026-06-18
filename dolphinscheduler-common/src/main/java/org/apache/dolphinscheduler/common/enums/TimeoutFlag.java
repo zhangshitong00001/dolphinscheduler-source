@@ -20,14 +20,13 @@ package org.apache.dolphinscheduler.common.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * timeout flag
+ * 超时标志枚举。
+ * 定义任务或流程的超时告警开关状态。
  */
 public enum TimeoutFlag {
-    /**
-     * 0 close
-     * 1 open
-     */
+    /** 关闭超时 */
     CLOSE(0, "close"),
+    /** 开启超时 */
     OPEN(1, "open");
 
     TimeoutFlag(int code, String desc) {

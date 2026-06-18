@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * handle state event received from master/api
+ * 任务事件处理器。接收来自Master或API服务的任务强制状态变更或唤醒命令，将其转换为任务状态事件并提交到工作流执行线程池。
  */
 @Component
 public class TaskEventProcessor implements NettyRequestProcessor {
@@ -44,6 +44,12 @@ public class TaskEventProcessor implements NettyRequestProcessor {
     @Autowired
     private StateEventResponseService stateEventResponseService;
 
+    /**
+     * 处理任务事件命令。解析命令并创建任务状态事件，直接提交到工作流执行线程池。
+     *
+     * @param channel Netty通道
+     * @param command 任务事件变更命令
+     */
     @Override
     public void process(Channel channel, Command command) {
         Preconditions.checkArgument(CommandType.TASK_FORCE_STATE_EVENT_REQUEST == command.getType()

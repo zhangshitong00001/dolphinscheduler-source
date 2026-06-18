@@ -49,6 +49,10 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 全局参数固化服务实现，负责处理流程实例和任务实例中的全局参数与本地参数。
+ * <p>支持时间占位符扩展、业务时间计算和参数合并等功能。</p>
+ */
 @Component
 public class CuringGlobalParams implements CuringParamsService {
 
@@ -71,14 +75,15 @@ public class CuringGlobalParams implements CuringParamsService {
     }
 
     /**
-     * here it is judged whether external expansion calculation is required and the calculation result is obtained
-     * @param processInstanceId
-     * @param globalParamMap
-     * @param globalParamList
-     * @param commandType
-     * @param scheduleTime
-     * @param timezone
-     * @return
+     * 固化全局参数，判断是否需要进行外部扩展计算并获取计算结果。
+     *
+     * @param processInstanceId 流程实例ID
+     * @param globalParamMap 全局参数映射表
+     * @param globalParamList 全局参数列表
+     * @param commandType 命令类型
+     * @param scheduleTime 调度时间
+     * @param timezone 时区
+     * @return 固化后的全局参数JSON字符串
      */
     @Override
     public String curingGlobalParams(Integer processInstanceId, Map<String, String> globalParamMap,
@@ -125,12 +130,13 @@ public class CuringGlobalParams implements CuringParamsService {
     }
 
     /**
-     * the global parameters and local parameters used in the worker will be prepared here.
+     * 参数解析准备，在Worker端合并全局参数和本地参数。
+     * <p>将流程实例的全局参数与任务本地参数进行合并，处理时间占位符替换和业务时间计算。</p>
      *
-     * @param taskInstance
-     * @param parameters
-     * @param processInstance
-     * @return
+     * @param taskInstance 任务实例
+     * @param parameters 任务参数
+     * @param processInstance 流程实例
+     * @return 合并后的参数映射表
      */
     @Override
     public Map<String, Property> paramParsingPreparation(@NonNull TaskInstance taskInstance,

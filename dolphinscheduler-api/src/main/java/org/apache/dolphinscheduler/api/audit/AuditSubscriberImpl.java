@@ -23,6 +23,9 @@ import org.apache.dolphinscheduler.dao.mapper.AuditLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 审计订阅者实现。将审计消息写入数据库审计日志表，实现审计数据的持久化存储。
+ */
 @Component
 public class AuditSubscriberImpl implements AuditSubscriber {
 

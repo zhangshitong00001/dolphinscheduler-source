@@ -22,17 +22,21 @@ import org.apache.dolphinscheduler.common.enums.AlertWarnLevel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * 服务器告警内容，封装 Master 或 Worker 节点的告警信息。
+ */
 public class ServerAlertContent {
 
-    /**
-     * server type :master or worker
-     */
+    /** 服务器类型：master 或 worker */
     @JsonProperty("type")
     final String type;
+    /** 服务器主机地址 */
     @JsonProperty("host")
     final String host;
+    /** 告警事件类型 */
     @JsonProperty("event")
     final AlertEvent event;
+    /** 告警警告级别 */
     @JsonProperty("warningLevel")
     final AlertWarnLevel warningLevel;
 

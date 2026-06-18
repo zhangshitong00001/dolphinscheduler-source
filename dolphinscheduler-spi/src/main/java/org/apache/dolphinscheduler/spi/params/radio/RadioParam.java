@@ -30,13 +30,18 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * front-end radio select component
+ * 前端单选框组件参数类，继承自 {@link PluginParams}。
+ * <p>
+ * 用于在前端动态表单中渲染单选框（radio）组件，
+ * 通过 {@link ParamsOptions} 定义可选项列表，支持设置选中态的颜色样式等属性。
  */
 public class RadioParam extends PluginParams {
 
+    /** 单选框可选项列表 */
     @JsonProperty(STRING_PLUGIN_PARAM_OPTIONS)
     private List<ParamsOptions> options;
 
+    /** 单选框组件专属属性 */
     private RadioParamProps props;
 
     private RadioParam(Builder builder) {

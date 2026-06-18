@@ -56,54 +56,51 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * TaskUpdateQueue consumer
+ * 任务优先级队列消费者。以守护线程方式运行，不断从优先级队列中拉取任务并分发到 Worker 执行。
  */
 @Component
 public class TaskPriorityQueueConsumer extends BaseDaemonThread {
 
-    /**
-     * logger of TaskUpdateQueueConsumer
-     */
     private static final Logger logger = LoggerFactory.getLogger(TaskPriorityQueueConsumer.class);
 
     /**
-     * taskUpdateQueue
+     * 任务优先级队列。
      */
     @Autowired
     private TaskPriorityQueue<TaskPriority> taskPriorityQueue;
 
     /**
-     * processService
+     * 流程服务。
      */
     @Autowired
     private ProcessService processService;
 
     /**
-     * executor dispatcher
+     * 执行器分发器。
      */
     @Autowired
     private ExecutorDispatcher dispatcher;
 
     /**
-     * processInstance cache manager
+     * 流程实例执行缓存管理器。
      */
     @Autowired
     private ProcessInstanceExecCacheManager processInstanceExecCacheManager;
 
     /**
-     * master config
+     * Master 配置。
      */
     @Autowired
     private MasterConfig masterConfig;
 
     /**
-     * task response service
+     * 任务事件服务。
      */
     @Autowired
     private TaskEventService taskEventService;
 
     /**
-     * consumer thread pool
+     * 消费者线程池。
      */
     private ThreadPoolExecutor consumerThreadPoolExecutor;
 
@@ -147,7 +144,12 @@ public class TaskPriorityQueueConsumer extends BaseDaemonThread {
     }
 
     /**
-     * batch dispatch with thread pool
+     * 使用线程池批量分发任务。
+     *
+     * @param fetchTaskNum 每次拉取的任务数量
+     * @return 分发失败的任务列表
+     * @throws TaskPriorityQueueException 任务优先级队列异常
+     * @throws InterruptedException 线程中断异常
      */
     public List<TaskPriority> batchDispatch(int fetchTaskNum) throws TaskPriorityQueueException, InterruptedException {
         List<TaskPriority> failedDispatchTasks = Collections.synchronizedList(new ArrayList<>());
@@ -179,10 +181,10 @@ public class TaskPriorityQueueConsumer extends BaseDaemonThread {
     }
 
     /**
-     * Dispatch task to worker.
+     * 将任务分发到 Worker。
      *
-     * @param taskPriority taskPriority
-     * @return dispatch result, return true if dispatch success, return false if dispatch failed.
+     * @param taskPriority 任务优先级对象
+     * @return 分发结果，true 表示分发成功，false 表示分发失败
      */
     protected boolean dispatchTask(TaskPriority taskPriority) {
         TaskMetrics.incTaskDispatch();
@@ -236,7 +238,7 @@ public class TaskPriorityQueueConsumer extends BaseDaemonThread {
     }
 
     /**
-     * add dispatch event
+     * 添加任务分发事件。
      */
     private void addDispatchEvent(TaskExecutionContext context, ExecutionContext executionContext) {
         TaskEvent taskEvent = TaskEvent.newDispatchEvent(context.getProcessInstanceId(), context.getTaskInstanceId(),
@@ -254,11 +256,10 @@ public class TaskPriorityQueueConsumer extends BaseDaemonThread {
     }
 
     /**
-     * taskInstance is final state
-     * success，failure，kill，stop，pause，threadwaiting is final state
+     * 判断任务实例是否为终态。success、failure、kill、stop、pause、threadwaiting 均为终态。
      *
-     * @param taskInstanceId taskInstanceId
-     * @return taskInstance is final state
+     * @param taskInstanceId 任务实例 ID
+     * @return true 表示任务实例处于终态
      */
     public boolean taskInstanceIsFinalState(int taskInstanceId) {
         TaskInstance taskInstance = processService.findTaskInstanceById(taskInstanceId);
@@ -266,7 +267,7 @@ public class TaskPriorityQueueConsumer extends BaseDaemonThread {
     }
 
     /**
-     * check if task need to check state, if true, refresh the checkpoint
+     * 检查任务是否需要检查状态，若需要则刷新检查点时间。
      */
     private boolean isTaskNeedToCheck(TaskPriority taskPriority) {
         long now = System.currentTimeMillis();

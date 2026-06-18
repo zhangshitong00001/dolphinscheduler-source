@@ -18,12 +18,14 @@
 package org.apache.dolphinscheduler.spi.params.base;
 
 /**
- * param datetype
+ * 参数数据类型枚举，定义前端表单参数支持的数据类型。
  */
 public enum DataType {
 
+    /** 字符串类型 */
     STRING("string"),
 
+    /** 数字类型 */
     NUMBER("number");
 
     private String dataType;

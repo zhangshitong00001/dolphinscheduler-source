@@ -30,12 +30,16 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * JSON 拆分数据访问对象，负责将旧版流程定义 JSON 数据拆分为独立的表字段，
+ * 并同步写入日志表，用于数据库升级迁移场景。
+ */
 public class JsonSplitDao {
 
     public static final Logger logger = LoggerFactory.getLogger(JsonSplitDao.class);
 
     /**
-     * executeJsonSplitProcessDefinition
+     * 执行流程定义的 JSON 拆分，将全局参数、超时设置、租户 ID 等字段从 JSON 中提取并更新到流程定义表及日志表。
      *
      * @param conn jdbc connection
      * @param processDefinitionLogs processDefinitionLogs
@@ -96,7 +100,7 @@ public class JsonSplitDao {
     }
 
     /**
-     * executeJsonSplitProcessDefinition
+     * 执行任务关系的 JSON 拆分，将流程任务关系数据批量写入主表和日志表。
      *
      * @param conn jdbc connection
      * @param processTaskRelationLogs processTaskRelationLogs
@@ -161,7 +165,7 @@ public class JsonSplitDao {
     }
 
     /**
-     * executeJsonSplitTaskDefinition
+     * 执行任务定义的 JSON 拆分，将任务定义数据批量写入主表和日志表。
      *
      * @param conn jdbc connection
      * @param taskDefinitionLogs taskDefinitionLogs

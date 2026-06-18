@@ -1,0 +1,62 @@
+<%- aslJava %>
+package org.apache.dolphinscheduler.api.service;
+
+import org.apache.dolphinscheduler.api.utils.Result;
+import org.apache.dolphinscheduler.dao.entity.User;
+
+/**
+ * <%= naming.kebab %> service
+ */
+public interface <%= naming.pascal %>Service {
+
+    /**
+     * query <%= naming.kebab %> list
+     *
+     * @param loginUser login user
+     * @return <%= naming.kebab %> list
+     */
+    Result queryList(User loginUser);
+
+    /**
+     * query <%= naming.kebab %> list paging
+     *
+     * @param loginUser login user
+     * @param searchVal search value
+     * @param pageNo page number
+     * @param pageSize page size
+     * @return <%= naming.kebab %> list
+     */
+    Result queryList(User loginUser, String searchVal, Integer pageNo, Integer pageSize);
+
+    /**
+     * create <%= naming.kebab %>
+     *
+     * @param loginUser login user
+<% fields.filter(f => f.required).forEach(function(field) { -%>
+     * @param <%= field.name %> <%= field.description || field.name %>
+<% }); -%>
+     * @return create result
+     */
+    Result create<%= naming.pascal %>(User loginUser<% fields.filter(f => f.required).forEach(function(field) { %>, <%= boxedType(field.type) %> <%= field.name %><% }); %>);
+
+    /**
+     * update <%= naming.kebab %>
+     *
+     * @param loginUser login user
+     * @param id <%= naming.kebab %> id
+<% fields.filter(f => f.required).forEach(function(field) { -%>
+     * @param <%= field.name %> <%= field.description || field.name %>
+<% }); -%>
+     * @return update result
+     */
+    Result update<%= naming.pascal %>(User loginUser, int id<% fields.filter(f => f.required).forEach(function(field) { %>, <%= boxedType(field.type) %> <%= field.name %><% }); %>);
+
+    /**
+     * delete <%= naming.kebab %> by id
+     *
+     * @param loginUser login user
+     * @param id <%= naming.kebab %> id
+     * @return delete result
+     */
+    Result delete<%= naming.pascal %>(User loginUser, int id);
+}

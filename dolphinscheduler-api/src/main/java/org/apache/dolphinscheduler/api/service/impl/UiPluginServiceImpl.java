@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * ui plugin service impl
+ * UI插件服务实现类。负责根据插件类型查询UI插件列表和插件详情，用于前端动态加载UI组件。
  */
 @Service
 public class UiPluginServiceImpl extends BaseServiceImpl implements UiPluginService {
@@ -42,6 +42,12 @@ public class UiPluginServiceImpl extends BaseServiceImpl implements UiPluginServ
     @Autowired
     PluginDefineMapper pluginDefineMapper;
 
+    /**
+     * 根据插件类型查询具有UI界面的插件列表。
+     *
+     * @param pluginType 插件类型
+     * @return 包含插件列表的结果Map
+     */
     @Override
     public Map<String, Object> queryUiPluginsByType(PluginType pluginType) {
         Map<String, Object> result = new HashMap<>();
@@ -61,6 +67,12 @@ public class UiPluginServiceImpl extends BaseServiceImpl implements UiPluginServ
         return result;
     }
 
+    /**
+     * 根据插件ID查询插件详情。
+     *
+     * @param id 插件ID
+     * @return 包含插件详情的结果Map
+     */
     @Override
     public Map<String, Object> queryUiPluginDetailById(int id) {
         Map<String, Object> result = new HashMap<>();

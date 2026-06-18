@@ -41,24 +41,24 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * lower weight host manager
+ * 低权重主机管理器。根据 Worker 节点的 CPU、内存、负载等资源指标计算权重，优先选择资源充足的节点。
  */
 public class LowerWeightHostManager extends CommonHostManager {
 
     private final Logger logger = LoggerFactory.getLogger(LowerWeightHostManager.class);
 
     /**
-     * selector
+     * 低权重轮询选择器。
      */
     private LowerWeightRoundRobin selector;
 
     /**
-     * worker host weights
+     * Worker 主机权重映射表，按 Worker 分组存储。
      */
     private ConcurrentHashMap<String, Set<HostWeight>> workerHostWeightsMap;
 
     /**
-     * worker group host lock
+     * Worker 分组主机操作锁。
      */
     private Lock lock;
 
@@ -71,10 +71,10 @@ public class LowerWeightHostManager extends CommonHostManager {
     }
 
     /**
-     * select host
+     * 根据执行上下文选择权重最低的 Worker 主机。
      *
-     * @param context context
-     * @return host
+     * @param context 执行上下文
+     * @return 选中的主机
      */
     @Override
     public Host select(ExecutionContext context) {
@@ -99,10 +99,10 @@ public class LowerWeightHostManager extends CommonHostManager {
     }
 
     /**
-     * Sync worker resource.
+     * 同步 Worker 资源信息。根据 Worker 心跳数据计算各节点的权重。
      *
-     * @param workerGroupNodes  worker group nodes, key is worker group, value is worker group nodes.
-     * @param workerNodeInfoMap worker node info map, key is worker node, value is worker info.
+     * @param workerGroupNodes  Worker 分组节点映射，key 为 Worker 分组，value 为节点地址集合
+     * @param workerNodeInfoMap Worker 节点信息映射，key 为节点地址，value 为心跳信息
      */
     private void syncWorkerResources(final Map<String, Set<String>> workerGroupNodes,
                                      final Map<String, WorkerHeartBeat> workerNodeInfoMap) {

@@ -37,6 +37,10 @@ import org.springframework.stereotype.Component;
 
 import lombok.NonNull;
 
+/**
+ * Worker消息发送器，负责向Master发送任务执行状态等消息。
+ * 支持普通发送和带重试的发送两种模式，根据消息类型路由到对应的MessageSender实现。
+ */
 @Component
 public class WorkerMessageSender {
 
@@ -50,12 +54,22 @@ public class WorkerMessageSender {
 
     private Map<CommandType, MessageSender> messageSenderMap = new HashMap<>();
 
+    /**
+     * 初始化消息发送器映射表，将CommandType与对应的MessageSender关联。
+     */
     @PostConstruct
     public void init() {
         messageSenders.forEach(messageSender -> messageSenderMap.put(messageSender.getMessageType(),
                 messageSender));
     }
 
+    /**
+     * 发送消息并支持失败重试，消息会被加入重试队列。
+     *
+     * @param taskExecutionContext 任务执行上下文
+     * @param messageReceiverAddress 消息接收方地址
+     * @param messageType 消息类型
+     */
     // todo: use message rather than context
     public void sendMessageWithRetry(@NonNull TaskExecutionContext taskExecutionContext,
                                      @NonNull String messageReceiverAddress,
@@ -73,6 +87,13 @@ public class WorkerMessageSender {
         }
     }
 
+    /**
+     * 发送消息，不包含重试机制，失败仅记录日志。
+     *
+     * @param taskExecutionContext 任务执行上下文
+     * @param messageReceiverAddress 消息接收方地址
+     * @param messageType 消息类型
+     */
     public void sendMessage(@NonNull TaskExecutionContext taskExecutionContext,
                             @NonNull String messageReceiverAddress,
                             @NonNull CommandType messageType) {

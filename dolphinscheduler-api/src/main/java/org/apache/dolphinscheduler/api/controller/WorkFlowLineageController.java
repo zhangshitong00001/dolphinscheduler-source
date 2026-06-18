@@ -58,7 +58,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 /**
- * work flow lineage controller
+ * 工作流血缘控制器，提供工作流依赖关系的追踪查询及任务可删除性验证 REST API。
  */
 @Api(tags = "WORK_FLOW_LINEAGE_TAG")
 @RestController
@@ -70,6 +70,14 @@ public class WorkFlowLineageController extends BaseController {
     @Autowired
     private WorkFlowLineageService workFlowLineageService;
 
+    /**
+     * 根据工作流名称查询血缘关系。
+     *
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param workFlowName 工作流名称
+     * @return 工作流血缘关系列表
+     */
     @ApiOperation(value = "queryLineageByWorkFlowName", notes = "QUERY_WORKFLOW_LINEAGE_BY_NAME_NOTES")
     @GetMapping(value = "/query-by-name")
     @ResponseStatus(HttpStatus.OK)
@@ -87,6 +95,14 @@ public class WorkFlowLineageController extends BaseController {
         }
     }
 
+    /**
+     * 根据工作流编码查询血缘关系。
+     *
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param workFlowCode 工作流编码
+     * @return 工作流血缘关系详情
+     */
     @ApiOperation(value = "queryLineageByWorkFlowCode", notes = "QUERY_WORKFLOW_LINEAGE_BY_CODE_NOTE")
     @GetMapping(value = "/{workFlowCode}")
     @ResponseStatus(HttpStatus.OK)
@@ -103,6 +119,13 @@ public class WorkFlowLineageController extends BaseController {
         }
     }
 
+    /**
+     * 查询项目下所有工作流血缘关系列表。
+     *
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @return 工作流血缘关系列表
+     */
     @ApiOperation(value = "queryWorkFlowList", notes = "QUERY_WORKFLOW_LINEAGE_NOTES")
     @GetMapping(value = "/list")
     @ResponseStatus(HttpStatus.OK)
@@ -119,13 +142,13 @@ public class WorkFlowLineageController extends BaseController {
     }
 
     /**
-     * Whether task can be deleted or not, avoiding task depend on other task of process definition delete by accident.
+     * 验证任务是否可以删除，防止因其他流程定义中的任务依赖而导致误删。
      *
-     * @param loginUser login user
-     * @param projectCode project codes which taskCode belong
-     * @param processDefinitionCode project code which taskCode belong
-     * @param taskCode task definition code
-     * @return Result of task can be delete or not
+     * @param loginUser 登录用户
+     * @param projectCode 项目编码
+     * @param processDefinitionCode 流程定义编码
+     * @param taskCode 任务定义编码
+     * @return 任务是否可删除的验证结果
      */
     @ApiOperation(value = "verifyTaskCanDelete", notes = "VERIFY_TASK_CAN_DELETE")
     @ApiImplicitParams({

@@ -31,6 +31,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 任务超时状态事件处理器。处理 TASK_TIMEOUT 状态事件，根据任务定义的超时策略（告警、失败、告警且失败）执行相应的超时动作并触发告警通知。
+ */
 @AutoService(StateEventHandler.class)
 public class TaskTimeoutStateEventHandler implements StateEventHandler {
 

@@ -27,7 +27,7 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 import java.io.Serializable;
 
 /**
- *  remove task log request command
+ * 删除任务日志请求命令。根据日志文件路径向Worker请求删除指定的任务日志文件。
  */
 @Data
 @NoArgsConstructor
@@ -35,7 +35,7 @@ import java.io.Serializable;
 public class RemoveTaskLogRequestCommand implements Serializable {
 
     /**
-     *  log path
+     * 日志文件路径
      */
     private String path;
 

@@ -42,7 +42,9 @@ import java.util.stream.Collectors;
 import com.google.auto.service.AutoService;
 
 /**
- * switch task processor
+ * Switch 任务处理器，用于根据条件表达式动态选择下游执行分支。
+ * 支持基于全局参数和上游任务输出变量的 JavaScript 条件表达式评估，
+ * 满足条件的第一个分支将被选中执行，若无匹配分支则执行默认分支。
  */
 @AutoService(ITaskProcessor.class)
 public class SwitchTaskProcessor extends BaseTaskProcessor {
@@ -50,7 +52,7 @@ public class SwitchTaskProcessor extends BaseTaskProcessor {
     protected final String rgex = "['\"]*\\$\\{(.*?)\\}['\"]*";
 
     /**
-     * switch result
+     * Switch 条件判断结果。
      */
     private DependResult conditionResult;
 
@@ -190,7 +192,7 @@ public class SwitchTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     * update task state
+     * 根据 Switch 条件结果更新任务状态。
      */
     private void endTaskState() {
         TaskExecutionStatus status =
@@ -201,7 +203,10 @@ public class SwitchTaskProcessor extends BaseTaskProcessor {
     }
 
     /**
-     * check whether switch result is valid
+     * 检查 Switch 分支结果是否有效（分支节点列表不能为空且不能包含空节点名）。
+     *
+     * @param switchResult Switch 分支结果
+     * @return 是否有效
      */
     private boolean isValidSwitchResult(SwitchResultVo switchResult) {
         if (CollectionUtils.isEmpty(switchResult.getNextNode())) {

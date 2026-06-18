@@ -87,6 +87,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+/**
+ * 资源权限检查服务实现。通过Spring容器管理各类资源的权限检查策略，使用策略模式将不同资源类型的授权逻辑解耦。
+ * 在应用启动时自动注册所有实现了ResourceAcquisitionAndPermissionCheck接口的Bean到资源映射表。
+ */
 @Component
 public class ResourcePermissionCheckServiceImpl implements ResourcePermissionCheckService<Object>, ApplicationContextAware {
 
@@ -150,6 +154,9 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
                 user.getUserType().equals(UserType.ADMIN_USER) ? 0 : userId, logger);
     }
 
+    /**
+     * 队列资源权限检查
+     */
     @Component
     public static class QueueResourcePermissionCheck implements ResourceAcquisitionAndPermissionCheck<Integer> {
 
@@ -180,6 +187,9 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
         }
     }
 
+    /**
+     * 项目资源权限检查
+     */
     @Component
     public static class ProjectsResourcePermissionCheck implements ResourceAcquisitionAndPermissionCheck<Integer> {
 
@@ -206,6 +216,9 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
         }
     }
 
+    /**
+     * 文件资源权限检查
+     */
     @Component
     public static class FilePermissionCheck implements ResourceAcquisitionAndPermissionCheck<Integer> {
 
@@ -244,6 +257,9 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
         }
     }
 
+    /**
+     * UDF函数资源权限检查
+     */
     @Component
     public static class UdfFuncPermissionCheck implements ResourceAcquisitionAndPermissionCheck<Integer> {
 
@@ -270,6 +286,9 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
         }
     }
 
+    /**
+     * 任务组资源权限检查
+     */
     @Component
     public static class TaskGroupPermissionCheck implements ResourceAcquisitionAndPermissionCheck<Integer> {
 
@@ -296,6 +315,9 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
         }
     }
 
+    /**
+     * K8s命名空间资源权限检查
+     */
     @Component
     public static class K8sNamespaceResourceList implements ResourceAcquisitionAndPermissionCheck<Integer> {
 
@@ -323,6 +345,9 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
     }
 
 
+    /**
+     * 环境资源权限检查
+     */
     @Component
     public static class EnvironmentResourceList implements ResourceAcquisitionAndPermissionCheck<Integer> {
 
@@ -349,6 +374,9 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
         }
     }
 
+    /**
+     * Worker分组资源权限检查
+     */
     @Component
     public static class WorkerGroupResourceList implements ResourceAcquisitionAndPermissionCheck<Integer> {
 
@@ -377,7 +405,7 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
     }
 
     /**
-     * AlertPluginInstance Resource
+     * 告警插件实例资源权限检查
      */
     @Component
     public static class AlertPluginInstanceResourceList implements ResourceAcquisitionAndPermissionCheck<Integer> {
@@ -406,7 +434,7 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
     }
 
     /**
-     * AlertPluginInstance Resource
+     * 告警组资源权限检查
      */
     @Component
     public static class AlertGroupResourceList implements ResourceAcquisitionAndPermissionCheck<Integer> {
@@ -436,7 +464,7 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
     }
 
     /**
-     * Tenant Resource
+     * 租户资源权限检查
      */
     @Component
     public static class TenantResourceList implements ResourceAcquisitionAndPermissionCheck<Integer> {
@@ -466,7 +494,7 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
     }
 
     /**
-     * DataSource Resource
+     * 数据源资源权限检查
      */
     @Component
     public static class DataSourceResourceList implements ResourceAcquisitionAndPermissionCheck<Integer> {
@@ -495,7 +523,7 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
     }
 
     /**
-     * AccessToken Resource
+     * 访问令牌资源权限检查
      */
     @Component
     public static class AccessTokenList implements ResourceAcquisitionAndPermissionCheck<Integer> {
@@ -523,26 +551,36 @@ public class ResourcePermissionCheckServiceImpl implements ResourcePermissionChe
     }
 
 
+    /**
+     * 资源获取与权限检查接口。定义不同资源类型的授权资源列表获取和权限校验策略。
+     *
+     * @param <T> 资源ID的类型
+     */
     interface ResourceAcquisitionAndPermissionCheck<T> {
 
         /**
-         * authorization types
-         * @return
+         * 获取该资源检查策略支持的授权类型列表。
+         *
+         * @return 授权类型列表
          */
         List<AuthorizationType> authorizationTypes();
 
         /**
-         * get all resources under the user (no admin)
+         * 获取当前用户（非管理员）有权访问的所有资源ID集合。
          *
-         * @param userId
-         * @return
+         * @param userId 用户ID，0表示管理员
+         * @param logger 日志记录器
+         * @return 授权的资源ID集合
          */
         Set<T> listAuthorizedResource(int userId, Logger logger);
 
         /**
-         * permission check
-         * @param userId
-         * @return
+         * 检查用户是否拥有指定权限键的操作权限。
+         *
+         * @param userId        用户ID
+         * @param permissionKey 权限键
+         * @param logger        日志记录器
+         * @return 有权限返回true，否则返回false
          */
         boolean permissionCheck(int userId, String permissionKey, Logger logger);
 

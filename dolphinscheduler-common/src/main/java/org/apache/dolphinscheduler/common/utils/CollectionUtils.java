@@ -27,16 +27,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Provides utility methods and decorators for {@link Collection} instances.
- * <p>
- * Various utility methods might put the input objects into a Set/Map/Bag. In case
- * the input objects override {@link Object#equals(Object)}, it is mandatory that
- * the general contract of the {@link Object#hashCode()} method is maintained.
- * <p>
- * NOTE: From 4.0, method parameters will take {@link Iterable} objects when possible.
- *
- * @version $Id: CollectionUtils.java 1686855 2015-06-22 13:00:27Z tn $
- * @since 1.0
+ * 集合操作工具类，提供Collection相关的实用方法。
+ * 支持对集合中的对象属性进行过滤和转换操作。
+ * 该类为工具类，不可实例化。
  */
 public class CollectionUtils {
 
@@ -45,12 +38,12 @@ public class CollectionUtils {
     }
 
     /**
-     * Removes certain attributes of each object in the list
+     * 从对象列表中移除指定属性，返回仅包含保留属性的Map列表。
      *
-     * @param originList origin list
-     * @param exclusionSet exclusion set
-     * @param <T> T
-     * @return removes certain attributes of each object in the list
+     * @param originList 原始对象列表
+     * @param exclusionSet 需要排除的属性名称集合
+     * @param <T> 对象类型
+     * @return 过滤后的Map列表，每个Map仅包含未被排除的属性
      */
     public static <T extends Object> List<Map<String, Object>> getListByExclusion(List<T> originList, Set<String> exclusionSet) {
         List<Map<String, Object>> instanceList = new ArrayList<>();

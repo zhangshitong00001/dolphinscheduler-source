@@ -25,27 +25,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * resource filter
+ * 资源过滤器。根据文件后缀对资源列表进行过滤，返回匹配文件及其所有父级目录。
  */
 public class ResourceFilter implements IFilter {
-    /**
-     * resource suffix
-     */
+    /** 资源文件后缀 */
     private String suffix;
-    /**
-     * resource list
-     */
+    /** 资源列表 */
     private List<Resource> resourceList;
 
     /**
-     * parent list
-     */
-    //Set<Resource> parentList =  new HashSet<>();
-
-    /**
-     * constructor
-     * @param suffix        resource suffix
-     * @param resourceList  resource list
+     * 构造资源过滤器
+     * @param suffix        资源文件后缀
+     * @param resourceList  资源列表
      */
     public ResourceFilter(String suffix, List<Resource> resourceList) {
         this.suffix = suffix;
@@ -53,8 +44,8 @@ public class ResourceFilter implements IFilter {
     }
 
     /**
-     * file filter
-     * @return file filtered by suffix
+     * 根据后缀过滤文件
+     * @return 按后缀过滤后的文件集合
      */
     public Set<Resource> fileFilter(){
         return resourceList.stream().filter(t -> {
@@ -64,8 +55,8 @@ public class ResourceFilter implements IFilter {
     }
 
     /**
-     * list all parent dir
-     * @return parent resource dir set
+     * 列出所有父级目录
+     * @return 父级资源目录集合
      */
     Set<Resource> listAllParent(){
         Set<Resource> parentList =  new HashSet<>();
@@ -79,9 +70,9 @@ public class ResourceFilter implements IFilter {
     }
 
     /**
-     * list all parent dir
-     * @param resource  resource
-     * @return parent resource dir set
+     * 递归设置所有父级目录
+     * @param resource   资源
+     * @param parentList 父级目录集合
      */
     private void setAllParent(Resource resource,Set<Resource> parentList){
         for (Resource resourceTemp : resourceList) {

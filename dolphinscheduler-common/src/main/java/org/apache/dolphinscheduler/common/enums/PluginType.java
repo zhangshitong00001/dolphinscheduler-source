@@ -22,12 +22,15 @@ import java.util.HashMap;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
 /**
- * PluginType
+ * 插件类型枚举。
+ * 定义DolphinScheduler中可插拔扩展的插件类别。
  */
 public enum PluginType {
-
+    /** 告警插件 */
     ALERT(1, "alert", true),
+    /** 注册插件 */
     REGISTER(2, "register", false),
+    /** 任务插件 */
     TASK(3,"task",true);
 
     PluginType(int code, String desc, boolean hasUi) {

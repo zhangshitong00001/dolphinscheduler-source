@@ -32,7 +32,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
 
 /**
- * netty decoder
+ * Netty解码器。通过状态机模式按协议顺序解析字节流的魔数、版本、命令类型、请求标识、上下文和消息体，将字节流解码为{@link Command}消息对象。
  */
 public class NettyDecoder extends ReplayingDecoder<NettyDecoder.State> {
     private static final Logger logger = LoggerFactory.getLogger(NettyDecoder.class);

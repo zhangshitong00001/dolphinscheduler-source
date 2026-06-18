@@ -28,17 +28,21 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 import lombok.experimental.UtilityClass;
 
+/**
+ * 线程工具类，提供守护线程池创建和线程休眠的便捷方法。
+ * 该类为工具类，使用Lombok @UtilityClass注解实现。
+ */
 @UtilityClass
 public class ThreadUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(ThreadUtils.class);
 
     /**
-     * Wrapper over newDaemonFixedThreadExecutor.
+     * 创建固定大小的守护线程池。
      *
-     * @param threadName threadName
-     * @param threadsNum threadsNum
-     * @return ExecutorService
+     * @param threadName 线程名称前缀
+     * @param threadsNum 线程数量
+     * @return ExecutorService线程池
      */
     public static ExecutorService newDaemonFixedThreadExecutor(String threadName, int threadsNum) {
         ThreadFactory threadFactory = new ThreadFactoryBuilder().setDaemon(true).setNameFormat(threadName).build();
@@ -46,7 +50,9 @@ public class ThreadUtils {
     }
 
     /**
-     * Sleep in given mills, this is not accuracy.
+     * 使当前线程休眠指定毫秒数，不保证精确计时。
+     *
+     * @param millis 休眠毫秒数
      */
     public static void sleep(final long millis) {
         try {

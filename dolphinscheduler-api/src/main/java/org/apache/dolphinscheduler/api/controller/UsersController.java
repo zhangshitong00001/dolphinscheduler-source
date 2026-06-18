@@ -67,7 +67,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * users controller
+ * 用户控制器，提供用户的创建、更新、删除、查询、注册、激活及项目/资源/数据源授权等 REST API。
  */
 @Api(tags = "USERS_TAG")
 @RestController
@@ -80,16 +80,16 @@ public class UsersController extends BaseController {
     private UsersService usersService;
 
     /**
-     * create user
+     * 创建用户。
      *
-     * @param loginUser login user
-     * @param userName user name
-     * @param userPassword user password
-     * @param email email
-     * @param tenantId tenant id
-     * @param phone phone
-     * @param queue queue
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param userName 用户名
+     * @param userPassword 用户密码
+     * @param tenantId 租户 ID
+     * @param queue 队列
+     * @param email 邮箱
+     * @param phone 电话
+     * @return 创建结果
      */
     @ApiOperation(value = "createUser", notes = "CREATE_USER_NOTES")
     @ApiImplicitParams({
@@ -119,13 +119,13 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * query user list paging
+     * 查询用户分页列表。
      *
-     * @param loginUser login user
-     * @param pageNo page number
-     * @param searchVal search avlue
-     * @param pageSize page size
-     * @return user list page
+     * @param loginUser 登录用户
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @param searchVal 搜索关键词
+     * @return 用户分页列表
      */
     @ApiOperation(value = "queryUserList", notes = "QUERY_USER_LIST_NOTES")
     @ApiImplicitParams({
@@ -152,17 +152,17 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * update user
+     * 更新用户。
      *
-     * @param loginUser login user
-     * @param id user id
-     * @param userName user name
-     * @param userPassword user password
-     * @param email email
-     * @param tenantId tennat id
-     * @param phone phone
-     * @param queue queue
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param id 用户 ID
+     * @param userName 用户名
+     * @param userPassword 用户密码
+     * @param queue 队列
+     * @param email 邮箱
+     * @param tenantId 租户 ID
+     * @param phone 电话
+     * @return 更新结果
      */
     @ApiOperation(value = "updateUser", notes = "UPDATE_USER_NOTES")
     @ApiImplicitParams({
@@ -195,11 +195,11 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * delete user by id
+     * 根据 ID 删除用户。
      *
-     * @param loginUser login user
-     * @param id user id
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param id 用户 ID
+     * @return 删除结果
      */
     @ApiOperation(value = "delUserById", notes = "DELETE_USER_BY_ID_NOTES")
     @ApiImplicitParams({
@@ -216,12 +216,12 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * grant project
+     * 为用户授权项目。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @param projectIds project id array
-     * @return grant result code
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @param projectIds 项目 ID 列表
+     * @return 授权结果
      */
     @ApiOperation(value = "grantProject", notes = "GRANT_PROJECT_NOTES")
     @ApiImplicitParams({
@@ -240,12 +240,12 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * grant project by code
+     * 根据项目编码为用户授权。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @param projectCode project code
-     * @return grant result code
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @param projectCode 项目编码
+     * @return 授权结果
      */
     @ApiOperation(value = "grantProjectByCode", notes = "GRANT_PROJECT_BY_CODE_NOTES")
     @ApiImplicitParams({
@@ -264,12 +264,12 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * revoke project
+     * 撤销用户对项目的权限。
      *
-     * @param loginUser     login user
-     * @param userId        user id
-     * @param projectCode   project code
-     * @return revoke result code
+     * @param loginUser   登录用户
+     * @param userId      用户 ID
+     * @param projectCode 项目编码
+     * @return 撤销结果
      */
     @ApiOperation(value = "revokeProject", notes = "REVOKE_PROJECT_NOTES")
     @ApiImplicitParams({
@@ -288,12 +288,12 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * grant resource
+     * 为用户授权资源。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @param resourceIds resource id array
-     * @return grant result code
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @param resourceIds 资源 ID 列表
+     * @return 授权结果
      */
     @ApiOperation(value = "grantResource", notes = "GRANT_RESOURCE_NOTES")
     @ApiImplicitParams({
@@ -312,12 +312,12 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * grant udf function
+     * 为用户授权 UDF 函数。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @param udfIds udf id array
-     * @return grant result code
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @param udfIds UDF 函数 ID 列表
+     * @return 授权结果
      */
     @ApiOperation(value = "grantUDFFunc", notes = "GRANT_UDF_FUNC_NOTES")
     @ApiImplicitParams({
@@ -336,12 +336,12 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * grant namespace
+     * 为用户授权 K8s 命名空间。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @param namespaceIds namespace id array
-     * @return grant result code
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @param namespaceIds 命名空间 ID 列表
+     * @return 授权结果
      */
     @ApiOperation(value = "grantNamespace", notes = "GRANT_NAMESPACE_NOTES")
     @ApiImplicitParams({
@@ -360,12 +360,12 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * grant datasource
+     * 为用户授权数据源。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @param datasourceIds data source id array
-     * @return grant result code
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @param datasourceIds 数据源 ID 列表
+     * @return 授权结果
      */
     @ApiOperation(value = "grantDataSource", notes = "GRANT_DATASOURCE_NOTES")
     @ApiImplicitParams({
@@ -384,10 +384,10 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * get user info
+     * 获取当前登录用户信息。
      *
-     * @param loginUser login user
-     * @return user info
+     * @param loginUser 登录用户
+     * @return 用户信息
      */
     @ApiOperation(value = "getUserInfo", notes = "GET_USER_INFO_NOTES")
     @GetMapping(value = "/get-user-info")
@@ -400,10 +400,10 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * user list no paging
+     * 查询所有普通用户列表（不分页）。
      *
-     * @param loginUser login user
-     * @return user list
+     * @param loginUser 登录用户
+     * @return 用户列表
      */
     @ApiOperation(value = "listUser", notes = "LIST_USER_NOTES")
     @GetMapping(value = "/list")
@@ -416,10 +416,10 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * user list no paging
+     * 查询所有用户列表（不分页）。
      *
-     * @param loginUser login user
-     * @return user list
+     * @param loginUser 登录用户
+     * @return 用户列表
      */
     @GetMapping(value = "/list-all")
     @ResponseStatus(HttpStatus.OK)
@@ -431,11 +431,11 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * verify username
+     * 验证用户名是否可用。
      *
-     * @param loginUser login user
-     * @param userName user name
-     * @return true if user name not exists, otherwise return false
+     * @param loginUser 登录用户
+     * @param userName 用户名
+     * @return 用户名不存在则返回 true，否则返回 false
      */
     @ApiOperation(value = "verifyUserName", notes = "VERIFY_USER_NAME_NOTES")
     @ApiImplicitParams({
@@ -451,11 +451,11 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * unauthorized user
+     * 查询未授权给定告警组的用户。
      *
-     * @param loginUser login user
-     * @param alertgroupId alert group id
-     * @return unauthorize result code
+     * @param loginUser 登录用户
+     * @param alertgroupId 告警组 ID
+     * @return 未授权用户列表
      */
     @ApiOperation(value = "unauthorizedUser", notes = "UNAUTHORIZED_USER_NOTES")
     @ApiImplicitParams({
@@ -472,11 +472,11 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * authorized user
+     * 查询已授权给定告警组的用户。
      *
-     * @param loginUser login user
-     * @param alertgroupId alert group id
-     * @return authorized result code
+     * @param loginUser 登录用户
+     * @param alertgroupId 告警组 ID
+     * @return 已授权用户列表
      */
     @ApiOperation(value = "authorizedUser", notes = "AUTHORIZED_USER_NOTES")
     @ApiImplicitParams({
@@ -498,12 +498,12 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * user registry
+     * 用户注册。
      *
-     * @param userName user name
-     * @param userPassword user password
-     * @param repeatPassword repeat password
-     * @param email user email
+     * @param userName 用户名
+     * @param userPassword 用户密码
+     * @param repeatPassword 重复密码
+     * @param email 邮箱
      */
     @ApiOperation(value = "registerUser", notes = "REGISTER_USER_NOTES")
     @ApiImplicitParams({
@@ -529,9 +529,10 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * user activate
+     * 激活用户。
      *
-     * @param userName user name
+     * @param loginUser 登录用户
+     * @param userName 用户名
      */
     @ApiOperation(value = "activateUser", notes = "ACTIVATE_USER_NOTES")
     @ApiImplicitParams({
@@ -549,9 +550,10 @@ public class UsersController extends BaseController {
     }
 
     /**
-     * user batch activate
+     * 批量激活用户。
      *
-     * @param userNames user names
+     * @param loginUser 登录用户
+     * @param userNames 用户名列表
      */
     @ApiOperation(value = "batchActivateUser", notes = "BATCH_ACTIVATE_USER_NOTES")
     @ApiImplicitParams({

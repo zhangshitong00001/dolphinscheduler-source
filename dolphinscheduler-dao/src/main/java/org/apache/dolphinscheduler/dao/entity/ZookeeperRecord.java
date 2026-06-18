@@ -19,69 +19,45 @@ package org.apache.dolphinscheduler.dao.entity;
 import java.util.Date;
 
 /**
- * monitor record for zookeeper
+ * ZooKeeper 监控记录，存储 ZooKeeper 节点的运行时状态和性能指标。
  */
 public class ZookeeperRecord {
 
-    /**
-     * hostname
-     */
+    /** 主机名 */
     private String hostname;
 
-    /**
-     * connections
-     */
+    /** 当前连接数 */
     private int connections;
 
-    /**
-     * max connections
-     */
+    /** 当前监视数 */
     private int watches;
 
-    /**
-     * sent
-     */
+    /** 发送数据量 */
     private long sent;
 
-    /**
-     * received
-     */
+    /** 接收数据量 */
     private long received;
 
-    /**
-     * mode: leader or follower
-     */
+    /** 节点模式：leader 或 follower */
     private String mode;
 
-    /**
-     * min Latency
-     */
+    /** 最小时延 */
     private float minLatency;
 
-    /**
-     * avg Latency
-     */
+    /** 平均时延 */
     private float avgLatency;
 
-    /**
-     * max Latency
-     */
+    /** 最大时延 */
     private float maxLatency;
 
-    /**
-     * node count
-     */
+    /** 节点数量 */
     private int nodeCount;
 
-    /**
-     * date
-     */
+    /** 记录日期 */
     private Date date;
 
 
-    /**
-     * is normal or not, 1:normal
-     */
+    /** 是否正常：1 表示正常 */
     private int state;
 
 

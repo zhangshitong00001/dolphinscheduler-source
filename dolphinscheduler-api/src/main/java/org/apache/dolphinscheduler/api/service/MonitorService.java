@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * monitor service
+ * 监控服务接口。提供系统数据库状态查询、Master/Worker服务列表查询等监控功能。
  */
 public interface MonitorService {
 

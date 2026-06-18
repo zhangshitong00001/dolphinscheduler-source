@@ -44,7 +44,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * mainly used to get the start command line of a process.
+ * 流程进程工具类，主要用于获取和管理进程的命令行操作。提供YARN应用的取消、Kerberos认证命令构建、
+ * 进程PID查询以及YARN任务的日志查找和终止等功能。
  */
 public class ProcessUtils {
 
@@ -62,12 +63,12 @@ public class ProcessUtils {
     private static final Pattern WINDOWSATTERN = Pattern.compile("\\w+\\((\\d+)\\)");
 
     /**
-     * kill yarn application.
+     * 取消（终止）指定的YARN应用列表。对于未完成的应用，构建kill命令并执行。
      *
-     * @param appIds app id list
-     * @param logger logger
-     * @param tenantCode tenant code
-     * @param executePath execute path
+     * @param appIds the list of YARN application ids to cancel
+     * @param logger the logger instance
+     * @param tenantCode the tenant code
+     * @param executePath the execution path
      */
     public static void cancelApplication(List<String> appIds, Logger logger, String tenantCode, String executePath) {
         if (appIds == null || appIds.isEmpty()) {
@@ -90,7 +91,9 @@ public class ProcessUtils {
     }
 
     /**
-     * get kerberos init command
+     * 构建Kerberos初始化命令，用于在进行YARN操作前进行Kerberos认证。如果未启用Kerberos则返回空字符串。
+     *
+     * @return the Kerberos init command string
      */
     static String getKerberosInitCommand() {
         logger.info("get kerberos init command");
@@ -149,11 +152,11 @@ public class ProcessUtils {
     }
 
     /**
-     * get pids str.
+     * 获取指定进程及其子进程的PID列表字符串。根据操作系统类型（Mac/Linux）使用不同的命令解析方式。
      *
-     * @param processId process id
-     * @return pids pid String
-     * @throws Exception exception
+     * @param processId the parent process id
+     * @return the space-separated PID string
+     * @throws Exception if command execution fails
      */
     public static String getPidsStr(int processId) throws Exception {
         List<String> pidList = new ArrayList<>();
@@ -182,10 +185,11 @@ public class ProcessUtils {
     }
 
     /**
-     * find logs and kill yarn tasks.
+     * 查找并终止任务相关的YARN应用。从日志客户端获取appId列表后，依次取消未完成的应用。
      *
-     * @param taskExecutionContext taskExecutionContext
-     * @return yarn application ids
+     * @param logClient the log client for retrieving application ids
+     * @param taskExecutionContext the task execution context
+     * @return the list of killed YARN application ids
      */
     public static @Nullable List<String> killYarnJob(@NonNull LogClient logClient,
                                                      @NonNull TaskExecutionContext taskExecutionContext) {

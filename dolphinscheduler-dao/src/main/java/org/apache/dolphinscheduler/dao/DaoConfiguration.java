@@ -24,6 +24,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * DolphinScheduler 数据访问层自动配置类，负责启用 MyBatis 自动配置并扫描 Mapper 接口。
+ */
 @Configuration
 @EnableAutoConfiguration
 @MapperScan("org.apache.dolphinscheduler.dao.mapper")

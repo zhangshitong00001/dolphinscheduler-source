@@ -38,7 +38,7 @@ import com.google.common.base.Preconditions;
 import io.netty.channel.Channel;
 
 /**
- * workflow executing data process from api/master
+ * 工作流执行数据请求处理器。接收来自API或其他Master节点的工作流执行数据查询请求，返回工作流当前的执行详情。
  */
 @Component
 public class WorkflowExecutingDataRequestProcessor implements NettyRequestProcessor {
@@ -48,6 +48,12 @@ public class WorkflowExecutingDataRequestProcessor implements NettyRequestProces
     @Autowired
     private ExecutingService executingService;
 
+    /**
+     * 处理工作流执行数据查询请求。根据请求中的processInstanceId查询执行数据并返回响应。
+     *
+     * @param channel Netty通道
+     * @param command 工作流执行数据请求命令
+     */
     @Override
     public void process(Channel channel, Command command) {
         Preconditions.checkArgument(CommandType.WORKFLOW_EXECUTING_DATA_REQUEST == command.getType(), String.format("invalid command type: %s", command.getType()));

@@ -27,8 +27,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * 错误页面控制器。实现Spring Boot ErrorController接口，处理未映射的请求。
+ * 对于404错误，将请求转发到前端UI首页，对于其他HTTP错误返回相应的错误状态码。
+ */
 @Controller
 public class DsErrorController implements ErrorController {
+    /**
+     * 处理错误请求。404错误转发到前端UI首页，其他错误返回HTTP状态码。
+     *
+     * @param request HTTP请求对象
+     * @return ModelAndView视图对象
+     */
     @RequestMapping("/error")
     public ModelAndView handleError(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);

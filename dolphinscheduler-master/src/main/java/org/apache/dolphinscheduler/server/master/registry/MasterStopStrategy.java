@@ -27,7 +27,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /**
- * This strategy will stop the master server, when disconnected from {@link org.apache.dolphinscheduler.registry.api.Registry}.
+ * Master停止连接策略。当Master与注册中心断开连接时，直接停止Master服务器。该策略为默认策略。
  */
 @Service
 @ConditionalOnProperty(prefix = "master.registry-disconnect-strategy", name = "strategy", havingValue = "stop", matchIfMissing = true)
@@ -40,17 +40,28 @@ public class MasterStopStrategy implements MasterConnectStrategy {
     @Autowired
     private MasterConfig masterConfig;
 
+    /**
+     * 断开连接时的处理逻辑。直接调用Stoppable接口停止Master服务器。
+     */
     @Override
     public void disconnect() {
         registryClient.getStoppable()
                 .stop("Master disconnected from registry, will stop myself due to the stop strategy");
     }
 
+    /**
+     * 重连时的处理逻辑。停止策略下不会尝试重连，仅记录警告日志。
+     */
     @Override
     public void reconnect() {
         logger.warn("The current connect strategy is stop, so the master will not reconnect to registry");
     }
 
+    /**
+     * 获取策略类型。
+     *
+     * @return 策略类型，始终返回STOP
+     */
     @Override
     public StrategyType getStrategyType() {
         return StrategyType.STOP;

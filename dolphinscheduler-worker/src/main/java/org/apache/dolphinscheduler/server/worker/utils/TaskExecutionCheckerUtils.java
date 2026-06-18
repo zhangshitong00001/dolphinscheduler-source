@@ -46,8 +46,18 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 
+/**
+ * 任务执行前检查工具类，提供租户检查、本地路径创建和资源下载等静态工具方法。
+ */
 public class TaskExecutionCheckerUtils {
 
+    /**
+     * 检查指定租户是否存在，支持Linux分布式用户、sudo自动创建和自我管理三种模式。
+     *
+     * @param workerConfig Worker配置
+     * @param taskExecutionContext 任务执行上下文
+     * @throws TaskException 如果租户不存在
+     */
     public static void checkTenantExist(WorkerConfig workerConfig, TaskExecutionContext taskExecutionContext) {
         try {
             String tenantCode = taskExecutionContext.getTenantCode();
@@ -77,6 +87,12 @@ public class TaskExecutionCheckerUtils {
         }
     }
 
+    /**
+     * 创建任务的本地执行路径，如果路径已存在则跳过。
+     *
+     * @param taskExecutionContext 任务执行上下文
+     * @throws TaskException 如果创建目录或设置权限失败
+     */
     public static void createProcessLocalPathIfAbsent(TaskExecutionContext taskExecutionContext) throws TaskException {
         try {
             // local execute path
@@ -94,6 +110,14 @@ public class TaskExecutionCheckerUtils {
         }
     }
 
+    /**
+     * 下载任务所需的资源文件到本地执行路径，跳过已存在的文件。
+     *
+     * @param storageOperate 存储操作接口
+     * @param taskExecutionContext 任务执行上下文
+     * @param logger 日志记录器
+     * @throws TaskException 如果下载资源失败
+     */
     public static void downloadResourcesIfNeeded(StorageOperate storageOperate,
                                                  TaskExecutionContext taskExecutionContext, Logger logger) {
         String execLocalPath = taskExecutionContext.getExecutePath();

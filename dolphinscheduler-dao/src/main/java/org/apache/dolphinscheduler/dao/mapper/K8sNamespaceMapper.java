@@ -27,50 +27,55 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
- * namespace interface
+ * K8s 命名空间 Mapper 接口，封装对 t_ds_k8s_namespace 表的数据库操作。
+ * 继承 MyBatis-Plus BaseMapper，提供 Kubernetes 命名空间的分页查询、存在性校验及授权管理等功能。
  */
 public interface K8sNamespaceMapper extends BaseMapper<K8sNamespace> {
 
     /**
-     * k8s namespace page
+     * 分页查询 K8s 命名空间列表，支持按命名空间名称进行 LIKE 模糊搜索。
      *
-     * @param page      page
-     * @param searchVal searchVal
-     * @return k8s namespace IPage
+     * @param page 分页对象
+     * @param searchVal 搜索关键字
+     * @return K8s 命名空间分页结果
      */
     IPage<K8sNamespace> queryK8sNamespacePaging(IPage<K8sNamespace> page,
                                                 @Param("searchVal") String searchVal);
 
     /**
-     * check the target namespace exist
+     * 判断指定命名空间名称和集群编码的组合是否已存在。
+     * SELECT COUNT(*) > 0 FROM t_ds_k8s_namespace WHERE namespace = #{namespace} AND cluster_code = #{clusterCode}
      *
-     * @param namespace   namespace
-     * @param clusterCode clusterCode
-     * @return true if exist else return null
+     * @param namespace 命名空间名称
+     * @param clusterCode 集群编码
+     * @return 存在返回 true，否则返回 false
      */
     Boolean existNamespace(@Param("namespace") String namespace, @Param("clusterCode") Long clusterCode);
 
     /**
-     * query namespace except userId
+     * 查询除指定用户之外的所有命名空间列表。
+     * 用于查找可以授权给当前用户的其他用户命名空间。
      *
-     * @param userId userId
-     * @return namespace list
+     * @param userId 要排除的用户ID
+     * @return 命名空间列表
      */
     List<K8sNamespace> queryNamespaceExceptUserId(@Param("userId") int userId);
 
     /**
-     * query authed namespace list by userId
+     * 查询指定用户已授权访问的命名空间列表。
+     * 通过 JOIN t_ds_relation_namespace_user 表查找用户有权限的命名空间。
      *
-     * @param userId userId
-     * @return namespace list
+     * @param userId 用户ID
+     * @return 用户授权命名空间列表
      */
     List<K8sNamespace> queryAuthedNamespaceListByUserId(@Param("userId") Integer userId);
 
     /**
-     * check the target namespace
+     * 根据命名空间编码查询 K8s 命名空间信息。
+     * SELECT * FROM t_ds_k8s_namespace WHERE code = #{clusterCode}
      *
-     * @param namespaceCode namespaceCode
-     * @return true if exist else return null
+     * @param namespaceCode 命名空间编码
+     * @return 命名空间实体，若不存在则返回 null
      */
     K8sNamespace queryByNamespaceCode(@Param("clusterCode") Long namespaceCode);
 }

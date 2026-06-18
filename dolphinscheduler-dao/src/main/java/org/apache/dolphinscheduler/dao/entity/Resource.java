@@ -29,75 +29,53 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 资源文件实体，映射到 t_ds_resources 表，表示系统中上传和管理的文件资源。
+ * 支持目录结构，可用于存放任务执行所需的脚本、配置文件等。
+ */
 @Data
 @NoArgsConstructor
 @TableName("t_ds_resources")
 public class Resource {
 
-    /**
-     * id
-     */
+    /** 资源主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * parent id
-     */
+    /** 父资源 ID，用于构建资源目录树 */
     private int pid;
 
-    /**
-     * resource alias
-     */
+    /** 资源别名 */
     private String alias;
 
-    /**
-     * full name
-     */
+    /** 资源全名（含路径） */
     private String fullName;
 
-    /**
-     * is directory
-     */
+    /** 是否为目录 */
     private boolean isDirectory = false;
 
-    /**
-     * description
-     */
+    /** 资源描述 */
     private String description;
 
-    /**
-     * file alias
-     */
+    /** 文件名 */
     private String fileName;
 
-    /**
-     * user id
-     */
+    /** 创建者用户 ID */
     private int userId;
 
-    /**
-     * resource type
-     */
+    /** 资源类型 */
     private ResourceType type;
 
-    /**
-     * resource size
-     */
+    /** 资源文件大小（字节） */
     private long size;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 
-    /**
-     * user name
-     */
+    /** 非数据库字段：用户名 */
     @TableField(exist = false)
     private String userName;
 

@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 基于Redis的任务优先级队列实现，使用Redis的Sorted Set（ZSet）结构存储任务。通过评分机制实现优先级排序，
+ * 同优先级下保证FIFO顺序。当配置 queue.type=redis 时启用此实现。
+ */
 @Slf4j
 @Service
 @ConditionalOnProperty(prefix = "queue", name = "type", havingValue = "redis")

@@ -84,6 +84,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Python网关服务。通过Py4J启动网关服务器，使Python客户端可以通过本地Java接口调用DolphinScheduler的各类服务。
+ * 提供工作流、租户、用户、数据源、资源等管理操作的统一入口，支持工作流即代码（workflow-as-code）模式。
+ */
 @Component
 public class PythonGateway {
     private static final Logger logger = LoggerFactory.getLogger(PythonGateway.class);
@@ -163,16 +167,37 @@ public class PythonGateway {
         }
     };
 
+    /**
+     * 健康检查接口，用于确认网关服务是否正常运行。
+     *
+     * @return 固定返回 "PONG"
+     */
     public String ping() {
         return "PONG";
     }
 
     // TODO Should we import package in python client side? utils package can but service can not, why
     // Core api
+    /**
+     * 批量生成任务编码列表。
+     *
+     * @param genNum 需要生成的编码数量
+     * @return 包含生成的任务编码列表的结果Map
+     */
     public Map<String, Object> genTaskCodeList(Integer genNum) {
         return taskDefinitionService.genTaskCodeList(genNum);
     }
 
+    /**
+     * 根据项目名、工作流名和任务名获取任务的编码和版本号。
+     * 如果项目、工作流或任务不存在，会为其生成新的编码并返回初始版本0。
+     *
+     * @param projectName           项目名称
+     * @param processDefinitionName 工作流名称
+     * @param taskName              任务名称
+     * @return 包含 code 和 version 的Map
+     * @throws CodeGenerateUtils.CodeGenerateException 编码生成异常
+     */
     public Map<String, Long> getCodeAndVersion(String projectName, String processDefinitionName, String taskName) throws CodeGenerateUtils.CodeGenerateException {
         Project project = projectMapper.queryByName(projectName);
         Map<String, Long> result = new HashMap<>();
@@ -205,27 +230,23 @@ public class PythonGateway {
     }
 
     /**
-     * create or update workflow.
-     * If workflow do not exists in Project=`projectCode` would create a new one
-     * If workflow already exists in Project=`projectCode` would update it
+     * 创建或更新工作流。如果工作流在项目中不存在则创建新的，如果已存在则更新。
      *
-     * @param userName user name who create or update workflow
-     * @param projectName project name which workflow belongs to
-     * @param name workflow name
-     * @param description description
-     * @param globalParams global params
-     * @param schedule schedule for workflow, will not set schedule if null,
-     * and if would always fresh exists schedule if not null
-     * @param onlineSchedule Whether set the workflow's schedule to online state
-     * @param warningType warning type
-     * @param warningGroupId warning group id
-     * @param timeout timeout for workflow working, if running time longer than timeout,
-     * task will mark as fail
-     * @param workerGroup run task in which worker group
-     * @param taskRelationJson relation json for nodes
-     * @param taskDefinitionJson taskDefinitionJson
-     * @param otherParamsJson otherParamsJson handle other params
-     * @return create result code
+     * @param userName           操作用户名
+     * @param projectName        项目名称
+     * @param name               工作流名称
+     * @param description        工作流描述
+     * @param globalParams       全局参数
+     * @param schedule           调度配置，为null时不设置调度，非null时总是刷新已有调度
+     * @param onlineSchedule     是否将调度设置为在线状态
+     * @param warningType        告警类型
+     * @param warningGroupId     告警组ID
+     * @param timeout            超时时间，运行超过该时间任务将被标记为失败
+     * @param workerGroup        运行任务的Worker分组
+     * @param taskRelationJson   任务节点关系JSON
+     * @param taskDefinitionJson 任务定义JSON
+     * @param otherParamsJson    其他参数JSON
+     * @return 工作流编码
      */
     public Long createOrUpdateWorkflow(String userName,
                                        String projectName,
@@ -288,11 +309,12 @@ public class PythonGateway {
     }
 
     /**
-     * get workflow
+     * 根据项目编码和工作流名获取工作流定义。
      *
-     * @param user user who create or update schedule
-     * @param projectCode project which workflow belongs to
-     * @param workflowName workflow name
+     * @param user         操作用户
+     * @param projectCode  项目编码
+     * @param workflowName 工作流名称
+     * @return 找到的工作流定义，如果不存在则返回null
      */
     private ProcessDefinition getWorkflow(User user, long projectCode, String workflowName) {
         Map<String, Object> verifyProcessDefinitionExists =
@@ -313,18 +335,16 @@ public class PythonGateway {
     }
 
     /**
-     * create or update workflow schedule.
-     * It would always use latest schedule define in workflow-as-code, and set schedule online when
-     * it's not null
+     * 创建或更新工作流调度配置。如果调度不存在则创建，如果已存在则更新。
      *
-     * @param user user who create or update schedule
-     * @param projectCode project which workflow belongs to
-     * @param workflowCode workflow code
-     * @param schedule schedule expression
-     * @param onlineSchedule Whether set the workflow's schedule to online state
-     * @param workerGroup work group
-     * @param warningType warning type
-     * @param warningGroupId warning group id
+     * @param user            操作用户
+     * @param projectCode     项目编码
+     * @param workflowCode    工作流编码
+     * @param schedule        调度表达式
+     * @param onlineSchedule  是否将调度设置为在线状态
+     * @param workerGroup     Worker分组
+     * @param warningType     告警类型
+     * @param warningGroupId  告警组ID
      */
     private void createOrUpdateSchedule(User user,
                                         long projectCode,
@@ -358,6 +378,18 @@ public class PythonGateway {
         }
     }
 
+    /**
+     * 执行工作流实例。
+     *
+     * @param userName       用户名
+     * @param projectName    项目名称
+     * @param workflowName   工作流名称
+     * @param cronTime       cron时间
+     * @param workerGroup    Worker分组
+     * @param warningType    告警类型
+     * @param warningGroupId 告警组ID
+     * @param timeout        超时时间
+     */
     public void execWorkflowInstance(String userName,
                                      String projectName,
                                      String workflowName,
@@ -413,9 +445,12 @@ public class PythonGateway {
         return projectUserMapper.insert(projectUser);
     }
 
-    /*
-      Grant or create project. Create a new project if project do not exists, and grant the project
-      permission to user if project exists but without permission to this user.
+    /**
+     * 分配或创建项目。如果项目不存在则创建新项目，如果项目存在但用户无权访问则授予权限。
+     *
+     * @param userName 用户名
+     * @param name     项目名称
+     * @param desc     项目描述
      */
     public void createOrGrantProject(String userName, String name, String desc) {
         User user = usersService.queryUser(userName);
@@ -432,39 +467,104 @@ public class PythonGateway {
         }
     }
 
+    /**
+     * 根据项目名称查询项目信息。
+     *
+     * @param userName    用户名
+     * @param projectName 项目名称
+     * @return 项目实体
+     */
     public Project queryProjectByName(String userName, String projectName) {
         User user = usersService.queryUser(userName);
         return (Project) projectService.queryByName(user, projectName).get(Constants.DATA_LIST);
     }
 
+    /**
+     * 更新项目信息。
+     *
+     * @param userName    用户名
+     * @param projectCode 项目编码
+     * @param projectName 新项目名称
+     * @param desc        项目描述
+     */
     public void updateProject(String userName, Long projectCode, String projectName, String desc) {
         User user = usersService.queryUser(userName);
         projectService.update(user, projectCode, projectName, desc, userName);
     }
 
+    /**
+     * 删除指定编码的项目。
+     *
+     * @param userName    用户名
+     * @param projectCode 项目编码
+     */
     public void deleteProject(String userName, Long projectCode) {
         User user = usersService.queryUser(userName);
         projectService.deleteProject(user, projectCode);
     }
 
+    /**
+     * 创建租户，如果租户已存在则返回已有租户。
+     *
+     * @param tenantCode 租户编码
+     * @param desc       租户描述
+     * @param queueName  队列名称
+     * @return 租户实体
+     */
     public Tenant createTenant(String tenantCode, String desc, String queueName) {
         return tenantService.createTenantIfNotExists(tenantCode, desc, queueName, queueName);
     }
 
+    /**
+     * 根据租户编码查询租户信息。
+     *
+     * @param tenantCode 租户编码
+     * @return 租户实体
+     */
     public Tenant queryTenantByCode(String tenantCode) {
         return (Tenant) tenantService.queryByTenantCode(tenantCode).get(Constants.DATA_LIST);
     }
 
+    /**
+     * 更新租户信息。
+     *
+     * @param userName   用户名
+     * @param id         租户ID
+     * @param tenantCode 新租户编码
+     * @param queueId    队列ID
+     * @param desc       租户描述
+     * @throws Exception 更新失败时抛出
+     */
     public void updateTenant(String userName, int id, String tenantCode, int queueId, String desc) throws Exception {
         User user = usersService.queryUser(userName);
         tenantService.updateTenant(user, id, tenantCode, queueId, desc);
     }
 
+    /**
+     * 删除指定ID的租户。
+     *
+     * @param userName  用户名
+     * @param tenantId  租户ID
+     * @throws Exception 删除失败时抛出
+     */
     public void deleteTenantById(String userName, Integer tenantId) throws Exception {
         User user = usersService.queryUser(userName);
         tenantService.deleteTenantById(user, tenantId);
     }
 
+    /**
+     * 创建用户。如果用户不存在则自动创建。
+     *
+     * @param userName     用户名
+     * @param userPassword 用户密码
+     * @param email        邮箱
+     * @param phone        电话
+     * @param tenantCode   租户编码
+     * @param queue        队列名称
+     * @param state        用户状态
+     * @return 用户实体
+     * @throws IOException 创建失败时抛出
+     */
     public User createUser(String userName,
                            String userPassword,
                            String email,
@@ -475,6 +575,13 @@ public class PythonGateway {
         return usersService.createUserIfNotExists(userName, userPassword, email, phone, tenantCode, queue, state);
     }
 
+    /**
+     * 根据用户ID查询用户信息。
+     *
+     * @param id 用户ID
+     * @return 用户实体
+     * @throws RuntimeException 用户不存在时抛出
+     */
     public User queryUser(int id) {
         User user = usersService.queryUser(id);
         if (user == null) {
@@ -483,10 +590,31 @@ public class PythonGateway {
         return user;
     }
 
+    /**
+     * 更新用户信息，如果用户不存在则自动创建。
+     *
+     * @param userName     用户名
+     * @param userPassword 用户密码
+     * @param email        邮箱
+     * @param phone        电话
+     * @param tenantCode   租户编码
+     * @param queue        队列名称
+     * @param state        用户状态
+     * @return 用户实体
+     * @throws Exception 操作失败时抛出
+     */
     public User updateUser(String userName, String userPassword, String email, String phone, String tenantCode, String queue, int state) throws Exception {
         return usersService.createUserIfNotExists(userName, userPassword, email, phone, tenantCode, queue, state);
     }
 
+    /**
+     * 删除指定ID的用户。
+     *
+     * @param userName 操作用户名
+     * @param id       要删除的用户ID
+     * @return 操作用户实体
+     * @throws Exception 删除失败时抛出
+     */
     public User deleteUser(String userName, int id) throws Exception {
         User user = usersService.queryUser(userName);
         usersService.deleteUserById(user, id);
@@ -494,11 +622,11 @@ public class PythonGateway {
     }
 
     /**
-     * Get single datasource by given datasource name. if type is not null,
-     * it will return the datasource match the type.
+     * 根据数据源名称和类型获取单个数据源。如果指定了类型，则只返回匹配该类型的数据源。
      *
-     * @param datasourceName datasource name of datasource
-     * @param type datasource type
+     * @param datasourceName 数据源名称
+     * @param type           数据源类型，为null时不按类型过滤
+     * @return 数据源实体
      */
     public DataSource getDatasource(String datasourceName, String type) {
 
@@ -528,12 +656,13 @@ public class PythonGateway {
     }
 
     /**
-     * Get workflow object by given workflow name. It returns map contain workflow id, name, code.
-     * Useful in Python API create subProcess task which need workflow information.
+     * 根据工作流名称获取工作流信息。返回包含工作流ID、名称和编码的Map。
+     * 主要用于Python API创建子流程任务时获取工作流信息。
      *
-     * @param userName user who create or update schedule
-     * @param projectName project name which workflow belongs to
-     * @param workflowName workflow name
+     * @param userName     用户名
+     * @param projectName  项目名称
+     * @param workflowName 工作流名称
+     * @return 包含 id、name 和 code 的工作流信息Map
      */
     public Map<String, Object> getWorkflowInfo(String userName, String projectName,
                                                String workflowName) {
@@ -561,12 +690,12 @@ public class PythonGateway {
     }
 
     /**
-     * Get project, workflow, task code.
-     * Useful in Python API create dependent task which need workflow information.
+     * 获取项目、工作流和任务编码信息。主要用于Python API创建依赖任务时获取工作流相关信息。
      *
-     * @param projectName project name which workflow belongs to
-     * @param workflowName workflow name
-     * @param taskName task name
+     * @param projectName  项目名称
+     * @param workflowName 工作流名称
+     * @param taskName     任务名称，可为null
+     * @return 包含 projectCode、processDefinitionCode 和可选的 taskDefinitionCode 的Map
      */
     public Map<String, Object> getDependentInfo(String projectName, String workflowName, String taskName) {
         Map<String, Object> result = new HashMap<>();
@@ -597,11 +726,12 @@ public class PythonGateway {
     }
 
     /**
-     * Get resource by given program type and full name. It returns map contain resource id, name.
-     * Useful in Python API create flink or spark task which need workflow information.
+     * 根据程序类型和资源全名获取资源文件信息。返回包含资源ID和名称的Map。
+     * 主要用于Python API创建Flink或Spark任务时获取资源信息。
      *
-     * @param programType program type one of SCALA, JAVA and PYTHON
-     * @param fullName full name of the resource
+     * @param programType 程序类型，可选值 SCALA、JAVA、PYTHON
+     * @param fullName    资源的完整名称（含路径）
+     * @return 包含 id 和 name 的资源信息Map
      */
     public Map<String, Object> getResourcesFileInfo(String programType, String fullName) {
         Map<String, Object> result = new HashMap<>();
@@ -621,10 +751,10 @@ public class PythonGateway {
     }
 
     /**
-     * Get environment info by given environment name. It return environment code.
-     * Useful in Python API create task which need environment information.
+     * 根据环境名称获取环境编码。主要用于Python API创建任务时获取环境信息。
      *
-     * @param environmentName name of the environment
+     * @param environmentName 环境名称
+     * @return 环境编码
      */
     public Long getEnvironmentInfo(String environmentName) {
         Map<String, Object> result = environmentService.queryEnvironmentByName(environmentName);
@@ -640,34 +770,41 @@ public class PythonGateway {
 
 
     /**
-     * Get resource by given resource type and full name. It return map contain resource id, name.
-     * Useful in Python API create task which need workflow information.
+     * 根据资源全名查询资源文件信息。主要用于Python API创建任务时获取资源信息。
      *
-     * @param userName user who query resource
-     * @param fullName full name of the resource
+     * @param userName 用户名
+     * @param fullName 资源完整名称
+     * @return 资源实体
      */
     public Resource queryResourcesFileInfo(String userName, String fullName) {
         return resourceService.queryResourcesFileInfo(userName, fullName);
     }
 
+    /**
+     * 获取Python网关的版本号。
+     *
+     * @return 版本号字符串
+     */
     public String getGatewayVersion() {
         return PythonGateway.class.getPackage().getImplementationVersion();
     }
 
     /**
-     * create or update resource.
-     * If the folder is not already created, it will be
+     * 创建或更新资源文件。如果资源所在目录不存在则自动创建。
      *
-     * @param userName user who create or update resource
-     * @param fullName The fullname of resource.Includes path and suffix.
-     * @param description description of resource
-     * @param resourceContent content of resource
+     * @param userName        用户名
+     * @param fullName        资源完整名称（含路径和后缀）
+     * @param description     资源描述
+     * @param resourceContent 资源内容
      */
     public void createOrUpdateResource(
             String userName, String fullName, String description, String resourceContent) {
         resourceService.createOrUpdateResource(userName, fullName, description, resourceContent);
     }
 
+    /**
+     * 服务初始化方法。在Spring容器启动后自动调用，当Python网关功能启用时启动网关服务。
+     */
     @PostConstruct
     public void init() {
         if (pythonGatewayConfiguration.isEnabled()) {

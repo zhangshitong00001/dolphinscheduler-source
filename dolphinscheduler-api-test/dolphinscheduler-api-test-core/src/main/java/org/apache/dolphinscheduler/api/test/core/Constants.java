@@ -22,34 +22,27 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public final class Constants {
 
-    /**
-     * backend api url
-     */
+    /** DolphinScheduler后端API地址 */
     public static final String DOLPHINSCHEDULER_API_URL = "http://0.0.0.0:12345/dolphinscheduler";
 
-    /**
-     * backend api request header's content type
-     */
+    /** 后端API请求头的内容类型 */
     public static final String REQUEST_CONTENT_TYPE = "application/x-www-form-urlencoded";
 
-    /**
-     * header's session id's key
-     */
+    /** 请求头中会话ID的键名 */
     public static final String SESSION_ID_KEY = "sessionId";
 
-    /**
-     * simple date format
-     */
+    /** 标准日期时间格式 */
     public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
-    /**
-     * docker compose default healthy timeout
-     */
+    /** Docker Compose默认健康检查超时时间（秒） */
     public static final Integer DOCKER_COMPOSE_DEFAULT_TIMEOUT = 180;
 
+    /** 问号分隔符 */
     public static final String QUESTION_MARK = "?";
 
+    /** 等号分隔符 */
     public static final String EQUAL_MARK = "=";
 
+    /** &符号分隔符 */
     public static final String AND_MARK = "&";
 }

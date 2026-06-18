@@ -38,14 +38,15 @@ import java.util.stream.Collectors;
 import com.google.common.base.Strings;
 
 /**
- * Param Utility class
+ * 参数工具类，用于处理工作流中的全局参数和子工作流参数。支持全局参数解析和子流程命令参数的构建。
  */
 public class ParamUtils {
 
     /**
-     * convert globalParams string to global parameter map
-     * @param globalParams  globalParams
-     * @return parameter map
+     * 将全局参数字符串转换为键值对映射。
+     *
+     * @param globalParams the global parameters JSON string
+     * @return a map of parameter name to value
      */
     public static Map<String, String> getGlobalParamMap(String globalParams) {
         List<Property> propList;
@@ -58,11 +59,12 @@ public class ParamUtils {
     }
 
     /**
-     * Get sub workflow parameters
-     * @param instanceMap process instance map
-     * @param parentProcessInstance  parent process instance
-     * @param fatherParams fatherParams
-     * @return sub workflow parameters
+     * 构建子工作流的命令参数，合并父流程的补数参数和全局参数。
+     *
+     * @param instanceMap the process instance map
+     * @param parentProcessInstance the parent process instance
+     * @param fatherParams the parent global parameters
+     * @return the sub workflow parameters JSON string
      */
     public static String getSubWorkFlowParam(ProcessInstanceMap instanceMap, ProcessInstance parentProcessInstance,
                                              Map<String, String> fatherParams) {

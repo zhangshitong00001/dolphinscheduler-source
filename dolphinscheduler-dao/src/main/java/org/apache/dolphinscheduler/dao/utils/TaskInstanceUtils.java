@@ -19,14 +19,16 @@ package org.apache.dolphinscheduler.dao.utils;
 
 import org.apache.dolphinscheduler.dao.entity.TaskInstance;
 
+/**
+ * 任务实例工具类，提供任务实例对象的属性深拷贝功能。
+ */
 public class TaskInstanceUtils {
 
     /**
-     * Copy the property of given source {@link TaskInstance} to target.
+     * 将源 TaskInstance 的全部属性复制到目标 TaskInstance，用于任务实例的快照或备份场景。
      *
      * @param source Given task instance, copy from.
      * @param target Given task instance, copy to
-     * @return a soft copy of given task instance.
      */
     public static void copyTaskInstance(TaskInstance source, TaskInstance target) {
         target.setId(source.getId());

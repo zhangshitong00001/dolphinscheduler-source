@@ -17,12 +17,15 @@
 
 package org.apache.dolphinscheduler.api.audit;
 
+/**
+ * 审计订阅者接口。定义审计消息处理的回调规范，实现类通过实现此接口来消费AuditPublishService发布的审计消息。
+ */
 public interface AuditSubscriber {
 
     /**
-     * process the audit message
+     * 处理审计消息。
      *
-     * @param message
+     * @param message 审计消息
      */
     void execute(AuditMessage message);
 }

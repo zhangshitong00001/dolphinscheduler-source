@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * constant
+ * 远程通信常量定义。包含网络配置、心跳时间、字符集等常量。
  */
 public class Constants {
 
@@ -40,25 +40,27 @@ public class Constants {
     public static final int NETTY_CLIENT_HEART_BEAT_TIME = 1000 * 6;
 
     /**
-     * charset
+     * UTF-8字符集
      */
     public static final Charset UTF8 = StandardCharsets.UTF_8;
 
     /**
-     * cpus
+     * CPU核心数
      */
     public static final int CPUS = Runtime.getRuntime().availableProcessors();
 
-
+    /**
+     * 本地地址
+     */
     public static final String LOCAL_ADDRESS = NetUtils.getHost();
 
     /**
-     * OS Name
+     * 操作系统名称
      */
     public static final String OS_NAME = System.getProperty("os.name");
 
     /**
-     * warm up time
+     * 预热时间（毫秒）
      */
     public static final int WARM_UP_TIME = 10 * 60 * 1000;
 

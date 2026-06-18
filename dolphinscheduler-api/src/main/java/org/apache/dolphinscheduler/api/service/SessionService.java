@@ -23,7 +23,7 @@ import org.apache.dolphinscheduler.dao.entity.User;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * session service
+ * 会话服务接口。提供用户Session的创建、获取和登出功能，用于管理用户登录状态。
  */
 public interface SessionService {
 

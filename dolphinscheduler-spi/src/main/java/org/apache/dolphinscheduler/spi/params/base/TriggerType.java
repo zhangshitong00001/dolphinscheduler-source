@@ -17,10 +17,15 @@
 
 package org.apache.dolphinscheduler.spi.params.base;
 
+/**
+ * 表单校验触发类型枚举，定义表单校验规则何时被触发执行。
+ */
 public enum TriggerType {
 
+    /** 失焦时触发校验 */
     BLUR("blur"),
 
+    /** 值变更时触发校验 */
     CHANGE("change");
 
     private String triggerType;

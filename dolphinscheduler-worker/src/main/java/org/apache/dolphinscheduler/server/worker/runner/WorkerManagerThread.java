@@ -33,7 +33,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 
 /**
- * Manage tasks
+ * Worker任务管理线程，负责从延迟队列中取出待执行任务并提交到WorkerExecService执行。
+ * 维护等待提交队列和正在运行的任务映射表，支持线程池满时的溢出控制策略。
  */
 @Component
 public class WorkerManagerThread implements Runnable {
@@ -46,9 +47,6 @@ public class WorkerManagerThread implements Runnable {
 
     private final int workerExecThreads;
 
-    /**
-     * running task
-     */
     private final ConcurrentHashMap<Integer, WorkerTaskExecuteRunnable> taskExecuteThreadMap = new ConcurrentHashMap<>();
 
     public WorkerManagerThread(WorkerConfig workerConfig) {
@@ -65,7 +63,7 @@ public class WorkerManagerThread implements Runnable {
     }
 
     /**
-     * get wait submit queue size
+     * 获取等待提交队列的大小。
      *
      * @return queue size
      */
@@ -74,7 +72,7 @@ public class WorkerManagerThread implements Runnable {
     }
 
     /**
-     * get thread pool queue size
+     * 获取线程池队列大小。
      *
      * @return queue size
      */
@@ -83,8 +81,9 @@ public class WorkerManagerThread implements Runnable {
     }
 
     /**
-     * Kill tasks that have not been executed, like delay task
-     * then send Response to Master, update the execution status of task instance
+     * 根据任务实例ID从等待队列中移除尚未执行的延迟任务。
+     *
+     * @param taskInstanceId 任务实例ID
      */
     public void killTaskBeforeExecuteByInstanceId(Integer taskInstanceId) {
         waitSubmitQueue.stream()
@@ -93,6 +92,12 @@ public class WorkerManagerThread implements Runnable {
                 .forEach(waitSubmitQueue::remove);
     }
 
+    /**
+     * 向等待提交队列中添加延迟任务，根据线程满策略处理队列溢出。
+     *
+     * @param workerDelayTaskExecuteRunnable 待添加的延迟任务Runnable
+     * @return 是否成功加入队列
+     */
     public boolean offer(WorkerDelayTaskExecuteRunnable workerDelayTaskExecuteRunnable) {
         if (workerConfig.getTaskExecuteThreadsFullPolicy() == TaskExecuteThreadsFullPolicy.CONTINUE) {
             return waitSubmitQueue.offer(workerDelayTaskExecuteRunnable);
@@ -110,6 +115,9 @@ public class WorkerManagerThread implements Runnable {
         return waitSubmitQueue.offer(workerDelayTaskExecuteRunnable);
     }
 
+    /**
+     * 启动Worker管理线程，以守护线程方式运行。
+     */
     public void start() {
         logger.info("Worker manager thread starting");
         Thread thread = new Thread(this, this.getClass().getName());
@@ -142,6 +150,10 @@ public class WorkerManagerThread implements Runnable {
         }
     }
 
+    /**
+     * 清理所有等待中和执行中的任务，在Worker断开注册中心连接时调用。
+     * 清空等待队列并逐个取消正在执行的任务。
+     */
     public void clearTask() {
         waitSubmitQueue.clear();
         workerExecService.getTaskExecuteThreadMap().values().forEach(workerTaskExecuteRunnable -> {

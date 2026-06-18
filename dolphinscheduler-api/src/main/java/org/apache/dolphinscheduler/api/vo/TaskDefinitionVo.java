@@ -25,13 +25,13 @@ import java.util.List;
 import lombok.Data;
 
 /**
- * @author fanwanlong
+ * 任务定义视图对象。继承TaskDefinition实体，附加任务节点间的关系列表，用于前端展示和编辑。
  */
 @Data
 public class TaskDefinitionVo extends TaskDefinition {
 
     /**
-     * process task related list
+     * 流程任务关系列表
      */
     private List<ProcessTaskRelation> processTaskRelationList;
 

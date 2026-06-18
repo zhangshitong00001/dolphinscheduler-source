@@ -26,48 +26,45 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * 项目用户关联实体，映射到 t_ds_relation_project_user 表，表示用户与项目之间的权限关系。
+ */
 @Data
 @TableName("t_ds_relation_project_user")
 public class ProjectUser {
 
-    /**
-     * id
-     */
+    /** 主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    /** 用户 ID */
     @TableField("user_id")
     private int userId;
 
+    /** 项目 ID */
     @TableField("project_id")
     private int projectId;
 
-    /**
-     * project code
-     */
+    /** 非数据库字段：项目编码 */
     @TableField(exist = false)
     private long projectCode;
 
-    /**
-     * project name
-     */
+    /** 非数据库字段：项目名称 */
     @TableField(exist = false)
     private String projectName;
 
-    /**
-     * user name
-     */
+    /** 非数据库字段：用户名 */
     @TableField(exist = false)
     private String userName;
 
-    /**
-     * permission
-     */
+    /** 权限值 */
     private int perm;
 
+    /** 创建时间 */
     @TableField("create_time")
     private Date createTime;
 
+    /** 更新时间 */
     @TableField("update_time")
     private Date updateTime;
 }

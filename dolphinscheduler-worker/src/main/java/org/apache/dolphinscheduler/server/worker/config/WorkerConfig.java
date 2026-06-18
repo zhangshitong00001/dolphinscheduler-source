@@ -34,6 +34,10 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 
+/**
+ * Worker配置类。管理Worker服务的所有配置参数，包括监听端口、执行线程数、心跳间隔、
+ * 主机权重、租户自动创建、CPU负载阈值、预留内存、告警服务地址以及注册中心断开连接策略等。
+ */
 @Data
 @Validated
 @Configuration
@@ -62,11 +66,24 @@ public class WorkerConfig implements Validator {
 
     private TaskExecuteThreadsFullPolicy taskExecuteThreadsFullPolicy = TaskExecuteThreadsFullPolicy.REJECT;
 
+    /**
+     * 验证器支持检查。判断当前验证器是否支持校验指定的类。
+     *
+     * @param clazz 待检查的类
+     * @return 如果clazz是WorkerConfig或其子类则返回true
+     */
     @Override
     public boolean supports(Class<?> clazz) {
         return WorkerConfig.class.isAssignableFrom(clazz);
     }
 
+    /**
+     * 验证Worker配置参数的有效性。检查执行线程数、心跳间隔、CPU负载阈值等参数，
+     * 并自动计算Worker地址和注册路径。
+     *
+     * @param target 待验证的目标对象
+     * @param errors 验证错误收集器
+     */
     @Override
     public void validate(Object target, Errors errors) {
         WorkerConfig workerConfig = (WorkerConfig) target;

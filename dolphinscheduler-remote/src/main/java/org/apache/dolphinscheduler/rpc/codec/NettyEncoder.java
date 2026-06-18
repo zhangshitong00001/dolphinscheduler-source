@@ -27,10 +27,19 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
- * NettyEncoder
+ * Netty RPC 编码器。将 RpcProtocol 对象按照 DolphinScheduler RPC 协议格式编码为字节流。
+ * 协议头部17字节：magic(2) + eventType(1) + version(1) + serialization(1) + requestId(8) + dataLength(4) + body。
  */
 public class NettyEncoder extends MessageToByteEncoder<RpcProtocol<Object>> {
 
+    /**
+     * 将 RpcProtocol 消息编码为字节流写入 ByteBuf。
+     *
+     * @param channelHandlerContext Netty 通道处理器上下文
+     * @param msg 待编码的 RpcProtocol 消息
+     * @param byteBuf 目标字节缓冲区
+     * @throws Exception 编码过程中可能发生的异常
+     */
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, RpcProtocol<Object> msg, ByteBuf byteBuf) throws Exception {
         MessageHeader msgHeader = msg.getMsgHeader();

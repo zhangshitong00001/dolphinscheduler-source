@@ -46,18 +46,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * dag tools
+ * DAG（有向无环图）辅助工具类，提供流程DAG的构建、节点查找、依赖分析、条件/分支任务解析等功能。
+ * 用于工作流调度引擎中图结构的管理和遍历。
  */
 public class DagHelper {
 
     private static final Logger logger = LoggerFactory.getLogger(DagHelper.class);
 
     /**
-     * generate flow node relation list by task node list;
-     * Edges that are not in the task Node List will not be added to the result
+     * 根据任务节点列表生成节点关系列表。不在任务节点列表中的边将不会被添加到结果中。
      *
-     * @param taskNodeList taskNodeList
-     * @return task node relation list
+     * @param taskNodeList list of task nodes
+     * @return list of task node relations
      */
     public static List<TaskNodeRelation> generateRelationListByFlowNodes(List<TaskNode> taskNodeList) {
         List<TaskNodeRelation> nodeRelationList = new ArrayList<>();
@@ -76,13 +76,13 @@ public class DagHelper {
     }
 
     /**
-     * generate task nodes needed by dag
+     * 根据起始节点和恢复节点生成DAG需要的任务节点列表。支持按前后依赖关系（TASK_PRE/TASK_POST）两种模式进行遍历。
      *
-     * @param taskNodeList taskNodeList
-     * @param startNodeNameList startNodeNameList
-     * @param recoveryNodeCodeList recoveryNodeCodeList
-     * @param taskDependType taskDependType
-     * @return task node list
+     * @param taskNodeList full list of task nodes
+     * @param startNodeNameList list of start node codes
+     * @param recoveryNodeCodeList list of recovery node codes
+     * @param taskDependType the task dependency type
+     * @return filtered list of task nodes needed for the DAG
      */
     public static List<TaskNode> generateFlowNodeListByStartNode(List<TaskNode> taskNodeList,
                                                                  List<String> startNodeNameList,
@@ -139,11 +139,12 @@ public class DagHelper {
     }
 
     /**
-     * find all the nodes that depended on the start node
+     * 查找所有依赖起始节点的后续节点（后序遍历方式）。
      *
-     * @param startNode startNode
-     * @param taskNodeList taskNodeList
-     * @return task node list
+     * @param startNode the start node
+     * @param taskNodeList full list of task nodes
+     * @param visitedNodeCodeList list of visited node codes
+     * @return list of nodes that depend on the start node
      */
     private static List<TaskNode> getFlowNodeListPost(TaskNode startNode, List<TaskNode> taskNodeList,
                                                       List<String> visitedNodeCodeList) {
@@ -165,12 +166,13 @@ public class DagHelper {
     }
 
     /**
-     * find all nodes that start nodes depend on.
+     * 查找起始节点所依赖的所有前置节点（前序遍历方式）。
      *
-     * @param startNode startNode
-     * @param recoveryNodeCodeList recoveryNodeCodeList
-     * @param taskNodeList taskNodeList
-     * @return task node list
+     * @param startNode the start node
+     * @param recoveryNodeCodeList list of recovery node codes
+     * @param taskNodeList full list of task nodes
+     * @param visitedNodeCodeList list of visited node codes
+     * @return list of predecessor nodes
      */
     private static List<TaskNode> getFlowNodeListPre(TaskNode startNode, List<String> recoveryNodeCodeList,
                                                      List<TaskNode> taskNodeList, List<String> visitedNodeCodeList) {
@@ -201,14 +203,14 @@ public class DagHelper {
     }
 
     /**
-     * generate dag by start nodes and recovery nodes
+     * 根据起始节点和恢复节点生成流程DAG图。
      *
-     * @param totalTaskNodeList totalTaskNodeList
-     * @param startNodeNameList startNodeNameList
-     * @param recoveryNodeCodeList recoveryNodeCodeList
-     * @param depNodeType depNodeType
-     * @return process dag
-     * @throws Exception if error throws Exception
+     * @param totalTaskNodeList full list of task nodes
+     * @param startNodeNameList list of start node codes
+     * @param recoveryNodeCodeList list of recovery node codes
+     * @param depNodeType the dependency node type
+     * @return the generated ProcessDag, or null if no nodes
+     * @throws Exception if an error occurs
      */
     public static ProcessDag generateFlowDag(List<TaskNode> totalTaskNodeList,
                                              List<String> startNodeNameList,
@@ -228,11 +230,11 @@ public class DagHelper {
     }
 
     /**
-     * find node by node name
+     * 根据节点名称查找任务节点。
      *
-     * @param nodeDetails nodeDetails
-     * @param nodeName nodeName
-     * @return task node
+     * @param nodeDetails list of task nodes to search
+     * @param nodeName the name of the node to find
+     * @return the found TaskNode, or null if not found
      */
     public static TaskNode findNodeByName(List<TaskNode> nodeDetails, String nodeName) {
         for (TaskNode taskNode : nodeDetails) {
@@ -244,11 +246,11 @@ public class DagHelper {
     }
 
     /**
-     * find node by node code
+     * 根据节点编码查找任务节点。
      *
-     * @param nodeDetails nodeDetails
-     * @param nodeCode nodeCode
-     * @return task node
+     * @param nodeDetails list of task nodes to search
+     * @param nodeCode the code of the node to find
+     * @return the found TaskNode, or null if not found
      */
     public static TaskNode findNodeByCode(List<TaskNode> nodeDetails, String nodeCode) {
         for (TaskNode taskNode : nodeDetails) {
@@ -260,12 +262,13 @@ public class DagHelper {
     }
 
     /**
-     * the task can be submit when  all the depends nodes are forbidden or complete
+     * 判断任务是否满足提交条件：所有依赖节点都已被禁止、已完成或在跳过列表中。
      *
-     * @param taskNode taskNode
-     * @param dag dag
-     * @param completeTaskList completeTaskList
-     * @return can submit
+     * @param taskNode the task node to check
+     * @param dag the DAG graph
+     * @param skipTaskNodeList map of skipped task nodes
+     * @param completeTaskList map of completed task instances
+     * @return true if all depends are forbidden or completed
      */
     public static boolean allDependsForbiddenOrEnd(TaskNode taskNode,
                                                    DAG<String, TaskNode, TaskNodeRelation> dag,
@@ -289,11 +292,14 @@ public class DagHelper {
     }
 
     /**
-     * parse the successor nodes of previous node.
-     * this function parse the condition node to find the right branch.
-     * also check all the depends nodes forbidden or complete
+     * 解析前置节点的后继节点集合。此方法会处理条件节点的分支选择逻辑，
+     * 同时检查所有依赖节点是否已禁止或完成，跳过不需要执行的节点。
      *
-     * @return successor nodes
+     * @param preNodeCode the code of the predecessor node
+     * @param skipTaskNodeList map of skipped task nodes
+     * @param dag the DAG graph
+     * @param completeTaskList map of completed task instances
+     * @return set of successor node codes
      */
     public static Set<String> parsePostNodes(String preNodeCode,
                                              Map<String, TaskNode> skipTaskNodeList,
@@ -352,8 +358,14 @@ public class DagHelper {
     }
 
     /**
-     * parse condition task find the branch process
-     * set skip flag for another one.
+     * 解析条件任务，根据条件任务的执行结果（成功或失败）选择对应的后续分支路径，
+     * 并将另一个未选择的分支节点标记为跳过。
+     *
+     * @param nodeCode the condition task node code
+     * @param skipTaskNodeList map of skipped task nodes
+     * @param dag the DAG graph
+     * @param completeTaskList map of completed task instances
+     * @return list of selected branch node codes
      */
     public static List<String> parseConditionTask(String nodeCode,
                                                   Map<String, TaskNode> skipTaskNodeList,
@@ -391,11 +403,14 @@ public class DagHelper {
     }
 
     /**
-     * parse condition task find the branch process
-     * set skip flag for another one.
+     * 解析分支(Switch)任务，根据Switch任务的执行结果选择对应的后续分支路径，
+     * 并将其他未选中的分支节点标记为跳过。
      *
-     * @param nodeCode
-     * @return
+     * @param nodeCode the switch task node code
+     * @param skipTaskNodeList map of skipped task nodes
+     * @param dag the DAG graph
+     * @param completeTaskList map of completed task instances
+     * @return list of selected branch node codes
      */
     public static List<String> parseSwitchTask(String nodeCode,
                                                Map<String, TaskNode> skipTaskNodeList,
@@ -447,10 +462,11 @@ public class DagHelper {
     }
 
     /**
-     * get all downstream nodes of the branch that the switch node needs to execute
-     * @param taskCode
-     * @param dag
-     * @param switchNeedWorkCodes
+     * 递归获取Switch任务需要执行的分支的所有下游节点编码。
+     *
+     * @param taskCode the current task code
+     * @param dag the DAG graph
+     * @param switchNeedWorkCodes set to collect all downstream node codes
      */
     public static void getSwitchNeedWorkCodes(String taskCode, DAG<String, TaskNode, TaskNodeRelation> dag,
                                               Set<String> switchNeedWorkCodes) {
@@ -501,10 +517,11 @@ public class DagHelper {
         }
     }
 
-    /***
-     * build dag graph
-     * @param processDag processDag
-     * @return dag
+    /**
+     * 根据 ProcessDag 构建 DAG 图结构，添加节点和边。
+     *
+     * @param processDag the process DAG model
+     * @return the constructed DAG graph
      */
     public static DAG<String, TaskNode, TaskNodeRelation> buildDagGraph(ProcessDag processDag) {
 
@@ -527,10 +544,10 @@ public class DagHelper {
     }
 
     /**
-     * get process dag
+     * 根据任务节点列表构建流程DAG（有向无环图）对象。
      *
-     * @param taskNodeList task node list
-     * @return Process dag
+     * @param taskNodeList list of task nodes
+     * @return the constructed ProcessDag
      */
     public static ProcessDag getProcessDag(List<TaskNode> taskNodeList) {
         List<TaskNodeRelation> taskNodeRelations = new ArrayList<>();
@@ -555,10 +572,11 @@ public class DagHelper {
     }
 
     /**
-     * get process dag
+     * 根据任务节点列表和任务关系列表构建流程DAG对象。
      *
-     * @param taskNodeList task node list
-     * @return Process dag
+     * @param taskNodeList list of task nodes
+     * @param processTaskRelations list of process task relations
+     * @return the constructed ProcessDag
      */
     public static ProcessDag getProcessDag(List<TaskNode> taskNodeList,
                                            List<ProcessTaskRelation> processTaskRelations) {
@@ -588,7 +606,11 @@ public class DagHelper {
     }
 
     /**
-     * is there have conditions after the parent node
+     * 判断指定父节点之后是否存在条件任务类型的后继节点。
+     *
+     * @param parentNodeCode the parent node code
+     * @param dag the DAG graph
+     * @return true if there are conditions tasks after the parent node
      */
     public static boolean haveConditionsAfterNode(String parentNodeCode,
                                                   DAG<String, TaskNode, TaskNodeRelation> dag) {
@@ -596,7 +618,11 @@ public class DagHelper {
     }
 
     /**
-     * is there have conditions after the parent node
+     * 判断在任务节点列表中，指定父节点之后是否存在条件任务类型的后继节点。
+     *
+     * @param parentNodeCode the parent node code
+     * @param taskNodes list of task nodes
+     * @return true if there are conditions tasks after the parent node
      */
     public static boolean haveConditionsAfterNode(String parentNodeCode, List<TaskNode> taskNodes) {
         if (CollectionUtils.isEmpty(taskNodes)) {
@@ -612,7 +638,11 @@ public class DagHelper {
     }
 
     /**
-     * is there have blocking node after the parent node
+     * 判断指定父节点之后是否存在阻塞任务类型的后继节点。
+     *
+     * @param parentNodeCode the parent node code
+     * @param dag the DAG graph
+     * @return true if there are blocking tasks after the parent node
      */
     public static boolean haveBlockingAfterNode(String parentNodeCode,
                                                 DAG<String, TaskNode, TaskNodeRelation> dag) {
@@ -620,7 +650,11 @@ public class DagHelper {
     }
 
     /**
-     * is there have all node after the parent node
+     * 判断指定父节点之后是否存在任意类型的后继节点。
+     *
+     * @param parentNodeCode the parent node code
+     * @param dag the DAG graph
+     * @return true if there are any successor nodes
      */
     public static boolean haveAllNodeAfterNode(String parentNodeCode,
                                                DAG<String, TaskNode, TaskNodeRelation> dag) {
@@ -628,7 +662,12 @@ public class DagHelper {
     }
 
     /**
-     * Whether there is a specified type of child node after the parent node
+     * 判断父节点之后是否存在指定类型的子节点。如果 filterNodeType 为空则判断是否存在任意子节点。
+     *
+     * @param parentNodeCode the parent node code
+     * @param dag the DAG graph
+     * @param filterNodeType the node type to filter, or null for any type
+     * @return true if there is a matching successor node
      */
     public static boolean haveSubAfterNode(String parentNodeCode,
                                            DAG<String, TaskNode, TaskNodeRelation> dag, String filterNodeType) {

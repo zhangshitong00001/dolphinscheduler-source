@@ -17,7 +17,14 @@
 
 package org.apache.dolphinscheduler.common.enums;
 
+/**
+ * 告警事件类型枚举。
+ * 定义系统中会触发告警的事件类型。
+ */
 public enum AlertEvent {
 
-    SERVER_DOWN,TIME_OUT
+    /** 服务宕机 */
+    SERVER_DOWN,
+    /** 超时 */
+    TIME_OUT
 }

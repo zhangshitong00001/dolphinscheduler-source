@@ -19,14 +19,29 @@ package org.apache.dolphinscheduler.dao.repository;
 
 import org.apache.dolphinscheduler.dao.entity.ProcessInstance;
 
+/**
+ * 流程实例数据访问接口，定义流程实例的持久化操作规范。
+ */
 public interface ProcessInstanceDao {
 
+    /**
+     * 插入新的流程实例记录。
+     *
+     * @param processInstance processInstance
+     * @return insert count
+     */
     public int insertProcessInstance(ProcessInstance processInstance);
 
+    /**
+     * 更新已有的流程实例记录。
+     *
+     * @param processInstance processInstance
+     * @return update count
+     */
     public int updateProcessInstance(ProcessInstance processInstance);
 
     /**
-     * insert or update work process instance to database
+     * 插入或更新流程实例到数据库。
      *
      * @param processInstance processInstance
      */

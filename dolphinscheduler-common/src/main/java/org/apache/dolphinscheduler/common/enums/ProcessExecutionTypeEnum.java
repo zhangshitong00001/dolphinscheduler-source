@@ -21,11 +21,18 @@ import java.util.HashMap;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 
+/**
+ * 流程执行类型枚举。
+ * 定义同一流程定义下多个实例的执行策略，控制并发或串行行为。
+ */
 public enum ProcessExecutionTypeEnum {
-
+    /** 并行执行 */
     PARALLEL(0, "parallel"),
+    /** 串行等待，后续实例排队等待 */
     SERIAL_WAIT(1, "serial wait"),
+    /** 串行丢弃，后续实例直接丢弃 */
     SERIAL_DISCARD(2, "serial discard"),
+    /** 串行优先级，根据优先级决定执行顺序 */
     SERIAL_PRIORITY(3, "serial priority");
 
     ProcessExecutionTypeEnum(int code, String descp) {

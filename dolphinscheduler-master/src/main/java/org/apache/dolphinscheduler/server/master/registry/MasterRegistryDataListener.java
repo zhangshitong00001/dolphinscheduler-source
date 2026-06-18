@@ -31,6 +31,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
+/**
+ * Master注册数据监听器。订阅注册中心中Master和Worker节点的数据变更事件，在节点新增或移除时分别进行处理。
+ */
 public class MasterRegistryDataListener implements SubscribeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(MasterRegistryDataListener.class);
@@ -41,6 +44,11 @@ public class MasterRegistryDataListener implements SubscribeListener {
         masterRegistryClient = SpringApplicationContext.getBean(MasterRegistryClient.class);
     }
 
+    /**
+     * 处理注册中心数据变更通知。根据事件路径判断是Master节点还是Worker节点的变更，并调用相应的处理方法。
+     *
+     * @param event 注册中心变更事件
+     */
     @Override
     public void notify(Event event) {
         final String path = event.path();

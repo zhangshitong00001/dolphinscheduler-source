@@ -17,11 +17,18 @@
 
 package org.apache.dolphinscheduler.spi.params.base;
 
+/**
+ * 控件缩放类型枚举，定义输入框可拖拽调整大小的方式。
+ */
 public enum ResizeType {
 
+    /** 不可调整大小 */
     NONE("none"),
+    /** 水平和垂直方向均可调整 */
     BOTH("both"),
+    /** 仅水平方向可调整 */
     HORIZONTAL("horizontal"),
+    /** 仅垂直方向可调整 */
     VERTICAL("vertical");
 
     private String value;

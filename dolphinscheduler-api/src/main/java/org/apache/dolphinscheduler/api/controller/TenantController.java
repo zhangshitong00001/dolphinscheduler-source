@@ -55,7 +55,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * tenant controller
+ * 租户控制器，提供租户的创建、更新、删除、查询和验证 REST API。
  */
 @Api(tags = "TENANT_TAG")
 @RestController
@@ -66,13 +66,13 @@ public class TenantController extends BaseController {
     private TenantService tenantService;
 
     /**
-     * create tenant
+     * 创建租户。
      *
-     * @param loginUser login user
-     * @param tenantCode tenant code
-     * @param queueId queue id
-     * @param description description
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param tenantCode 租户编码
+     * @param queueId 队列 ID
+     * @param description 描述
+     * @return 创建结果
      */
     @ApiOperation(value = "createTenant", notes = "CREATE_TENANT_NOTES")
     @ApiImplicitParams({
@@ -94,13 +94,13 @@ public class TenantController extends BaseController {
     }
 
     /**
-     * query tenant list paging
+     * 查询租户分页列表。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return tenant list page
+     * @param loginUser 登录用户
+     * @param searchVal 搜索关键词
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 租户分页列表
      */
     @ApiOperation(value = "queryTenantlistPaging", notes = "QUERY_TENANT_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -127,10 +127,10 @@ public class TenantController extends BaseController {
     }
 
     /**
-     * tenant list
+     * 查询租户列表。
      *
-     * @param loginUser login user
-     * @return tenant list
+     * @param loginUser 登录用户
+     * @return 租户列表
      */
     @ApiOperation(value = "queryTenantlist", notes = "QUERY_TENANT_LIST_NOTES")
     @GetMapping(value = "/list")
@@ -143,14 +143,14 @@ public class TenantController extends BaseController {
     }
 
     /**
-     * update tenant
+     * 更新租户。
      *
-     * @param loginUser login user
-     * @param id tenant id
-     * @param tenantCode tenant code
-     * @param queueId queue id
-     * @param description description
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param id 租户 ID
+     * @param tenantCode 租户编码
+     * @param queueId 队列 ID
+     * @param description 描述
+     * @return 更新结果
      */
     @ApiOperation(value = "updateTenant", notes = "UPDATE_TENANT_NOTES")
     @ApiImplicitParams({
@@ -174,11 +174,11 @@ public class TenantController extends BaseController {
     }
 
     /**
-     * delete tenant by id
+     * 根据 ID 删除租户。
      *
-     * @param loginUser login user
-     * @param id tenant id
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param id 租户 ID
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteTenantById", notes = "DELETE_TENANT_NOTES")
     @ApiImplicitParams({
@@ -195,11 +195,11 @@ public class TenantController extends BaseController {
     }
 
     /**
-     * verify tenant code
+     * 验证租户编码是否可用。
      *
-     * @param loginUser login user
-     * @param tenantCode tenant code
-     * @return true if tenant code can user, otherwise return false
+     * @param loginUser 登录用户
+     * @param tenantCode 租户编码
+     * @return 租户编码可用则返回 true，否则返回 false
      */
     @ApiOperation(value = "verifyTenantCode", notes = "VERIFY_TENANT_CODE_NOTES")
     @ApiImplicitParams({

@@ -26,6 +26,9 @@ import lombok.NonNull;
 import org.apache.dolphinscheduler.common.enums.StateEventType;
 import org.apache.dolphinscheduler.plugin.task.api.enums.TaskExecutionStatus;
 
+/**
+ * 任务状态事件。封装任务实例的状态变化信息，包括任务编码、目标执行状态和关联的流程实例 ID，用于驱动任务状态流转。
+ */
 @Data
 @Builder
 @NoArgsConstructor

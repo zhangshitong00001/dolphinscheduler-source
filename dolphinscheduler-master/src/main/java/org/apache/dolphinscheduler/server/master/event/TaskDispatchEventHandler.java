@@ -31,6 +31,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 任务分发事件处理器。处理任务分发事件，当 Master 将任务成功分发至 Worker 时触发，负责将任务实例状态更新为 DISPATCH 并更新 Worker 地址。
+ */
 @Component
 public class TaskDispatchEventHandler implements TaskEventHandler {
 

@@ -1,0 +1,61 @@
+<%- aslTs %>
+import { reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import {
+  query<%= naming.pascal %>ListPaging,
+  delete<%= naming.pascal %>,
+} from '@/service/modules/<%= naming.kebab %>'
+
+export function useTable() {
+  const { t } = useI18n()
+
+  const data = reactive({
+    page: ref(1),
+    pageSize: ref(10),
+    itemCount: ref(0),
+    loading: ref(false),
+    list: ref([]),
+    searchVal: ref(''),
+  })
+
+  async function changePage(pageNo: number) {
+    if (data.loading) return
+    data.loading = true
+    try {
+      const result = await query<%= naming.pascal %>ListPaging({
+        pageNo,
+        pageSize: data.pageSize,
+        searchVal: data.searchVal,
+      })
+      data.list = result.totalList || []
+      data.itemCount = result.total || 0
+      data.page = pageNo
+    } catch (error) {
+      console.error('Failed to fetch <%= naming.kebab %> list:', error)
+    } finally {
+      data.loading = false
+    }
+  }
+
+  async function changePageSize(pageSize: number) {
+    data.pageSize = pageSize
+    await changePage(1)
+  }
+
+  async function deleteRecord(id: number): Promise<boolean> {
+    try {
+      await delete<%= naming.pascal %>(id)
+      await changePage(data.page)
+      return true
+    } catch (error) {
+      console.error('Failed to delete <%= naming.kebab %>:', error)
+      return false
+    }
+  }
+
+  async function updateList() {
+    await changePage(data.page)
+  }
+
+  return { data, changePage, changePageSize, deleteRecord, updateList }
+}

@@ -19,42 +19,42 @@ package org.apache.dolphinscheduler.remote.config;
 import org.apache.dolphinscheduler.remote.utils.Constants;
 
 /**
- *  netty server config
+ * Netty服务器配置类。配置Netty服务端的连接参数，包括监听端口、连接队列长度、TCP参数、缓冲区大小和工作线程数等。
  */
 public class NettyServerConfig {
 
     /**
-     * init the server connectable queue
+     * 服务端连接队列最大长度（backlog）
      */
     private int soBacklog = 1024;
 
     /**
-     *  whether tpc delay
+     * 是否启用TCP无延迟（Nagle算法）
      */
     private boolean tcpNoDelay = true;
 
     /**
-     *  whether keep alive
+     * 是否启用TCP KeepAlive保活机制
      */
     private boolean soKeepalive = true;
 
     /**
-     *  send buffer size
+     * 发送缓冲区大小（字节）
      */
     private int sendBufferSize = 65535;
 
     /**
-     *  receive buffer size
+     * 接收缓冲区大小（字节）
      */
     private int receiveBufferSize = 65535;
 
     /**
-     *  worker threads，default get machine cpus
+     * 工作线程数，默认为CPU核心数
      */
     private int workerThread = Constants.CPUS;
 
     /**
-     *  listen port
+     * 监听端口号
      */
     private int listenPort = 12346;
 

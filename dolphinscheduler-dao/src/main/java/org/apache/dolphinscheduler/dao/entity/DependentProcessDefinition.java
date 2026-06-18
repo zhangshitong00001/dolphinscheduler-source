@@ -27,38 +27,27 @@ import org.apache.dolphinscheduler.plugin.task.api.parameters.DependentParameter
 import java.util.List;
 
 /**
- * dependent process definition
+ * 依赖工作流定义实体，非数据库表映射，用于表示 Dependent 类型任务的依赖配置信息。
+ * 封装了被依赖的上游工作流定义信息，包括编码、名称、版本、任务参数和工作组等，用于在依赖任务执行时解析和检查上游依赖状态。
  */
 public class DependentProcessDefinition {
 
-    /**
-     * process definition code
-     */
+    /** 工作流定义编码，全局唯一标识 */
     private long processDefinitionCode;
 
-    /**
-     * process definition name
-     */
+    /** 工作流定义名称 */
     private String processDefinitionName;
 
-    /**
-     * process definition version
-     **/
+    /** 工作流定义版本号 */
     private int processDefinitionVersion;
 
-    /**
-     * task definition name
-     */
+    /** 任务定义编码，Dependent 任务的任务编码 */
     private long taskDefinitionCode;
 
-    /**
-     * task definition params
-     */
+    /** 任务参数字符串，JSON 格式，包含依赖配置列表 */
     private String taskParams;
 
-    /**
-     * schedule worker group
-     */
+    /** 调度工作组名称 */
     private String workerGroup;
 
     /**

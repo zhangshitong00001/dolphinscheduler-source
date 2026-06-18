@@ -85,7 +85,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * resources controller
+ * 资源控制器，提供文件资源的创建、更新、删除、查询、下载、在线编辑以及 UDF 函数管理 REST API。
  */
 @Api(tags = "RESOURCES_TAG")
 @RestController
@@ -100,13 +100,15 @@ public class ResourcesController extends BaseController {
     private UdfFuncService udfFuncService;
 
     /**
-     * @param loginUser login user
-     * @param type type
-     * @param alias alias
-     * @param description description
-     * @param pid parent id
-     * @param currentDir current directory
-     * @return create result code
+     * 创建资源目录。
+     *
+     * @param loginUser 登录用户
+     * @param type 资源类型
+     * @param alias 别名
+     * @param description 描述
+     * @param pid 父目录 ID
+     * @param currentDir 当前目录
+     * @return 创建结果
      */
     @ApiOperation(value = "createDirectory", notes = "CREATE_RESOURCE_NOTES")
     @ApiImplicitParams({
@@ -130,9 +132,16 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * create resource
+     * 创建文件资源。
      *
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param type 资源类型
+     * @param alias 别名
+     * @param description 描述
+     * @param file 上传文件
+     * @param pid 父目录 ID
+     * @param currentDir 当前目录
+     * @return 创建结果
      */
     @ApiOperation(value = "createResource", notes = "CREATE_RESOURCE_NOTES")
     @ApiImplicitParams({
@@ -158,15 +167,15 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * update resource
+     * 更新文件资源。
      *
-     * @param loginUser login user
-     * @param alias alias
-     * @param resourceId resource id
-     * @param type resource type
-     * @param description description
-     * @param file resource file
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param resourceId 资源 ID
+     * @param type 资源类型
+     * @param alias 别名
+     * @param description 描述
+     * @param file 更新文件
+     * @return 更新结果
      */
     @ApiOperation(value = "updateResource", notes = "UPDATE_RESOURCE_NOTES")
     @ApiImplicitParams({
@@ -190,11 +199,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * query resources list
+     * 查询资源列表。
      *
-     * @param loginUser login user
-     * @param type resource type
-     * @return resource list
+     * @param loginUser 登录用户
+     * @param type 资源类型
+     * @return 资源列表
      */
     @ApiOperation(value = "queryResourceList", notes = "QUERY_RESOURCE_LIST_NOTES")
     @ApiImplicitParams({
@@ -211,14 +220,15 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * query resources list paging
+     * 查询资源分页列表。
      *
-     * @param loginUser login user
-     * @param type resource type
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return resource list page
+     * @param loginUser 登录用户
+     * @param type 资源类型
+     * @param id 父资源 ID
+     * @param pageNo 页码
+     * @param searchVal 搜索关键词
+     * @param pageSize 每页大小
+     * @return 资源分页列表
      */
     @ApiOperation(value = "queryResourceListPaging", notes = "QUERY_RESOURCE_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -249,11 +259,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * delete resource
+     * 删除资源。
      *
-     * @param loginUser login user
-     * @param resourceId resource id
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param resourceId 资源 ID
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteResource", notes = "DELETE_RESOURCE_BY_ID_NOTES")
     @ApiImplicitParams({
@@ -269,12 +279,12 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * verify resource by alias and type
+     * 验证资源名称是否可用。
      *
-     * @param loginUser login user
-     * @param fullName resource full name
-     * @param type resource type
-     * @return true if the resource name not exists, otherwise return false
+     * @param loginUser 登录用户
+     * @param fullName 资源全名
+     * @param type 资源类型
+     * @return 资源名称不存在则返回 true，否则返回 false
      */
     @ApiOperation(value = "verifyResourceName", notes = "VERIFY_RESOURCE_NAME_NOTES")
     @ApiImplicitParams({
@@ -292,11 +302,12 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * query resources by type
+     * 根据程序类型查询资源列表。
      *
-     * @param loginUser login user
-     * @param type resource type
-     * @return resource list
+     * @param loginUser 登录用户
+     * @param type 资源类型
+     * @param programType 程序类型
+     * @return 资源列表
      */
     @ApiOperation(value = "queryResourceByProgramType", notes = "QUERY_RESOURCE_LIST_NOTES")
     @ApiImplicitParams({
@@ -313,13 +324,13 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * query resource by full name and type
+     * 根据资源全名和类型查询资源。
      *
-     * @param loginUser login user
-     * @param fullName resource full name
-     * @param type resource type
-     * @param id resource id
-     * @return true if the resource name not exists, otherwise return false
+     * @param loginUser 登录用户
+     * @param fullName 资源全名
+     * @param id 资源 ID
+     * @param type 资源类型
+     * @return 资源详情
      */
     @ApiOperation(value = "queryResource", notes = "QUERY_BY_RESOURCE_NAME")
     @ApiImplicitParams({
@@ -340,13 +351,13 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * view resource file online
+     * 在线查看资源文件内容。
      *
-     * @param loginUser login user
-     * @param resourceId resource id
-     * @param skipLineNum skip line number
-     * @param limit limit
-     * @return resource content
+     * @param loginUser 登录用户
+     * @param resourceId 资源 ID
+     * @param skipLineNum 跳过的行数
+     * @param limit 返回行数上限
+     * @return 资源文件内容
      */
     @ApiOperation(value = "viewResource", notes = "VIEW_RESOURCE_BY_ID_NOTES")
     @ApiImplicitParams({
@@ -365,9 +376,17 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * create resource file online
+     * 在线创建资源文件。
      *
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param type 资源类型
+     * @param fileName 文件名
+     * @param fileSuffix 文件后缀
+     * @param description 描述
+     * @param content 文件内容
+     * @param pid 父目录 ID
+     * @param currentDir 当前目录
+     * @return 创建结果
      */
     @ApiOperation(value = "onlineCreateResource", notes = "ONLINE_CREATE_RESOURCE_NOTES")
     @ApiImplicitParams({
@@ -399,12 +418,12 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * edit resource file online
+     * 在线编辑资源文件内容。
      *
-     * @param loginUser login user
-     * @param resourceId resource id
-     * @param content content
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param resourceId 资源 ID
+     * @param content 内容
+     * @return 更新结果
      */
     @ApiOperation(value = "updateResourceContent", notes = "UPDATE_RESOURCE_NOTES")
     @ApiImplicitParams({
@@ -425,11 +444,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * download resource file
+     * 下载资源文件。
      *
-     * @param loginUser login user
-     * @param resourceId resource id
-     * @return resource content
+     * @param loginUser 登录用户
+     * @param resourceId 资源 ID
+     * @return 资源文件
      */
     @ApiOperation(value = "downloadResource", notes = "DOWNLOAD_RESOURCE_NOTES")
     @ApiImplicitParams({
@@ -452,17 +471,17 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * create udf function
+     * 创建 UDF 函数。
      *
-     * @param loginUser login user
-     * @param type udf type
-     * @param funcName function name
-     * @param argTypes argument types
-     * @param database database
-     * @param description description
-     * @param className class name
-     * @param resourceId resource id
-     * @return create result code
+     * @param loginUser 登录用户
+     * @param type UDF 类型
+     * @param funcName 函数名
+     * @param className 类名
+     * @param argTypes 参数类型
+     * @param database 数据库
+     * @param description 描述
+     * @param resourceId 资源 ID
+     * @return 创建结果
      */
     @ApiOperation(value = "createUdfFunc", notes = "CREATE_UDF_FUNCTION_NOTES")
     @ApiImplicitParams({
@@ -493,11 +512,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * view udf function
+     * 查看 UDF 函数详情。
      *
-     * @param loginUser login user
-     * @param id resource id
-     * @return udf function detail
+     * @param loginUser 登录用户
+     * @param id 资源 ID
+     * @return UDF 函数详情
      */
     @ApiOperation(value = "viewUIUdfFunction", notes = "VIEW_UDF_FUNCTION_NOTES")
     @ApiImplicitParams({
@@ -514,18 +533,18 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * update udf function
+     * 更新 UDF 函数。
      *
-     * @param loginUser login user
-     * @param type resource type
-     * @param funcName function name
-     * @param argTypes argument types
-     * @param database data base
-     * @param description description
-     * @param resourceId resource id
-     * @param className class name
-     * @param udfFuncId udf function id
-     * @return update result code
+     * @param loginUser 登录用户
+     * @param udfFuncId UDF 函数 ID
+     * @param type UDF 类型
+     * @param funcName 函数名
+     * @param className 类名
+     * @param argTypes 参数类型
+     * @param database 数据库
+     * @param description 描述
+     * @param resourceId 资源 ID
+     * @return 更新结果
      */
     @ApiOperation(value = "updateUdfFunc", notes = "UPDATE_UDF_FUNCTION_NOTES")
     @ApiImplicitParams({
@@ -556,13 +575,13 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * query udf function list paging
+     * 查询 UDF 函数分页列表。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return udf function list page
+     * @param loginUser 登录用户
+     * @param pageNo 页码
+     * @param searchVal 搜索关键词
+     * @param pageSize 每页大小
+     * @return UDF 函数分页列表
      */
     @ApiOperation(value = "queryUdfFuncListPaging", notes = "QUERY_UDF_FUNCTION_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -586,11 +605,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * query udf func list by type
+     * 根据类型查询 UDF 函数列表。
      *
-     * @param loginUser login user
-     * @param type resource type
-     * @return resource list
+     * @param loginUser 登录用户
+     * @param type UDF 类型
+     * @return UDF 函数列表
      */
     @ApiOperation(value = "queryUdfFuncList", notes = "QUERY_UDF_FUNC_LIST_NOTES")
     @ApiImplicitParams({
@@ -606,11 +625,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * verify udf function name can use or not
+     * 验证 UDF 函数名称是否可用。
      *
-     * @param loginUser login user
-     * @param name name
-     * @return true if the name can user, otherwise return false
+     * @param loginUser 登录用户
+     * @param name 函数名
+     * @return 名称可用则返回 true，否则返回 false
      */
     @ApiOperation(value = "verifyUdfFuncName", notes = "VERIFY_UDF_FUNCTION_NAME_NOTES")
     @ApiImplicitParams({
@@ -627,11 +646,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * delete udf function
+     * 删除 UDF 函数。
      *
-     * @param loginUser login user
-     * @param udfFuncId udf function id
-     * @return delete result code
+     * @param loginUser 登录用户
+     * @param udfFuncId UDF 函数 ID
+     * @return 删除结果
      */
     @ApiOperation(value = "deleteUdfFunc", notes = "DELETE_UDF_FUNCTION_NOTES")
     @ApiImplicitParams({
@@ -647,11 +666,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * authorized file resource list
+     * 查询已授权给用户的文件资源列表。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @return authorized result
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @return 已授权文件资源列表
      */
     @ApiOperation(value = "authorizedFile", notes = "AUTHORIZED_FILE_NOTES")
     @ApiImplicitParams({
@@ -668,11 +687,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * unauthorized file resource list
+     * 查询已授权的资源树。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @return unauthorized result code
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @return 已授权资源树
      */
     @ApiOperation(value = "authorizeResourceTree", notes = "AUTHORIZE_RESOURCE_TREE_NOTES")
     @ApiImplicitParams({
@@ -689,11 +708,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * unauthorized udf function
+     * 查询未授权的 UDF 函数列表。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @return unauthorized result code
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @return 未授权的 UDF 函数列表
      */
     @ApiOperation(value = "unauthUDFFunc", notes = "UNAUTHORIZED_UDF_FUNC_NOTES")
     @ApiImplicitParams({
@@ -711,11 +730,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * authorized udf function
+     * 查询已授权的 UDF 函数列表。
      *
-     * @param loginUser login user
-     * @param userId user id
-     * @return authorized result code
+     * @param loginUser 登录用户
+     * @param userId 用户 ID
+     * @return 已授权的 UDF 函数列表
      */
     @ApiOperation(value = "authUDFFunc", notes = "AUTHORIZED_UDF_FUNC_NOTES")
     @ApiImplicitParams({
@@ -732,11 +751,11 @@ public class ResourcesController extends BaseController {
     }
 
     /**
-     * query resource by resource id
+     * 根据资源 ID 查询资源详情。
      *
-     * @param loginUser login user
-     * @param id resource id
-     * @return resource
+     * @param loginUser 登录用户
+     * @param id 资源 ID
+     * @return 资源详情
      */
     @ApiOperation(value = "queryResourceById", notes = "QUERY_BY_RESOURCE_NAME")
     @ApiImplicitParams({

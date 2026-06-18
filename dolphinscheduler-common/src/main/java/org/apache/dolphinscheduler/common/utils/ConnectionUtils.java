@@ -23,6 +23,10 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 资源连接释放工具类，用于安全地释放AutoCloseable资源。
+ * 该类为工具类，不可实例化。
+ */
 public class ConnectionUtils {
 
     public static final Logger logger = LoggerFactory.getLogger(ConnectionUtils.class);
@@ -32,9 +36,9 @@ public class ConnectionUtils {
     }
 
     /**
-     * release resource
+     * 释放多个AutoCloseable资源，忽略释放过程中的异常。
      *
-     * @param resources resources
+     * @param resources 需要释放的AutoCloseable资源数组
      */
     public static void releaseResource(AutoCloseable... resources) {
 

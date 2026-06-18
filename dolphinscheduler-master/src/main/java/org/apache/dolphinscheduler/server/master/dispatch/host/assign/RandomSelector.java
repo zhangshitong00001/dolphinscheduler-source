@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * random selector
+ * 随机选择器。根据主机权重按比例随机选择一个 Worker 节点。
  */
 public class RandomSelector extends AbstractSelector<HostWorker> {
 

@@ -37,8 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * <p>DolphinScheduler master register client, used to connect to registry and hand the registry events.
- * <p>When the Master node startup, it will register in registry center. And start a {@link MasterHeartBeatTask} to update its metadata in registry.
+ * DolphinScheduler Master注册客户端。负责连接注册中心、处理注册事件，并在Master节点启动时向注册中心注册，通过心跳任务维持元数据更新。
  */
 @Component
 public class MasterRegistryClient implements AutoCloseable {
@@ -59,6 +58,9 @@ public class MasterRegistryClient implements AutoCloseable {
 
     private MasterHeartBeatTask masterHeartBeatTask;
 
+    /**
+     * 启动Master注册客户端。创建心跳任务，向注册中心注册Master节点，添加连接状态监听器并订阅注册数据变更。
+     */
     public void start() {
         try {
             this.masterHeartBeatTask = new MasterHeartBeatTask(masterConfig, registryClient);
@@ -83,11 +85,11 @@ public class MasterRegistryClient implements AutoCloseable {
     }
 
     /**
-     * remove master node path
+     * 移除Master节点路径，并在需要时执行故障转移。
      *
-     * @param path node path
-     * @param nodeType node type
-     * @param failover is failover
+     * @param path Master节点在注册中心中的路径
+     * @param nodeType 节点类型
+     * @param failover 是否执行故障转移
      */
     public void removeMasterNodePath(String path, NodeType nodeType, boolean failover) {
         logger.info("{} node deleted : {}", nodeType, path);
@@ -117,11 +119,11 @@ public class MasterRegistryClient implements AutoCloseable {
     }
 
     /**
-     * remove worker node path
+     * 移除Worker节点路径，并在需要时执行故障转移。
      *
-     * @param path     node path
-     * @param nodeType node type
-     * @param failover is failover
+     * @param path Worker节点在注册中心中的路径
+     * @param nodeType 节点类型
+     * @param failover 是否执行故障转移
      */
     public void removeWorkerNodePath(String path, NodeType nodeType, boolean failover) {
         logger.info("{} node deleted : {}", nodeType, path);
@@ -147,7 +149,7 @@ public class MasterRegistryClient implements AutoCloseable {
     }
 
     /**
-     * Registry the current master server itself to registry.
+     * 将当前Master服务器注册到注册中心。先移除旧路径再创建临时节点，启动心跳任务维持注册信息。
      */
     void registry() {
         logger.info("Master node : {} registering to registry center", masterConfig.getMasterAddress());
@@ -170,6 +172,9 @@ public class MasterRegistryClient implements AutoCloseable {
 
     }
 
+    /**
+     * 从注册中心注销当前Master节点。移除注册路径、停止心跳任务并关闭注册客户端连接。
+     */
     public void deregister() {
         try {
             registryClient.remove(masterConfig.getMasterRegistryPath());

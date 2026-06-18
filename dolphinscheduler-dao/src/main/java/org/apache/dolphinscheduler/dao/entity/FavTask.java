@@ -25,6 +25,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 收藏任务实体，映射到 t_ds_fav_task 表，记录用户收藏的任务类型。
+ * 用于前端快速新建任务时展示用户常用的任务类型列表，提升操作效率。
+ */
 @NoArgsConstructor
 @Getter
 @Setter
@@ -32,9 +36,12 @@ import lombok.Setter;
 @TableName("t_ds_fav_task")
 public class FavTask {
 
+    /** 收藏记录主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+    /** 任务类型名称，如 "SQL"、"SHELL"、"SPARK" 等 */
     private String taskName;
+    /** 用户 ID，对应 t_ds_user 表的 id */
     private int userId;
 
 }

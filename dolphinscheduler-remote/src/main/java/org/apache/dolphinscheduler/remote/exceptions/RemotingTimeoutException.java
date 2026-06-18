@@ -19,7 +19,7 @@ package org.apache.dolphinscheduler.remote.exceptions;
 
 
 /**
- *  timeout exception
+ * 远程通信超时异常，当远程请求在指定时间内未收到响应时抛出。
  */
 public class RemotingTimeoutException extends RemotingException{
 

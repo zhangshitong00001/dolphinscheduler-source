@@ -30,6 +30,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 告警客户端服务，通过Netty远程通信向告警服务器同步发送告警请求。
+ * <p>实现{@link AutoCloseable}接口，支持资源自动释放。</p>
+ */
 public class AlertClientService implements AutoCloseable {
 
     private static final Logger logger = LoggerFactory.getLogger(AlertClientService.class);
@@ -44,23 +48,15 @@ public class AlertClientService implements AutoCloseable {
 
     private int port;
 
-    /**
-     * request time out
-     */
+    /** 告警请求超时时间（毫秒） */
     private static final long ALERT_REQUEST_TIMEOUT = 10 * 1000L;
 
-    /**
-     * alert client
-     */
     public AlertClientService() {
         this.clientConfig = new NettyClientConfig();
         this.client = new NettyRemotingClient(clientConfig);
         this.isRunning = new AtomicBoolean(true);
     }
 
-    /**
-     * alert client
-     */
     public AlertClientService(String host, int port) {
         this();
         this.host = host;
@@ -68,7 +64,7 @@ public class AlertClientService implements AutoCloseable {
     }
 
     /**
-     * close
+     * 关闭告警客户端，释放Netty连接资源。
      */
     @Override
     public void close() {
@@ -83,24 +79,28 @@ public class AlertClientService implements AutoCloseable {
     }
 
     /**
-     * alert sync send data
-     * @param groupId
-     * @param title
-     * @param content
-     * @return
+     * 使用默认的host和port同步发送告警。
+     *
+     * @param groupId 告警组ID
+     * @param title 告警标题
+     * @param content 告警内容
+     * @param strategy 告警策略
+     * @return 告警发送响应结果
      */
     public AlertSendResponseCommand sendAlert(int groupId, String title,  String content, int strategy) {
         return this.sendAlert(this.host,this.port,groupId,title,content,strategy);
     }
 
     /**
-     * alert sync send data
-     * @param host host
-     * @param port port
-     * @param groupId groupId
-     * @param title title
-     * @param content content
-     * @return AlertSendResponseCommand
+     * 向指定地址的告警服务器同步发送告警。
+     *
+     * @param host 告警服务器主机地址
+     * @param port 告警服务器端口
+     * @param groupId 告警组ID
+     * @param title 告警标题
+     * @param content 告警内容
+     * @param strategy 告警策略
+     * @return 告警发送响应结果，发送失败时返回null
      */
     public AlertSendResponseCommand sendAlert(String host, int port, int groupId, String title,  String content, int strategy) {
         logger.info("sync alert send, host : {}, port : {}, groupId : {}, title : {} , strategy : {} ", host, port, groupId, title, strategy);

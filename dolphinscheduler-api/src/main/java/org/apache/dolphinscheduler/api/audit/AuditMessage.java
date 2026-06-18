@@ -23,6 +23,9 @@ import org.apache.dolphinscheduler.dao.entity.User;
 
 import java.util.Date;
 
+/**
+ * 审计消息实体。封装审计事件的操作信息，包括操作用户、操作时间、资源类型和操作类型等，用于在审计发布-订阅模式中传递。
+ */
 public class AuditMessage {
     private User user;
 

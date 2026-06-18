@@ -27,6 +27,11 @@ import org.apache.dolphinscheduler.common.utils.OSUtils;
 import org.apache.dolphinscheduler.server.master.config.MasterConfig;
 import org.apache.dolphinscheduler.service.registry.RegistryClient;
 
+/**
+ * Master 心跳任务，定期向注册中心报告 Master 节点的健康状态和系统负载信息。
+ * 收集 CPU 使用率、内存使用率、负载均衡、磁盘可用空间等指标，
+ * 并将心跳数据以临时节点的形式写入注册中心，用于集群中其他节点的状态感知。
+ */
 @Slf4j
 public class MasterHeartBeatTask extends BaseHeartBeatTask<MasterHeartBeat> {
 
@@ -47,6 +52,11 @@ public class MasterHeartBeatTask extends BaseHeartBeatTask<MasterHeartBeat> {
         this.processId = OSUtils.getProcessID();
     }
 
+    /**
+     * 收集当前 Master 的心跳数据，包括启动时间、CPU、内存、负载、磁盘等信息。
+     *
+     * @return Master 心跳数据对象
+     */
     @Override
     public MasterHeartBeat getHeartBeat() {
         return MasterHeartBeat.builder()
@@ -63,6 +73,11 @@ public class MasterHeartBeatTask extends BaseHeartBeatTask<MasterHeartBeat> {
                 .build();
     }
 
+    /**
+     * 将心跳数据写入注册中心，创建或更新临时节点。
+     *
+     * @param masterHeartBeat Master 心跳数据
+     */
     @Override
     public void writeHeartBeat(MasterHeartBeat masterHeartBeat) {
         String masterHeartBeatJson = JSONUtils.toJsonString(masterHeartBeat);

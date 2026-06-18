@@ -24,38 +24,29 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+/**
+ * UDF 用户关联实体，映射到 t_ds_relation_udfs_user 表，存储 UDF 函数与用户的授权关系。
+ */
 @Data
 @TableName("t_ds_relation_udfs_user")
 public class UDFUser {
 
-    /**
-     * id
-     */
+    /** 关联主键 ID，自增 */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    /**
-     * id
-     */
+    /** 用户 ID */
     private int userId;
 
-    /**
-     * udf id
-     */
+    /** UDF 函数 ID */
     private int udfId;
 
-    /**
-     * permission
-     */
+    /** 权限 */
     private int perm;
 
-    /**
-     * create time
-     */
+    /** 创建时间 */
     private Date createTime;
 
-    /**
-     * update time
-     */
+    /** 更新时间 */
     private Date updateTime;
 }

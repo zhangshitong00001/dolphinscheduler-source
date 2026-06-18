@@ -24,12 +24,18 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * caller thread execute
+ * 调用者线程执行拒绝策略。当线程池队列已满时，任务将由提交任务的调用者线程直接执行，提供自然的背压机制。
  */
 public class CallerThreadExecutePolicy implements RejectedExecutionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(CallerThreadExecutePolicy.class);
 
+    /**
+     * 当线程池拒绝执行任务时，由调用者线程直接同步执行该任务。
+     *
+     * @param r runnable
+     * @param executor executor
+     */
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
         logger.warn("queue is full, trigger caller thread execute");

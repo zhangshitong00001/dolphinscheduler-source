@@ -26,22 +26,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *  task savepoint request command
+ * 任务保存点请求命令，用于请求对指定任务创建保存点（Savepoint）。
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskSavePointRequestCommand implements Serializable {
 
-    /**
-     *  task id
-     */
+    /** 任务实例ID */
     private int taskInstanceId;
 
     /**
-     *  package request command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

@@ -27,7 +27,7 @@ import org.apache.dolphinscheduler.remote.command.CommandType;
 import java.io.Serializable;
 
 /**
- *  view log request command
+ * 查看完整日志请求命令。根据日志文件路径向Worker请求获取任务的完整日志内容。
  */
 @Data
 @NoArgsConstructor
@@ -35,7 +35,7 @@ import java.io.Serializable;
 public class ViewLogRequestCommand implements Serializable {
 
     /**
-     *  log path
+     * 日志文件路径
      */
     private String path;
 

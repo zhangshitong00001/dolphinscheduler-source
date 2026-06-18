@@ -137,7 +137,7 @@ export function useForm(id?: number) {
     state.detailForm.port = options.previousPort || options.defaultPort
     state.detailForm.type = type
 
-    state.requiredDataBase = (type !== 'POSTGRESQL' && type !== 'ATHENA')
+    state.requiredDataBase = type !== 'POSTGRESQL' && type !== 'ATHENA'
 
     state.showHost = type !== 'ATHENA'
     state.showPort = type !== 'ATHENA'
@@ -240,6 +240,11 @@ export const datasourceType: IDataBaseOptionKeys = {
     value: 'ATHENA',
     label: 'ATHENA',
     defaultPort: 0
+  },
+  DORIS: {
+    value: 'DORIS',
+    label: 'DORIS',
+    defaultPort: 9030
   }
 }
 

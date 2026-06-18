@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * data quality controller
+ * 数据质量控制器。提供数据质量规则管理REST API，包括规则表单JSON获取、规则分页查询、规则列表查询和执行结果分页查询等操作。
  */
 @Api(tags = "DATA_QUALITY_SERVICE")
 @RestController
@@ -65,9 +65,10 @@ public class DataQualityController extends BaseController {
     private DqExecuteResultService dqExecuteResultService;
 
     /**
-     * get rule from-create json
-     * @param ruleId ruleId
-     * @return from-create json
+     * 获取规则创建表单的JSON数据。
+     *
+     * @param ruleId 规则ID
+     * @return 表单创建JSON
      */
     @ApiOperation(value = "getRuleFormCreateJson", notes = "GET_RULE_FORM_CREATE_JSON_NOTES")
     @ApiImplicitParams({
@@ -82,13 +83,13 @@ public class DataQualityController extends BaseController {
     }
 
     /**
-     * query rule list paging
+     * 分页查询规则列表。支持按搜索值、规则类型和时间范围进行筛选。
      *
-     * @param loginUser login user
-     * @param searchVal search value
-     * @param pageNo page number
-     * @param pageSize page size
-     * @return rule page
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索值
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 规则分页列表
      */
     @ApiOperation(value = "queryRuleListPaging", notes = "QUERY_RULE_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -119,8 +120,9 @@ public class DataQualityController extends BaseController {
     }
 
     /**
-     * query all rule list
-     * @return rule list
+     * 查询所有规则列表。
+     *
+     * @return 规则列表
      */
     @ApiOperation(value = "queryRuleList", notes = "QUERY_RULE_LIST_NOTES")
     @GetMapping(value = "/ruleList")
@@ -132,17 +134,17 @@ public class DataQualityController extends BaseController {
     }
 
     /**
-     * query task execute result list paging
+     * 分页查询任务执行结果列表。支持按规则类型、状态和时间范围进行筛选。
      *
-     * @param loginUser loginUser
-     * @param searchVal searchVal
-     * @param ruleType ruleType
-     * @param state state
-     * @param startTime startTime
-     * @param endTime endTime
-     * @param pageNo pageNo
-     * @param pageSize pageSize
-     * @return
+     * @param loginUser 当前登录用户
+     * @param searchVal 搜索值
+     * @param ruleType 规则类型
+     * @param state 执行状态
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param pageNo 页码
+     * @param pageSize 每页大小
+     * @return 执行结果分页列表
      */
     @ApiOperation(value = "queryExecuteResultListPaging", notes = "QUERY_EXECUTE_RESULT_LIST_PAGING_NOTES")
     @ApiImplicitParams({
@@ -177,9 +179,10 @@ public class DataQualityController extends BaseController {
     }
 
     /**
-     * get datasource options by id
-     * @param datasourceId datasourceId
-     * @return result
+     * 根据数据源ID获取数据源选项。
+     *
+     * @param datasourceId 数据源ID
+     * @return 数据源选项
      */
     @ApiOperation(value = "getDatasourceOptionsById", notes = "GET_DATASOURCE_OPTIONS_NOTES")
     @ApiImplicitParams({

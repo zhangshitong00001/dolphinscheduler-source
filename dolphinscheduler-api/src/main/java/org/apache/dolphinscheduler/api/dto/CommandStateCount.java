@@ -20,7 +20,7 @@ package org.apache.dolphinscheduler.api.dto;
 import org.apache.dolphinscheduler.common.enums.CommandType;
 
 /**
- * command state count
+ * 命令状态统计 DTO，用于按命令状态统计正常数量与错误数量。
  */
 public class CommandStateCount {
 

@@ -26,7 +26,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * task priority info
+ * 任务优先级信息模型，包含流程实例优先级、任务实例优先级、任务上下文等信息。实现 Comparable 接口用于优先级队列排序，
+ * 排序规则依次为：流程实例优先级、流程实例ID、任务实例优先级、任务组优先级、任务ID、分组名称、检查点时间戳。
  */
 public class TaskPriority implements Comparable<TaskPriority> {
 

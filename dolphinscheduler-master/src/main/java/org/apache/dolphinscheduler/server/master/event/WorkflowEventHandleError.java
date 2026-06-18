@@ -17,6 +17,9 @@
 
 package org.apache.dolphinscheduler.server.master.event;
 
+/**
+ * 工作流事件处理错误异常。表示工作流事件处理过程中发生不可恢复的错误，当捕获此异常时，系统将丢弃该事件。
+ */
 public class WorkflowEventHandleError extends Exception {
 
     public WorkflowEventHandleError(String message) {

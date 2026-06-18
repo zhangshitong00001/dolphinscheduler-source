@@ -17,9 +17,14 @@
 
 package org.apache.dolphinscheduler.common.enums;
 
+/**
+ * 阻塞时机枚举。
+ * 定义任务流程中执行阻塞操作的时机，用于控制并行任务间的依赖阻塞策略。
+ */
 public enum BlockingOpportunity {
-
+    /** 成功时阻塞 */
     BLOCKING_ON_SUCCESS("BlockingOnSuccess"),
+    /** 失败时阻塞 */
     BLOCKING_ON_FAILED("BlockingOnFailed");
 
     private final String desc;

@@ -34,8 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * BaseBenchMark
- * If you need to test jmh, please extend him first
+ * JMH基准测试抽象基类。提供默认的预热、测量和Fork配置，以及报告输出和测试运行能力。
+ * 所有JMH基准测试类应继承此类以复用公共配置。
  */
 @Warmup(iterations = AbstractBaseBenchmark.DEFAULT_WARMUP_ITERATIONS)
 @Measurement(iterations = AbstractBaseBenchmark.DEFAULT_MEASURE_ITERATIONS)
@@ -43,14 +43,22 @@ import org.slf4j.LoggerFactory;
 @Fork(AbstractBaseBenchmark.DEFAULT_FORKS)
 public abstract class AbstractBaseBenchmark {
 
+    /** 默认预热迭代次数 */
     static final int DEFAULT_WARMUP_ITERATIONS = 10;
 
+    /** 默认测量迭代次数 */
     static final int DEFAULT_MEASURE_ITERATIONS = 10;
 
+    /** 默认Fork次数 */
     static final int DEFAULT_FORKS = 2;
 
     private static Logger logger = LoggerFactory.getLogger(AbstractBaseBenchmark.class);
 
+    /**
+     * 构建JMH运行选项。根据类名自动匹配测试、设置迭代参数，并处理JSON格式报告输出。
+     *
+     * @return 配置好的ChainedOptionsBuilder实例
+     */
     private ChainedOptionsBuilder newOptionsBuilder() {
 
         String className = getClass().getSimpleName();
@@ -96,6 +104,11 @@ public abstract class AbstractBaseBenchmark {
         return optBuilder;
     }
 
+    /**
+     * 执行JMH基准测试。通过JUnit的 {@link Test} 注解触发，构建运行选项并启动JMH Runner。
+     *
+     * @throws Exception 当基准测试执行失败时抛出
+     */
     @Test
     public void run() throws Exception {
         new Runner(newOptionsBuilder().build()).run();

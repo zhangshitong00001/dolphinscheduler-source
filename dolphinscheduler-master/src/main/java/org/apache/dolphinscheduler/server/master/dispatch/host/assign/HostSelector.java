@@ -17,10 +17,16 @@
 
 package org.apache.dolphinscheduler.server.master.dispatch.host.assign;
 
+/**
+ * 主机选择策略枚举。定义 Worker 节点的选择算法类型。
+ */
 public enum HostSelector {
+    /** 随机选择。 */
     RANDOM,
 
+    /** 平滑加权轮询选择。 */
     ROUND_ROBIN,
 
+    /** 低权重优先选择。 */
     LOWER_WEIGHT
 }

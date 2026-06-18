@@ -24,13 +24,18 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 任务拒绝确认命令，用于确认已收到Worker拒绝执行任务的响应。
+ */
 @Data
 @NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class TaskRejectAckCommand extends BaseCommand {
 
+    /** 任务实例ID */
     private int taskInstanceId;
+    /** 是否成功 */
     private boolean success;
 
     public TaskRejectAckCommand(boolean success,
@@ -44,9 +49,9 @@ public class TaskRejectAckCommand extends BaseCommand {
     }
 
     /**
-     * package response command
+     * 将当前命令对象打包为通用的Command对象。
      *
-     * @return command
+     * @return command 打包后的命令对象
      */
     public Command convert2Command() {
         Command command = new Command();

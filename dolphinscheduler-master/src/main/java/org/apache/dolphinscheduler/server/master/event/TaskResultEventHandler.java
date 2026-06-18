@@ -35,6 +35,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * 任务结果事件处理器。处理 Worker 上报的任务执行结果事件，负责更新任务实例状态和输出参数、处理数据质量结果，并在成功后发起 TASK_STATE_CHANGE 状态事件。
+ */
 @Component
 public class TaskResultEventHandler implements TaskEventHandler {
 
