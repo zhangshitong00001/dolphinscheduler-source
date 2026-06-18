@@ -61,5 +61,6 @@ export default {
   user_password_tips: '请输入密码',
   aws_region: 'AwsRegion',
   aws_region_tips: '请输入AwsRegion',
-  jdbc_format_tips: 'jdbc连接参数不是一个正确的JSON格式'
+  jdbc_format_tips: 'jdbc连接参数不是一个正确的JSON格式',
+  doris: 'DORIS'
 }
